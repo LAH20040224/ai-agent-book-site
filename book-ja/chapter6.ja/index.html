@@ -1,0 +1,2676 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/book-ja/chapter6.ja/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Agent の評価 - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="Agent の評価">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/book-ja/chapter6.ja/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Agent の評価">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#agent" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Agent の評価
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        具体的な評価の例
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        自動評価環境
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="自動評価環境">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        評価環境の基本構成
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ツール呼び出し型評価環境
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        人間・機械インタラクション型評価環境
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        評価タスクデータセットの設計
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="評価タスクデータセットの設計">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        タスクデータセット設計の核心的課題
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        タスク記述の精確性設計
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        タスク複雑度の階層化設計
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        検証可能性と客観性の保証
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        タスク分布の系統的設計
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        データ品質管理と反復改善
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        評価指標体系
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        自動化評価方法
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="自動化評価方法">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#llm-as-a-judge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLM-as-a-Judge：自動化評価の核心
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        配対比較とモデルランキング
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        評価駆動のモデル選定
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="評価駆動のモデル選定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        選定の鍵となる次元
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent システムのコスト分析
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        評価駆動の継続的反復
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        評価結果の統計的有意性
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent の可観測性
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benchmark レポートからシステム改善へ
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Benchmark レポートからシステム改善へ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#benchmark_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benchmark レポートを読み解く：問題発見の技
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        データから仮説へ：改善のロードマップを構築する
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        結果から意思決定へ：データ駆動のトレードオフ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        継続的反復：最初の改善からシステムの進化へ
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        外部評価から内部評価へ：本番級 Agent の評価インフラ
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="外部評価から内部評価へ：本番級 Agent の評価インフラ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        アブレーションインフラ：各特性の真の寄与を理解する
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AB テスト方法論：メカニズムと目標を区別する
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二層特性スイッチシステム
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        プロンプト敏感性評価
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_26" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        プライバシー配慮の分析を評価の基礎とする
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        外部から内部へ：評価思考の転換
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        シミュレーション環境：評価からポストトレーニングへの橋
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="シミュレーション環境：評価からポストトレーニングへの橋">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_29" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        忠実度のトレードオフと領域ランダム化
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        本章のまとめ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        演習問題
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/book-ja/chapter6.ja.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/book-ja/chapter6.ja.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="agent">Agent の評価<a class="headerlink" href="#agent" title="Permanent link">&para;</a></h1>
+<p>Agent システムを構築する際、開発者は数多くの設計上の選択に直面しますが、それらには明白な正解がないことがしばしばです。</p>
+<ul>
+<li>どのモデルを使うか？</li>
+<li>モデルにどんなツールを呼び出させるか？</li>
+<li>知識ベースにはどんなデータを、どんな構造で構築すべきか？</li>
+<li>ユーザーメモリはどう作るべきか？</li>
+<li>モデルのプロンプトと Skills はどう構成すべきか？</li>
+<li>Harness にはどんな制約を加える必要があるか？</li>
+<li>この Agent の自己進化と自己反復はどうすべきか？</li>
+</ul>
+<p>評価は私たちに科学的な意思決定の根拠を提供します。系統的な対比実験（1 つの変数を変えて効果の変化を観察する）とアブレーション実験（コンポーネントを 1 つずつ無効化し、全体性能の変化を観察して、そのコンポーネントの真の寄与を判断する）を通じて、真の能力向上と表面的な変動とを区別し、「ゴマを拾って西瓜を落とす（小を得て大を失う）」ことを避けます。ソフトウェアエンジニアリングにおける「度量なくして改善なし」という言い方の通り、再現可能な評価体系を確立しなければ、Agent の反復の方向は直感に頼るしかありません。</p>
+<p>第 1 章で導入した Harness 工学の視点から見ると、評価は Harness の中で「検証」機能という中核的な役割を担っています。1 つの重要な認識は、<strong>評価の対象はモデルだけであってはならず、モデルと Harness の組み合わせ体であるべきだ</strong> ということです。同じモデルでも、異なる Harness の中では性能に大きな差が出ることがあります。一部のチームは Harness を最適化するだけで、同じモデルの端末系タスクにおける性能を著しく向上させました（詳しくは第 5 章）。これが意味するのは、Agent が評価で振るわないとき、改善の方向はモデルの交換ではなく、Harness のあるコンポーネント（プロンプト、ツール設計、フィードバックループ）の最適化かもしれない、ということです。完備された評価体系は、「モデルの能力不足」と「Harness の設計欠陥」という本質的に異なる 2 種類の問題を区別できるべきです。<strong>この 2 種類の問題を区別する一般的な手段がモデル置換実験（model swap）です</strong>。Harness を固定し、より強い/より弱いモデルだけを交換して、スコアの変化幅を観察します。もし強いモデルに換えてもスコアが上がらないなら、ボトルネックは Harness にあります。もし弱いモデルに換えるとスコアが大きく下がり、スコアがモデル能力とともに大幅に変動するなら、最も直接的な解釈はボトルネックがモデル能力そのものにあり、現在の性能が主にモデルによって決まっている、というものです（それがタスク自体が難しいためなのか、それとも Harness がモデルの事前知識に過度に依存しているためなのかは、さらなる分析が必要です）。これが先ほど述べた「アブレーション実験」とは 2 つの異なる方法である点に注意してください。アブレーションは <strong>Harness のあるコンポーネントを無効化して</strong> 全体性能がどう変わるかを見るもので、モデル置換は <strong>Harness を固定してモデルだけを交換する</strong> ものです。前者は Harness 内部のどの部品が重要かを特定し、後者はボトルネックがモデルにあるのか Harness にあるのかを区別します。</p>
+<p>評価体系の価値は、モデルが急速に進化する時代においていっそう際立ちます。モデルの能力は依然として急速に進化していますが、新しいモデルが公開ベンチマークでより良い性能を示したからといって、あなたの特定のタスクでも優れているとは限りません。むしろ性能の後退（regression、すなわち新バージョンが一部の面で旧バージョンに劣ること）が起こることもあります。自分の評価データセットで完全にテストしてはじめて、データ駆動のアップグレード判断ができます。さらに、完備された評価体系は「未来のモデルのために製品を開発する」ことを実行可能な戦略にします。すなわち、現在のモデルが商用に耐えなくても、先に製品開発を完了して評価集を確立し、新しいモデルの性能を継続的に追跡し、閾値に達したらすぐにリリースすることができるのです。</p>
+<blockquote>
+<p><strong>本章の読みどころ</strong></p>
+<p>本章は 3 つの層から完全な評価体系を構築します。第 1 層は <strong>評価環境</strong>（「どこで測るか」）です。いかに自動化された再現可能なテスト環境を構築するかで、ツール呼び出し型と人間・機械インタラクション型の 2 つの範式を含みます。第 2 層は <strong>評価方法</strong>（「どう判定するか」）です。データセットの設計原則、評価指標体系（何を測るべきか）から、LLM-as-a-Judge（大規模言語モデルを評者に充てる）による自動化評定、さらに配対比較とモデルランキングまで。第 3 層は <strong>評価駆動の意思決定</strong>（「測って何をするか」）です。評価結果をモデル選定、アーキテクチャ最適化、継続的反復の行動指針へと転化し、統計的有意性の助けを借りて観察されたスコア差が本当に信頼できるかを判断します。加えて本章では、可観測性と本番級 Agent の内部評価インフラについても論じ、章末では第 7 章のポストトレーニングにつながるシミュレーション環境を紹介します。</p>
+<p>全章を貫く中核理念はこうです。<strong>評価体系の第一の価値は、現在のシステムに点数をつけることではなく、あなたが素早く確実にモデルの進化についていけるようにすることだ</strong>。より強く、あるいはより安いモデルがリリースされたとき、完備された評価体系を持つチームは数時間以内に切り替えの判断を下せますが、評価体系を欠くチームは直感に頼るかコミュニティのフィードバックを待つしかありません。競争の激しい Agent 市場では、この速度差が成否を分けることもあるのです。</p>
+</blockquote>
+<p><img alt="図6-1 評価体系の三つの層" src="../images/fig6-1.svg" /></p>
+<h2 id="_1">具体的な評価の例<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>方法論に踏み込む前に、まず 1 つの完全な例を通じて直感を築きましょう。私たちがカスタマーサポート Agent を構築し、返金リクエストを処理する能力を評価する必要があると仮定します。</p>
+<p><strong>テストケース</strong>：ユーザーが 3 日前の注文（注文番号 #12345、金額 ¥299）の返金を要求。会社のポリシー：7 日以内なら全額返金可能。</p>
+<p><strong>Agent の軌跡</strong>：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ユーザー：3 日前に買ったあのイヤホンを返品したいのですが、注文番号は 12345 です。（今日は 2026-04-10）
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Agent（思考）：ユーザーは返金を求めている。まず注文情報を照会する必要がある。
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Agent → ツール呼び出し query_order(order_id=&quot;12345&quot;)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ツールの返り値：{status: &quot;delivered&quot;, amount: 299, date: &quot;2026-04-07&quot;, item: &quot;蓝牙耳机&quot;}
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Agent（思考）：注文日は 2026-04-07、今日 2026-04-10 まで 3 日で、7 日の返金期間内であり、全額返金の条件を満たす。
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Agent → ツール呼び出し process_refund(order_id=&quot;12345&quot;, amount=299)
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ツールの返り値：{refund_id: &quot;R-98765&quot;, status: &quot;processing&quot;, eta: &quot;3-5个工作日&quot;}
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>Agent：返金を開始いたしました。注文 #12345（ワイヤレスイヤホン、¥299）の全額返金を処理中で、
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>      到着まで 3〜5 営業日を見込んでいます。返金番号は R-98765 で、進捗の照会に使えます。
+</code></pre></div>
+<p><strong>Rubric で採点</strong>（4 つの次元、各次元 1〜4 点）。表6-1 は、このカスタマーサポート返金タスクの採点例を示しており、Rubric がいかに 1 回の Agent 軌跡をチェック可能な評価次元に分解するかを説明するためのものです。</p>
+<p>表6-1 カスタマーサポート返金タスクの Rubric 採点例</p>
+<table>
+<thead>
+<tr>
+<th>次元</th>
+<th>基準</th>
+<th>得点</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>操作の正確性</td>
+<td>返金額、注文番号が正しいか</td>
+<td>4</td>
+<td>正しく照会し ¥299 の全額返金を開始</td>
+</tr>
+<tr>
+<td>ポリシー遵守</td>
+<td>7 日返金ポリシーに従っているか</td>
+<td>4</td>
+<td>注文は返金期間内でポリシーに合致</td>
+</tr>
+<tr>
+<td>情報の完全性</td>
+<td>金額、到着時期、返金番号を伝えたか</td>
+<td>4</td>
+<td>3 つの重要情報をすべて伝達</td>
+</tr>
+<tr>
+<td>ハルシネーション検出（否決項）</td>
+<td>存在しない情報を捏造していないか</td>
+<td>通過</td>
+<td>すべての情報がツールの返り値に由来</td>
+</tr>
+</tbody>
+</table>
+<p>ハルシネーションが分級採点の次元ではなく <strong>否決項</strong> として挙げられているのは、それが品質と直交しているからです。流暢で、詳細で、丁寧な回答であっても、虚偽の事実を含んでいれば、ユーザーへの害は簡潔だが正確な回答よりはるかに大きいのです。（否決メカニズムの一般的な設計は後述の「Rubric 四準則」を参照。）</p>
+<p>このユースケースは通過しました。しかし良い評価は成功シナリオを測るだけでなく、境界と罠こそ測るべきです。ユーザーが 15 日前の注文（返金期間超過）を返品しようとするとき、Agent は正しく拒否できるか？ ユーザーが「カスタマーサポートがすでに返金を承認した」と主張するとき、Agent はシステムに記録がないのに軽々しく信じてしまわないか？ こうした境界シナリオこそ、Agent の能力の高低を分ける鍵です。</p>
+<p>上記のこのフロー、すなわちテストケースの定義、Agent の実行、Rubric による採点、結果の分析こそが、評価の基本骨格です。本章はこの後、各段階の設計方法を一歩ずつ展開していきます。</p>
+<h2 id="_2">自動評価環境<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Agent の評価には、繰り返し実行できる自動化された環境が必要です。開発段階で変更の効果を素早くテストできるものです。こうした環境を構築するには 3 つの問いに答える必要があります。何を評価するか（タスク定義と検証基準）、誰を対象に評価するか（Agent のインタラクション相手をどうシミュレートするか）、どんな基準で採点するか、です。</p>
+<h3 id="_3">評価環境の基本構成<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>評価環境は 5 つの要素を含みます。以降の節では、そのうちデータセット設計と採点基準の設計を重点的に展開します。</p>
+<p><strong>データセット（Dataset）</strong> はタスクの集合を定義し、初期状態、目標の記述、およびオプションの参照解を含みます。</p>
+<p><strong>環境状態（Environment State）</strong> はタスク実行中の可変情報を維持し、真実性と可制御性のバランスを取る必要があります。例えばカスタマーサポート評価では、環境状態にはデータベース内の注文記録とユーザーアカウント残高が含まれます。Agent が <code>process_refund</code> を呼び出すと、注文状態が <code>"delivered"</code> から <code>"refunded"</code> に変わり、残高が増加します。これらが「可変情報」です。「真実性」は状態変化が業務ロジックに合致すること（返金が注文金額を超えないこと）を要求し、「可制御性」はテストのたびに同じ初期状態にリセットできることを要求します。</p>
+<p><strong>ツールインターフェース（Tools）</strong> は Agent が実行可能な操作の集合を定義します。ツールは高すぎるレベルの抽象（「ユーザーの問題を解決する」など）を提供すべきではなく、原子的な操作（注文の照会、予約の変更、メールの送信など）を提供し、Agent に計画と思考を通じてこれらの操作を組み合わせることを強いるべきです。</p>
+<p><strong>採点基準（Rubric、採点準則）</strong> は Agent の性能を定量化します。二値（通過/不通過）でも、連続（0〜100 点）でも、多次元（正確性、効率、安全性にそれぞれ採点）でも構いません。</p>
+<p><strong>実行プロトコル（Interaction Protocol）</strong> はインタラクションのモードと終了条件を規定します。</p>
+<p><img alt="図6-2 ツール呼び出し型と人間・機械インタラクション型の評価環境" src="../images/fig6-2.svg" /></p>
+<h3 id="_4">ツール呼び出し型評価環境<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>コード生成、データ分析など主にツール使用に依存するタスクについては、Verifiers フレームワークが典型的な設計パターンを示しています。Agent は事前定義されたツールを呼び出してタスクを完了し、検証は実行可能な基準（テストが通るか、答えが一致するか）に基づき、人間のアノテーションやモデルの評定に依存しません。</p>
+<p>Verifiers は階層化された環境設計を導入しています。<code>SingleTurnEnv</code> は単一ターンのタスク（単純な質疑応答など）に適し、<code>ToolEnv</code> は複数ターンのツール呼び出しの自律ループをサポートし、<code>StatefulToolEnv</code> と <code>SandboxEnv</code> は状態を持つツールと長期実行のサンドボックス環境（コード実行など）をサポートします。例えば <code>SingleTurnEnv</code> は数学の問題を 1 問尋ねて直接答えを検証するのに適し、<code>ToolEnv</code> は複数のウェブページを検索してから総合的に回答し、最終結果を検証するのに適し、<code>StatefulToolEnv</code> はデータベースレコードを変更してからデータベースの状態変化を検証するのに適し、<code>SandboxEnv</code> はサンドボックスでコードを実行してから出力ファイルをチェックするのに適します。表6-2 はこれらの環境タイプをまとめており、読者がタスクの状態、ツール呼び出し、隔離の必要性に応じて適切な評価環境を選べるようにしています。</p>
+<p>表6-2 Verifiers 環境タイプの比較</p>
+<table>
+<thead>
+<tr>
+<th>環境タイプ</th>
+<th>状態保持</th>
+<th>ツール呼び出し</th>
+<th>典型的なユースケース</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SingleTurnEnv</td>
+<td>なし</td>
+<td>なし</td>
+<td>単一ターン質疑応答、数学問題</td>
+</tr>
+<tr>
+<td>ToolEnv</td>
+<td>なし</td>
+<td>複数ターン</td>
+<td>検索+情報総合</td>
+</tr>
+<tr>
+<td>StatefulToolEnv</td>
+<td>あり</td>
+<td>複数ターン</td>
+<td>データベースレコードの変更</td>
+</tr>
+<tr>
+<td>SandboxEnv</td>
+<td>あり+隔離</td>
+<td>複数ターン</td>
+<td>コード実行とテスト</td>
+</tr>
+</tbody>
+</table>
+<p>フレームワークは並列サンプリングと軌跡キャッシュをサポートし、各評価の完全な軌跡（観察、行動、報酬）が保存され、後続の分析やリプレイに便利です。</p>
+<p>環境はさらに操作の状態依存性を扱う必要があります。ツールの実行効果は現在の状態に依存し、失敗時には単純な失敗フラグではなく明確なエラー情報を提供すべきで、Agent がエラーから学び方策を調整できるようにします。</p>
+<h3 id="_5">人間・機械インタラクション型評価環境<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>多くの現実のタスクはツール呼び出しだけでなく、人間のユーザーとの対話も必要とします。カスタマーサポート Agent は曖昧な表現を理解し、ニーズを明確化し、バックエンドシステムを照会し、ユーザーに情報を確認する必要があります。この種のタスクの評価は根本的な課題に直面します。自動化された環境の中で、いかに本物のユーザーをシミュレートするか、です。</p>
+<p>鍵となる設計原則は <strong>漸進的情報開示（Progressive Information Disclosure）</strong> であり、これが人間・機械インタラクション型評価と従来のベンチマーク（benchmark）との根本的な違いです。大多数の benchmark は最初から完全な要求をすべて提示しますが、現実ではユーザーが最初からニーズを明確に記述できることはめったにありません。彼らはたいてい「私のフライトに何か問題があるみたいで」「ネットにつながらなくなった」としか言いません。Agent は能動的に質問してニーズを明確化する必要があり、この過程そのものが能力の重要な現れです。したがって評価においては、<strong>決して最初からシミュレートされたユーザーのすべての情報を Agent に露出させてはならず</strong>、情報は必要に応じて漸進的に対話の中で開示されるべきです。</p>
+<p>τ-bench の解決策は <strong>ユーザーシミュレーション（User Simulation）</strong> です。別の LLM にユーザー役を演じさせ、事前定義された指示に従って Agent と対話させます。シミュレートされたユーザーはタスク指示（「明日のフライトをキャンセルする必要がある」など）を受け取り、対話の中で必要な情報を段階的に Agent に開示し、問い合わせに応じ、タスク完了後に終了信号を発します。プロンプトはシミュレートされたユーザーに「すべての情報を一度に開示せず、現在のステップに必要な内容だけを提供する」「指示に与えられていない情報を捏造しない」ことを要求します。ユーザーシミュレーションの設計は真実性と可制御性の間でトレードオフする必要があります。振る舞いは本物のユーザーに近づけ（表現が曖昧、情報が不完全、時に感情の起伏がある）、同時に再現性を確保するため一定の脚本に従わせます。</p>
+<p>以下は漸進的情報開示を伴う複数ターン対話の例です（ユーザーシミュレーターは固定の脚本に従って行動します）。</p>
+<blockquote>
+<p><strong>ユーザー</strong>：「私のフライトに問題があります。」
+<strong>Agent</strong>：「どのフライトでしょうか？」
+<strong>ユーザー</strong>（脚本に従って開示）：「Delta 123、明日の朝サンフランシスコからニューヨークへ。」
+<strong>Agent</strong>：「具体的にはどんな問題でしょうか？」
+<strong>ユーザー</strong>（脚本に従って開示）：「飛行時間が長すぎるので、変更したいのです。」
+<strong>Agent</strong>：「新しいフライトへの希望はありますか？」
+<strong>ユーザー</strong>（脚本に従って開示）：「午後のフライトならどれでも構いません。」</p>
+</blockquote>
+<p>ユーザーシミュレーターは固定の脚本（既知情報 + 開示ルール）に従い、評価の再現性を確保しつつ、本物のユーザーの漸進的な表現方式をシミュレートします。</p>
+<p>τ-bench は、構造化された業務プロセス（航空カスタマーサポート、小売カスタマーサポートなど）における Agent の性能を評価するベンチマークです。そのチェックはコンポーネントレベルで多次元的です。一方ではデータベースの最終状態が正しいか（予約記録の状態が「キャンセル済み」に変わるなど）をチェックし、他方では Agent が対話の中で必要な重要情報（返金額と到着時期など、特定の文字列やパターンを検索して検証）を出力したかを検証します。この二重検証は操作の正確性とコミュニケーションの有効性を同時に考察します。しかしタスクレベルでは、これらのチェックは最終的に <strong>ゼロか 1 かの二値報酬</strong> に集約されます。すべてのチェックが通過してはじめて 1 点、いずれか 1 つでも不通過なら 0 点です。二値報酬は Pass^k などの信頼性指標（後述の「評価指標体系」を参照）の統計に便利ですが、その代償として「操作は正確だが非重要フィールドを 1 つ漏らした」場合と「完全な失敗」が同じスコアになります。</p>
+<p>改良版 <strong>τ²-bench</strong> の核心的な増分は採点粒度ではなく、次の 2 点にあります。1 つは <strong>双制御環境（Dual-Control）</strong> です。もはや Agent 側だけがツールを呼び出せるのではなく、ユーザーシミュレーターも同じ共有環境を操作できます（例えば Agent がユーザーに機内モードの切り替えを指示し、ユーザーの操作が実際に環境状態を変える）。これは技術サポートなどユーザーの手作業による協力を必要とする現実のシナリオにより近いものです。もう 1 つは <strong>より精確なタスク仕様と組み合わせ型タスク生成</strong> です。成功条件の曖昧さがより少なく、具体的なタスクインスタンスをパラメータ化して一括生成できます（詳細な検証次元は後述の「検証可能性と客観性の保証」の節を参照）。</p>
+<blockquote>
+<p><strong>実験 6-1 ★：τ²-bench を実行して τ-bench の進化と対比する</strong></p>
+<p>本実験は τ²-bench 評価フレームワークを実行することで、人間・機械インタラクション型評価環境の設計要点を理解し、τ-bench と τ²-bench の差異を対比することで、評価データセットがいかに反復改善されるかを体得します。</p>
+<p>タスク定義ファイルを深く読み込みます。各タスクは既知情報（ユーザーの背景知識）、タスク指示（いかに漸進的に情報を開示し応答戦略をとるかを指導）、成功条件（データベースの目標状態と対話に必ず現れるべき確認情報）を含みます。完全な評価フローを実行し、ユーザーシミュレーターと Agent の複数ターン対話を観察し、典型的な失敗モード（ポリシー違反、情報の漏れ、過度な有人転送など）を分析します。</p>
+<p><img alt="図6-3 τ²-bench 評価アーキテクチャ" src="../images/fig6-3.svg" /></p>
+<p>τ-bench と τ²-bench の設計上の差異を対比します。τ-bench 初期版のユーザー指示は単純すぎ（Agent が答えを当てられる）、成功条件が精確でなく（誤判定を招く）、ユーザーシミュレーターが機械的すぎました。τ²-bench はこれらの問題に対して系統的な改善を行いました。</p>
+<ul>
+<li><strong>より詳細なタスク指示の導入</strong>：「事実アンカリング要求」（Grounding）、すなわち環境の真の状態に基づいて回答しなければならないことを含む</li>
+<li><strong>より精確な評価基準</strong>：「速度テストが excellent を返してはじめて解決とみなす」など</li>
+<li><strong>より本物らしいユーザーシミュレーターの振る舞い規範</strong>：漸進的情報開示、自然な感情の起伏</li>
+</ul>
+<p>τ²-bench が新たに追加した telecom 領域のタスクに特に注目し、その双制御環境設計（前述の通り、ユーザーと Agent が同じ共有環境を共同操作する）を理解します。
+</p>
+</blockquote>
+<p>ツール呼び出し型評価が「観測可能な状態変更を完了したか」を重視するのと異なり、人間・機械インタラクション型評価は「ユーザーに認知や意思決定上の変化を完了させるよう導いたか」に着目します。前者は Agent の行動の正確性を考察し、後者はそのコミュニケーション戦略の妥当性を考察します。</p>
+<p>評価環境の構築はさらにシミュレーション環境の設計にも関わります。評価環境が大規模な反復インタラクションをサポートする必要が出てくると、それはシミュレーション環境へと進化します。本章末尾で簡単に論じます。</p>
+<h2 id="_6">評価タスクデータセットの設計<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<p>評価環境は「舞台」、データセットは「脚本」です。脚本設計の良し悪しは、しばしば舞台そのもの以上に評価の価値を左右します。設計の拙いデータセットは、完璧な環境で走らせても、得られるのはノイズだけです。本節では、GAIA、AndroidWorld、SWE-Bench Verified（Software Engineering Benchmark、ソフトウェアエンジニアリングベンチマーク）、τ-bench と τ²-bench、Terminal-Bench、OSWorld と OSWorld-Verified などのベンチマークの設計実践から、繰り返し検証されてきたいくつかの原則を抽出します。</p>
+<p>このリストは Agent 評価の全体像を尽くしてはいません。Web/GUI 系だけでも、それぞれに重点の異なる複数のベンチマークがあります。WebArena は完全に再現可能なウェブサイト群（EC、フォーラム、コードホスティングなど）を自作し、「本物のウェブページ」の制御不能性をサンドボックスに閉じ込めました。Mind2Web はその逆を行き、数百の本物のウェブサイト上で直接汎化能力をテストします。<a href="https://claw-bench.com/">ClawBench</a>（<a href="https://arxiv.org/abs/2604.08523">論文</a>、<a href="https://github.com/TIGER-AI-Lab/ClawBench">コード</a>）は、隔離コンテナ内の Agent に実際のウェブサイト上で日常的なエンドツーエンドタスクを実行させます。V1 は 144 サイトの 153 タスクをカバーし、V2 ではさらに 130 タスクを追加しています。また、セッションリプレイ、アクションのスクリーンショット、HTTP トラフィック、ブラウザ操作、Agent メッセージという 5 層の証拠を同時に記録します。サンドボックス型ベンチマークを補完し、実サイトの変化やロングテールの失敗を分析しやすくする一方、再現性は第三者サイトの変化に左右されます。BrowseComp は深い検索に特化しており、答えが深く隠されていて、マルチホップのブラウジングとクロス検証によってはじめて見つけられます。ツール呼び出しの次元には BFCL（Berkeley Function-Calling Leaderboard）のような専門の関数呼び出しランキングもあります。本章はすべてのベンチマークを列挙する意図はなく、2 つの中核的な環境範式（ツール呼び出し型、人間・機械インタラクション型）に、データセット事例を貫く GUI 操作シナリオを加え、その設計上のトレードオフを深掘りします。範式を理解すれば、どんな新しいベンチマークに直面しても、それが何を測っているか、漏洩対策はどれほどか、結論がどこまで外挿できるかを素早く判断できます。</p>
+<blockquote>
+<p><strong>実験 6-2 ★：ベンチマークタスクを人力で実行する</strong></p>
+<p>GAIA、AndroidWorld、SWE-Bench Verified、τ²-bench、Terminal-Bench、OSWorld-Verified からそれぞれタスクを選んで自ら完了します。各データセットで簡単・中程度・困難を 1 つずつ完了することをおすすめします。「困難」レベルは人間にとっても挑戦的です。実行結果を標準解と対比し、差異の源を分析します。自ら体験することで理解します。タスク記述は明確性と開放性の間でバランスを取る必要があること、検証基準は客観的で実行可能でなければならないこと、タスク難易度の階層化は異なる能力レベルを区別できなければならないこと、を。
+</p>
+</blockquote>
+<h3 id="_7">タスクデータセット設計の核心的課題<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p><strong>課題一：明確性と開放性の緊張。</strong> タスク記述は評価の再現性を確保するのに十分明確でなければならず、かといって固すぎて Agent の創造性を制限してもいけません。GAIA は 1 つの手本を示しています。タスクは「概念的には単純」だが実装経路は開放的です。例えば NASA の毎日の天文写真から宇宙飛行士の情報を見つけるよう要求する場合、目標は明確（特定の宇宙飛行士とその宇宙滞在時間を見つける）ですが、どう検索し、選別し、検証するかは完全に Agent の自主的な判断に委ねられます。</p>
+<p><strong>課題二：真実性と可制御性のバランス。</strong> 本物のタスクは不確実性とノイズを含み、頑健性を顕在化させられますが、再現性も脅かします。SWE-Bench の初期版は GitHub の本物の issue から直接取り、真実性を確保しましたが、タスク記述が曖昧、テストケースが不完全、評価基準が主観的という問題も招きました。SWE-Bench Verified は人間の専門家を導入して系統的な検証を行い、その中から問題が明確でテストが充分、解法が明確な 500 個の高品質タスクを選別し、真実性を保ちつつ可制御性を著しく高めました。</p>
+<p><strong>課題三：多様性と系統性の調和。</strong> 有効なデータセットは典型的な状況、境界条件、エラーの罠をカバーする必要があり、同時に系統的な組織方式を持ち、評価結果が具体的な能力の弱点を診断できるようにする必要があります。AndroidWorld の 116 個のタスクは 20 個の本物のアプリにまたがり、各タスクには必要な核心能力（多段階計画、視覚理解、時系列推論）が注記されており、評価結果は全体の成功率を示すだけでなく、特定の能力次元の強弱も明らかにできます。さらに重要なのは、パラメータ化メカニズムを通じてほぼ無限のタスクバリアントを生成できることです。</p>
+<p><strong>課題四：評価コストとカバー範囲。</strong> 複雑な Agent タスクは完了に数分あるいは数時間かかり、大量のトークン消費を伴うことがあります。データセットの規模は網羅性と経済性の間でバランスを取る必要があります。GAIA は 466 問を精選し 3 段階の難易度に分け、多様な能力次元をカバーしつつ合理的なコストで評価を完了できます。SWE-Bench Verified は 2294 問から 500 問に選別しました（コストを約 5 分の 4 削減し、より厳格な品質基準を通じて S/N 比を高めました）。</p>
+<p><strong>課題五：データ漏洩（Data Contamination）の防止。</strong> 大規模言語モデルの時代において、データ漏洩は評価が直面する厳しい課題です。評価データが訓練データに取り込まれると、評価が測っているのは記憶力であって汎化能力ではなくなります。試験前に答えを暗記してしまえば、成績がどれほど良くても真の実力を示せないのと同じです。各ベンチマークは異なる防止戦略を採用しています。GAIA は答えの独自性に頼り、問題は複数の情報源を組み合わせてはじめて回答でき、一部のタスクには専門に作成された添付ファイル（インターネット上に存在しない PDF/音声/画像）が付属しており、単一のウェブページでは直接答えを提供できません。SWE-Bench Verified はそれ自体が OpenAI が元の SWE-Bench に人手による品質選別を施して得た 500 問のサブセットであり、時間次元の漏洩防止設計は含んでいません。本当に時間的な新鮮さで漏洩を防ぐのは SWE-bench-Live などの後続の取り組みで、これらはモデルの訓練カットオフ日以降に新規作成された issue を継続的に収録し、評価が常にモデルの訓練コーパスに先行するようにします。τ²-bench は動的パラメータ生成で防止し、具体的なタスクインスタンス（ユーザー氏名、注文番号、日付など）を毎回ランダムに生成します。AndroidWorld のパラメータ化タスク生成は本質的に漏洩耐性を持ちます。検証が操作シーケンスではなく最終的な UI 状態に基づくためです。Terminal-Bench はカナリア識別子（canary GUID、すなわちグローバル一意識別子、一種の一意な追跡マーク）を埋め込むことで漏洩を検出可能にします。もしモデルがその GUID を含む内容を出力できるなら、ベンチマークデータが訓練集に漏洩したことを示します。</p>
+<h3 id="_8">タスク記述の精確性設計<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>GAIA は明確な情報源の制約、時間範囲、主題、クエリ目標を通じて答えの一意性を確保します。例えば Level 3 タスクは特定日付の NASA 画像を起点とし、視覚理解で宇宙飛行士を識別し、所属する宇宙飛行士グループを照会し、宇宙滞在時間を計算して精確にフォーマット出力する（「姓、セミコロン区切り、千位区切り記号」）ことを要求し、あらゆる細部が自動検証に資するようになっています。フォーマットと内容が完全に一致してはじめて通過とみなされます。</p>
+<p>τ²-bench は状況化設計を導入し、各タスクは多層の情報を含みます。表面的な問題（「モバイルデータが動かない」）、性能への期待（「絶対に優れた速度が欲しい」）、制約条件（「他の速度は受け入れない」）、および暗黙の感情です。鍵となる改善は「既知情報」と「タスク指示」の分離です。既知情報はユーザーが現在把握している事実、タスク指示はシミュレーターがいかに漸進的に情報を開示するかを指導するもので、その中に「事実アンカリング要求」（Grounding Requirement、すなわちツール呼び出しの実際の返り値に基づいて回答し、捏造してはならない）を含みます。</p>
+<p>SWE-Bench Verified は問題記述、再現手順、期待/実際の振る舞いなどの構造化フィールドを含み、アノテーターは記述とテストケースの整合性を検証します。Terminal-Bench のタスク記述では各要素が機械的に検証可能です。ファイルパスが存在するか、権限の数値が正しいか、証明書のパラメータ、日付形式など。例えば「build-linux-kernel-qemu」はソースコードから Linux カーネル 6.9 をビルドし、<code>start_kernel</code> にカスタム printk を追加し、initramfs を生成して QEMU 上で実行することを要求し、成功基準は起動ログにカスタムメッセージが現れることです。Agent は出力を偽造してごまかすことはできず、本当にプロセス全体を完了しなければなりません。</p>
+<p>AndroidWorld は <strong>パラメータ化テンプレート</strong> 設計を採用しています。1 つのタスクは静的なテキストではなく、動的にインスタンス化できるテンプレート（「連絡先 <code>[CONTACT_NAME]</code> の電話を <code>[NEW_PHONE]</code> に変更する」など）で、評価のたびに異なるパラメータ値がランダムに生成されます。利点は 3 つあります。</p>
+<ul>
+<li><strong>記憶の防止</strong>：パラメータ値が毎回異なり、固定の操作シーケンスを再生できない</li>
+<li><strong>データ多様性の増加</strong>：1 つのテンプレートからほぼ無限のインスタンスを生成できる</li>
+<li><strong>対比実験のサポート</strong>：一部のパラメータを固定して他のパラメータだけを変化させ、特定要因の影響を精確に測定できる</li>
+</ul>
+<p>検証は操作シーケンスではなく最終的な UI 状態（電話番号フィールドが期待値を含むかなど）に基づきます。</p>
+<p>OSWorld のタスクはしばしば「クリーンな」初期状態からではなく、入念に構成された中間状態から起動し、より現実の使用シナリオに近づけます。タスク記述は多解性（「背景を紫にする」には曖昧さを解消する具体的なカラーコードの提供が必要、「2 つの CSV を連結する」には単一ヘッダー保持/二重ヘッダーなどすべての合理的な方式を受け入れる必要がある）と環境の不確実性（ウェブサイトのクローラー対策、アプリ UI の進化、タイミング競合。OSWorld-Verified はオフラインページスナップショット、依存バージョンのロック、明示的な待機条件などのメカニズムで緩和）を扱う必要があります。</p>
+<h3 id="_9">タスク複雑度の階層化設計<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>GAIA は 3 段階の難易度を設計しました。Level 1 は 1〜2 個のツールだけで済み（人間 93.9% 対 GPT-4 30.3%）、Level 2 は多段階の思考を要し（91.8% 対 9.7%）、Level 3 は複雑な組み合わせを要します（87.3% 対 0%）。階層化設計の診断的価値はこうです。Level 1 の失敗は基礎的なツール使用の問題を指し、Level 2 は多段階計画と情報統合を指し、Level 3 は長いシーケンスの思考と複雑性管理を指します。各層は異なる改善方向（プロンプトエンジニアリング 対 計画メカニズム 対 階層アーキテクチャ/ポストトレーニング）に対応します。</p>
+<p>τ²-bench は業務複雑度で階層化します。単純な情報照会から、多段階プロセス（フライト変更には照会、代替案の提示、確認、差額計算、支払いが必要）へ、さらに故障診断（複数の可能な原因を系統的にチェックし修復を検証）へ、最後に方策判断（ポリシーに合致しない要求の処理）へ。</p>
+<p>Terminal-Bench は技術領域×操作複雑度の二次元で階層化し、そのタスクレジストリはすでに 200 余りのタスクを収録しています（バージョンによって中核評価集の規模は異なり、2.0 版はコミュニティの貢献から 89 個の高品質タスクを精選）。単純な mlflow モデル登録から、中程度の 7z パスワードクラック、困難な git サーバー+webserver 多コンポーネント統合、最も困難な FEAL 差分暗号解析（暗号学の知識+アルゴリズム最適化で 30 秒の時間制約を満たす必要がある）まで。</p>
+<h3 id="_10">検証可能性と客観性の保証<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>GAIA の答えは簡潔明確で、厳格なフォーマット規定により検証を精確な文字列マッチで完了でき、二値の結果（一致か不一致か）が客観的な再現性を確保します。答えの稀少性も不正防止に役立ちます。高度に具体的な事実は、そのままの形で訓練データに現れる可能性が低いのです。</p>
+<p>SWE-Bench Verified はコードの実行可能性に基づいて検証し、FAIL_TO_PASS（修復前は失敗、修復後は通過、問題が解決されたことを証明）と PASS_TO_PASS（修復前後とも通過、新しいバグを導入していないことを証明）を区別し、二重検証を実現します。Verified 版はさらにテスト自体の品質が信頼でき、通ったり失敗したりする不安定なテスト（flaky tests）がないことを確保します。</p>
+<p>τ²-bench の検証体系は多層のチェックを含みます（各層のチェック結果はタスクレベルではやはり二値報酬に集約され、すべて通過してはじめて成功とみなされます）。</p>
+<ul>
+<li><strong>データベース状態チェック</strong>：予約記録の状態、返金記録が作成されたか</li>
+<li><strong>対話内容のキーワード検索</strong>：ユーザーに返金額と到着時期を確認したか</li>
+<li><strong>プロセス遵守性</strong>：ツール呼び出しシーケンスの分析、注文変更前にユーザーの明確な確認を得たかなど</li>
+</ul>
+<p>τ²-bench の双制御環境（前述の「人間・機械インタラクション型評価環境」を参照）は検証レベルでさらに 1 次元多くなります。ユーザーシミュレーターが実際に環境状態を変えた後、Agent はツール呼び出しを通じてこの変化を観測し、それに基づいて調査を続けなければならず、検証は「Agent が本当にユーザー側の操作結果を読み取ったか」までカバーします。</p>
+<p>OSWorld は 134 個の独立した評価関数を備え、完全な OS アクセス権限を持ち、ファイルシステム構造、プロセス状態、ネットワーク接続、アプリ内部状態を深くチェックできます。例えばデータベース操作タスクでは、評価スクリプトはレポートファイルの存在を検証するだけでなく、直接データベースに接続して SQL が正しく実行されたかをチェックします。ブラウザタスクでは DOM ツリーを分析し、cookie/localStorage をチェックし、バックエンドに検証リクエストを送ってフォームが本当に有効になったかを確認します。この深いチェックは「表面上は完了したが実質はエラー」の状況を発見できます。例えば Agent が送信ボタンをクリックしたが、フィールドの記入ミスでサーバー側に拒否された、というような場合です。</p>
+<p>Terminal-Bench は Docker コンテナで環境を標準化し、ファイルシステム状態のチェック（パスが存在するか、権限の数値、内容の形式）とプログラム実行機能の検証（build-linux-kernel-qemu で実際に QEMU を起動しカスタム printk メッセージを検索）を組み合わせ、canary GUID で漏洩を追跡可能にします。</p>
+<h3 id="_11">タスク分布の系統的設計<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>タスク分布は能力次元、難易度次元、シナリオ次元、境界状況を系統的にカバーする必要があります。GAIA は汎用性を追求し、大多数のタスクが推論、マルチモーダル、ブラウジング、ツール使用の組み合わせを必要とします。τ²-bench は専門に「罠タスク」を設計しました。例えばユーザーが「カスタマーサポートがキャンセルを承認した」と主張するが実際にはポリシーに合致しない、というもので、Agent が圧力と誤導に直面したときに正しい判断を保てるかをテストします。OSWorld は操作タイプ（ファイル IO / デスクトップアプリ / ウェブアプリ / アプリ横断プロセス）とアプリ領域の二次元マトリクスに基づき、3 つのオペレーティングシステムにまたがります（研究によれば OS 横断能力は強く相関し、あるシステムで学んだ能力は他のシステムに転移できます）。Terminal-Bench は「技術スタック横断の組み合わせタスク」を含み、システム思考をテストします（データ処理 + ファイル操作 + Python エンジニアリングを融合した再シャーディングタスクなど）。</p>
+<h3 id="_12">データ品質管理と反復改善<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<p>SWE-Bench Verified は品質管理の模範です。OpenAI は元の 2294 個のタスクからランダムに 1699 個を抽出して人手評価を行い、Python に精通した 93 名の開発者を募りました。アノテーターは複数のチェックを完了する必要があります。問題記述が明確か（何を解決すべきか理解できるか）、テストケースが完全か（すべての側面と境界条件をカバーしているか）、テストが安定しているか（環境やランダム性による flaky test がないか）、patch が正しいか（新しいエラーを導入していないか）、難易度が妥当か。厳格な選別を経て、最終的に 500 個だけが通過しました（29%）。この高い淘汰率は評価品質への必要な投資です。彼らはさらに標準化されたアノテーションガイドラインを確立し、各チェックに具体的な基準と例を定義し、異なるアノテーター間の一貫性を確保しました。</p>
+<p>τ²-bench は「既知情報」/「タスク指示」の分離（シミュレーターの振る舞いをより本物らしくする）と、より厳格な完了条件（「excellent だけが解決とみなされ、poor/fair/good はすべて受け入れない」など）を導入し、「その場しのぎの修復」を防ぎます。</p>
+<p>OSWorld-Verified は反復改善の模範です。OSWorld は 2024 年 4 月のリリース後、急速にマルチモーダル Agent 評価の重要なベンチマークになりましたが、15 か月の広範な使用の中で 300 を超える問題が露呈しました。これらの問題は 4 種類に分かれます。環境問題（ウェブサイトのクローラー対策 / CAPTCHA / 動的コンテンツの変化）、タスク記述の問題（曖昧な表現）、検証ロジックの問題（厳しすぎるか緩すぎる）、初期状態の問題（構成が不完全）です。香港大学のチームは約 10 人のグループを組み、MoonShot AI、OpenAI、ByteDance Seed TARS、Anthropic、Simular などと 2 か月間深く協力して系統的な修復を行いました。各種の問題に対して修復戦略を立てました。環境問題はバージョンのロックとオフラインバックアップで解決、タスク記述は曖昧な表現の書き直しで解消、検証ロジックは人手で正しいベースラインを確立し条件を調整してバランスを取り、初期状態は完全性チェックの追加で強化しました。</p>
+<p>評価インフラもローカル VM から AWS クラウドプラットフォームに移行し、弾力的スケーリングを利用して 50 倍の並列高速化を実現しました（10 数時間から数分に短縮）。Google Drive タスクの初期化成功率は 50% から 95% 以上に向上しました。すべての公式評価軌跡データは HuggingFace で公開され、コミュニティが各詳細を精査し、結果を再現し、問題を発見できるようにし、継続的改善の好循環を形成しています。</p>
+<p>特筆すべきは、評価環境とポストトレーニング環境がしばしば同源であることです。設計の良い評価環境は、少し改造するだけで訓練環境に変えられます。SWE-Gym は SWE-bench に基づいて訓練タスクを構築した代表例で、τ²-bench、AndroidWorld のパラメータ化テンプレートは大量の訓練インスタンスを一括生成できます。ただし 1 本の赤線を引かなければなりません。再利用できるのは <strong>環境の構築メカニズム</strong> であって、評価集そのものの具体的な問題は訓練データと厳格に隔離しなければなりません。評価問題が訓練集に入った途端、測っているのは記憶であって能力ではなくなります（詳しくは第 7 章）。</p>
+<h2 id="_13">評価指標体系<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h2>
+<p>「どんなタスクで評価するか」を確定した後は、「どの次元を計測すべきか」に答える必要があります。本節では Agent 評価でよく使う指標を、参照できる「指標辞典」にまとめます。過程から結果へ、品質から安全へ、1 つずつ定義と適用シーンを示します。前文（τ-bench の節など）で繰り返し言及した Pass@k、Pass^k などの指標も、その精確な定義をここで示します。</p>
+<p><strong>過程指標：ブラックボックスからホワイトボックスへ。</strong></p>
+<p>最終結果だけに着目するのでは不十分で、Agent が結果に到達する過程も同様に重要です。<strong>行動合法率</strong> は操作のうち有効かつ合法なものの比率を測定します。無効な操作には、存在しないツールの呼び出し、誤った引数型の受け渡しが含まれます。越権操作とは権限範囲を超える行為を指します。高い合法率は、Agent がツールエコシステムを明確に理解していることを示します。<strong>ツール呼び出し正確率</strong> はさらに、引数が意味的に妥当であることを要求します。検索ツールのクエリ語はニーズを正確に表現すべきで、ファイル操作のパスは正しい対象を指すべきです。</p>
+<p><strong>経路効率</strong> はタスク完了の経済性を測ります。ステップ数（思考-行動-観察ループの回数）、冗長な動作（同じキーワードの重複検索、同じファイルの繰り返し読み込み）、後戻り回数（誤りに気づいて修正する頻度。時々の後戻りは正常だが、頻繁な後戻りは前方計画の不足を示す）。「妥当なステップ数」を定義するには、人間の専門家や発見的アルゴリズムのベースラインを確立する必要があります。</p>
+<p><strong>検索カバレッジ</strong> は情報収集系タスクに対応します。Agent は情報空間を充分に探索したか？ 検索結果の 1 ページ目だけを見て軽率に結論を出していないか？ <strong>コストと遅延</strong> はリクエスト回数、トークン消費（入力/出力コストを区別し、KV Cache の再利用を考慮する必要がある）、実時間（モデルの推論 + ツール実行 + ネットワーク遅延を含む）に着目し、時間分布を追跡してボトルネックを特定する必要があります。</p>
+<p><strong>結果と品質の指標。</strong></p>
+<p><strong>タスク成功率</strong> は最も直接的な硬指標で、階層化された基準を設計できます（核心目標は必達、副次目標は品質スコアに影響）。統計方式においては、しばしば混同される 2 つの指標を区別する必要があります。</p>
+<ul>
+<li><strong>Pass@k</strong>：k 回の試行のうち <strong>少なくとも 1 回</strong> 成功する確率、「Agent はそれをやれるのか」に答える</li>
+<li><strong>Pass^k</strong>：k 回の試行が <strong>すべて成功する</strong> 確率、「Agent は安定して信頼できるか」に答える</li>
+<li><strong>Best@k</strong>：k 回の試行のうち <strong>最良の 1 回</strong> のスコア（成功か否かではなく）、「充分な機会を与えたときの品質上限」を測り、連続スコアのある開放的タスクに多く用いる</li>
+</ul>
+<p>具体的な数字で差を感じてみましょう。Agent の単回成功率が 60%（すなわち Pass@1 = 0.6）だと仮定すると、5 回走らせたときの 2 つの指標はそれぞれこうなります。Pass@5 = 1 - 0.4^5 ≈ 99%（ほぼ確実に少なくとも 1 回成功）、Pass^5 = 0.6^5 ≈ 7.8%（すべて成功する確率は非常に低い）。前者は能力の上限を評価し、後者は安定性を評価します。混用すると誤判定を招きます。表6-3 は両者の適用シーンと誤用リスクをまとめ、読者が回帰テストと探索的評価の間で正しい指標を選べるようにします。</p>
+<p>表6-3 Pass@k と Pass^k の適用シーン</p>
+<table>
+<thead>
+<tr>
+<th>評価目的</th>
+<th>どの指標を使うか</th>
+<th>誤用の帰結</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>安定性の検証（回帰テスト）</td>
+<td>Pass^k</td>
+<td>Pass@k を使うと不安定性を覆い隠す——Agent が 5 回中 1 回しか成功しなくても「通過」と表示される</td>
+</tr>
+<tr>
+<td>能力の天井の評価（探索的タスク）</td>
+<td>Pass@k または Best@k</td>
+<td>Pass^k を使うと偶発的な変動で誤報する——小さな変更のたびに失敗と判定される</td>
+</tr>
+</tbody>
+</table>
+<p><strong>安全とコンプライアンスの指標</strong> は本番デプロイにおいてきわめて重要です。センシティブな操作のトリガー（データ削除 / 権限変更 / 外部への通信送信）、データ流出（ログにパスワードを出力 / 秘密文書を外部 API に送信）、違反コンテンツは、いずれも <strong>ゼロ容認原則</strong> に従うべきです。ハルシネーション否決項と同様に（後述の「Rubric 四準則」を参照）、1 回の重大な安全違反があれば全体の評価を否決し、他の次元の性能が優れていても免除しません。</p>
+<p><strong>頑健性</strong> は不確実性に直面したときの安定性を測ります。乱数シードの敏感性（異なる初期化で性能差がどれほどか）、ページ変化への適応性（ウェブサイトの UI 更新で完全に機能停止すべきでない）、API のばらつきへの許容度（一時的な故障、タイムアウト、フォーマット変化を優雅に処理できるか）、長時記憶の干渉（コンテキストに蓄積された古い情報が誤った意思決定を招かないか）。</p>
+<p><strong>実行軌跡と最終結果の二重カバレッジ</strong>。評価で見落とされやすい 1 つの区別は、Agent が実行過程で「何を言い、何をしたか」（すなわち第 1 章で定義した軌跡、trajectory）と「システムが最終的にどうなったか」（最終結果、outcome）は別物だ、ということです。Agent が「予約が完了しました」と言うのは軌跡レベルの情報で、データベースに本当に注文が 1 件生成されたことが結果レベルの検証です。軌跡だけを見ると「言ったがやっていない」状況を見落とし、結果だけを見ると途中のステップが逸れたことに気づけないかもしれません。Anthropic はかつてこんな例を挙げました。ある航空券予約 Agent が実行中に航空会社のポリシーの抜け穴を見つけ、ユーザーのためにより安いプランを見つけた——もし事前設定された実行経路だけで採点すれば、この実行は失敗と判定されます。しかし最終結果から見れば、ユーザーはより良いプランを手にしました。したがって両種の評価をともにカバーし、系統的な盲点を避けるべきです。</p>
+<p><strong>人手抽出検査と敵対的レビュー。</strong></p>
+<p>自動評価が大多数の場合に信頼できるとしても、定期的な人手抽出検査は必要です。異なるタスクタイプ、成功/失敗のケース、境界スコア付近の曖昧なケースをカバーし、結果を検証するだけでなく、採点理由の妥当性も精査します。人手抽出検査はさらに <strong>評者のキャリブレーション</strong> へと系統化できます。LLM 評者を大量に使い始める前に、まず人手アノテーションのゴールドセット（各タスクタイプと難易度をカバーする 100〜200 個のケースなど）を構築し、その上で評者モデル（すなわち LLM を評者に充てる。そのメカニズムは次節 LLM-as-a-Judge で詳述）と人間のアノテーションの一致率（単純一致率、あるいは Cohen's kappa などの一致係数。後者は偶然当たった分を除去する）を測定し、あらかじめ定めた閾値（kappa が 0.7 を上回るなど）に達してはじめて評者モデルを大規模評価に用います。それ以降、評者モデルや Rubric が更新されるたびに、ゴールドセットで再キャリブレーションすべきです。このステップがなければ、LLM 評者のスコアは「別のモデルの意見」にすぎず、人間の判断の信頼できる代理ではありません。<strong>敵対的レビュー</strong> はレッドチーム（Red Teaming）を通じて挑戦的なケースを能動的に構築します。表面上は完璧だが隠れた誤りを含む回答、キーワードの羅列でごまかす回答、評者モデルの既知のバイアスを利用して不相応な高得点を得る回答です。<strong>複数評者メカニズム</strong> は複数の独立した評者にそれぞれ採点させ、加重平均や一致性チェックを通じて最終結果を確定します。評者間で深刻な意見の相違があるときは、さらなる人手審査が必要とマークします。</p>
+<h2 id="_14">自動化評価方法<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h2>
+<p>評価環境、データセット、明確な指標体系がそろったところで、次の核心的な問題はこうです。どう採点するか？ 明確な正解のあるタスク（数学問題、SQL クエリなど）については、単純な二値判定（正/誤）で充分です。しかし開放的タスク（カスタマーサポート対話、レポート作成など）については、より精緻な評価方法が必要です。</p>
+<p>コードの自動検証は標準解のあるシーンしかカバーせず、開放的タスクの採点こそ本節の主題です。そのうち、報酬信号の密度設計（二値報酬から過程報酬、さらに生成式報酬へ）および報酬モデルの訓練方法は、第 7 章のポストトレーニング部分で系統的に論じます。本節ではより基礎的な問いに答えます。いかに LLM を使って開放的タスクの出力品質を自動的に評定するか、です。</p>
+<h3 id="llm-as-a-judge">LLM-as-a-Judge：自動化評価の核心<a class="headerlink" href="#llm-as-a-judge" title="Permanent link">&para;</a></h3>
+<p><img alt="図6-4 LLM-as-a-Judge パイプライン" src="../images/fig6-4.svg" /></p>
+<p>なぜ LLM-as-a-Judge が必要なのでしょうか。開放的タスク（レポート生成、顧客クレーム処理、創作コンテンツなど）については、自動的に対比できる標準解がなく、人手評価はコストが高く規模化が難しいのです。LLM-as-a-Judge は、言語モデルに専門家が定義した採点基準（Rubric）に従って評定させることで、自動化のスケールと人間の専門的判断の間のバランスを取ります。しかしこの方法には既知の限界もあります。評者モデルは自身のバイアスを持ちうる（最も典型的なのは <strong>長さバイアス</strong> で、内容がより正しいわけでなくても、より長く詳細な返答に高得点をつける傾向がある）ほか、同じ入力を複数回評定しても変動しうるのです。長さバイアスは特に個別に防ぐ価値があり、よく使われる手段は 3 つあります。Rubric の中で冗長さを明示的にペナルティにし、同類タスクに回答の長さ上限を規定すること。配対比較をするとき、まず 2 つの候補の長さを近づけてから評定すること。そして定期的にスコアと回答長の相関を監査すること——もし高得点がほぼ常に長い回答を伴うなら、評定が長さに引きずられていることを示すので、Rubric を作り直す必要があります。これらの課題に系統的に対処するため、Rubric 設計は以下の準則に従わなければなりません。</p>
+<p><strong>Rubric（採点基準）：LLM 評定の拠り所。</strong></p>
+<p><strong>Rubric 四準則</strong>（Scale AI、「Rubrics as Rewards」）：</p>
+<p>（1）<strong>専門家の指導に基づく</strong>——領域知識を反映し、核心的な事実と推論ステップを捉えなければならない。例えば医療 Q&amp;A の Rubric には診断基準と避けるべき医学的誤りを含める必要があり、専門的基礎を欠いた Rubric は言語の流暢さなど表面的な特徴しか捉えられない。</p>
+<p>（2）<strong>網羅的なカバー</strong>——事実の正確性、論理の一貫性、完全性、安全性を含み、しかも正の基準を定義するだけでなく、<strong>罠（Pitfall）</strong>——すなわち高リスクなよくある誤り、例えば医療アドバイスで未検証の療法を推奨すること——も明確にする。</p>
+<p>（3）<strong>基準の重要性の重み付け</strong>——必須項（Essential）、重要項、任意項、罠項に分ける。<strong>一票否決メカニズム（Veto）</strong> をサポートする。例えばカスタマーサポートのシーンでは、ハルシネーション（虚偽情報の捏造）が典型的な否決次元であり、他の次元がどれほど優秀でも、虚偽情報が現れたら否決しなければならない。これはキーワード羅列式の報酬ハッキングの防止にも役立つ。</p>
+<p>（4）<strong>自己完結した評価</strong>——各評価項が独立して操作可能で、評価者の領域知識に依存しない。「回答は深い理解を示した」のような抽象的な基準を避け、「少なくとも 2 つの権威ある理論を引用し、それがいかに結論を支えるかを正確に説明した」のような検証可能な基準に改める。</p>
+<p>鍵となる実践：各次元に客観的で検証可能な採点段階を定義し、具体的な例と <strong>境界ケース</strong> を提供して曖昧な状況の区別を助けます。<strong>報酬ハッキング（Reward Hacking）</strong>——すなわち Agent が高得点を得る「近道」を見つけたが実際にはタスクを完了していない——を能動的に防ぎ、ハルシネーション、ユーザーへの迎合、キーワードの羅列、難しい問題の回避を明確にペナルティにします。Rubric は反復の産物です。試用を通じて評価者の相違を収集し、徐々に完成させ、抽象的な準則から詳細な判例集へと進化させていきます。</p>
+<p>ユーザーメモリ Agent を例に、四準則に合致する完全な Rubric を示します。テスト問題：「私の娘の小児科医は誰？」（答えは 2 つの対話をまたいで関連づける必要があります。1 回目の対話で「娘は Lily という名」と述べ、2 回目で「Lily を Dr. Chen に診てもらった」と述べています）。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">rubric</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">dimensions</span><span class="p">:</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">事实正确性</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">essential</span><span class="w">        </span><span class="c1"># 必要项</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">scoring</span><span class="p">:</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">        </span><span class="nt">4_优秀</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;准确回答</span><span class="nv"> </span><span class="s">Dr.</span><span class="nv"> </span><span class="s">Chen，且关联到女儿</span><span class="nv"> </span><span class="s">Lily&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">        </span><span class="nt">3_良好</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;准确回答</span><span class="nv"> </span><span class="s">Dr.</span><span class="nv"> </span><span class="s">Chen，但未提及是</span><span class="nv"> </span><span class="s">Lily</span><span class="nv"> </span><span class="s">的医生&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="nt">2_及格</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;给出了正确医生但附带不确定的额外信息&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">        </span><span class="nt">1_不及格</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;给出错误医生名，或回答不知道&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">信息完整性</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">important</span><span class="w">        </span><span class="c1"># 重要项</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="nt">scoring</span><span class="p">:</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">        </span><span class="nt">4_优秀</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;主动补充相关信息（如上次就诊时间、诊断结果）&quot;</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">        </span><span class="nt">3_良好</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;回答了核心问题，无遗漏&quot;</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">        </span><span class="nt">2_及格</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;回答了核心问题，但遗漏了可用的关联信息&quot;</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">        </span><span class="nt">1_不及格</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;关键信息缺失&quot;</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">思考正确性</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">      </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">important</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">      </span><span class="nt">scoring</span><span class="p">:</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">        </span><span class="nt">4_优秀</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;正确关联&#39;女儿=Lily&#39;和&#39;Lily的医生=Dr.</span><span class="nv"> </span><span class="s">Chen&#39;两条跨会话信息&quot;</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">        </span><span class="nt">3_良好</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;关联正确但思考路径不够清晰&quot;</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">        </span><span class="nt">2_及格</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;部分关联正确&quot;</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">        </span><span class="nt">1_不及格</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;错误关联（如把用户自己的医生当成女儿的医生）&quot;</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">幻觉检测</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">      </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">veto</span><span class="w">             </span><span class="c1"># 否决项：一旦触发，总分归零</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">      </span><span class="nt">scoring</span><span class="p">:</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">        </span><span class="nt">pass</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;所有信息均可溯源到历史对话记录&quot;</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">        </span><span class="nt">fail</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;编造了对话中不存在的信息（如虚构就诊日期、诊断结果）&quot;</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">  </span><span class="nt">edge_cases</span><span class="p">:</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;如果用户有多个女儿且分别看不同的医生，应追问是哪个女儿&quot;</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;如果记忆中同时存在&#39;Dr.</span><span class="nv"> </span><span class="s">Chen&#39;和&#39;陈医生&#39;，应识别为同一人&quot;</span>
+</code></pre></div>
+<p><strong>良い Rubric 対 悪い Rubric</strong>：上記の各採点段階は検証可能な具体的行動（「Dr. Chen と正確に回答」）を示しており、「メモリへの深い理解を示した」のような客観的に判定不能な記述ではありません。否決項は底線を明確にしています。他の次元がすべて満点でも、ハルシネーションが 1 回でも現れたら直接ゼロと判定します。</p>
+<p>この Rubric と Agent の実際の回答を一緒に評者モデルに送ると、評者モデルは次元ごとに採点して理由を示します。数十個のテストケースで走らせることで、Agent の能力の弱点を系統的に発見できます。例えば「セッション横断の関連づけ」次元の平均点が 2.1 しかなければ、記憶検索や情報関連づけの不足を明確に指し示します。</p>
+<blockquote>
+<p><strong>実験 6-3 ★★：Rubric に基づくユーザーメモリ評価システムの構築</strong></p>
+<p><strong>前提要件</strong>：第 3 章のユーザーメモリ実験（<code>ch3/user-memory-evaluation</code>）を完了している必要があります。</p>
+<p>本実験では第 3 章の <code>ch3/user-memory-evaluation</code> フレームワークを改造し、現在の単純な LLM-as-a-Judge に基づく採点メカニズムを、構造化された多次元 Rubric 評価システムへとアップグレードします。既存システムは単一の LLM 呼び出しで通過/失敗と評価理由を返すもので、構造化された診断能力を欠いています。</p>
+<p>すべての三層タスクに適用できる統一的な多次元 Rubric フレームワークを設計します。評価次元には次のものを含みます。事実の正確性（Precision、精度——与えられたすべての情報のうち、どれだけが正しいか）は数字/日付/名称が記憶情報と一致するかを検証。事実の完全性（Recall、再現率——与えるべきすべての情報のうち、どれだけが言及されたか）はすべての関連情報を提供したか、重要な内容を漏らしていないかを検証。思考の正確性は情報間の関係と暗黙のロジックを正しく理解したかをチェック。思考の能動性は適切なときに直接の回答を超えた提案やリスクの注意喚起を提供したかを評価。ハルシネーション検出は記憶に存在しない情報を捏造していないことを確保します。</p>
+<p>四段階採点（優秀/良好/合格/不合格）とし、各段階に抽象的な記述ではなく具体的な判定基準を配します。ハルシネーション次元は一票否決項に設定します。各次元に例と境界ケースを提供します。</p>
+<p><strong>実験 6-4 ★★：Advanced JSON Cards と RAG の対比評価</strong></p>
+<p><strong>前提要件</strong>：第 3 章のユーザーメモリと RAG 実験（<code>ch3/user-memory</code>、<code>ch3/agentic-rag-for-user-memory</code>）を完了している必要があります。</p>
+<p><strong>目標</strong>：同一の評価集の上で、構造化メモリと非構造化検索の優位性の境界を公平に対比します。2 つの第 3 章プロジェクトを再利用し、<code>ch3/user-memory-evaluation</code> の 60 個のテストケースで 3 つの構成——純粋な Advanced JSON Cards（構造化カードをコンテキストに常駐、検索不要）、純粋な RAG（対話をチャンク分割してベクトルストアに入れ、必ず検索）、ハイブリッドシステム（核心的な事実を常駐 + 元の対話を必要に応じて検索）を対比します。</p>
+<p><strong>検収</strong>：三層の複雑度（基礎的な想起 / マルチセッション曖昧性解消 / セッション横断の隠れた関連）で成功率、平均ステップ数、ツール呼び出し回数、遅延、コストを記録し、各方式の失効境界を明らかにします。構造化は何を失ったか、検索は何を漏らしたか、ハイブリッドに本当に協同があるか。構成の詳細とテストケースは付属リポジトリを参照してください。
+</p>
+</blockquote>
+<p><strong>同源モデル問題と多源評定。</strong></p>
+<p>Agent と評者モデルが同じファミリーに由来する場合、Agent は評者モデルの好みと盲点を利用することを学びうます。</p>
+<p><strong>これはまさにグッドハートの法則（Goodhart's Law）が言うところです。ある度量指標が最適化目標になると、それはもはや良い度量指標ではなくなる。</strong> Agent がある採点システムの上で訓練やチューニングをすればするほど、真に能力を高めるのではなく、そのシステムの抜け穴を突く傾向が強まります。</p>
+<p>さらに巧妙なことに、Agent は評者モデルが検出を苦手とする誤りのタイプを次第に避けるようになり、採点システムから見ればすべて正常に見えるようにもなります。</p>
+<p>緩和策は <strong>多源異種評定</strong> です。異なるモデルファミリーの複数の LLM にそれぞれ評定させます（例えば Agent が Claude なら、評定には GPT-5 と Gemini を使う）。異なるファミリーのバイアスはしばしば直交しており、Agent がすべての評者を同時に「欺く」のは非常に困難です。同じ Rubric を使ってみなが同じ目標を評定していることを確保し、加重平均や一致性チェックで結果を集約します。デプロイ段階では単一モデルで素早く評価してもよいですが、定期的に完全な多源評定で品質監査を行うべきです。</p>
+<p>多源評定が解決するのは「どのモデルで評定するか」の問題です。次に解決すべきは「どのモダリティを評定するか」の問題です。LLM-as-a-Judge の能力をテキストから音声、画像、動画へと拡張することは、評価カバレッジのもう 1 つの次元です。</p>
+<p><strong>マルチモーダル LLM-as-a-Judge。</strong></p>
+<p>マルチモーダル評定は LLM-as-a-Judge を音声、画像、動画の領域に拡張します。よくある 4 つの方向は次の通りです。</p>
+<ul>
+<li><strong>TTS 評価</strong>（TTS すなわち Text-to-Speech、テキスト読み上げ）：正確性、自然さ、音色の一貫度、感情表現を判断します。これらの次元は、従来の WER（Word Error Rate、単語誤り率）では捉えにくい韻律の問題を発見できます。</li>
+<li><strong>ASR 評価</strong>（ASR すなわち Automatic Speech Recognition、音声認識）：意味への影響を判断します。「今日の天気」の認識ミスは無害ですが、「1 千の振込」が「1 万」になれば深刻な結果を招きかねません。</li>
+<li><strong>UI 評価</strong>：<strong>提案者・審査者</strong>（Proposer-Reviewer）メカニズムを採用し、文字のはみ出し、色のコントラスト、ボタンの位置などの問題をチェックします。ここでの提案者・審査者は <strong>評価方法</strong> として使われており、第 5 章での <strong>生成システムのコンポーネント</strong> としての用法とは異なりますが、核心メカニズムは同じです。一方のモデルが生成し、もう一方のモデルが独立して審査します。</li>
+<li><strong>動画編集評価</strong>：キーフレームを通じて、編集の始点・終点や特殊効果の適用が正しいかを検証します。</li>
+</ul>
+<blockquote>
+<p><strong>実験 6-5 ★★：全自動 TTS 品質評価パイプラインの構築</strong></p>
+<p>本実験では、ゼロから完全なマルチモーダル LLM-as-a-Judge TTS 品質評価システムを設計・実装します。</p>
+<p>TTS の多次元 Rubric を設計します。正確性次元はすべての文字を正しく読み上げたか（漏れ/読み誤り/追加がないか）を検証、自然さ次元は音声が流暢か（機械的な感じや不自然な休止がないか、韻律が人間の習慣に合うか）を評価、感情表現次元は語気がテキストの感情的色彩に合うか（疑問文は語尾上げ、感嘆文は強調、悲しい内容は速度を落とし低い調子で）をチェック、音色の一貫性次元は参照音声があるときに話者の類似度を評価します（マルチモーダルモデルが参照音声と合成音声を同時に受け取って対比）。</p>
+<p>多様なテストコーパスを構築します。異なる長さ（単文→長い段落）、文体（ニュース/物語/対話）、感情（中立/興奮/悲しみ）、特殊な挑戦（数字/固有名詞/多音字/方言語彙）。評価パイプラインを実装します。TTS 生成モジュールは主要サービス（OpenAI、ElevenLabs、Fish Audio、Minimax、Doubao）に接続し、マルチモーダル評定モジュールは Gemini 3.5 Flash を使って合成音声、元のテキスト、参照音声、Rubric を一緒に入力し、次元ごとに採点して詳細な理由を示します。評価結果の分布を分析し、異なる TTS モデルの各次元での優劣を識別します。あるモデルは正確性に優れるが自然さが不足、別のモデルは自然さは高いが特殊な語彙で誤りやすい、といったように。
+</p>
+</blockquote>
+<p>人手で Rubric を定義するほか、専用の <strong>生成式報酬モデル</strong> を訓練して評定を自動化することもできます。これは報酬モデルの訓練方法に関わり、第 7 章で詳しく論じます。</p>
+<p>実際のモデル選定では、私たちがしばしば直面する問題はこうです。「A と B のどちらが優れているか？」 配対比較は、絶対スコアに依存しない評価方式を提供します。</p>
+<h3 id="_15">配対比較とモデルランキング<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<p><img alt="図6-5 Elo 評価と配対比較ランキング" src="../images/fig6-5.svg" /></p>
+<p><strong>Elo 評価</strong>（もともとチェスに用いられたランキングシステム）は大量の一対一の対決を通じてモデルの相対的な能力を定量化します。点差が大きいほど、強者の予想勝率が高くなります。例えばモデル A のスコアが 1200、モデル B のスコアが 1000 なら、Elo システムは A の勝率を約 76% と予測します。もし B が意外にも勝てば、B は多く加点され A は多く減点されます。番狂わせの結果はより大きなスコア調整をもたらし、このメカニズムがランキングを真の水準へ素早く収束させます。その背後にある統計的基礎が <strong>Bradley-Terry モデル</strong> です。各モデルを潜在的な「実力スコア」として抽象化し、一対一の対決の勝敗の確率を両者のスコア差によって決めるもので、Elo はこのモデルのオンライン更新形式の工学的実装です。</p>
+<p>Chatbot Arena は匿名ランダム対決を採用しています。ユーザーはモデルの正体を知らないまま優れた応答をブラインドで選び、数百万回の投票を通じてランキングを導きます。この方法の利点は「絶対基準」を定義する必要がなく、人間が「A と B のどちらが優れているか」を判断するだけでよい点です。しかし限界もあります。ランキング結果はユーザーが何を尋ねたかに左右されます。もし多くのユーザーがたまたまみなプログラミングの問題を尋ねれば、プログラミングが得意なモデルのランキングが高く出ますが、これは他のタスクでの真の水準を反映するとは限りません。</p>
+<p>配対評定が人間の投票ではなく LLM によって行われる場合、さらに <strong>位置バイアス（Position Bias）</strong> を防ぐ必要があります。評者モデルはある位置（通常は先に現れる方）の候補を系統的に贔屓する傾向があり、2 つの候補の内容を完全に入れ替えても、判決が変わらないことがあります。標準的な緩和方法は <strong>順序を入れ替えてそれぞれ 1 回ずつ評定する</strong> ことです。A を先にして 1 回、B を先にしてもう 1 回評定し、2 回の結果の平均を取ります。より厳格なやり方は、2 回の判決が一致したときのみ計上し、不一致なら引き分けと記録するか人手再審査に回すことです。Chatbot Arena のやり方も本質は同じで、2 つの回答の表示位置をランダム化し、大標本の下で位置バイアスを相殺させます。</p>
+<p><strong>評価から訓練へ：配対比較信号の転移</strong>。配対比較は評価手段であるだけでなく、ポストトレーニングの重要な信号源でもあります。第 7 章で紹介する <strong>GRPO</strong>（Group Relative Policy Optimization、グループ相対方策最適化）アルゴリズムはまさに「どちらが優れているかを比較する」評定方式をモデル訓練に持ち込んだものです。その核心的な発想は、同じ問題に対して複数の候補回答をサンプリングし、それらの間の相対的な優劣（絶対スコアではなく）で優位性を推定することで、PPO において別途価値ネットワーク（critic、ベースラインの推定に用いる）を訓練する手間を省きます。GRPO が省くのは価値ネットワークであって報酬信号そのものではない点に注意してください。GRPO は依然として報酬モデルや検証可能な報酬ルールに頼って各候補の良し悪しを評定します。ここでは伏線を張るにとどめ、完全なアルゴリズム導出、PPO/DPO との対比、および Agent ポストトレーニングにおける実装の詳細はすべて第 7 章で展開します。</p>
+<blockquote>
+<p><strong>実験 6-6 ★★：配対比較データからモデルランキングを構築する</strong></p>
+<p>本実験では、ゼロから Elo rating 計算システムを実装することで、Bradley-Terry モデルがいかに大量の配対比較から相対的な能力評価を抽出するかを深く理解します。Chatbot Arena がオープンソースで公開した本物の投票データセット（数百万回のユーザーブラインド投票を含む）を使います。</p>
+<p>Elo rating の反復更新アルゴリズムを実装します。初期は全モデルの評価を 1000 点とし、時間順に投票記録を処理します。各対決について、2 つのモデルの現在の評価差に基づいて予想勝率を計算し、実際の結果を予想と比較し、固定の学習率で調整します。勝者は加点、敗者は減点し、調整幅は予想からのずれに比例します（番狂わせの敗北はより大きなスコア変化を招く）。最終評価の降順に並べ、一対一の勝率マトリクスを計算し、公式ランキングと対比してランキングがおおむね一致すればよいとします。1 点単位の完全な一致にこだわる必要はありません。Chatbot Arena 公式が使うのは Bradley-Terry の最尤フィッティング（全対局を一括で解き、投票の前後順序に依存しない）ですが、ここで実装するのはオンライン増分更新の Elo（結果は学習率 K 因子と処理順序に影響される）で、2 つのアルゴリズムは全体のランキングでは一致するはずですが、具体的なスコアは精確には一致しません。</p>
+<p>実験の第 2 部では歴史的ランキング推移のアニメーションを作成します。投票データを時間で切り分け（週ごとや月ごと）、各時点で Elo 評価のスナップショットを計算します。D3.js を使って棒グラフレース（水平な棒の長さ=評価、縦方向の位置=ランキング、時間とともに滑らかに変化）を実装します。アニメーションを観察することで、技術的ブレイクスルーの瞬間（あるモデルの評価が急上昇）、競争構図の変遷、モデルのライフサイクルを識別します。
+</p>
+</blockquote>
+<h2 id="_16">評価駆動のモデル選定<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h2>
+<p>モデル選定は単純に「最強のモデルを選ぶ」ことではなく、応用シーンに応じて複数の次元の間で評価駆動のトレードオフを行うことです。</p>
+<h3 id="_17">選定の鍵となる次元<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<p><strong>スループット</strong> と <strong>遅延</strong> は混同されやすい 2 組の指標ですが、それらを整理するには大規模モデルの推論が 2 つの段階に分かれることを知れば充分です。<strong>Prefill（プレフィル）</strong> は完全なコンテキストを一度に読み込み、ユーザーが Enter を押してから最初の文字が現れるまでの <strong>初字遅延</strong> を決めます（業界では <strong>TTFT</strong>、Time To First Token で測る）。コンテキストが長いほど prefill が遅く、TTFT が大きくなります。<strong>Decode（デコード）</strong> はその後トークンを 1 つずつ生成して回答を作り、以降の文字が出る速度（tokens/秒）を決め、同時に思考時間も直接決めます。50 tokens/s のモデルが 2000 個の思考トークンを生成すれば、思考だけで 40 秒かかります。</p>
+<p>この 2 つの段階をめぐる主要なスループットと遅延の指標は次の通りです。</p>
+<ul>
+<li><strong>入力スループット / 出力スループット</strong>：それぞれ Prefill と Decode の速度に対応。</li>
+<li><strong>TTFT</strong>：待ち時間に Prefill 時間を加えたもので、ユーザーが感じる「反応の速さ」。</li>
+<li><strong>思考遅延</strong>：異なるモデルが生成する思考トークン数の差は数倍に達することがあり、しかも思考の長さとタスク効果は必ずしも正の相関はありません。自分のワークロードで各モデルの思考トークン使用量とそれに対応する収益を実測すべきで、公開ランキングだけから推し量るべきではありません。</li>
+<li><strong>p95 テール遅延</strong>：95% のリクエストが超えない遅延。平均値より実際のユーザー体験をよく反映します。平均値は大量の高速リクエストに引き下げられ、少数のユーザーが遭遇する深刻な引っかかりを覆い隠すからです。</li>
+</ul>
+<p><strong>コスト</strong>：入力/出力/キャッシュトークンの価格設定。コストは孤立して評価すべきではありません。安いが成功率の低いモデルは、頻繁な再試行が必要なため、実際の出費がかえって高くなることがあります。各タスクの平均コストとコスト・性能比を計算する必要があります。</p>
+<p><strong>性能</strong>：Pass@1、Pass^k、Pass@k、Best@k の 4 指標の精確な定義は前述の「評価指標体系」を参照。ここでは選定の文脈でどう取捨するかだけを述べます。日常のシーンでは最もよく使う Pass@1（単回の平均成功率）を見ます。重要操作のシーンでは Pass^k を優先し、「毎回間違えないこと」の安定性に注目します。探索的タスクでは Pass@k または Best@k を優先し、充分な機会を与えたときの能力上限を見ます。開放的タスクでは Rubric の多次元採点を使います。</p>
+<p><strong>レート制限と信頼性</strong>：RPM（毎分リクエスト数）/ TPM（毎分トークン数）の制限は並行能力に影響し、一部の API はピーク時に上限を動的に調整することもあります。頑健性の面では、分布外データ、敵対的入力、長時間実行の安定性（モード崩壊や注意の散漫などの問題が出ないか）に注目する必要があります。</p>
+<p><strong>予算—能力曲線</strong>：固定予算での一点の成績だけでは、Agent が長時間タスクを担えるか判断できません。成功率に加え、実時間、token、ツール呼び出し回数、計算予算に応じて性能がどう変化するかを報告すべきです。RE-Bench の人間との比較はこの違いをよく示します。各環境に合計2時間の予算を与えたとき、最良の Agent は人間の専門家のおよそ4倍の得点でした。しかし追加時間から得る利益は人間のほうが大きく、8時間では最良の Agent をわずかに上回り、複数試行を合わせて32時間ではおよそ2倍の得点に達しました<sup id="fnref:re-bench-2025"><a class="footnote-ref" href="#fn:re-bench-2025">1</a></sup>。したがって短い予算での優位を長時間能力へそのまま外挿してはならず、モデル選定では実タスクの所要時間に近い複数の予算点を比較する必要があります。</p>
+<p>実践では複数モデル協同の戦略を採れます。軽量モデルで単純なリクエストを処理してコストを下げ、強力なモデルで複雑なタスクを処理して品質を保証する。あるいは専用のモデルで特定のサブタスク（画像理解、コード生成など）を処理し、サブ Agent メカニズムで協調する。この異種の組み合わせは評価を通じて検証し、全体的な便益が増加したシステムの複雑さを上回るかを確認する必要があります。</p>
+<h3 id="agent_1">Agent システムのコスト分析<a class="headerlink" href="#agent_1" title="Permanent link">&para;</a></h3>
+<p>コストはモデル選定で過小評価されやすい次元です。あなたの Agent がすでに本番環境に入っている、あるいは本番環境に入る準備をしているなら、本節のコスト分析を飛ばすべきではありません。</p>
+<p>前節ではコストをモデル選定の鍵となる次元の 1 つに挙げましたが、Agent のシーンにおけるコストは単純なトークン価格設定よりはるかに複雑です。複数ターンの推論、ツール呼び出し、コンテキストの累積がコストを非線形に増大させます。系統的なコスト分析は評価体系に欠かせない一環であり、本番デプロイの必要な前提でもあります。</p>
+<p><strong>コストの構成要素。</strong></p>
+<p>Agent システムのコストは 3 つの層に分解できます。</p>
+<p><strong>モデル推論コスト</strong> は最も直接的な部分で、入力トークンと出力トークンの消費によって決まります。しかし Agent のシーンには見落とされやすい 2 つの増幅要因があります。1 つは <strong>コンテキスト累積効果</strong> です。Agent は LLM を呼び出すたびに、それまでのすべての対話履歴とツールの返り値を一緒に送ります（そうしてはじめてモデルがコンテキストを理解できる）。もし KV Cache（すなわち処理済みのコンテキストをキャッシュし、重複計算を避ける）をうまく活用しなければ、コストの増加は非常に速くなります。第 1 ターンで 1000 トークン、第 2 ターンで 2000 トークン、第 3 ターンで 3000 トークンを送ると、総量は 1000+2000+3000=6000 であって 3×1000=3000 ではなく、ターン数が多いほど差が大きくなります。もう 1 つは <strong>思考トークンコスト</strong> です。思考をサポートするモデルは大量の思考トークンを生成し、これらのトークンはユーザーには表示されませんが、同様に費用に計上されます。</p>
+<p><strong>ツール呼び出しコスト</strong> には外部 API の費用（検索エンジンは回数課金、データベースクエリは計算リソースを消費）、コード実行のサンドボックスリソース、そして見落とされやすい間接コストが含まれます。ツールの返り値をコンテキストに注入した後に生じるトークン費用です。1 回のウェブ検索の返り値が 2000〜5000 個のトークンを占めることもあり、しかも以降の各ターンの推論で入力として繰り返し課金されます。</p>
+<p><strong>インフラコスト</strong> はベクトルデータベース（RAG 検索用）、メッセージキュー、リレーショナルデータベース、ログとトレースのストレージ（可観測性用）などの運用開銷をカバーします。</p>
+<p>具体的な例でコストの非線形な増大を説明します。表6-4 は本章冒頭のカスタマーサポート返金 Agent を例に、一組の例示的なトークン価格パラメータを使って 3 ターンの呼び出しコストを分解し、複数ターンのコンテキスト累積とキャッシュヒットが費用に及ぼす影響を説明します。</p>
+<p>表6-4 カスタマーサポート返金 Agent の三ターンコスト例</p>
+<table>
+<thead>
+<tr>
+<th>ターン</th>
+<th>操作</th>
+<th>入力 token</th>
+<th>出力 token</th>
+<th>本ターンコスト</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>システムプロンプト + ユーザー質問 → 注文照会を決定</td>
+<td>2,500（うち 2,000 はシステムプロンプト）</td>
+<td>150</td>
+<td>$0.0098</td>
+</tr>
+<tr>
+<td>2</td>
+<td>前ターン全部 + ツール返り値 → 返金開始を決定</td>
+<td>3,200（2,000 はキャッシュヒット）</td>
+<td>120</td>
+<td>$0.0060</td>
+</tr>
+<tr>
+<td>3</td>
+<td>前ターン全部 + 返金結果 → ユーザーに返信</td>
+<td>3,800（3,200 はキャッシュヒット）</td>
+<td>200</td>
+<td>$0.0058</td>
+</tr>
+<tr>
+<td><strong>合計</strong></td>
+<td></td>
+<td><strong>9,500</strong></td>
+<td><strong>470</strong></td>
+<td><strong>$0.022</strong></td>
+</tr>
+</tbody>
+</table>
+<p>注：入力 $3/百万 token、出力 $15/百万 token の例示価格で計算し、キャッシュヒット部分は入力価格の 10% で課金と仮定（各社の割引は異なり、例えば Anthropic のキャッシュ書き込みは約入力価格の 1.25 倍、読み取りは約 0.1 倍。ここでは読み取り割引のみを計算するよう簡略化）。</p>
+<p>3 ターンの呼び出しで合計 $0.022——一見とても安く見えます。もしキャッシュがまったくなければ、3 ターンの入力コストは約 $0.029、出力を加えて合計約 $0.036——この例ではキャッシュが入力コストの半分近くを節約しており、後述の「KV Cache は入力コストを 30%〜60% 削減できる」という経験的レンジと一致します。ただしいくつかの増幅要因に注意してください。もし思考モードを有効にすれば、各ターンで追加で 500〜2,000 個の思考トークンを生成し、コストが 3〜5 倍になりえます。もしあるターンでツールが 5,000 トークンのウェブ内容を返せば、以降の各ターンでこれらのトークンに課金し続けます。もし Agent が回り道をして 10 ターンかけて完了すれば、コンテキストは 20,000+ トークンに累積し、コストは上記の単純なシーンをはるかに超えます。したがって、コスト最適化の核心は安いモデルを選ぶことではなく、ターン数とコンテキストの増大を制御することにあります。</p>
+<p><strong>コスト最適化戦略。</strong></p>
+<p>定量的な視点から見ると、入力側に作用する 3 種類のレバーが最も有効です。<strong>KV Cache の再利用</strong>（プレフィックスを安定させ、繰り返されるシステムプロンプト、ツール定義、履歴ターンをキャッシュ価格で課金させ、入力トークンコストを 30%〜60% 削減できる——上記の 3 ターンの例ではキャッシュが入力費用の半分近くを節約した）、<strong>コンテキスト圧縮</strong>（履歴軌跡を圧縮し、冗長なツールの返り値を切り詰め、コンテキストの増大速度を直接制御する。長いタスクで特に効果が顕著）、<strong>モデル階層ルーティング</strong>（単純なリクエストは軽量モデルに、複雑な思考は強力なモデルに渡す）。これら 3 種類の手段の具体的な実装——プレフィックス安定性の設計、圧縮のタイミングと戦略、ルーティングメカニズム——はすでに第 2 章で詳しく論じたので、ここでは展開しません。本章では評価と運用の視点に特有の 2 つの手段を補足します。</p>
+<p><strong>非同期バッチ処理</strong> は非リアルタイムのタスクを溜めて一括処理し、API プロバイダーのバッチ価格割引を利用します。自己デプロイのシーンでは、閑散時間帯の GPU 利用率も高められます。</p>
+<p><strong>コスト監視と予算制御。</strong></p>
+<p>本番環境では、リアルタイムのコスト監視体系を確立すべきです。タスクタイプ、モデル、ユーザーなどの次元でトークン消費と API 費用を追跡します。同時に各タスクにコスト上限を設定し、Agent がループに陥ったり探索が深すぎたりしたときに自動的に終了させ、単一のタスクが異常に高額の費用を生むのを防ぎます。</p>
+<blockquote>
+<p><strong>実験 6-7 ★：Agent タスクのエンドツーエンドコスト分析</strong></p>
+<p><strong>実験目標</strong>：典型的な Agent タスクに対して全リンクのコスト分解を行い、コストのベースラインを確立して最適化戦略の効果を検証します。</p>
+<p><strong>技術方式</strong>：いくつかの典型的なタスクを選び、LangSmith または自作のトレースシステムを使って、各 LLM 呼び出しの入力/出力トークン数、思考トークン数、ツール呼び出し回数と返り値サイズ、エンドツーエンド遅延を記録します。各種タスクの平均コスト、コスト分布（p50/p95/p99）、コスト構成比を計算します。</p>
+<p><strong>検収基準</strong>：コスト分解レポートを生成し、主要なコスト駆動要因を識別します。KV Cache の有効/無効、コンテキスト圧縮の有効/無効でのコスト差を対比します。</p>
+</blockquote>
+<h3 id="_18">評価駆動の継続的反復<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
+<p>モデル選択は一度きりの意思決定ではなく、モデルの進化に伴って動的に調整すべき継続的な過程です。本章の冒頭ですでに「評価体系を持てば素早くモデルの進化についていける」という核心理念を提起しました。以下では具体的なモデル切り替えの事例を用いて、この体系が現実の意思決定でいったいどう機能するかを説明します。</p>
+<p>あなたの Agent システムが現在 Claude をベースに構築されており、ツール呼び出しと複雑なオーケストレーションで優れた性能を発揮していると仮定します。ある日 Gemini が新しいモデルをリリースし、公開ベンチマークでは複数の指標で Claude を上回り、しかも価格が安い。このときあなたが直面する問題は「Gemini は Claude より強いか」ではなく、「<strong>私の特定のタスクで、Gemini は Claude より優れているか？ どれだけ？ 切り替えコストは何か？</strong>」です。</p>
+<p>完備された評価体系を持つチームは数時間以内に答えを出せます。自分の評価データセットで新しいモデルを走らせ、タスク成功率、ツール呼び出し正確率、遅延、コストを対比します。新しいモデルは単純なタスクでは確かにより優れて安いが、複雑な複数ターンのツールオーケストレーションが絡む核心シーンでは、成功率がかえって 5% 下がる、と気づくかもしれません。この差異がノイズの帯域幅を超えていることを確認した後（後述の「評価結果の統計的有意性」を参照）、あなたの意思決定は「単純なタスクは新しいモデルに移してコストを下げ、複雑なタスクは元のモデルを保持して品質を確保する」という差別化戦略になり、盲目的な全量切り替えにはなりません。この精緻化されたデータ駆動の意思決定は、あらかじめ評価体系を構築しておいてはじめて実現可能なのです。</p>
+<blockquote>
+<p><strong>実験 6-8 ★★：多次元モデル性能ベンチマーク</strong></p>
+<p>主要な LLM と異なる API プロバイダーに対して全面的なベンチマークを行い、多次元のモデル選定意思決定データベースを構築します。</p>
+<p>テスト範囲を選びます。GPT 系列、Claude 系列、Gemini 系列、Doubao 系列などのクローズドソース SOTA モデル、および Qwen、Kimi、DeepSeek などのオープンソースモデル。同じモデルに対して異なる API プロバイダー（DeepSeek 公式 対 Siliconflow など）をテストし、第三者の性能監測プラットフォーム（Artificial Analysis など）の結果を検証します。</p>
+<p>標準化されたテストワークロードを設計します。入力スループットテストは固定長のコンテキスト（8K/32K/128K tokens）を使い、出力スループットテストは固定長の応答（512/2048 tokens）の生成をリクエストします。遅延テストは TTFT（最初のトークン生成時間）とエンドツーエンド遅延を含み、思考をサポートするモデルには思考の長さと思考遅延を別途測定します。各構成で少なくとも 100 回リクエストし、標準偏差/p50/p95/p99 を計算します。高い遅延分散はユーザー体験の不安定さを意味します。</p>
+<p>API の可用性と安定性を評価します。1 週間、1 時間ごとに 1 回探測し、成功率、エラータイプ、故障時間を記録します。故障率、MTTR（平均復旧時間）、最長連続可用時間を計算します。レート制限の実際の閾値をテストします。並行量を段階的に上げてスロットリング点を見つけ、RPM/TPM の上限を記録します。総合コストを計算します。価格情報（入力/出力/キャッシュトークンの単価）を集め、KV Cache の影響を考慮し、典型的な複数ターン Agent タスクの平均コストを計算します。</p>
+<p><strong>実験 6-9 ★★：ユーザーメモリシステムのエンドツーエンド選定評価</strong></p>
+<p><strong>前提要件</strong>：第 3 章のコンテキスト検索またはエージェント化 RAG 実験を完了している必要があります。</p>
+<p><strong>目標</strong>：ユーザーメモリ検索 Agent に対して全リンクの選定評価を行い、埋め込みモデル、reranker、Agent 主モデルの 3 つの選択点がいかに共同で検索品質、遅延、コストに影響するかを見ます。<code>ch3/contextual-retrieval-for-user-memory</code> または <code>ch3/agentic-rag-for-user-memory</code> を再利用し、60 個のテストケースで対比します。</p>
+<p><strong>検収</strong>：3 つの選択点をそれぞれ走査します——埋め込みモデル（BGE-M3 / OpenAI / Doubao など、top-5 検索精度、遅延、コストを記録）、reranker（「reranker なし」ベースラインを含め、その限界的価値を定量化）、主モデル（同じ検索構成の下で成功率とツール使用効率を比較）。鍵はコンポーネント間の協同を読み取ることです。より強い埋め込みは reranker を不要にするかもしれず、より強い主モデルは検索の不足を補うかもしれません。選定は系統的なトレードオフであって、1 つずつ最強を選ぶことではありません。構成の詳細は付属リポジトリを参照してください。
+</p>
+</blockquote>
+<h2 id="_19">評価結果の統計的有意性<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h2>
+<p>「数時間以内に切り替えの判断を下す」には 1 つの暗黙の前提があります。観察されたスコア差が本物の信号であって、標本抽出のノイズではない、ということです。評価集の規模が有限で、モデルの出力も不確定である以上、この前提は自動的には成立しません。</p>
+<p>ノイズの帯域幅を概算する道具が <strong>二項分布の標準誤差</strong>（standard error、成功率が標本抽出のランダム性によって変動する幅を刻むもの。値が大きいほどその成功率が信頼できないことを示す）です。n 個のテストケースで成功率 p を測ったとすると、標準誤差は約 √(p(1-p)/n) です。具体例を挙げましょう。100 ケース、成功率 70% なら、標準誤差 ≈ √(0.7×0.3/100) ≈ 4.6%。直感的には、95% 信頼区間（真の成功率が約 95% の確からしさでその中に収まる範囲）は約 p ± 標準誤差 2 個分、すなわち 70% ± 9 パーセントポイントです。つまり「新モデル 73% 対 旧モデル 70%」のような 3 パーセントポイントの差は完全にノイズの帯域幅の中に収まります。2 つの成功率を互いに独立として比較する場合、差の標準誤差は単体の約 √2 倍（ここでは約 6.5%）です。ただし強調しておくと、この √2 は「2 回の測定が互いに独立」の場合の計算で、実戦では 2 つの構成は通常 <strong>同じ一群のタスク</strong> の上で走り、標本は独立ではありません——独立仮定はやや保守的な上界にすぎず、「この程度の差を真に受ける価値があるか」を素早く判断するために使います。この保守的な尺度では、3% の点差も 6.5% のノイズの規模よりはるかに小さく、これを根拠にモデルを切り替えるのはコイン投げと大差ありません。</p>
+<p>Agent 評価にはもう 1 層の非決定性があります。同じモデル、同じデータセットでも、2 回の実行の結果はドリフトします——温度サンプリング、ツール返り値の変動、環境のタイミングがいずれもランダム性を導入します。したがって単回実行の数字を意思決定の根拠とすべきではなく、<strong>複数回実行して平均を取る</strong>（各構成を 3〜5 回走らせるなど）べきで、同時に平均値と変動範囲を報告します。後述の仮想事例では、各構成を「（異なる乱数シードで）5 回実行」するのは、まさにこの理由からです。</p>
+<p>ここから 1 つの実用的な原則が得られます。<strong>点差がノイズの帯域幅より小さいときは、切り替えの判断をしない</strong>。ただし「切り替えない」の前に、まずより鋭敏でより正しい分析方法に切り替えるべきです。同じ一群のタスクの上で 2 つの構成を対比するとき、正しいデフォルトのやり方は <strong>配対分析</strong> です。問題ごとに両者の勝敗を比較し、結果が異なるケース（一方が正解、一方が不正解）だけを見て、McNemar 検定のような考え方で差異が有意かを判断します。配対分析は「問題自体の難易」という共通のノイズ源を差し引くため、同じ標本量の下で「2 つの独立した成功率の差」よりはるかに鋭敏です。先ほどの独立仮定に基づく √2 の概算は、オンラインに接続せず暗算でできる保守的なふるいにすぎず、明らかに届かない点差を素早く排除するために使います。配対分析でもなお差異が不確定と示されるなら、そのとき標本の拡大を検討します。標準誤差は √n で縮むので、標本を 100 から 400 に拡げてはじめてノイズの帯域幅が半減し、標本拡大のコストは高いのです。逆に見れば、ある改善の期待収益がそもそも 2〜3 パーセントポイントしかなく、評価集が数十ケースしかないなら、この評価はこの改善が有効かどうかまったく見分けられません。このときまず優先すべきは、Agent の反復を続けることではなく、評価集を拡充することです。</p>
+<p>もう 1 つ見落とされやすい罠があります。<strong>多重比較</strong> です。一群の仮説を並行して検証すると、「少なくとも 1 つの結論が偽陽性である」確率が仮説の数とともに急速に累積します。各個別の結論が 95% の信頼度を使っていても、6 つの仮説を同時に見れば、少なくとも 1 つの偽陽性を踏む確率は 1 − 0.95^6 ≈ 26% です。並行して走らせる仮説が多いほど、「どれか 1 つが有意に見える」偶然を避けにくくなります。対処法は 2 種類あります。多仮説のシーンでは個別の結論の信頼閾値を厳しくする（Bonferroni 式に仮説の数に応じて有意水準の閾値を厳しく調整するなど）か、走らせて出た正の結論に対して独立した確認的な再実行を 1 回行い、再現されたものだけを採信するかです。後述の「データから仮説へ」の節では、真に並行な 4 つの仮説 H1〜H4 を並行して検証します（H5、H6 は条件付きで起動するもので、前 4 者と同時には走らせません）。これはまさにこの罠の典型的なシーンです。</p>
+<p>評価駆動の意思決定は高品質のデータに依存し、そのデータは Agent の実行過程の系統的な記録から来ます——これが可観測性の解決すべき問題です。</p>
+<h2 id="agent_2">Agent の可観測性<a class="headerlink" href="#agent_2" title="Permanent link">&para;</a></h2>
+<p>評価駆動の意思決定（モデル選定であれ継続的反復であれ）は、いずれも高品質の実行データに依存します。以下ではまず、いかにこれらのデータを系統的に収集するか（可観測性）を紹介し、次にいかに評価結果をシステム改善へと転化するかを論じます。</p>
+<p><img alt="図6-6 可観測性技術スタック" src="../images/fig6-6.svg" /></p>
+<p>可観測性（Observability）というこの概念は分散システムの領域から借りたものです。システムの内部を直接開いて何をしているかを見ることはできず、それが出力するログ、指標、トレースデータを通じてのみ、何が起きたかを推し量れます。ちょうど医師が患者の体内を直接見ることはできず、体温、血圧、画像などの外部信号を通じてのみ問題を診断できるのと同じです。Agent システムはこれをさらに難しくします。同じ入力でも異なる出力を生みうるし、複数ターンの推論とツール呼び出しが実行経路をきわめて複雑にし、しかもモデルの「思考」過程は外部にはまったく不透明です。</p>
+<p>可観測性の価値はまず <strong>問題診断</strong> にあります。完全な軌跡があれば、開発者は推測に頼らず全過程を再生できます。次に <strong>継続的最適化</strong> の基礎です。どのタスクが複数ターンの反復を要するか、どのツールの成功率が最も低いか、どの検索クエリが常に空の結果を返すかが見えます。<strong>コスト管理</strong> では、Agent の実行コストはタスクによって 1〜2 桁も差がありえ、追跡によって異常に高コストのケースを識別できます。最後に、蓄積された軌跡データは、後続のシステム最適化とモデル改善の基礎も提供します。</p>
+<p>Agent 可観測性のデータ基礎は <strong>トレース（Trace）</strong> で、そのデータ構造は分散システムの span ツリーモデルを直接踏襲しています。1 回のタスク実行が 1 本の trace に対応し、その中の各 LLM 呼び出し、各ツール呼び出し、各検索が 1 つの <strong>span</strong>（入出力、開始・終了時刻、トークン消費、エラー情報を記録する実行単位）であり、span 間の親子関係が 1 本の実行ツリーを構成します。例えば「Agent メインループ」span の下にいくつかの「LLM 呼び出し」と「ツール呼び出し」の子 span がぶら下がる、というように。この層にはすでに標準化されたプロトコルが使えます。<strong>OpenTelemetry</strong> は汎用の分散トレースの標準で、<strong>OpenInference</strong> などの規範はその上に LLM アプリ特有の意味的約束（プロンプト、モデルパラメータ、トークン使用量などをどう記録するか）を定義します。標準プロトコルを採用する利点は、収集と分析が疎結合になることです。同じトレースデータを異なる分析バックエンドに接続でき、単一プラットフォームへのロックインを避けられます。</p>
+<p>LangSmith はこの領域の代表的なプラットフォームの 1 つ（似た位置づけには Langfuse、Arize Phoenix などもある）で、可観測性、評価、最適化を閉ループに統合します。実行のたびに 1 つのトレースセッションを作成し、その中のモデル呼び出し、ツール使用、知識検索が独立した実行単位として記録され、因果関係でリンクされて 1 本の実行ツリーを形成します。各単位は完全な入出力、時間情報、コストデータ、エラー情報を記録します。プラットフォームは非同期バッチのデータ収集を採用し、トレース自体が Agent の応答遅延に影響しないよう確保します。</p>
+<p>プラットフォームはさらに A/B テスト（一部のユーザーのトラフィックを新バージョンにルーティングし、各指標を自動対比し、素早いロールバックや段階的な拡大をサポート）、プロンプトのバージョン管理（各バージョンが実行時の性能データに関連づけられる）、および協働的な開発（チームメンバーがトレースデータと問題ケースを共有できる）をサポートします。本番環境の膨大な実データは継続的改善の金鉱です。予期しなかったシーンを発見し、最も最適化を要する機能点を識別できます。</p>
+<p>可観測性データの最も価値ある行き先は、<strong>評価資産として還流すること</strong> です。1 つの実用的な閉ループはこうです。本番軌跡から失敗と疑わしいケースを選別 → 匿名化処理（ユーザーのプライバシー、鍵などのセンシティブなフィールドを除去）→ 評価集の新しいケースと回帰テストとして蓄積。こうすれば評価集はもはや一度きりに構築した静的な集合ではなく、製品の進化とともに継続的に実ユーザー分布に近づく生きた資産になります。今日オンラインで露呈した失敗モードが、明日にはこの底線を守る回帰ケースになるのです。これがまさに可観測性と本章の評価の本筋とのインターフェースです。可観測性は「現実世界で何が起きたかを見る」ことを担い、評価はこれらの観察を繰り返し検証できる基準として固定することを担います。</p>
+<p>可観測性はいくつかの課題に直面します。</p>
+<ul>
+<li><strong>データ量とプライバシーのトレードオフ</strong>：高トラフィックのシステムは毎日数 TB のトレースデータを生み、同時にデータ保護法規を遵守する必要がある。</li>
+<li><strong>因果帰属の複雑さ</strong>：軌跡から根本原因を自動識別するにはなおより賢い分析アルゴリズムが必要で、最先端の研究は因果推論と反事実分析を試みているが、まだ成熟していない。</li>
+<li><strong>マルチ Agent システムのトレースの難題</strong>：複数の Agent をまたぐ実行フローの追跡は、マイクロサービス間の API 呼び出しより複雑で、より意味的である。</li>
+<li><strong>リアルタイム防護と事後分析のバランス</strong>：高リスクのシーンは能動的な防護を要するが、追加の遅延と誤報をもたらす。</li>
+</ul>
+<p>ML 技術がツールチェーンに深く統合されるにつれ、未来の可観測性プラットフォームは異常を自動識別して根源を特定できるようになると期待されます。</p>
+<p>完備された評価体系とデータセットを備えた後、鍵は評価結果を実質的なシステム改善へと転化することにあります。</p>
+<h2 id="benchmark">Benchmark レポートからシステム改善へ<a class="headerlink" href="#benchmark" title="Permanent link">&para;</a></h2>
+<p><strong>以下は教示的な仮想事例です</strong>。具体的なデータで Benchmark レポートからシステム改善への完全な意思決定フローを説明します。データは仮定値であり、方法論を示すことを狙いとしており、本物の実験結果を報告するものではありません。</p>
+<p><img alt="図6-7 Benchmark から改善への閉ループ" src="../images/fig6-7.svg" /></p>
+<p>Harness 工学の視点から見ると、この節が本質的に語っているのは Harness の反復最適化の方法論です。評価データを通じて Harness の弱点（コンテキスト不足？ 制約の欠如？ 検証の不足？ フィードバックの遅れ？）を特定し、的を絞って改善し、再び評価して、Harness が継続的に進化する閉ループを形成します。</p>
+<p>Benchmark レポートの分析を始める前に、見落とされやすい 1 つの原則があります。<strong>Agent の性能低下を見たときは、まず評価システム自体をチェックしてから Agent に手をつけるべき</strong> です。よくある誤りは、スコアの低下を見た途端に Agent のコードを修正し、評価システム自体が先に問題を起こしているかもしれないことを無視することです。歪んだ信号に基づいて方向を調整すれば、改善の方向が最初から誤っているかもしれません。評価システムのよくあるエラー源には、実行環境のリソース不足でプロセスが kill される（ランダムな失敗として現れる）、採点器自体にバグがあり正解を失敗と判定する、テストケースと本番シーンの間に乖離がある、などがあります。これらの問題は結果の数字上ではモデルの退化とまったく同じに見え、完全な軌跡を精査してはじめて区別できます。</p>
+<h3 id="benchmark_1">Benchmark レポートを読み解く：問題発見の技<a class="headerlink" href="#benchmark_1" title="Permanent link">&para;</a></h3>
+<p>具体的な事例で、いかに Benchmark レポートを読むかを説明します。私たちが AndroidWorld である Agent を評価し、2 枚の核心レポート表を得たと仮定します。タスクごとの性能リストと、能力ラベルで分けた性能マトリクスです。レポートの価値は全体の成功率という単一の数字にあるのではなく、それが明らかにする構造的な弱点にあります。</p>
+<p>タスクごとの表は明確なパターンを示しています。大多数の通常タスクの成功率は 100% に近い。これらの成功したタスクは録音、撮影、連絡先管理、メモ作成、ファイル操作、システム設定などのよくあるシーンをカバーし、平均で十数ステップの操作を要し、最も複雑なものは数十ステップに達します。Agent がこれほど長い操作シーケンスを維持して成功裏に完了できることは、標準的なシーンでの計画と実行の能力を証明しています。</p>
+<p>失敗は少数の領域に高度に集中しています。SMS 返信、Wi-Fi のオン・オフと状態検証、ToDo 項目の照会、Wi-Fi+Bluetooth の組み合わせ操作、VLC プレイリスト作成など。表面上はこれらのタスクは互いに無関係ですが、能力ラベルマトリクスはそれらの共通の特徴を明らかにします。</p>
+<p><strong>能力ラベルマトリクス</strong> は診断の鍵です。すべてのタスクを必要な能力と難易度で交差分類します。レポートにはしばしば成功率のきわめて低いいくつかの能力次元が現れます。transcription（画像/動画から情報を転写、視覚理解の欠陥を露呈）、math_counting（問題は数学能力そのものではなく——現代の LLM の数学能力は非常に強い——Agent が計算が必要だと認識し、インターフェースから数字を抽出し、結果を操作シーケンスにマッピングできるかにある）、complex_ui_understanding（標準化された UI パターンに強く依存し、非標準のレイアウトに出くわすと崩壊する）。</p>
+<p>2 枚の表を結びつけて分析すると、失敗の原因が明確になります。ToDo 項目の照会の失敗は、そのアプリの非標準 UI が Agent にタスクリストを読み取って絞り込むことを不可能にしていることを指し、Wi-Fi 操作の失敗は、システム設定インターフェースのコントロール階層が Agent の理解範囲を超えていることを指し、VLC プレイリストの失敗は、専門アプリの複雑なインターフェースで Agent が作成の入口を見つけられないことを指します。</p>
+<h3 id="_20">データから仮説へ：改善のロードマップを構築する<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<p><strong>表層仮説</strong>（コストが低く、互いに独立で、並行して検証できる）：H1 は Wi-Fi 操作にシステム設定ナビゲーションのヒントを追加する（Agent はスイッチを操作できるが、入口ページを見つけられないだけかもしれない）ことで、設定系タスクの集中的な失敗の解決を見込みます。H2 は ToDo アプリに UI 要素認識ルールを提供することで、ToDo 系タスクの失敗の解決を見込みます。</p>
+<p><strong>中層仮説</strong>（同様に独立で、並行可能）：H3 はマルチモーダル入力パイプラインを修復する——失敗軌跡を再生すると、画像がパイプラインで捨てられるかテキスト記述に変換されている可能性が分かり、どれほど強いマルチモーダルモデルでも転写しようがありません。H4 は計数系の失敗を解決するため思考をグローバルに有効化します。</p>
+<p><strong>深層仮説</strong>（検証コストが高く、表層と中層の改善後も complex_ui の成功率が 40% を下回るときのみ起動）：H5 は視覚理解のより強いモデル（GPT-5）に交換、H6 はスクリーンショットに加えて UI 要素ツリー情報を追加（UI Automator が抽出した構造化 DOM とスクリーンショットをクロス検証）。両者は 2×2 の対比実験（Claude/GPT-5 × スクリーンショットのみ/スクリーンショット+要素ツリー）を組め、「モデル能力と情報の豊富さのどちらがより重要か、両者に協同効果はあるか」に答えます。</p>
+<p>各構成は完全な 116 タスク集の上で（異なる乱数シードで）5 回実行し、成功率、平均ステップ数、実行時間を記録します。</p>
+<h3 id="_21">結果から意思決定へ：データ駆動のトレードオフ<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
+<p>実験データが次の結果を示したと仮定します（<strong>以下のデータはすべて仮定値</strong>）。H1 は設定系タスクを 0% から 75% に引き上げ、入力トークンが 8% 増加。H3 は転写を 0% から 80% に引き上げ、vision トークンが 15% 増加、各ステップの遅延が 1 秒増加。H4 は計数を 0% から 70% に引き上げるが、各ステップの遅延が 4 秒から 12 秒に上がり、コストが 3 倍に増加。H6 は complex_ui を 17% から 52% に引き上げ、トークンが 30% 増加、各ステップの遅延が 2 秒増加。H5（GPT-5）は complex_ui を 17% から 35% に引き上げるが、各ステップの遅延が 4 秒から 15 秒に上がる。</p>
+<p>意思決定は単純にすべての有効な改善を採用することではありません。</p>
+<p><strong>H1+H3 は明確にデプロイ</strong>：H1 はコストが低く、収益が高く、副作用がありません。H3 は 15% の vision トークンコストと 1 秒の遅延を増やすものの、転写能力がゼロから生まれ、しかも修復するのは「入力パイプラインがマルチモーダル情報を失う」というアーキテクチャ上の欠陥で、他の視覚理解タスクも併せて改善する可能性があります。</p>
+<p><strong>H4 のグローバル思考は受け入れられない</strong>：全体の成功率は 88% から 91% に上がるものの、能力ラベルの分布は計数に関わるタスクが約 8% しかないことを示しています。少数のタスクのために全タスクに 3 倍の遅延とコストを負わせるのは、典型的な「鶏を割くに牛刀を用いる」です。ただし H4 は思考が計数タスクに有効であることを証明し、次のラウンドの条件付き有効化の基礎にできます。</p>
+<p><strong>H6 は H5 に勝る</strong>：H5（GPT-5）は各ステップの遅延が 4 秒から 15 秒に急騰したのに、complex_ui は 35% にしか上がらず、ボトルネックがモデルの思考能力ではなく、入力の情報が充分かにあることを示しています。H6（要素ツリー情報の追加）は 30% のトークン増分と 2 秒の遅延で 35 パーセントポイントの向上を得ており、コストパフォーマンスがはるかに高いのです。H5+H6 の組み合わせが最高成績（68%）ですが、タスク所要時間が大規模デプロイでは受け入れられず、重要な非同期タスク（銀行振込、医療予約）で選択的に有効化するのにのみ適し、通常のシーンでは H6 で充分です。</p>
+<p><strong>H2 はスケーラビリティの問題に直面</strong>：非標準アプリごとに専用ルールを書くのは持続不可能で、暫定策にしかならず、長期的には Agent の汎化能力を高めるべきです。</p>
+<h3 id="_22">継続的反復：最初の改善からシステムの進化へ<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
+<p>H1、H3、H6 の 3 つの改善を実施した後（H4 は未デプロイ）、Agent の AndroidWorld での成功率は 88% から 94% に向上しました。完全な benchmark を再実行すると、新しいレポートは異なる失敗モードを示しました。転写、設定系、複雑 UI のタスクはいずれも大幅に改善され、残る約 6% の失敗は、まだ解決していない計数タスク、依然変動する Wi-Fi 状態検証（0% から 60% に上がったが不安定）、および少数の新たに現れた失敗——プロンプトが長くなったか要素ツリー情報が多すぎてモデルの注意が散漫になった可能性——に集中しています。</p>
+<p>新しいレポートと H4 実験の洞察に基づいて、新しい仮説を立てられます。H7：条件付きで思考を有効化する——タスク開始前に 1 回の素早い LLM 呼び出し（約 1〜2 秒）でタスク記述を分析し、計数や複雑な推論に関わるタスクだけ思考モードを有効にして、遅延の増加を本当に必要なタスクに限定します。H8：行動空間を拡張し、複雑なジェスチャー（二本指ズーム、長押しドラッグ、マルチタッチ）をサポートする——残る失敗軌跡を再生すると、一部のタスクが地図のズーム、画像のトリミング、リストの長押しメニューなどの操作を要することが分かります。</p>
+<p>この benchmark フィードバックに基づく継続的反復が、Agent 能力のらせん状の向上を推し進めます。Benchmark は一度きりの試験ではなく、継続的な能力の健康診断です。定期的な評価メカニズム（毎週 1 回完全なテストを走らせるなど）を確立すれば、能力の進化曲線を監視し、退化（新機能がバグを導入した）を適時に発見し、改善（最適化が確かに有効）を検証し、知識（どのタイプの改善が通常有効で、どれが逆効果になりやすいか）を蓄積できます。このデータ駆動、仮説検証、継続的反復の方法論が、Agent 工学を経験駆動から科学的工学へと転換させる鍵となる道です。</p>
+<blockquote>
+<p><strong>実験 6-10 ★★★：AndroidWorld の評価と改善</strong></p>
+<p>本実験は評価レポートからシステム改善への 1 回の完全な閉ループ実践です。<code>ch6/android-world</code> の AndroidWorld 評価レポートを起点とします。</p>
+<p>第 1 歩：診断。タスクごとの表と能力ラベルマトリクスを交差分析し、表面的なタスクの失敗を深層の能力欠陥にマッピングします。予想を下回る成功率の能力ラベルと集中的に失敗するタスク領域を識別します。</p>
+<p>第 2 歩：仮説の構築。三層フレームワーク（表層→中層→深層）に沿って改善仮説を立て、各仮説に予想される成功率向上目標と検証方法を明確にします。</p>
+<p>第 3 歩：段階的実験。対照実験を設計して仮説を検証します。第 1 段階では低コストの表層仮説（プロンプト最適化、ツール記述の補足）をテストし、第 2 段階では中層の能力仮説（入力パイプラインの修正、思考モードの切り替え）をテストし、特定の能力ラベル下のタスクの改善幅を重点的に観察しつつ、副作用を測定します。</p>
+<p>第 4 歩：データ駆動の意思決定。コスト収益比に基づいてデプロイの意思決定を行います。単純にすべての有効な改善を採用するのではなく、各改善の適用範囲、遅延への影響、コスト開銷を天秤にかける必要があります。低コスト高収益の改善を優先してデプロイし、高コストの改善は重要なシーンに限定して使います。</p>
+<p>第 5 歩：反復。改善を完了したら評価データセットを再実行し、LLM で評価結果を分析して新しいレポートを生成します。新しいレポートは異なる失敗モードを示し、次のラウンドの反復の起点となります。
+</p>
+</blockquote>
+<h2 id="agent_3">外部評価から内部評価へ：本番級 Agent の評価インフラ<a class="headerlink" href="#agent_3" title="Permanent link">&para;</a></h2>
+<p>前のいくつかの節では、いかに Agent システムを外部から評価するか——評価環境の構築、データセットの設計、Benchmark レポートの分析——を論じました。しかし最も優れた Agent 製品は外部評価を受け入れるだけでなく、<strong>継続的な自己評価のインフラを内蔵しています</strong>。以下では第 5 章で紹介したオープンソースの汎用 Agent OpenClaw を例に、トップの Coding Agent 製品の公開技術分析と実務者の共有を交えて、参考に値する内部評価体系を示します。それは ML 研究の実験方法論を系統的に製品工学に埋め込んだものです。</p>
+<h3 id="_23">アブレーションインフラ：各特性の真の寄与を理解する<a class="headerlink" href="#_23" title="Permanent link">&para;</a></h3>
+<p>ML 研究者は長らくアブレーション実験（Ablation Study）を使って、モデルのどのコンポーネントが本当に重要かを理解してきました。いわゆるアブレーションとは、あるコンポーネントを 1 つずつ「取り外し」、全体性能がどれだけ落ちるかを見ることです。OpenClaw はこの方法論を製品工学に持ち込みました。システムに 1 つの総スイッチを内蔵し、複数の主要な特性（思考モード、コンテキスト圧縮、自動記憶、バックグラウンドタスクなど）を同時に無効化して、「素のモデル」ベースラインを作れます。これによりチームは 1 つの鍵となる問いに答えられます。<strong>ある特性は本当にユーザー体験を改善したのか、それとも役立つように感じるだけなのか？</strong></p>
+<p>アブレーションを一度きりの研究ではなく常態的な工学実践とすることには、いくつかの実際的な意義があります。まず、アブレーションスイッチは起動経路のごく初期——いかなるモジュールレベルの定数が設定値を捕捉するより前——に注入しなければなりません。これはアブレーションインフラを最初からシステムアーキテクチャに設計し込まなければならず、後付けではだめだということを意味します。次に、定期的にアブレーション実験を走らせること（大きなバージョンリリースごとなど）で、「特性の負債」——かつて有効だったがモデルの進化とともにもはや不要になった特性——を発見できます。本番 Agent を構築するどのチームにも、推奨される実践はこうです。<strong>各主要特性は独立して無効化できるべきで、チームは定期的に各特性の実際の寄与を検証すべきです</strong>。</p>
+<h3 id="ab">AB テスト方法論：メカニズムと目標を区別する<a class="headerlink" href="#ab" title="Permanent link">&para;</a></h3>
+<p>成熟した Agent 製品は自身の振る舞いに対して厳格な AB テスト（すなわちユーザーをランダムに 2 グループに分け、一方は旧バージョン、一方は新バージョンを使い、両グループの実際のデータを対比して変更が有効かを判断する）を行います。精緻に設計された Agent の AB テスト事例は、いくつかの鍵となる方法論的原則を示しています。</p>
+<p><strong>二値ではなく多腕</strong>。「ある」と「ない」を対比するだけでなく、複数の漸進的なバリアントを設計します（例えば異なる強度のプロンプト制約をテストするとき、対照群と 3 つの漸進的により厳格な実験群を設ける）。この設計は用量・効果関係を明らかにし、最適点を見つける助けになります。</p>
+<p><strong>メカニズム指標と目標指標を区別する</strong>。これは最も犯しやすい誤りです——あなたが変えているものを最適化目標だと勘違いすることです。例えば「Agent の計画ファイルの長さを短くする」をテストしているなら、計画の長さはメカニズム指標（あなたが直接変えているもの）ですが、それは目標ではありません。本当の目標は「セッションレベルのコストを下げる」かもしれません。計画ファイルを短くすればコストが下がるかもしれませんが、計画が詳細でないために編集・チェック・編集のループが増え、かえって総出力量が増えるかもしれません。常に自問してください。<strong>私が変えているもの（メカニズム）と、私が本当に気にしているもの（目標）は同じか？</strong> もし違うなら、目標を基準にします。</p>
+<p><strong>ガードレール指標を設定する</strong>。目標指標が改善したとしても、ユーザー満足度が下がる、操作回数が増える、あるいはエラー率が上がるなら、実験は停止すべきです。ガードレール指標は「悪化してはならない底線」です。</p>
+<p><strong>ベースライン統計を記録する</strong>。標本量、分布のパーセンタイル、相関分析（「拒否率が計画サイズに単調増加する」など）を含め、実験結果の解釈に必要なコンテキストを提供します。ベースラインがなければ、実験結果が統計的有意性を持つかを判断できません。</p>
+<h3 id="_24">二層特性スイッチシステム<a class="headerlink" href="#_24" title="Permanent link">&para;</a></h3>
+<p>Agent 製品は初日から特性スイッチ（Feature Flag）インフラを設計する必要があります。いわゆる特性スイッチとは、ある機能をユーザーに対して有効にするか無効にするかを、コードを再デプロイせずにリモートで制御できるスイッチのことです。それは同時に 3 つの目的に資します。実験、段階的リリース、緊急遮断です。</p>
+<p><strong>コンパイル時スイッチ</strong> はビルド段階で関連コードを成果物から物理的に取り除きます。内部専用の特性は外部ビルドにはそもそも存在せず——リバースエンジニアリングしても取り除かれた機能は発見できません。これはクリーンなアブレーションメカニズムでもあります。ある特性を無効化するのは実行時にロジックをスキップするのではなく、対応するコードが物理的にそもそも存在しないのです。</p>
+<p><strong>実行時スイッチ</strong> の設定はサーバー側から配信され、ローカルディスクに 1 部キャッシュされます。設計上、やや古いキャッシュ設定を読む方を選んでも、Agent がネットワークリクエストを待って起動をブロックさせてはなりません。具体的なグループ分けの決定は実験プラットフォーム（GrowthBook など）を通じて完了し、AB テストグループの割り当てに使います。1 つの鍵となる設計の細部は、各特性の露出イベントが各セッションで最大 1 回しか記録されないことです。重複記録が実験データを汚染するのを避けます。</p>
+<p>Agent 開発者への示唆はこうです。特性スイッチはデバッグツールではなく、<strong>一等市民級のアーキテクチャコンポーネント</strong> です。</p>
+<h3 id="_25">プロンプト敏感性評価<a class="headerlink" href="#_25" title="Permanent link">&para;</a></h3>
+<p>システムプロンプトは Agent の振る舞いの核心的な「コード」ですが、通常のコードと同等のバージョン管理と回帰テストを欠いていることがしばしばです。OpenClaw のやり方は、指定した git バージョンで完全にレンダリングされたシステムプロンプト——すべての動的条件が展開された後の最終テキストを含む——を抽出できる専用ツールを提供することです。これによりチームは正確に答えられます。<strong>どの commit がプロンプトを変えたか？ 評価集への影響は何か？</strong></p>
+<p>どの Agent チームにも、推奨される実践はこうです。(1) システムプロンプトは決定的にレンダリングできるべき（同じ設定入力が与えられれば、永遠に同じ出力を生む）。(2) プロンプトのバージョン化スナップショットのメカニズムを確立する。(3) プロンプト変更のたびに評価集で回帰テストを走らせる——ちょうどコード変更が CI を走らせる必要があるように。</p>
+<h3 id="_26">プライバシー配慮の分析を評価の基礎とする<a class="headerlink" href="#_26" title="Permanent link">&para;</a></h3>
+<p>評価は良いデータに依存しますが、Agent 製品が扱うのはしばしばユーザーのセンシティブな内容です。OpenClaw は型システムを通じてこの矛盾を解決します。分析インターフェースは特殊な型でラップされた値しか受け付けず、型名そのものが監査の手がかりになります——それは率直に「これがコードやファイルパスでないことを検証済みだ」と宣言します。この設計はプライバシー制約を、文書化された規範から、コンパイル時に強制される型チェックへと変えます。</p>
+<p>核心原則はこうです。<strong>最初からプライバシー制約を設計に組み込み、後付けにしない</strong>。もしあなたの分析システムが安全にデータを収集できないなら、有効に評価することはできません。プライバシーと評価は対立しません——プライバシー配慮の設計は、<em>本当に何を計測する必要があるか</em> を真剣に考えることを迫り、これがかえってより精確な評価指標を生み出すのです。</p>
+<h3 id="_27">外部から内部へ：評価思考の転換<a class="headerlink" href="#_27" title="Permanent link">&para;</a></h3>
+<p>本節の核心メッセージはこうです。<strong>前のいくつかの節はいかに外部から Agent を評価するかを教え、本節が明らかにするのは最良の Agent 製品がいかに内部から自らを評価するかです</strong>。外部評価は「Agent がどれほど優れているか」を教え、内部評価インフラは「どの変更がそれを良くしたか」を教えます。アブレーション実験はどの特性が本当に重要かを発見し、AB テストは各変更の影響を定量化し、特性スイッチは実験とロールバックのインフラを提供し、プロンプト敏感性評価はシステムプロンプトを CI 体系に組み込み、プライバシー配慮の分析はデータ収集のコンプライアンスを確保します。この 5 つのコンポーネントが共に評価駆動の製品工学を構成します——たまに一度評価するのではなく、評価を製品の意思決定の一つひとつに埋め込むのです。</p>
+<h2 id="_28">シミュレーション環境：評価からポストトレーニングへの橋<a class="headerlink" href="#_28" title="Permanent link">&para;</a></h2>
+<p>評価の終点は採点ではなく、改善です。本章はすでに改善の 2 つの道を示しました。Harness の調整（Benchmark レポートからシステム改善へ）と、評価を製品工学に埋め込むこと（内部評価インフラ）です。そして改善の最強の形態は訓練です。目標が「既存の能力を評価する」から「新しい能力を育てる」へと拡張するとき、特に第 7 章で論じるポストトレーニング技術を通じて、評価環境は <strong>シミュレーション環境</strong> へと進化する必要があります。Agent が繰り返し練習し、自動的に採点される仮想の練習場です。シミュレーション環境と評価環境の核心的な違いはこうです。インタラクションの頻度がはるかに高い（数百万回 対 数千回）、ランダム化が必要（特定の構成の丸暗記を防ぐ）、そして即時のフィードバックを提供しなければならない。応用領域から見ると、シミュレーション環境はデジタル環境（情報処理タスク）と身体化環境（物理世界の知覚と操作）の 2 大類に分かれます。</p>
+<p>この橋の両端はこう接続されます。評価側ですでに蓄積した資産は、ほぼシームレスに訓練信号に転換できます。定義の明確な一組の Rubric や検証器は、本質的に <strong>検証可能報酬（RLVR、Reinforcement Learning with Verifiable Rewards）</strong> の報酬関数そのものです——採点スクリプトがそのまま報酬スクリプトになり、テストが通るか、状態が達成されたかは、評価の判拠であると同時に強化学習の報酬でもあります。しかし訓練は評価段階では気にしなくてよかった新しい要求を突きつけます。1 つは <strong>信頼できる reset の意味論</strong> です。訓練は数百万の episode（1 つの episode とは初期状態からタスク終了までの 1 回の完全なインタラクションのラウンド）を走らせ、各 episode は環境を確定的でクリーンな初期状態にリセットできなければならず、さもなくば勾配信号が前ラウンドの残留状態に汚染されます。もう 1 つは <strong>評価をはるかに上回るスループット</strong> です。評価は数千回で結論を出せば充分ですが、訓練は許容できる実時間の中でモデルに数百万回のインタラクションを与えねばならず、環境の並列度と単一インスタンスの開銷が訓練の実行可能性を直接左右します。この 2 点——報酬関数化された検証器、訓練向けの reset とスループット——はいずれも第 7 章で展開します。</p>
+<p><img alt="図6-8 シミュレーション忠実度スペクトル" src="../images/fig6-8.svg" /></p>
+<p><strong>デジタル環境</strong> の面では、AWorld フレームワークが GAIA タスクのために制御可能な MCP サーバーサンドボックスを構築し、26 個の MCP サーバーを提供し、126 個のツール関数をカバーし、本物の API への直接アクセスがもたらす BAN や制御不能な副作用を避けます。すべてのツール呼び出しは再生可能で監査可能です。AWorld の分散アーキテクチャは従来の直列実行の 7695 秒を 525 秒に短縮し（14.6 倍の高速化）、環境のステートレス設計により各インスタンスが完全に独立し、効率的な並列をサポートします。</p>
+<p><strong>身体化環境</strong> の面では、RoboTwin2 が物理エンジンに基づいて双腕操作タスクを構築し、環境は物体の位置、向き、外観をランダム化して汎化能力を高めます。観測空間はマルチカメラの視覚と関節状態を含み、<strong>動作チャンキング（Action Chunking）</strong>——モデルが一度に複数の連続動作を計画する——を通じてリアルタイム制御を実現します（詳しくは第 9 章）。OSWorld は仮想マシンのスナップショットを通じてリセット可能性を実現し、AndroidWorld はモバイルアプリの自動化に焦点を当てます。デジタル環境であれ身体化環境であれ、シミュレーション環境は同様に第 4 章で論じた隔離実行環境と仮想身元メカニズム（VM/コンテナ隔離、住宅プロキシ、Human-in-the-Loop 認証、共有ファイルシステム）を必要とします。ここでは繰り返しません。</p>
+<blockquote>
+<p><strong>実験 6-11 ★★：OpenVLA と RoboTwin2 の身体化知能環境を構成する</strong></p>
+<p>ロボット操作のシミュレーション環境を構築します。<code>ch7/SimpleVLA-RL</code> と OpenVLA のドキュメントを読み、視覚・言語・行動モデルのアーキテクチャ（視覚エンコーダ + 言語モデル + 行動デコーダをエンドツーエンドに統合、画像とテキストを共有の意味空間に投影）を理解します。RoboTwin2 環境を構成し、観測空間（3 視点 RGB + 14 次元関節状態）と行動空間（14 次元制御ベクトル）を理解します。move_can_pot における環境ランダム化メカニズムと空間制約ロジックを研究します。事前学習済みモデルの評価を実行し、成功率、完了時間、失敗モードを記録し、動作チャンキングメカニズムの影響を重点的に観察します。</p>
+<p><img alt="図6-9 OpenVLA と RoboTwin2 の身体化知能環境" src="../images/fig6-9.svg" /></p>
+</blockquote>
+<h3 id="_29">忠実度のトレードオフと領域ランダム化<a class="headerlink" href="#_29" title="Permanent link">&para;</a></h3>
+<p>高忠実度の環境はより良く現実世界に転移できますが、計算開銷が大きいのです。忠実度のもう 1 つの次元はランダム化の程度です。適度なランダム化は汎化能力を高め、過度なランダム化はタスクを難しくしすぎます。<strong>領域ランダム化（Domain Randomization）</strong> はシミュレーションと現実のギャップ（sim-to-real gap）を縮める鍵となる技術です。物理パラメータ、視覚外観、センサーノイズなどの面で大範囲のランダムな変化を導入します——さまざまな照明と角度の下で把持を練習しておけば、本物の環境でも光の変化で取り落とさないのと同じです。デジタル環境では、sim-to-real はインターフェースのレンダリング、応答時間などの面での差異として現れ、遅延と失敗のランダム化を導入することで緩和できます。</p>
+<p>ここに至り、評価環境はその最後の進化を完成させました。能力を計測する試験会場から、能力を育てる訓練場へと。第 7 章では、AWorld-train がいかにこの種のシミュレーション環境を訓練可能な場へと改造するか、およびその中の工学的課題を紹介します——本章で確立した評価体系とシミュレーション環境こそ、ポストトレーニングの 2 つの礎です。</p>
+<h2 id="_30">本章のまとめ<a class="headerlink" href="#_30" title="Permanent link">&para;</a></h2>
+<p>本章は 1 つの核心的な問いをめぐって展開しました。Agent が本当に良くなったかをどう判断するか？ 再現可能なテスト環境の構築から、漏洩の試練に耐えるデータセットの設計、LLM に評者を担わせること、そして最後に評価結果でモデル選定と反復を駆動することまで——この一連の道の各段階が結論の信頼性に影響します。モデル選定では一点の成績だけでなく、異なる資源予算における能力成長曲線も比較すべきです。本番級 Agent の評価はたまに一度行う試験ではなく、あらゆる製品の意思決定に埋め込まれた継続的な検証です。</p>
+<p>核心的な方法論：観察→仮説→実験→検証→新しい認識→新しい仮説。これが Agent 工学を経験駆動の「錬金術」からデータ駆動の科学的工学へと転換させます。</p>
+<p>本章で紹介した評価体系は 1 つの完全な閉ループを形成します。<strong>評価環境</strong> が自動化されたテストインフラを提供する → <strong>評価データセット</strong> がテストケースを定義する → <strong>自動化評価方法</strong>（LLM-as-a-Judge と Rubric）が Agent の性能を採点する → <strong>Benchmark 分析</strong> が改善の方向を明らかにする → <strong>システム改善</strong> が問題を修復する → 評価環境とデータセットを更新し、新しいラウンドの反復を始める。</p>
+<p>第 1 章で導入した Harness 工学の視点から見ると、本章の評価方法論は Harness における「検証」機能の系統的な実装であり、「Benchmark レポートからシステム改善へ」の閉ループは Harness の反復最適化の核心メカニズムです——評価は Agent の現在の能力を計測するだけでなく、Harness の継続的な進化の方向を指し示します。</p>
+<p>本章で確立した評価体系は現在のシステムの最適化に資するだけでなく、次章のモデルのポストトレーニングに鍵となる基礎も提供します——評価環境とデータセットはポストトレーニングの重要な入力であり、シミュレーション環境はポストトレーニングの練習場です。次章では評価からモデルレベルの改善へと転じ、いかに SFT と RL を通じてインタラクション方策をモデルパラメータに書き込むかを深く論じます。</p>
+<h2 id="_31">演習問題<a class="headerlink" href="#_31" title="Permanent link">&para;</a></h2>
+<ol>
+<li>★★ LLM-as-a-Judge は言語モデルを使って言語モデルの出力を評価します。この「自己評価」には系統的な盲点が存在するのでしょうか——例えばモデルがある種のスタイルの回答に一貫して高得点をつけ、その好みが人間の評定と一致しない、というような？ こうしたバイアスをどう検出し校正しますか？</li>
+<li>★★★ 評価データセットの「漏洩防止」設計はきわめて重要です。しかしオープンソースのエコシステムでは、benchmark データがいったん公開されると、すぐに訓練データに取り込まれます。この「いたちごっこ」に終局はあるでしょうか？ データ漏洩に根本的に抵抗する評価方法を設計してください。</li>
+<li>★★ Scale AI の四準則（専門家の指導に基づく、網羅的なカバー、基準の重要性の重み付け、自己完結した評価）は評価の主観性を排除することを狙いとしています。しかし一部のタスク次元（「回答が役立つか」「語気が適切か」など）は本質的に主観性を持ちます。こうした主観的な次元に信頼できる Rubric をどう設計しますか？</li>
+<li>★★ τ-bench は本物のユーザーの振る舞いをシミュレートして Agent を評価します。しかしシミュレートされたユーザー自体も 1 つの LLM です——それはある種のエッジシナリオ（感情が激しい、表現が不明瞭なユーザーなど）を系統的に過小評価するかもしれません。シミュレートされたユーザー自体の品質をどう検証しますか？</li>
+<li>★★ 配対比較（Bradley-Terry モデル）は好みが推移的である（A &gt; B かつ B &gt; C なら A &gt; C）と仮定します。しかし人間の好みはしばしば推移性に反します。Agent 評価において、非推移的な好みはどんなシーンで現れうるでしょうか？ これはランキングの信頼性にどう影響しますか？</li>
+<li>★★ 本章は「観察→仮説→実験→検証」の科学的方法を提起しました。しかし実践では、Agent の行動空間は巨大で、1 つの仮説の検証に数百回の評価実行が必要かもしれません。限られた計算予算の下で、いかに評価の情報量を最大化しますか？</li>
+<li>★ 本章の仮想事例では、思考のグローバル有効化（H4）は全体の成功率を高めたものの、遅延とコストのために否決され、最終的に条件付き有効化（H7）へと進化しました。どんな信号（タスク記述の特徴、履歴の失敗モード、実行中の不確実性）が「思考モードを有効にするか否か」のルーティング根拠に適していますか？ 思考がかえって有害となる Agent のシーンは存在しますか？</li>
+<li>★★ τ-bench のユーザーシミュレーションは「漸進的情報開示」を採用しています——すべての情報を一度に提供せず、Agent の質問に応じて段階的に開示します。この設計は評価結果にどう影響しますか？ もしシミュレートされたユーザーの情報開示戦略が本物のユーザーと大きく異なるなら、評価結論はなお信頼できるでしょうか？</li>
+</ol>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:re-bench-2025">
+<p>Wijk, Hjalmar, et al. <em>RE-Bench: Evaluating Frontier AI R&amp;D Capabilities of Language Model Agents against Human Experts.</em> arXiv:2411.15114, 2025.&#160;<a class="footnote-backref" href="#fnref:re-bench-2025" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:45 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:45 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

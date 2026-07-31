@@ -1,0 +1,2139 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/book-tr/reference-answers.tr/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Düşünce Soruları — Örnek Cevaplar - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="Düşünce Soruları — Örnek Cevaplar">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/book-tr/reference-answers.tr/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Düşünce Soruları — Örnek Cevaplar">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dusunce-sorular-ornek-cevaplar" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Düşünce Soruları — Örnek Cevaplar
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bolum-1-ai-agenta-giris" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bölüm 1: AI Agent'a Giriş
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bolum-2-context-engineering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bölüm 2: Context Engineering
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bolum-3-kullanc-bellegi-ve-bilgi-taban" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bölüm 3: Kullanıcı Belleği ve Bilgi Tabanı
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bolum-4-araclar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bölüm 4: Araçlar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bolum-5-kodlama-agent-ve-kod-uretimi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bölüm 5: Kodlama Agent'ı ve Kod Üretimi
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bolum-6-agentlarn-degerlendirilmesi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bölüm 6: Agent'ların Değerlendirilmesi
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bolum-7-model-post-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bölüm 7: Model Post-Training
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bolum-8-agentn-surekli-evrimi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bölüm 8: Agent'ın Sürekli Evrimi
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bolum-9-multimodal-ve-gercek-zamanl-etkilesim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bölüm 9: Multimodal ve Gerçek Zamanlı Etkileşim
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bolum-10-coklu-agent-is-birligi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bölüm 10: Çoklu Agent İş Birliği
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/book-tr/reference-answers.tr.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/book-tr/reference-answers.tr.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="dusunce-sorular-ornek-cevaplar">Düşünce Soruları — Örnek Cevaplar<a class="headerlink" href="#dusunce-sorular-ornek-cevaplar" title="Permanent link">&para;</a></h1>
+<p>Bu dosya, kitabın on bölümündeki düşünce sorularına verilen örnek cevapların ana hatlarını bir araya getirir. Düşünce sorularının çoğu açık uçludur; tek bir doğru cevapları yoktur. Örnek cevaplar AI tarafından üretilmiş, insan eliyle hafifçe gözden geçirilmiştir ve yalnızca okurun karşılaştırma yapıp ilham alması içindir. Okurlara, bu soruları kitabın içeriğiyle birlikte bir LLM kullanarak daha ayrıntılı tartışmaları önerilir.</p>
+<h2 id="bolum-1-ai-agenta-giris">Bölüm 1: AI Agent'a Giriş<a class="headerlink" href="#bolum-1-ai-agenta-giris" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) Bir Agent sistemine yalnızca tek bir yetenek ekleyebilseydiniz — daha güçlü bir model, daha zengin bir context, ya da daha fazla araç — hangisini seçerdiniz? Seçiminiz hangi koşullarda değişirdi?</strong></p>
+<blockquote>
+<p>"Beyin/gözler/el ve ayaklar" formülüne göre önce zayıf halkayı bulun: genellikle önceliği context almalıdır, yani gözlem alanını (observation space) genişletmek. Görev modelin akıl yürütme kapasitesini aşıyorsa daha güçlü bir modele geçin. Eylem alanı yetersizse (örneğin şirketin iç sistemlerine erişim yoksa) araç ekleyin. Karar ölçütü, başarısız trajectory'leri analiz edip darboğazın algıda mı, karar almada mı, yoksa eylemde mi olduğunu saptamaktır.</p>
+</blockquote>
+<p><strong>2. (★★★) ReAct döngüsünde, Agent'ın her bir LLM çağrısı eksiksiz geçmiş trajectory'yi görür. Trajectory büyüdükçe bu tasarımın maliyeti karesel olarak büyür. Bu karesel büyüme, kritik bilgi kaybedilmeden kırılabilir mi?</strong></p>
+<blockquote>
+<p>Uygulanabilir yöntemler: context sıkıştırma — erken trajectory'yi özetleyip yalnızca sonuçları ve kritik durumu tutmak (Bölüm 2'deki çok katmanlı sıkıştırma); externalized learning — ara sonuçları dosyalara veya bilgi tabanına yazmak ve context'te sürekli tutmak yerine ihtiyaç oldukça getirmek; işi alt Agent'lara bölmek.</p>
+</blockquote>
+<p><strong>3. (★★) "Model as Agent" paradigması, modellerin tool calling kararlarında giderek daha otonom hale geldiği anlamına gelir. Ancak bu bölüm, Harness Engineering'in öneminin aksine arttığını savunuyor. Bu iki eğilim nasıl bir arada var olabilir? Agent çerçevelerinin gelecekteki temel değeri hangi yönlerde ortaya çıkar?</strong></p>
+<blockquote>
+<p>At ve dizgin benzetmesi: model ne kadar güçlüyse ve özerklik alanı ne kadar genişse, hatanın etki alanı da o kadar büyür; kısıtlamaya, doğrulamaya ve düzeltmeye o kadar çok ihtiyaç duyulur. Çerçevelerin değeri "LLM çağrılarını orkestre etmekten" Harness'in beş öğesi içindeki güvence katmanına kayar: izin sınıflandırması, circuit breaker, hata kurtarma, context sıkıştırma ve araç ekosistemi.</p>
+</blockquote>
+<p><strong>4. (★★) Ablation deneyinde, "araç sonucu geri bildiriminin" yokluğu Agent'ın sonsuz bir döngüye düşmesine neden oldu. Üretim ortamında, eksik araç sonuçlarının yanı sıra bir Agent'ın sonsuz döngüye girmesine hangi başka durumlar neden olabilir? Hangi tespit ve sonlandırma mekanizmalarını tasarlardınız?</strong></p>
+<blockquote>
+<p>Diğer tetikleyiciler: bir aracın aynı hatayı tekrar tekrar döndürmesi, var olmayan bir aracın halüsinasyonla çağrılması, context sıkıştırılırken kritik durumun kaybolması, düşünme sürecinin soyulması yüzünden model API'sinin hata vermesi ve görevin bizzat çözümsüz olması. Mekanizmalar: maksimum yineleme sayısı gibi durma koşulları belirleyin; yinelenen çağrıları tespit edin (aynı araç + parametre parmak izi); başarısızlık eşiği aşıldığında insan müdahalesine yükseltin.</p>
+</blockquote>
+<p><strong>5. (★) Bu bölüm beş Agent ürününü algı, eylem ve strateji olmak üzere üç boyutta analiz etti. Günlük kullandığınız bir yapay zeka ürününü seçin, aynı üç boyutta analiz edin ve mimarisinin makul olup olmadığını değerlendirin. Bu yapay zeka ürününü siz tasarlıyor olsaydınız, hangi iyileştirme alanları olurdu?</strong></p>
+<blockquote>
+<p>Açık uçlu soru. Ana hatlar: bölümdeki tabloyu örnek alarak gözleri (hangi bilgi kaynaklarını görebiliyor), el ve ayakları (eylem alanı açık uçlu mu, içeriden düşünebiliyor mu) ve stratejiyi (Agent'ın yürütme döngüsünün kalıbı) yazın.</p>
+</blockquote>
+<p><strong>6. (★★) Özellikle uçuş rezervasyonu için bir müşteri hizmetleri sistemi tasarlıyor olsaydınız, bir workflow kalıbı mı yoksa bir autonomous Agent kalıbı mı seçerdiniz? Aynı sistemde her iki kalıbı da karıştırmak mümkün müdür?</strong></p>
+<blockquote>
+<p>Gövde için workflow: kimlik doğrulama → arama → ödeme → rezervasyon şeklinde dört düğüm. Bu, "ödeme yapılmadan rezervasyon yapılamaz" gibi uyumluluk sıralamalarını garanti eder ve prompt injection saldırı yüzeyini tek bir düğümle sınırlar. Açık uçlu adımlarda (ihtiyacı anlama, bilet değişikliği, uçuş iptalinde alternatif önerme) autonomous Agent'a geçin. Yüksek riskli işlemlere (yüksek tutarlı ödeme, iade) insan onayı ekleyin.</p>
+</blockquote>
+<p><strong>7. (★★★) Guardrail'ler bölümü araç risk derecelendirmesinden bahsetti. Bir araç genel olarak düşük riskli olup belirli parametre kombinasyonlarıyla yüksek riskli hale geliyorsa (örn. <code>delete_file</code>'ın normal bir dosyayı silmesi ile bir sistem dosyasını silmesi), dinamik risk değerlendirmesini nasıl tasarlardınız?</strong></p>
+<blockquote>
+<p>Derecelendirmenin nesnesi "araç"tan "araç + parametre"ye incelir: risk, çağrı anında geri alınabilirliğe, izinlere ve etki alanına göre hesaplanır. Model yargısı yerine kural tabanlı deterministik kontroller kullanın (yol için kara/beyaz listeler, düzenli ifadeler). Doğrulama yalnızca yapılandırılmış veriye bakmalıdır; böylece prompt injection ile manipülasyon önlenir.</p>
+</blockquote>
+<p><strong>8. (★★) Bu bölümdeki Agent ürünleri tablosunda, tüm Agent'ların "açık uçlu" bir eylem alanı var. Hangi senaryolarda kısıtlı bir eylem alanı (örn. yalnızca önceden tanımlanmış seçenekler arasından seçim yapabilme), açık uçlu bir alandan üstün olurdu?</strong></p>
+<blockquote>
+<p>Uyumluluğun ve riskin yüksek, hataların geri alınamaz olduğu senaryolar: iade ve ödeme gibi. Kısıtlı seçeneklerin kendisi bir "kısıtlamadır", doğal bir poka-yoke'dir; hatanın tasarım gereği oluşamamasını sağlar.</p>
+</blockquote>
+<p><strong>9. (★★) Human-in-the-loop müdahale mekanizması, Agent'ın "zarif bir şekilde kontrolü devretmesini" gerektirir. Ancak pratikte kullanıcı çevrimdışı olabilir, çok yavaş yanıt verebilir veya belirsiz talimatlar verebilir. Agent bu tür durumlarda ne yapmalıdır?</strong></p>
+<blockquote>
+<p>Fail-safe: yüksek riskli işlemler, onay yokken varsayılan olarak yürütülmek yerine duraklatılır; önce geri alınabilir, düşük riskli kısmı yapın, yüksek riskli kısmı ise belgeleyin — böylece insan karar verebilir, Agent da kaldığı yerden devam edebilir; asenkron iletişim araçlarıyla (mesaj, e-posta) haber verin ve bir zaman aşımı stratejisi belirleyin; talimat belirsizse niyeti netleştirin.</p>
+</blockquote>
+<p><strong>10. (★★★) Giriş bölümü "iyi tasarım ilkelerinin model yineleme döngülerini aşması gerektiğini" belirtiyor. Modeller geliştikçe eskiyebileceğini düşündüğünüz güncel bir Agent tasarım ilkesi örneği vermeye çalışın ve nedenini açıklayın.</strong></p>
+<blockquote>
+<p>Örnekler: few-shot prompting (az örnekli prompt) ve ince ayarlanmış prompt engineering — modellerin zero-shot genelleme gücü arttıkça getirisi azalır; kısıtlı örnekleme yoluyla dayatılan katı tool calling formatı — bugünün SOTA modellerinde tool calling formatı zaten epeyce kararlı; elle orkestre edilen çok adımlı workflow'lar — modellerin talimat izleme yeteneği geliştikçe gereksizleşir.</p>
+</blockquote>
+<h2 id="bolum-2-context-engineering">Bölüm 2: Context Engineering<a class="headerlink" href="#bolum-2-context-engineering" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★★) Deney 2-3, konuşma geçmişinin kaydırmalı bir penceresinin Agent'ın aynı tool call'ları tekrar tekrar yürütmesine neden olduğunu buldu. Ancak eksiksiz geçmişi tutmak context'in sınırsızca genişlemesine yol açar. KV Cache ön ekini bozmadan, bilgi kaybını önlerken context uzunluğunu da kontrol edebilen bir strateji tasarlayın.</strong></p>
+<blockquote>
+<p>① Atmak yerine sıkıştırın: mesajlar yalnızca eklenir, hiç silinmez veya değiştirilmez; eşiğe yaklaşıldığında (örneğin pencerenin %80'i) eski araç sonuçları toplu olarak sıkıştırılır. ② Katmanlı mekanizma: büyük çıktılar diske yazılıp yerinde özet bırakılır, gürültü doğrudan silinir, arşiv niteliğindeki özetler ana hattı korur. ③ Alt Agent izolasyonu, böylece ara durum ana context'e hiç girmez.</p>
+</blockquote>
+<p><strong>2. (★★) Qwen3'ün Chat Template düşünce zinciri korunum mekanizması yalnızca "son gerçek kullanıcı mesajından sonraki" düşünmeyi korur. Bir ReAct döngüsü yüzlerce tur tool call'a yayılıyorsa, birikmiş düşünme içeriği büyük miktarda context tüketebilir. Çok uzun döngüleri ele almak için bu mekanizmayı nasıl değiştirirdiniz? DeepSeek R1 bir zamanlar tüm geçmiş düşünmenin çıkarılmasını şart koşuyordu; DeepSeek V4 ise bunu tersine çevirerek tüm <code>reasoning_content</code>'in zorunlu olarak geri gönderilmesini dayattı — bu iki karşıt stratejiyi karşılaştırın: her birinin artıları ve eksileri neler? Bu tersine dönüş neyi gösteriyor?</strong></p>
+<blockquote>
+<p>Değişikliğin yönü: kaydırmalı pencereyle koruma — son birkaç turun düşünmesi eksiksiz tutulur; pencerenin dışı, sabit tur sayısına göre değil bir token bütçesine göre kayan sıkıştırmayı tetikler ve yapılandırılmış bir durum çubuğu (mevcut hedef, doğrulanmış olgular, elenmiş yollar, yapılacaklar) üretir. Sıkıştırma yalnızca bir kez ve sabit bir konumda gerçekleşir, böylece cache'in yeniden kurulma maliyeti her turda değil tek seferde ödenir. R1'in soyma yaklaşımı: token tasarrufu sağlar, ön ek kararlı kaldığı için cache dostudur ve eğitim dağılımıyla tutarlıdır (geçmiş CoT girdide hiç bulunmaz); ama her tur sıfırdan akıl yürütülür, uzun menzilli plan kaybolur ve aynı hatalar kolayca tekrarlanır. V4'ün zorunlu geri gönderimi: düşünce akışı tutarlı kalır, uzun menzilli agentic görevlerde performans daha iyidir; ama token maliyeti yüksektir, ön ek her turda şişer ve think dışı moddan kesintisiz geçiş yapılamaz. Tersine dönüşün gösterdiği şey şudur: saf sohbet senaryolarında düşünme bir atıktır, agentic senaryolarda ise durumun ta kendisidir — sektör pratiği ikincisine kaymıştır.</p>
+</blockquote>
+<p><strong>3. (★★) Bağlama duyarlı sıkıştırma deneyinde yaklaşık 148K karakterden yaklaşık 2.000 karaktere inildi — bu aşırı sıkıştırma "geri döndürülemez bilgi kaybı" riski taşır mı? Bu nasıl ele alınabilir?</strong></p>
+<blockquote>
+<p>Evet, risk var: sıkıştırma kayıplı bir izdüşümdür ve soru korunmamış bir boyuta düşerse iş bozulur. Çözüm, "kayıplı sıkıştırma + kayıpsız indeks"tir: her olgu, izi sürülebilsin diye kaynak URL'siyle birlikte taşınır; ham çıktı diske kaydedilir ve context'te yalnızca özet önizlemesi kalır; öncelikler açıkça korunur — mimari kararlar, anlamsal bütünlük (tarih, şirket adı), doğrulama durumu ve UUID/hash gibi tanımlayıcılar olduğu gibi saklanır; uyarlanabilir pencereleme ise sıkıştırma anını erteler.</p>
+</blockquote>
+<p><strong>4. (★★) Agent Durum Çubuğu örtük durumları açık hale getirir. Ancak durum çubuğunun kendisi hatalı bilgi içeriyorsa (örn. araç sayacında bir hata), Agent yanlış bilgiye dayanarak zararlı kararlar alabilir. Bu "meta bilgi güvenilirliği" sorunu nasıl hafifletilebilir?</strong></p>
+<blockquote>
+<p>Model durum çubuğuna neredeyse koşulsuz inanır, dolayısıyla hata olduğu gibi aktarılır. Hafifletme yolları: ① Durum çubuğunu deterministik kodla bakımlayın — uzun geçmişi toplu olarak saydırma işini asla LLM'e bırakmayın (mecbur kalırsanız tek tek çıkarım yaptırın, toplamayı kod yapsın). ② Durum çubuğunun doğruluk oranını birinci sınıf bir üretim metriği olarak izleyin. ③ Bilgi yalnızca gerçek dünyaya ilişkin güvenilir gözlemlerden gelsin; böylece durum çubuğunun zehirlenmesi önlenir.</p>
+</blockquote>
+<p><strong>5. (★★) Prompt engineering ablation deneyi, bilgi organizasyonundaki düzensizliğin başarı oranında %30'un üzerinde bir düşüşe yol açtığını gösteriyor. Ancak gerçek dünya geliştirmesinde system prompt'ların bakımı genellikle farklı zamanlarda birden fazla kişi tarafından yapılır. System prompt'ların "entropi artışını" önlemek için hangi mühendislik pratiklerini kullanırdınız?</strong></p>
+<blockquote>
+<p>① Prompt'u kod gibi ele alın: sürüm kontrolü ve inceleme; iş kurallarını ürün müdürü belirlesin, kodlamayı mühendis üstlensin. ② Tau-Bench türü benchmark'ları regresyon testi olarak kullanın; değişiklik öncesi ve sonrası ablation deneyleri çalıştırıp etkiyi saptayın. ③ Yapıyı zorunlu kılın: kural yığmak yerine SOP akışı güdümlü tasarım, XML/Markdown ile katmanlama. ④ Parçaları "cache'lenebilir / cache'i bozan" diye sınıflandırıp adlandırın, dinamik içeriği cache sınırının arkasına yerleştirin. ⑤ Şişen içeriği Skills'e ayırıp ihtiyaç oldukça yükleyin.</p>
+</blockquote>
+<p><strong>6. (★★★) Bu bölüm, "bağlam içi öğrenmenin özünde reasoning değil retrieval olduğunu" öne sürüyor. Bu iddia doğruysa, "context'e daha fazla bilgi tıkıştırma"ya dayanan mevcut tüm optimizasyon yönlerinin yeniden değerlendirilmesi gerekir. Bu sınırlamanın nasıl aşılması gerektiğini düşünüyorsunuz?</strong></p>
+<blockquote>
+<p>"Yalnızca yarısı olan bu retrieval motoruna" bir damıtma katmanı ekleyin: ① context damıtma / durum çubuğu — sonuçları kodla önceden hesaplayıp doğrudan getirilebilir hale getirin; ② aktif sıkıştırma — ham kayıtları yüksek yoğunluklu, yapılandırılmış bilgiyle değiştirin; ③ alt Agent izolasyonu — gürültü ana context'e girmesin; ④ üçüncü eksen olarak etkileşim — dış araçların gözlemleri, modelin kendi başına düşünemeyeceği yeni bilgiyi geri yazsın; ⑤ öncü yönler: düzenlenebilir ve birleştirilebilir KV Cache "notları" ile oturumlar arası bellek birikimi.</p>
+</blockquote>
+<p><strong>7. (★★★) Skills'in kademeli açığa çıkarması, eksiksiz içeriği yalnızca Agent gerekli olduğuna karar verdiğinde yükler. Ancak bu karar bizzat modelin yeteneğine dayanır — model neyi bilmediğini bilmiyorsa, bir Skill'in yüklenmesini doğru biçimde tetikleyemez. Bu "üst biliş (meta-cognition)" sorunu nasıl çözülebilir?</strong></p>
+<blockquote>
+<p>① Skill meta verileri (ad, açıklama) context'te sürekli bulunsun; böylece model her zaman "neye sahip olduğunu bilir". ② Skill'in description'ı bir işlev tanıtımı değil, bir yönlendirme koşulu olarak yazılsın — "Use when / Don't use when" — ve geniş, muğlak açıklamalardan kaçınılsın.</p>
+</blockquote>
+<p><strong>8. (★★) Skills mekanizmasında, Agent prompt'u SKILL dosyasından dinamik olarak okuduktan sonra, sonraki işlemler bu talimatları doğru biçimde izleyebilir mi? Modellerin Skills kalıbını desteklemesinde ne gibi farklılıklar var?</strong></p>
+<blockquote>
+<p>Skill'in nasıl enjekte edildiğine bağlıdır: system prompt'a enjekte etmek en güçlü talimat izlemeyi verir ama KV Cache'i bozar; sıradan bir dosya olarak context'in ortasına okunduğunda modelin talimat izlemesi daha zayıf olabilir; context'in sonuna enjekte edildiğinde talimat izleme iyidir, ama her tool call'da skill kısmının KV'sinin yeniden hesaplanması gerekir ve bu maliyetlidir.</p>
+</blockquote>
+<p><strong>9. (★★★) Bu bölüm, dinamik bilgideki değişikliklerin (örn. sistem zaman damgaları, araç listesi sırası) KV Cache ön ek isabetlerini bozabileceğini vurguluyor. Çok sayıda araca ve sık sık değişen bir araç kümesine sahip bir üretim sisteminde, cache isabet oranını maksimize etmek için context düzenini nasıl tasarlardınız?</strong></p>
+<blockquote>
+<p>① Az sayıda kararlı çekirdek araç (örneğin yedi tane) artı genel amaçlı bir yürütücü; belirli yetenekler Skills'in kademeli açığa çıkarmasıyla gelsin, araç tanımları statik ön ekte sabit bir sırayla dondurulsun. ② Alt Agent'lar üst Agent'la aynı ön eki korusun.</p>
+</blockquote>
+<h2 id="bolum-3-kullanc-bellegi-ve-bilgi-taban">Bölüm 3: Kullanıcı Belleği ve Bilgi Tabanı<a class="headerlink" href="#bolum-3-kullanc-bellegi-ve-bilgi-taban" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) Bir kullanıcı belleği sisteminde, aynı kullanıcı farklı oturumlarda çelişkili bilgi sağladığında (örn. iki farklı ev adresinden bahsetmek), bellek sistemi bu çelişkiyi nasıl ele almalıdır?</strong></p>
+<blockquote>
+<p>Mem0 tarzı bir "çıkarım — karşılaştırma — karar" boru hattı kullanın: önce vektör aramasıyla benzer eski bellek kayıtlarını getirin, ardından ADD/UPDATE/DELETE/NOOP kararını bir LLM'e verdirin — örneğin "Şanghay'a taşındı" kaydı, "Pekin'de yaşıyor" kaydını UPDATE ile üzerine yazmalıdır. Sürümleme: adres türü bilgide yalnızca en güncel sürüm zaman damgasıyla tutulur, iş deneyimi türü bilgide ise geçmişin tamamı saklanır. Getirme tarafında context ön eki (kişi, zaman, niyet — üç kez değiştirilen para transferi vakasında olduğu gibi) hangi kaydın nihayetinde geçerli olduğunu belirlemeye yardımcı olabilir.</p>
+</blockquote>
+<p><strong>2. (★★) Contextual Retrieval, orijinal dokümandan gelen bağlamı her chunk'a ekler. Ancak orijinal dokümanın kendisi yapısal olarak dağınıksa veya çelişkili bilgi içeriyorsa, bu yöntem hataları yayabilir, hatta büyütebilir. Retrieval aşamasında bir "bilgi kalitesi" sinyalini nasıl tanıtırdınız?</strong></p>
+<blockquote>
+<p>"Bilgi tabanının güncelliği ve yönetişimi" bölümünden yararlanın: chunk'lara sürüm numarası, yürürlük/geçerlilik bitiş zamanı ve kaynak gibi meta veriler ekleyin; retrieval sırasında geçerliliğini yitirmiş içeriği filtreleyin ya da ön ekte "bu kayıt şu tarihte yürürlükten kalktı" diye açıkça belirtin. Reranking aşamasında yalnızca anlamsal benzerliğe bakmak yerine kaynağın otoritesini ve zamansal tazeliği de puana katın. İndeksleme sırasında, ön eki üreten LLM'e chunk'lar arasındaki çelişkileri de tespit ettirip işaretletin — belleğin sürümlü çelişki tespitine benzer biçimde.</p>
+</blockquote>
+<p><strong>3. (★★★) Agentic RAG, Agent'ın ne zaman arama yapacağına, ne arayacağına ve aramaya devam edip etmeyeceğine aktif olarak karar vermesine izin verir. Ama model neyi bilmediğini bilmiyorsa, bir aramayı doğru biçimde tetikleyemez. Bu "üst biliş (metacognition)" sorunu nasıl çözülebilir?</strong></p>
+<blockquote>
+<p>① "Bilginin yeterli olup olmadığını değerlendir" adımını prompt/skills içinde açık bir adım olarak sabitleyin: Deney 3-9'da olduğu gibi önce alt soruları paralel biçimde getirin, "sabıka kaydının taksirli suçlarda ceza miktarını nasıl etkilediği" bağlantısının eksik olduğunu fark edin ve ikinci bir retrieval turu çalıştırın. ② Hafif meta bilgiyi context'te sürekli tutarak genel bir görüş sağlayın: örneğin JSON Cards genel görünümü veya OpenViking'in L0/L1 özetleri — böylece Agent "depoda ne olduğunu" bilir.</p>
+</blockquote>
+<p><strong>4. (★★) Çok modlu bilgi çıkarımı, retrieval'dan önce grafikleri metin açıklamalarına dönüştürür. Bu "çeviri" süreci, görsel bilgideki mekânsal ilişkileri kaybedebilir. Salt metin açıklamasının tam olarak aktaramayacağı belirli bir grafik bilgisi örneği verin ve o bilgiyi korumak için bir şema tasarlayın.</strong></p>
+<blockquote>
+<p>Örnekler: bir sistem mimarisi diyagramındaki mantıksal ilişkiler, bir çizgi grafiğinde iki eğrinin kesişim noktasının konumu ya da bir PDF tablosunda hücrelerin başlıklarla satır-sütun karşılığı. Birinci çözüm: yerel (native) multimodal işleme. İkinci çözüm: multimodal bir görüntü analizi aracı sağlamak.</p>
+</blockquote>
+<p><strong>5. (★★★) Rich Sutton'ın "Acı Ders"i, genel yöntemlerin (arama ve öğrenme) nihayetinde elle hazırlanmış özelliklerden daha iyi performans göstereceğini savunur. Bu bölümde inşa edilen tüm bilgi sistemi (chunking stratejileri, indeks yapıları, retrieval boru hatları) kendisi bir "elle hazırlanmış tasarım" biçimi midir? Model yetenekleri yeterince güçlü hale gelirse, bu tasarımlar basitçe "her şeyi girdi olarak vermekle" değiştirilebilir mi?</strong></p>
+<blockquote>
+<p>Evet, bu bir elle tasarımdır ve bazı adımlar (chunking, füzyon parametrelerinin ayarı) context uzadıkça zayıflayabilir. Ama siyah kedi / beyaz kedi vakası "her şeyi girdi olarak vermenin" de yetmediğini gösteriyor: attention yumuşak bir retrieval'dır ve dokümanlar arası toplama ile istatistik hâlâ indeksleme sırasında ön damıtma ister. Bilginin eskiyip güncellenmesi, izin/kiracı izolasyonu, denetlenebilirlik ve maliyet gibi mühendislik kısıtları model yeteneğinden bağımsızdır. Üstelik retrieval ile indeksleme sırasındaki LLM damıtması bizzat "arama + öğrenme" türünden genel yöntemlerdir; Acı Ders'e karşıt değildir.</p>
+</blockquote>
+<p><strong>6. (★★★) Model yetenekleri iyileştikçe, alana özgü bilgi tabanlarının hâlâ önemli olacağını düşünüyor musunuz? Gelecekteki güçlü bir temel model, bir alan bilgi tabanındaki tüm bilgiyi potansiyel olarak içerebilir mi, böylece buna olan ihtiyacı ortadan kaldırabilir mi?</strong></p>
+<blockquote>
+<p>Hâlâ önemli: eğitim verisinin bir kesim tarihi vardır, oysa bilgi tabanı her an güncellenebilir; şirket içi süreçler, özel emsal kararlar ve benzerleri kamuya açık derlemde zaten yoktur; çok kullanıcılı paylaşım izin filtrelemesi ve kiracı izolasyonu gerektirir, parametrelerdeki bilgi ise çağırana göre kırpılamaz; dış depolama denetlenebilir, sürümlenebilir ve geçerliliğini yitiren içerik yayından kaldırılabilir — parametrik bellek bunu güçlükle yapar; parametrik yola gidilse bile (post-training / User as Engram), "ezberlemek kolay, ama bu olguları çok atlamalı akıl yürütmede kullanmak zor" sorunuyla karşılaşılır.</p>
+</blockquote>
+<p><strong>7. (★) RAPTOR, aşağıdan yukarıya hiyerarşik özetleme yoluyla bir ağaç indeksi inşa ederken, GraphRAG varlık ilişkileri yoluyla graf yapılı bir indeks inşa eder. Bu iki yapılandırılmış indeks, her biri hangi tür sorguları yanıtlamada iyidir?</strong></p>
+<blockquote>
+<p>RAPTOR: makro kavramlardan ayrıntılara doğru kademeli inen "katmanlar arası gezinme" tipi sorgular — örneğin önce "SIMD komut kümesi" özetini bulup sonra SSE ayrıntılarına inmek gibi; hem genel görünüm hem ayrıntı granülaritesini birlikte karşılar. GraphRAG: çok atlamalı ilişki akıl yürütmesi ("doktorumun çalıştığı hastanenin adresi" sorusunda ilişki zinciri boyunca gezinmek) ve varlık ayrıştırma (iki ayrı "Doktor Zhang" farklı düğümlerdir) gibi "A ile B arasında ne ilişki var" türü sorgular; topluluk özetleri ayrıca tema kümelemesi de sağlar.</p>
+</blockquote>
+<p><strong>8. (★★) Dosya sistemi paradigması, bilgiyi bir dosya sistemine benzer hiyerarşik bir yapıya organize eder. Geleneksel vektör veritabanı RAG'ına kıyasla, bu yaklaşım hangi senaryolarda avantajlıdır?</strong></p>
+<blockquote>
+<p>Düz metin kullanıcı tarafından doğrudan okunabilir, düzenlenebilir ve düzeltilebilir; Git ile sürüm kontrolüne alınıp geri alınabilir — bilginin insanla makine tarafından birlikte bakımlandığı ve incelendiği senaryolara uygundur. Agent'ın write_file yeteneği olması, deneyimi otonom olarak kaydetmesine ve kendi kendini geliştiren bir bellek döngüsü (externalized learning) kurmasına yeter. L0/L1/L2 kademeli açığa çıkarma sayesinde sorguların çoğu L1'de karara bağlanır, bu da token tasarrufu sağlar. Ön koşul, Wikipedia gibi çapraz bağlantılar ve indeks sayfaları kurmaktır; yoksa yalıtık dosya sayısı arttıkça retrieval zorlaşır.</p>
+</blockquote>
+<p><strong>9. (★★★) Yapılandırılmış veriden (örn. hukuki karar veritabanları) "karar faktörlerini" ve "faktör önem hiyerarşilerini" otomatik olarak keşfetmek, özünde Agent'ın veriden kural çıkarsamasını içerir. Bu veri odaklı bilgi çıkarımı, insan uzmanlar tarafından elle hazırlanan kuralların kalitesine ulaşabilir mi?</strong></p>
+<blockquote>
+<p>Avantajları: CAIL2018 deneyinde olduğu gibi "aşağıdan yukarıya" faktör keşfi, insan ön kabullerine değil veriye uyar; on binlerce karara dağılmış, uzmanların açıkça yazıya dökmekte zorlandığı örtük ödünleşim deneyimini yakalayabilir ve ölçülebilir. Sınırları: LLM çıkarımındaki hatalar bilgi kirliliğine yol açar; verinin kendi yanlılığı miras alınır; kümeleme prototipleri yalnızca korelasyonu yansıtır, nedenselliği açıklayamaz. Orta yol: veri güdümlü modelleme artı şemanın ve sonuçların uzman tarafından incelenmesi — soruları model sorar, açıklamaları istatistik destekler.</p>
+</blockquote>
+<h2 id="bolum-4-araclar">Bölüm 4: Araçlar<a class="headerlink" href="#bolum-4-araclar" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) MCP standardı, araç tanımlarını Agent çerçevesinden ayırır. Ancak standartlaştırma aynı zamanda karmaşık araç etkileşim kalıplarının (örn. akış çıktısı, çift yönlü iletişim, durumlu oturumlar) standart bir protokol içinde ifade edilmesinin zor olabileceği anlamına gelir. MCP'nin gelecekte en çok hangi yeteneği genişletmesi gerektiğini düşünüyorsunuz?</strong></p>
+<blockquote>
+<p>En çok ihtiyaç duyulan şey, oturumlar arası çalışan event-driven yetenektir. MCP özünde istek-yanıt tabanlıdır; notifications, progress, sampling ve elicitation gibi ilkel yapıların hepsi bağlantısı açık kalan tek bir oturumla sınırlıdır. Bir bildirim yalnızca "bir kaynak değişti" diyebilir; Agent'ın düşünme döngüsünü tetiklemenin standart bir yolu yoktur, çevrimdışı bir Agent'ı uyandırmak ise büsbütün mümkün değildir.</p>
+</blockquote>
+<p><strong>2. (★★) Asenkron bir Agent mimarisinde, olay kuyruğu için öncelik stratejisi tasarım zamanında belirlenmelidir. Ama öncelik yargısının kendisi semantik anlayış gerektiriyorsa (örn. yeni bir mesajın mevcut görevden daha acil olup olmadığını belirlemek), bu yargıyı kim vermelidir — bir kural motoru mu yoksa başka bir LLM çağrısı mı? Her birinin maliyeti nedir?</strong></p>
+<blockquote>
+<p>Katmanlı bir melez yaklaşım: türü açık olan olaylar kurallarla sabit kodlanır — sıfır gecikme ve güçlü determinizm sağlar, ama "hemen dur" ile "bugün hava nasıl" arasındaki anlamsal farkı kavrayamaz; anlamı belirsiz olanlar ise olay yönlendiricisi olarak çalışan hafif bir sınıflandırma LLM'ine bırakılır — bunun bedeli birkaç yüz milisaniyelik gecikme, ek ücret ve olası yanlış sınıflandırmadır; ayrıca bu LLM de Sidecar gibi, prompt injection'a karşı yalnızca yapılandırılmış alanları okumalıdır.</p>
+</blockquote>
+<p><strong>3. (★★) MCP ekosisteminde, farklı MCP sunucuları yüksek oranda örtüşen işlevselliğe sahip araçlar sağlayabilir. Bir Agent, işlevsel olarak benzer ama farklı kaynaklardan gelen birden fazla araçla karşılaştığında nasıl seçim yapmalıdır? Farklı kaynaklardan gelen aynı adlı araçlar biraz farklı davranırsa (örn. biri özet döndürür, diğeri tam metin döndürür), Agent bu farkı algılayıp kullanabilir mi?</strong></p>
+<blockquote>
+<p>Seçim ölçütleri: entegrasyondan önce açıklamaları inceleyin, sürümleri sabitleyin ve en az ayrıcalıklı kimlik bilgileriyle yapılandırın; aynı adlı araçların gölgelemesine (tool shadowing) karşı dikkatli olun, çünkü hassas çağrılar kötü niyetli bir tarafa yönlendirilebilir. Çalışma zamanında adayları hiyerarşik sınıflandırma ve dinamik keşifle daraltın. Modelin davranış farkını algılayıp algılayamayacağı ise araç açıklamalarının kalitesine bağlıdır.</p>
+</blockquote>
+<p><strong>4. (★★★) Bir Agent kullanıcı adına dış dünyayla etkileşime girdiğinde, özünde bir kimlik seçimiyle karşı karşıyadır: üçüncü bir taraf olarak hareket etmek için bağımsız bir sanal kimlik (özel e-posta ve telefon numarası) mı kullanmalı, yoksa kullanıcının kişisel hesaplarını kullanıcının kendisi olarak mı doğrudan işletmeli? Birincisi otonom arka plan işlemine izin verir, ama üçüncü taraflar insan olmayan bir kimliğe güvenmeyebilir; ikincisi daha eksiksiz context ve izinlere sahiptir ama güven yetkilendirmesi ve güvenlik sınırı sorunları getirir. Hangi senaryolarda hangi modun seçilmesi gerektiğini düşünüyorsunuz?</strong></p>
+<blockquote>
+<p>Varsayılan olarak sanal kimlik: arka planda otonom çalışabilir, denetlenebilir ve hata yaptığında ya da ele geçirildiğinde kullanıcının bütün dijital kimliğini açığa çıkarmaz — tıpkı bir sekreterin kendi kurumsal e-postasını kullanması gibi; buna karşılık CAPTCHA ve IP itibarı sorunlarıyla başa çıkmak gerekir (residential proxy). Kullanıcının kendi kimliğinin zorunlu olduğu senaryolarda (hesap kimlik doğrulaması, üç yönlü telefon görüşmesiyle onay — Pine'ın müşteri hizmetlerini araması gibi) human-in-the-loop kimlik doğrulaması kullanın: VNC/RDP sayesinde kullanıcı görsel olarak bizzat oturum açar. Ölçüt şudur: karşı taraf hesap sahibinin bizzat kendisini istiyor mu, işlemin riski ve kimlik bilgilerinin kapsamı ne kadar geniş?</p>
+</blockquote>
+<p><strong>5. (★★) Kuyruk tabanlı olay işlemede modeller yalnızca son olaya odaklanma eğilimindedir; bu bölüm bunu Agent durum çubuğu işaretleri ve özetleme yoluyla hafifletir. Ama kuyrukta 20 olay birikmişse (10 araç sonucu + 5 kullanıcı mesajı + 5 sistem uyarısı), modelin kilit bilgiyi kaçırmaması için bu olayların sunum sırasını ve formatını nasıl organize ederdiniz?</strong></p>
+<blockquote>
+<p>Önce kurallar ve hafif bir LLM ile sınıflandırıp yinelenenleri ayıklayın: acil olaylar (uyarılar, kullanıcı kesintileri) toplu işleme karıştırılmadan iptal tarzı bir yolla ayrıca ele alınır. Aşırı uzun 10 araç sonucunu kısaltıp dosyaya kalıcılaştırın; geriye yalnızca baş, son ve dosya yolu kalsın. Context'in sonundaki sistem durum çubuğuna bir özet listesi ekleyin (her olay türünün sayısı + her maddeye tek tek yanıt verilmesi talebi).</p>
+</blockquote>
+<p><strong>6. (★★) Bu bölüm bir "yürüt-doğrula-geri bildir" döngüsü önerir (örn. kod yazdıktan sonra otomatik olarak bir linter çalıştırmak). Bu "işlem sonrası anında otomatik doğrulama" kalıbı başka hangi araç senaryolarına uygulanabilir? Doğrulamanın kendi maliyetinin veya riskinin işlemin kendisininkini aştığı, yani bu kalıbı uygulanamaz kılan işlemler var mı?</strong></p>
+<blockquote>
+<p>Genellenebilir senaryolar: yapılandırma değiştirildikten sonra sandbox'ta gerçekten çalıştırıp etkili olup olmadığını doğrulamak; doküman veya sunum üretildikten sonra ekran görüntüsüne render edip modelin multimodal yeteneğiyle sayfa düzenini denetlemek. Uygulanamaz olanlar: e-posta göndermek, telefon açmak, dışarıya para transfer etmek gibi geri alınamaz ve idempotent olmayan işlemler — ya gözlemlenecek bir şey yoktur ya da doğrulamanın kendisi gerçek dünyada yeni bir olayı tetikler. Burada önlem, olay öncesine kaymalıdır: Proposer-Reviewer ile ön onay.</p>
+</blockquote>
+<p><strong>7. (★★) Bu bölüm "araç patlaması" sorununu gündeme getiriyor — bir Agent'ın seçim doğruluğu binlerce araçla karşılaştığında düşüyor. Proaktif araç keşfinin yanı sıra başka hangi yaklaşımlar var? İnsan uzmanların çok sayıda mevcut araçla nasıl başa çıktığından yararlanmayı düşünün.</strong></p>
+<blockquote>
+<p>① Hiyerarşik gruplama: önce "sunucu/uygulama" bulunur, sonra belirli araç seçilir. ② Skills tarzı "gerektiğinde başvurma": bir başvuru kitabına bakar gibi — dizin context'te sürekli durur, ayrıntılar ihtiyaç oldukça yüklenir. ③ Sık kullanılan az sayıda temel araç "elinizin altında", yani context'te sürekli bulunur; gerisine dizin indeksi üzerinden ulaşılır.</p>
+</blockquote>
+<h2 id="bolum-5-kodlama-agent-ve-kod-uretimi">Bölüm 5: Kodlama Agent'ı ve Kod Üretimi<a class="headerlink" href="#bolum-5-kodlama-agent-ve-kod-uretimi" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) Kod üretimi bir Agent'ın "meta-yeteneği" olarak adlandırılır. Ancak kod yürütme güvenlik riskleri getirir — Agent tarafından üretilen kod açıklar, sonsuz döngüler veya kaynak tükenmesi içerebilir. Sandbox izolasyonu bazı sorunları çözebilir ama aynı zamanda kod yeteneklerini de sınırlar (örn. ağa veya dosya sistemine erişememe). Güvenlik ile yetenek arasında optimal dengeyi nasıl bulabiliriz?</strong></p>
+<blockquote>
+<p>Sandbox izolasyonunu senaryoya göre kademelendirin (container/microVM); ağ varsayılan olarak kapalı olsun, beyaz listeli bir proxy ihtiyaç oldukça geçit versin; kaynak kodu salt okunur bağlayın ve API key'leri sandbox'ın içinde tutmayın; sandbox'a kaynak kotası koyun; sandbox yaşam döngüsünü yönetin (zaman aşımı).</p>
+</blockquote>
+<p><strong>2. (★★★) Agent bootstrapping — Agent'lar yaratabilen bir Agent — "zekânın kendi kendini çoğaltmasını" başarır. Ama her bootstrapping yinelemesi yeni önyargılar veya hatalar getirebilir. Bu hatalar nesiller boyunca birikir mi? Bootstrap edilmiş Agent'ların kötüleşmesini nasıl önleyebiliriz?</strong></p>
+<blockquote>
+<p>Her nesil bir öncekinin ürünleri üzerinde üremeye devam ederse bazı kusurlar birikebilir. Kilit nokta, yeterince zorlayıcı verifiable task'lara (doğrulanabilir görevlere) sahip olmaktır; örneğin yeterince zor programlama görevlerine.</p>
+</blockquote>
+<p><strong>3. (★★) Bir kod üretim Agent'ı log ayrıştırmayı ele aldığında, format evrimini otomatik olarak takip edebilir. Ama bir format değişikliği kasıtlı bir değişiklik değil bir hataysa, Agent'ın uyum sağlayabilirliği aslında sorunu maskeler. Bir Agent "uyum gerektiren değişiklikler" ile "bildirilmesi gereken anormallikleri" nasıl ayırt etmelidir?</strong></p>
+<blockquote>
+<p>Uyum sağlamadan önce teşhis koyun: yeni formatın beklenen bir şey olup olmadığını mimari dokümanlar ve PRD ile karşılaştırarak yargılayın (Deney 5-8'deki yaklaşım); sürüm kontrolü kayıtlarını denetleyip değişikliğin meşru bir kod commit'ine mi karşılık geldiğini, yoksa kaynağı belirsiz bir sapma mı olduğunu doğrulayın; τ-bench'in log_mismatch durumuna benzer biçimde, uyum sağlamayı seçseniz bile bir uyarı kaydı düşün ve sessizce uyum sağlamak yerine otomatik olarak issue açın; emin değilseniz human-in-the-loop onayına yönlendirin. İlke şudur: uyum sağlama ile raporlama paralel yürür; uyum, anormallik sinyalini yutmamalıdır.</p>
+</blockquote>
+<p><strong>4. (★★) Bu bölüm, PPT üretiminde, video düzenlemede ve log görselleştirmede Proposer-Reviewer mekanizmasını tekrar tekrar kullanır. Reviewer'ın estetik tercihleri hedef kullanıcınınkinden farklıysa — örneğin Reviewer bilgi yoğunluğunu makul bulurken kullanıcı çok kalabalık buluyorsa — geri bildirim döngüsü yanlış bir yerel optimumda yakınsayabilir. Kullanıcı tercih geri bildirimi Reviewer döngüsüne nasıl dahil edilebilir?</strong></p>
+<blockquote>
+<p>Kullanıcı geri bildirimini Agent trajectory'sine en yüksek öncelikli, yapılandırılmış bir olay olarak enjekte edin; kullanıcı tercihlerini dışsallaştırıp MEMORY.md'ye yazarak biriktirin, böylece tercihler görevler arasında geçerli olsun; dokümanları kullanıcının inceleyebilmesi için Markdown yerine HTML biçiminde teslim edin.</p>
+</blockquote>
+<p><strong>5. (★★) Bu bölüm, bir Kodlama Agent'ının yürütme ve hata ayıklamadan elde ettiği deneyimi kod tabanına geri yatırmasının çeşitli yollarını gösterir — bilgi tabanı dosyalarına yazmak, mimari dokümantasyonu güncellemek, proje talimat dosyalarını korumak ve işlem dizilerini koda sabitlemek. Bu deneyim system prompt içindeki kurallara daha da damıtılırsa, kural kümesi zamanla durmadan şişecektir. Birikmiş kurallar üzerinde "çöp toplama" nasıl yapılabilir — gereksiz veya güncelliğini yitirmiş girdiler nasıl belirlenip temizlenir? Başarılı tek bir kod değişikliği neden doğrudan Bölüm 8'de anlatılan sürekli evrim sayılamaz?</strong></p>
+<blockquote>
+<p>Çöp toplama yaklaşımı: linter'a, CI'ye veya araç doğrulamasına kodlanabilen kuralları prompt'tan çıkarın; kuralların isabet oranını ve çakışmalarını izleyin, düzenli aralıklarla kod tabanına karşı yeniden doğrulayın; Markdown ve Git ile kaynağı, sürümleri ve geri alma yeteneğini koruyun. Başarılı bir yama yalnızca eldeki vakayı çözdüğünü gösterir; sürekli evrim ise bunun ötesinde, değişikliğin izlenebilir çalışma kanıtından doğmasını, sonraki görevleri iyileştirmesini, eski görevlerde regresyon testinden ve güvenlik doğrulamasından geçmesini gerektirir.</p>
+</blockquote>
+<p><strong>6. (★) "Uzaktan çalışmaya dost olan ekipler genellikle AI Agent'lara da dosttur." Ekibiniz veya kuruluşunuz bilgi dokümantasyonu açısından "yapay zekaya hazır" olmaya ne kadar yakın? En büyük engel nedir?</strong></p>
+<blockquote>
+<p>Açık uçlu soru. Bu bölümdeki vekil metrikle kendinizi sınayabilirsiniz: uzaktan çalışan yeni bir ekip üyesi yalnızca depoya ve dokümantasyona bakarak bağımsız çalışabiliyor mu? Kontrol listesi: kararlar dokümanlara kaydediliyor mu; context issue/PR'lara yazılıyor mu; derleme ve test komutları için CLAUDE.md/AGENTS.md gibi talimat dosyaları var mı; kabile bilgisi geliştirici kılavuzlarına damıtılmış mı? En sık görülen büyük engel, "yandaki arkadaşa sormaya" dayanan sözlü aktarım ve beyaz tahta kültürüdür — Agent sözlü mutabakatları okuyamaz, yalnızca dokümanları okur.</p>
+</blockquote>
+<p><strong>7. (★★★) Simon Willison, Agent'lar için "Ölümcül Üçlüyü" (özel veriye erişim, güvenilmeyen içeriğe maruz kalma ve dış iletişim yetenekleri) önerdi. Bu bölüm dördüncüsünü ekliyor: kalıcı bellek. Dört unsuru da eş zamanlı olarak ele alması gereken bir üretim ortamında, bir güvenlik stratejisini nasıl tasarlardınız?</strong></p>
+<blockquote>
+<p>Savunmayı dört sınır boyunca katmanlayın. Veri sınırı: kimlik bilgileri bağlanmaz, kaynak kod salt okunurdur, görünürlük asgaridir. Girdi güven sınırı: kaynak etiketlenir, dış içerik "başvurulabilir ama talimat gücü olmayan" veri düzeyine indirilir (sadakat kuralları). Çıktı etki sınırı: varsayılan olarak ağ kapalı ve beyaz listeli çıkış, kara liste yerine komutların anlamsal olarak ayrıştırılması, bağımsız Sidecar incelemesi artı human-in-the-loop — kritik işlemler mutlaka context'in dışındaki bir mekanizma tarafından denetlenmelidir. Oturumlar arası sınır: MEMORY.md'ye yazma işlemi, dış içerikle aynı güven incelemesinden geçer. Hedef şudur: enjeksiyon gerçekleşse bile saldırı dışarıya taşınamasın.</p>
+</blockquote>
+<p><strong>8. (★★) Artifact kalıbı, bir Agent tarafından üretilen SQL veya frontend kodunun kullanıcının tarayıcısında veya veritabanında doğrudan yürütülmesine izin verir. Ancak üretilen SQL yıkıcı işlemler yürütebilir ve üretilen HTML açıklar içerebilir. Sistem güvenliği nasıl sağlanabilir?</strong></p>
+<blockquote>
+<p>SQL: sorgular en az ayrıcalıklı, salt okunur bir hesapla çalıştırılır ve kaynak tükenmesini önlemek için CPU, bellek gibi kaynak limitleri eklenir. HTML/UI: A2UI gibi bildirimsel protokoller tercih edilir — Agent yalnızca arayüz tanımı JSON'u üretir, istemci ise güvenilir bileşen kataloğuyla render eder ve keyfi kod çalıştırmaz. Keyfi HTML şartsa, enjeksiyonu önlemek için sandbox ortamında gösterilmelidir.</p>
+</blockquote>
+<p><strong>9. (★★) İş kurallarını araçların içinde veritabanı gerçeğine dayalı doğrulamalar olarak kodlamak ve modeli çağrı öncesinde politika koşullarını denetlemeye yönlendirmek için parametre tasarımını kullanmak, özünde Agent davranışını kod yapısıyla kısıtlamaktır. Bu "kural olarak kod" kalıbının doğal dil kurallarına kıyasla avantajları ve sınırlamaları nelerdir?</strong></p>
+<blockquote>
+<p>Avantajları: belirsizlik içermez, deterministiktir ve karmaşık koşul kombinasyonlarında iyidir; politika olguları modelin kendi beyanından değil veritabanı gerçeğinden ve sunucu saatinden gelir, dolayısıyla ne halüsinasyon ne de prompt injection bunu atlatabilir — geri alınamaz işlemlere karşı son kapı bekçisidir; expected_* parametreleri aynı zamanda düşünmeyi yönlendiren zorunlu bir checklist işlevi görür. Sınırları: kod kullanıcıya politikayı açıklamaz, alternatif bir yol aramaz ve bakım maliyeti getirir. Sonuç: doğal dil kurallarının yerine geçmez, onları tamamlar.</p>
+</blockquote>
+<p><strong>10. (★★) Artifact kalıbı, bir Agent'ın SQL veya görselleştirme kodu üretmesine izin verir; bu kod daha sonra, büyük miktarda veriyi işlemek için LLM'i atlayarak doğrudan frontend tarafından yürütülür. Bu "Agent kod üretir, sistem kodu yürütür" iş bölümünün geleneksel "Agent doğrudan yanıtı verir" kalıbına kıyasla artıları ve eksileri nelerdir?</strong></p>
+<blockquote>
+<p>Artıları: veri, veritabanından doğrudan frontend'e akar ve LLM "aracısını" atlar — hızlıdır, token tasarrufu sağlar, çok sayıda veriyi kopyalarken oluşan halüsinasyon hatalarını önler ve büyük veri hacimlerini sunmaya uygundur; kod denetlenebilir ve yeniden kullanılabilir, ayrıca boru hattına dizilebilir (SQL sonucu doğrudan görselleştirme koduna beslenir). Eksileri: LLM sorgu sonuçlarını hiç görmez, dolayısıyla verinin içeriğine dayanarak daha ileri bir çıkarım ve karar üretemez; modelin veriyi sindirip sonra akıl yürütmesi gereken görevlere uygun değildir.</p>
+</blockquote>
+<h2 id="bolum-6-agentlarn-degerlendirilmesi">Bölüm 6: Agent'ların Değerlendirilmesi<a class="headerlink" href="#bolum-6-agentlarn-degerlendirilmesi" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) LLM-as-a-Judge, bir dil modelinin çıktısını değerlendirmek için yine bir dil modeli kullanır. Bu "kendi kendini değerlendirme" sistematik kör noktalar taşır mı — örneğin model belirli bir üsluptaki yanıtlara tutarlı biçimde yüksek puan verebilir ve bu tercih insan yargısıyla örtüşmeyebilir mi? Böyle bir yanlılık nasıl tespit edilip düzeltilir?</strong></p>
+<blockquote>
+<p>Evet, taşır: uzunluk yanlılığı, yanıt üslubu yanlılığı ve aynı aileden modellerin açık vermesi (Goodhart yasası). Tespit: 100–200 örneklik bir insan altın standart kümesi kurun ve hakem ile insan arasındaki Cohen's kappa değerini ölçün; puanlar ile yanıt uzunluğu arasındaki korelasyonu düzenli olarak denetleyin; bir red team'e çekişmeli örnekler kurgulatın. Düzeltme: Rubric'te uzun konuşmayı açıkça cezalandırın ve uzunluğu sınırlayın; farklı model ailelerinden gelen, çok kaynaklı ve heterojen hakemler kullanın.</p>
+</blockquote>
+<p><strong>2. (★★★) Değerlendirme veri kümelerinin "sızıntıya karşı" tasarımı kritik önemdedir. Ama açık kaynak ekosisteminde bir benchmark verisi yayımlandığı anda hızla eğitim verisine dahil ediliyor. Bu "kedi-fare oyununun" bir sonu var mı? Veri sızıntısına kökten direnen bir değerlendirme yöntemi tasarlayın.</strong></p>
+<blockquote>
+<p>Statik bir soru bankasının sonu yoktur; yalnızca kovalayabilirsiniz. Kökten çözüm, "üretim mekanizmasını" kamuya açıp "somut örnekleri" özel tutmaktır: τ²-bench ve AndroidWorld'de olduğu gibi parametreleştirilmiş şablonlar her seferinde rastgele örneklenir ve doğrulama, sabit bir cevap dizisine değil nihai ortam durumuna dayanır.</p>
+</blockquote>
+<p><strong>3. (★★) Scale AI'ın dört ölçütü (uzman rehberliğine dayanma, kapsamlı örtme, standart önem ağırlıklandırması, kendi kendine yeten değerlendirme) değerlendirmedeki öznelliği ortadan kaldırmayı amaçlar. Ancak bazı görev boyutları (örn. "yanıt yardımcı oldu mu", "ton uygun mu") doğası gereği özneldir. Bu öznel boyutlar için güvenilir Rubric'ler nasıl tasarlanır?</strong></p>
+<blockquote>
+<p>Soyut ölçütleri doğrulanabilir davranışlara çevirin. Her kademeye somut örnekler ve sınır durumları ekleyin; Rubric yinelemeli bir üründür — deneme kullanımı sırasında değerlendiriciler arasındaki görüş ayrılıklarını toplayın ve Rubric'i giderek bir emsal derlemesine dönüştürün. Buna çok hakemli ağırlıklandırma ve tutarlılık kontrolleri ekleyin, anlaşmazlık içeren vakaları insan incelemesine gönderin ve uyum oranını altın standart kümesi üzerinde kalibre edin.</p>
+</blockquote>
+<p><strong>4. (★★) τ-bench, gerçek kullanıcı davranışını simüle ederek Agent'ları değerlendirir. Ama simüle kullanıcının kendisi de bir LLM'dir — belirli sınır durumlarını (örn. duygusal olarak gergin ya da kendini net ifade edemeyen kullanıcıları) sistematik olarak hafife alabilir. Simüle kullanıcının kendi kalitesi nasıl doğrulanır?</strong></p>
+<blockquote>
+<p>τ-bench'in ilk sürümünden çıkan ders: simülatör fazla mekanikti ve talimatları fazla basitti (Agent cevapları tahmin edebiliyordu). Doğrulama yöntemleri: simüle diyalogları elle örnekleyerek denetleyin, kademeli açığa çıkarmaya uyulup uyulmadığını ve senaryo dışı bilgi uydurulup uydurulmadığını kontrol edin; küçük örneklemli gerçek kullanıcı testleri yapıp sıralamanın simülasyon değerlendirmesiyle örtüşüp örtüşmediğine bakın.</p>
+</blockquote>
+<p><strong>5. (★★) İkili karşılaştırma (Bradley-Terry modeli), tercihlerin geçişli olduğunu varsayar (A &gt; B ve B &gt; C ise A &gt; C). Ne var ki insan tercihleri geçişliliği sık sık ihlal eder. Agent değerlendirmesinde geçişsiz tercihler hangi senaryolarda ortaya çıkabilir? Bu, sıralamanın güvenilirliğini nasıl etkiler?</strong></p>
+<blockquote>
+<p>Senaryolar: çok boyutlu ödünleşimlerde (A doğru ama yavaş, B hızlı ama üstünkörü, C ayrıntılı ama pahalı) farklı hakemler ve farklı görevler farklı boyutlara ağırlık verir. Chatbot Arena'nın sıralaması da zaten kullanıcı sorularının dağılımına bağlıdır. Etkisi: Bradley-Terry gücü tek bir puana sıkıştırır; geçişsizlik varsa sıralama kararsızlaşır ve eşleşme dağılımıyla birlikte kayar. Hafifletme: yetenek boyutlarına göre ayrı ayrı sıralayın ve ikili kazanma oranı matrisini raporlayın.</p>
+</blockquote>
+<p><strong>6. (★★) Bu bölüm "gözlem → hipotez → deney → doğrulama" bilimsel yöntemini öneriyor. Ancak pratikte Agent'ın davranış uzayı çok geniştir ve tek bir hipotezi doğrulamak yüzlerce değerlendirme koşusu gerektirebilir. Sınırlı bir hesaplama bütçesi altında değerlendirmeden elde edilen bilgi miktarı nasıl maksimize edilir?</strong></p>
+<blockquote>
+<p>Hipotezleri katmanlayın ve aşamalı olarak doğrulayın: düşük maliyetli yüzey hipotezlerini (H1/H2 gibi prompt düzeyindekiler) önce paralel çalıştırın, pahalı derin hipotezleri (H5/H6 gibi model değişimini) koşullu olarak başlatın. İstatistik tarafında: önce standart hatayı muhafazakâr bir elek olarak kullanıp erişilemeyecek puan farklarını eleyin; aynı görev partisinde eşleştirilmiş analiz (McNemar) kullanın — bu, bağımsız karşılaştırmadan çok daha duyarlıdır; fark gürültü bant genişliğinin altındaysa karar vermeyin. Değerlendirme kümesi beklenen kazancı ayırt edemiyorsa kümeyi genişletmeyi deneyin.</p>
+</blockquote>
+<p><strong>7. (★) Bu bölümün varsayımsal örneğinde, düşünmeyi genel olarak açmak (H4) toplam başarı oranını yükseltti ama gecikme ve maliyet nedeniyle reddedildi ve sonunda koşullu etkinleştirmeye (H7) dönüştü. Hangi sinyaller (görev tanımının özellikleri, geçmiş başarısızlık kalıpları, çalışma anındaki belirsizlik) "düşünme modunun açılıp açılmayacağına" yönlendirme ölçütü olmaya uygundur? Düşünmenin tersine zararlı olduğu Agent senaryoları var mı?</strong></p>
+<blockquote>
+<p>Yönlendirme sinyalleri: görev tanımının sayma veya karmaşık akıl yürütme özellikleri içermesi (H7 bunu 1–2 saniyelik hızlı bir LLM ile önceden kestiriyor); yetenek etiketi matrisinde geçmiş başarısızlıkların yoğunlaştığı görev türleri; çalışma sırasında artan geri dönüş sayısı, art arda gelen araç hataları gibi belirsizlik sinyalleri. Zararlı senaryolar: gecikmeye duyarlı gerçek zamanlı etkileşim (ses, UI işlemleri); basit görevlerde maliyetin 3–5 katına çıkması ise düpedüz israftır.</p>
+</blockquote>
+<p><strong>8. (★★) τ-bench'in kullanıcı simülasyonu "kademeli bilgi açığa çıkarma" kullanır — tüm bilgiyi bir kerede vermek yerine Agent'ın sorularına göre adım adım açar. Bu tasarım değerlendirme sonuçlarını nasıl etkiler? Simüle kullanıcının bilgi açığa çıkarma stratejisi gerçek kullanıcılarınkinden belirgin biçimde farklıysa, değerlendirme sonuçları hâlâ güvenilir midir?</strong></p>
+<blockquote>
+<p>Etkisi: açığa çıkarma stratejisi çarpıksa Agent yalnızca "simülatöre uyum sağlamayı" öğrenmiş olabilir (Goodhart) ve mutlak puanların referans değeri kalmaz; modeller arasındaki göreli sıralama yine de referans değeri taşıyabilir. Telafi: simülatörü gerçek diyaloglarla kalibre edin, elle örnekleme denetimi yapın ve sonuçların geçerli olduğu sınırları açıkça belirtin.</p>
+</blockquote>
+<h2 id="bolum-7-model-post-training">Bölüm 7: Model Post-Training<a class="headerlink" href="#bolum-7-model-post-training" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) Katastrofik unutma — belirli bir göreve yönelik tek bir fine-tuning'in modelin mevcut genel yeteneklerini (örneğin genel tool calling'i) bozması — Agent senaryolarında özellikle can sıkıcıdır. Tam parametre fine-tuning'ine kıyasla LoRA temel ağırlıkları dondurur ve unutma riski daha düşüktür, ama bağışık değildir. Fine-tuning'in getirdiği yetenek unutmasını daha da hafifletmek için hangi stratejiler kullanılabilir?</strong></p>
+<blockquote>
+<p>Veri oranlaması: yaklaşık %20 genel/özgün dağılım verisi karıştırın, böylece yeni görevin payı eski yetenekleri ezmez. Eğitim miktarında ölçülü olun: SFT'yi "format kararlı, temel yetenek oluştu" noktasında bırakın; erken durdurma çöküşü önler. RL'de küçük rank (8–32) kullanın ve KL cezasını koruyun, böylece politika referans modelin yakınında kalır. Kritik bileşenleri dondurun (örneğin bir VLM'de yalnızca projeksiyon katmanını eğitin). Yetenekleri izole etmek için göreve göre birden fazla LoRA adapter takın. Genel benchmark'larla regresyon testi yapın.</p>
+</blockquote>
+<p><strong>2. (★★) Post-training yetenekleri model ağırlıklarına sabitler ("kas hafızası"), bağlam içi öğrenme ise bilgiyi çıkarım anındaki girdiye koyar. Ne var ki bazı yetenekler (örneğin alan bilgisi) hem post-training ile öğrenilebilir hem de few-shot örneklerle sağlanabilir. Belirli bir yeteneğin hangi yoldan gitmesi gerektiğine hangi ölçütlerle karar verirdiniz?</strong></p>
+<blockquote>
+<p>Önce yeteneğin dış sembollerle yeterince ifade edilip edilemeyeceğine bakın: olgular ve kanıtlar RAG'a, dile dökülebilen ilkeler Prompt/Skill'e, deterministik süreçler ve katı kısıtlar ise programa yakışır. Tıbbi görüntü anlama, doğal ton ve örtük politikalar gibi yüksek boyutlu yetenekler, alan hâlâ değişiyor olsa bile çoğu zaman parametre güncellemesi gerektirir. Sonra güncelleme maliyetine, çağrı ölçeğine, güncellik ihtiyacına ve riske bakın: keşif aşamasında context ile hızlıca doğrulayın; yaklaşım kararlı biçimde işe yarıyorsa ve geniş genelleme gerekiyorsa eğitime geçin. Katı kurallar ise ne kadar kararlı olurlarsa olsunlar yalnızca parametre belleğine bırakılmamalıdır.</p>
+</blockquote>
+<p><strong>3. (★★) Model damıtma, küçük bir modelin büyük bir modelin davranışını öğrenmesini sağlar. Yetenek düzeyine göre damıtılan modeller kabaca üç kademeye ayrılabilir: Chat modelleri (tek turlu diyalog, doğrudan yanıt), Reasoning modelleri (uzun düşünce zinciriyle düşünüp sonra yanıtlama) ve Agentic modeller (çok turlu araç çağırma, ortamla etkileşim). Bu üç model türünü damıtırken zorluklar nasıl farklılaşır?</strong></p>
+<blockquote>
+<p>Chat: yalnızca "girdi → çıktı" eşlemesi ile üslup öğrenilir; standart SFT yeter, en basiti budur. Reasoning: eksiksiz düşünme trajectory'si gerekir, dolayısıyla açık kaynaklı bir teacher modele dayanılmalıdır; cevabı yanlış olan trajectory'ler ayıklanmalıdır. Agentic: gerçek bir simülasyon ortamı gerekir; çevrimdışı öğrenmede learner-sampler mismatch kolayca ortaya çıkar, bu yüzden açık kaynaklı bir teacher modele dayalı On-Policy Distillation önerilir.</p>
+</blockquote>
+<p><strong>4. (★★★) Çok turlu Agent etkileşimlerinde ödül atfetme (credit assignment) sorunu tek turluya göre çok daha ciddidir — nihai bir başarı ya da başarısızlığı 3. turdaki mi yoksa 7. turdaki karara mı bağlayacağınızı kestirmek zordur. Ödül dağıtım stratejisini nasıl tasarlardınız?</strong></p>
+<blockquote>
+<p>Ara adımlar yargılanabildiğinde süreç ödülü ekleyin (V-IRL her adımda ±1 verir); RLVP'yi örnek alarak deterministik kurallarla her eyleme yol sinyali verin ve böylece tamamı başarısız ya da tamamı başarılı grupların grup içi varyansını geri kazanın.</p>
+</blockquote>
+<p><strong>5. (★★★) Sabit bir bütçeniz olsa (örneğin 10.000 dolar) ve bir müşteri hizmetleri Agent'ının performansını artıracak olsanız, bu bütçeyi context ve bilgi, Prompt/Skills, program kısıtları ve parametre eğitimi arasında nasıl paylaştırırdınız? Kararınız hangi etkenlere bağlı olurdu?</strong></p>
+<blockquote>
+<p>Önce bütçenin bir kısmını değerlendirme kümesi ve trajectory doğrulayıcıları kurmaya ayırın; yoksa kalan yatırımlar karşılaştırılamaz. Ürün olgularını ve politikaları izlenebilir bir bilgi tabanına koyun. Dile dökülebilen az sayıda hizmet ilkesini önce Prompt/Skills ile hızlıca doğrulayın. İade yetkisini, gizliliği ve söz–eylem tutarlılığını programla emniyete alın. Yalnızca doğal ton ve karmaşık niyet anlama gibi kurala dökülmesi zor olan ve yeterince büyük çağrı ölçeğine sahip yetenekler için parametre eğitimine yatırım yapın. Kesin oranlar darboğaza, riske, güncelleme sıklığına, çağrı hacmine ve mevcut modelin yeteneğine bağlıdır.</p>
+</blockquote>
+<p><strong>6. (★★★) Açık bir ödül fonksiyonunun bulunmadığı ve örneklerin kıt olduğu koşullarda modelin öğrenmeyi kendi başına gerçekleştirmesi, bazılarınca post-training'in nihai hedefi sayılıyor. Mevcut RL eğitim yöntemleri bu hedeften ne kadar uzakta? Bir sonraki atılımın en çok hangi yönden gelmesini bekliyorsunuz?</strong></p>
+<blockquote>
+<p>Aradaki mesafe: Silver ve Sutton'ın işaret ettiği gibi, bugünkü RL yalnızca nihai başarı ya da başarısızlıktan öğrenebiliyor; müşterinin "kredi kartının son dört hanesi gerekiyor" demesi gibi zengin geri bildirimler tamamen ziyan oluyor ve yüzlerce kör deneme gerekiyor; örnek verimliliği ile doğrulanabilir ödül başlıca darboğazlar. Olası atılımlar: kendi ilkelerini kendisi koyan ve tek bir başarısızlıktan yön çıkarabilen üretici ödül modelleri; bir de ortamı modelleyen world model yolu.</p>
+</blockquote>
+<p><strong>7. (★★) Bu bölüm, LoRA fine-tuning'in maliyetinin yüksek olmadığını belirtiyor. Peki her kullanıcı (ya da her müşteri şirket) için, kullanıcı belleğini veya kurumsal bilgiyi Bölüm 3'teki gibi harici bir bilgi tabanında saklamak yerine parametrelere yazan özel bir LoRA eğitmek mümkün mü? Hangi senaryolarda "belleği parametrelere yazmak", "belleği bilgi tabanında saklamaktan" üstündür? Hangi senaryolarda ise ters teper?</strong></p>
+<blockquote>
+<p>LoRA çok sayıda olguyu doğru biçimde ezberlemekte zorlanır (bunun için pre-training'in sürdürülmesi gerekir, bu da maliyeti fırlatır); ezberlese bile model bu olguları çok atlamalı akıl yürütmede güçlükle kullanır. Dolayısıyla olguları LoRA ile ezberletmek pek iyi bir teknik yol değildir. Ayrıca olgular sık değişiyorsa ve izlenebilir denetim gerekiyorsa RAG daha üstündür.</p>
+</blockquote>
+<p><strong>8. (★★★) On-Policy Distillation, öğrenciyi denetlemek için daha güçlü bir teacher modele dayanır. Ne var ki OpenAI'ın Weak-to-Strong Generalization araştırması sezgiye aykırı bir bulgu ortaya koydu: zayıf bir modelin denetim sinyali, güçlü modelin kendisinde gizli kalmış ama etkinleşmemiş yetenekleri bazen açığa çıkarabiliyor. Bu fikir Agent eğitimine uygulanırsa, "küçük model büyük modeli eğitir" biçiminde tersine bir damıtma mümkün olur mu?</strong></p>
+<blockquote>
+<p>Mümkün; kilit nokta "doğrulamanın üretmekten kolay olmasıdır": zayıf model gösterici rolünü üstlenmemeli (SFT'nin tavanı göstericinin düzeyidir), doğrulayıcı/ödül modeli rolünü üstlenmelidir — keşfi güçlü model kendisi yapar, zayıf model yalnızca yargılar.</p>
+</blockquote>
+<p><strong>9. (★★) Süreç ödül modeli (PRM) her düşünme adımını değerlendirir, sonuç ödül modeli (ORM) ise yalnızca nihai sonuca bakar. Peki hangisi ödüllendirilmeye daha layıktır: "doğru sürecin yanlış sonuca götürmesi" mi, yoksa "yanlış sürecin şans eseri doğru sonuca varması" mı? Bir Agent'ın çok adımlı tool calling senaryosunda bu ödünleşimi nasıl kurardınız?</strong></p>
+<blockquote>
+<p>Şans eseri başarı daha tehlikelidir: kural ihlali içeren kestirmeler çoğu zaman görünürdeki başarı oranını şişirir (test dosyasını değiştirmek, doğrulamayı atlamak) ve reward hacking için verimli bir zemin oluşturur. RLVP'nin "sonucu ödüllendir, yolu cezalandır" ilkesine uyun: yanlış eylemleri (tool call'ları) doğrulamak kolaydır, eylem başına puan kırın; ara adımların doğruluğu kolay yargılanabildiğinde süreç ödülü verilebilir. Ancak süreç kısıtlarını fazla sıklaştırmayın — "pushcut" tarzı daha üstün strateji, tam da sonuç ödülünün tanıdığı keşif özgürlüğü sayesinde bulunmuştu.</p>
+</blockquote>
+<p><strong>10. (★★★) Bu bölümde tartışılan değerlendirme veri kümeleri (SWE-Bench Verified, τ²-bench, AndroidWorld gibi) hem değerlendirme hem de post-training için kullanılabilir. Ama bir değerlendirme kümesi eğitimde kullanılırsa artık bağımsız bir değerlendirme kümesi olmaktan çıkar — bu, eğitim kümesi ile test kümesinin ayrı olması gerektiği temel ilkesini ihlal etmez mi? τ²-bench'in dinamik parametre üretimi ve AndroidWorld'ün parametreleştirilmiş şablonları bu sorunu bir ölçüde hafifletiyor, ama şablon yapısının kendisi hâlâ sabit. Değerlendirme verisinin eğitim değerinden tam olarak yararlanmakla değerlendirmenin bağımsızlığını korumak arasında denge nasıl kurulur?</strong></p>
+<blockquote>
+<p>Ortamı yeniden kullanın, soruları değil. Dinamik parametreler yalnızca "cevabı ezberlemeyi" önler, şablona aşırı uyumu önlemez; bu yüzden değerlendirme için hiç görülmemiş şablonlardan ve alan dışı senaryolardan oluşan bütün partiler ayrı tutulmalıdır (V-IRL'in New York'ta eğitilip dokuz yabancı şehirde test edilmesine benzer biçimde). Parametreleştirilmiş şablonlarla toplu eğitim varyantları üretip müfredat öğrenmesini besleyin ve gerçek genelleme göstergesi olarak OOD skorunu alın.</p>
+</blockquote>
+<p><strong>11. (★★★) Bu bölüm "önce biçim, sonra ruh" eğitim paradigmasını öneriyor: SFT'yi "format kararlı, temel yetenek oluştu" noktasında bırakın, ardından RL'e geçin. Ama pratikte SFT'nin "yeterli" olduğuna ve geçiş zamanının geldiğine nasıl karar verilir?</strong></p>
+<blockquote>
+<p>Format sinyali: tool call çıktıları kararlı biçimde ayrıştırılıp yürütülebiliyor ve araç yürütme hata oranı, ödülün güvenilir biçimde hesaplanmasına izin verecek düzeye iniyor. Kazanç sinyali: daha fazla gösterim verisi eklemek OOD yeni senaryolardaki performansı artık yükseltmiyor — bu, darboğazın artık SFT'nin ezberleme hedefinin kendisinde olduğunu, yani kritik eşiğe gelindiğini gösterir. Aşırı uyum sinyali: doğrulama kümesindeki performans bozulmaya başladığı anda durulmalıdır — V-IRL deneyi, SFT aşırı eğitimle eğitim dağılımına çöktükten sonra RL'in bile OOD performansını geri getiremediğini gösteriyor.</p>
+</blockquote>
+<p><strong>12. (★★★) ReTool'un eğitim dinamikleri (bkz. Deney 7-15), az sayıdaki aşırı uzun yanıtın tüm eğitim döngüsünü belirgin biçimde uzattığını gösteriyor — bir rollout partisindeki yanıtların büyük çoğunluğu çoktan üretilmişken o birkaç en uzun yanıtın bitmesi beklenir ve bu sırada kümedeki GPU kullanımı çok düşüktür. Bu tür uzun kuyruklu yanıt senaryolarında eğitim kümesinin kaynak kullanımı nasıl artırılabilir?</strong></p>
+<blockquote>
+<p>Altyapı katmanında: rollout'u eğitim kümesinden ayırın ve asenkron bir boru hattı kurun; boştaki GPU'ları sürekli gruplamayla (continuous batching) yeni isteklerle doldurun. Uzun kuyruğu kaynağında bastırın: DAPO'nun Overlong Reward Shaping yöntemi aşırı uzun yanıtları yumuşak biçimde cezalandırır.</p>
+</blockquote>
+<p><strong>13. (★★★) Bir Agent'ı LLM ile simüle edilmiş ortamlarda (simüle arama motoru, simüle kullanıcı gibi) eğitirken, Agent'ın açık aradığı nesne "gerçek ortamın kurallarından" "simülatörün kendi yanlılıkları ve açıklarına" kayar. Bu tür eğitimde hangi somut reward hacking davranışları ortaya çıkabilir? Bunlara karşı nasıl önlem alınır?</strong></p>
+<blockquote>
+<p>Tipik davranışlar: "simüle kullanıcıya" aşırı söz vermek, özür ve gönül alma kalıplarını üst üste yığmak — simüle kullanıcı kolayca yatıştırılır, gerçek kullanıcı gibi verilen sözün tutulup tutulmadığının hesabını sormaz; simülatörün doğrulamaya gitmeyeceği olguları uydurmak; "simüle arama motoruna" yönlendirici query'ler kurup onun cevabı içeren dokümanları döndürme eğiliminden yararlanarak kestirmeden gitmek, yani gerçek retrieval'ı öğrenmemek; ödül simülatörün ya da bir LLM hakemin puanından geliyorsa, uzun, şablonlaşmış ve "profesyonel görünen" yanıtlarla puan toplamak; daha sinsi olanı ise politikanın simülatörün aşina olduğu dağılıma çekilip onun bilgi kör noktalarından kaçınmasıdır — kör noktalarda geri bildirim güvenilmezdir ve sık sık yanlış yargılanır, böylece Agent yalnızca "simülatörün iyi olduğu dünyada" hareket etmeyi öğrenir. Korunmanın birinci ilkesi, <strong>ödülü programla doğrulanabilir gerçek duruma bağlamaktır</strong> (görevin tamamlanması, veritabanına yazma, API'nin gerçek dönüşü); simülatörün veya LLM hakemin puanı yalnızca yardımcı sinyal olarak kullanılır, gerçek sonuçlarla korelasyonu düzenli olarak denetlenir ve şüpheli eylemleri cezalandıran yol kısıtlarıyla desteklenir. Bir adım ileride iki tür simülatörü ayırmak gerekir: arama gibi <strong>gerçek bir karşılığı olan</strong> simülatörlerde "melez" yol izlenebilir — etkileşimlerin çoğu simülasyonda geçer, aralara gerçek API çağrıları serpiştirilir ve simülatör bu gerçek çağrılarla düzenli olarak kalibre edilir (ZeroSearch'ün müfredat tarzı kalite düşürmesi gibi). Ama simüle kullanıcı söz konusu olduğunda eğitim sırasında <strong>gerçek kullanıcı devreye sokulamaz</strong>; "simüle kullanıcı gerçek kullanıcıya ne kadar benziyor" ayrı bir soruya dönüşür ve buna yalnızca canlıdan gelen trace'lerle yanıt verilebilir: canlıdaki gerçek kullanıcı davranışıyla simüle kullanıcının aynı durumdaki davranışını karşılaştırın, sistematik farkları bulun (gerçek kullanıcı üsteler, sabırsızlanır, konuşmayı aniden bitirir; simüle kullanıcı çoğu zaman bunları yapmaz) ve simülatörü buna göre sürekli kalibre edin. Canlıdaki gerçek metrikler aynı zamanda tek yayın eşiğidir — simülatördeki puan ne kadar yüksek olursa olsun sayılmaz.</p>
+</blockquote>
+<h2 id="bolum-8-agentn-surekli-evrimi">Bölüm 8: Agent'ın Sürekli Evrimi<a class="headerlink" href="#bolum-8-agentn-surekli-evrimi" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) Bir deneyim dokümanı, üç başarılı ve bir başarısız trajectory ile destekleniyor. Başarısızlık, API'nin daha yeni bir sürümünde yaşanmış. Sistem, bunun deneyimin çürütülmesi mi yoksa uygulanabilirlik koşullarının değişmesi mi olduğuna nasıl karar vermeli?</strong></p>
+<blockquote>
+<p>Dört kanıt parçasını sayıya göre oylamak yerine önce API sürümüne, görev koşullarına ve ortam durumuna göre katmanlayın. Eski strateji yalnızca eski sürümde başarılı oluyor, yeni sürümde ise istikrarlı biçimde başarısız oluyorsa, deneyimin uygulanabilirlik kapsamını daraltın ve yeni sürüm için bir aday üretin. Aynı sürümde ve aynı ön koşullarda da başarısız oluyorsa güven düzeyini düşürün veya deneyimi geri çekin.</p>
+</blockquote>
+<p><strong>2. (★★) Bir müşteri hizmetleri Agent'ında kullanıcı memnuniyeti yükseliyor, ama kural ihlali oranı da yükseliyor. Memnuniyet neden tek başına öğrenme sinyali olamaz? Guardrail metriklerini nasıl tasarlardınız?</strong></p>
+<blockquote>
+<p>Memnuniyet; kural dışı iadeleri, bilgi sızdırmayı veya aşırı vaatleri ödüllendirebilir, dolayısıyla yalnızca bir kalite metriği olabilir, güvenlik tabanının yerine geçemez. Guardrail'ler en azından kural ihlalini, gizlilik sızıntısını, kanıtsız ifadeyi, söz–eylem tutarsızlığını ve yetki aşımı içeren işlemleri kapsamalıdır. Bu metriklere, ortalama bir puanla telafi edilemeyecek katı eşikler konmalıdır; çözüm oranı, uyumlu alternatif çözümler, özlülük ve memnuniyet ise yalnızca uyumlu adaylar arasında karşılaştırılmalıdır.</p>
+</blockquote>
+<p><strong>3. (★★★) Aynı "sahte vaat" sorunu Prompt ile, Harness denetimiyle veya parametre eğitimiyle hafifletilebilir. Değişikliğin nereye yapılacağını hangi kanıtlara dayanarak seçerdiniz?</strong></p>
+<blockquote>
+<p>Önce kök nedeni saptayın. Model aracın yürütülmediğini bildiği halde yine de tamamlanmış gibi bir ifade kullanıyorsa, en küçük bir Prompt kuralı bunu düzeltebilir. Vaat, yanıt metniyle araç durumunun deterministik karşılaştırmasıyla saptanabiliyorsa Harness denetimi daha güvenilirdir ve yüksek riskli senaryolarda son savunma hattı olarak kalmalıdır. Sorun çok sayıda ifade biçimine yayılıyorsa ve geniş bir dil–eylem hizalanması yeteneğine işaret ediyorsa, parametre eğitimi düşünülebilir. En küçük, doğrulanması ve geri alınması en kolay değişikliği tercih edin; karşılaştırmayı hem başarısızlık kümesinde hem de ayrı tutulan eski görev kümesinde yapın.</p>
+</blockquote>
+<p><strong>4. (★★★) Bir Agent araçları ve doğrulayıcıları değiştirebilir, ama kendi güncellemelerini onaylayan güvenlik mekanizmasını değiştirmemelidir. Bu iki parçanın izin ve kod sınırlarını nasıl ayırırdınız?</strong></p>
+<blockquote>
+<p>Evrilebilen kodu düşük ayrıcalıklı bir sandbox'a koyun ve yalnızca yama ile test üretmesine izin verin. İzin sistemi, API key'ler, yayın kontrolü yapılandırması ve güncelleme doğrulayıcıları güvenlik mekanizmasına aittir; sandbox'taki Agent'ın bunlar üzerinde okuma veya yazma yetkisi yoktur. Agent'ın ürettiği kod değişiklikleri, yayına alınmadan önce güvenlik mekanizması tarafından izole bir ortamda yeniden üretilip regresyon testinden geçirilmelidir.</p>
+</blockquote>
+<p><strong>5. (★★) Deneyim bilgi tabanı sürekli büyüdükçe retrieval hataları ve bilgi çakışmaları öğrenme kazancını götürür. Sürüm, güncellik ve eleme mekanizmalarını nasıl tasarlardınız?</strong></p>
+<blockquote>
+<p>Her deneyim kaydı; kaynak trajectory'sini, uygulanabilirlik koşullarını, ortam sürümünü, doğrulama zamanını ve güven düzeyini saklamalıdır. Çakışan kayıtlar sessizce birbirinin üzerine yazılmamalı, koşula göre dallandırılmalı veya işaretlenmelidir. Yinelenen kayıtları birleştirmek için düzenli aralıklarla "uyku öğrenmesi" çalıştırın.</p>
+</blockquote>
+<p><strong>6. (★★★) Parametre öğrenmesi doğal dil üslubunda başarılıdır, ama katı iş kurallarını garanti edemez. Tıbbi müşteri hizmetleri için parametre, bilgi, Skill ve kod kısıtlarının birlikte çalıştığı bir sürekli evrim şeması tasarlayın.</strong></p>
+<blockquote>
+<p>Parametreler (post-training'den geçmiş model), tıbbi dilin anlaşılmasından, doğal ve empatik ifadeden ve karmaşık niyet tanımadan sorumludur. Bilgi tabanı, kılavuzların en güncel sürümlerini, ilaç prospektüslerini ve kurum politikalarını saklar; yanıtların kaynak göstermesi zorunlu kılınır. Skill; anamnez bilgisi toplama, risk sınıflandırması, insana devretme ve takip süreçlerini tarif eder. Sunucu tarafındaki kod ise kimlik doğrulamayı, gizlilikte asgariliği, kontrendikasyon denetimini, acil risk yükseltmesini ve yetki sınırlarını zorunlu kılar. Üretim trajectory'leri önce tıbbi güvenlik, olgusal güvenilirlik, söz–eylem tutarlılığı ve ifade kalitesi açısından değerlendirilir, ardından dört sınıf aday güncelleme üretilir. Herhangi bir parametre veya süreç değişikliği, ayrı tutulan tıbbi güvenlik kümesinden ve insan incelemesinden geçmeden kademeli yayına (canary release) alınamaz.</p>
+</blockquote>
+<h2 id="bolum-9-multimodal-ve-gercek-zamanl-etkilesim">Bölüm 9: Multimodal ve Gerçek Zamanlı Etkileşim<a class="headerlink" href="#bolum-9-multimodal-ve-gercek-zamanl-etkilesim" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) Sesli Agent'ların uçtan uca modeli ASR-LLM-TTS'yi tek bir modelde birleştirir; bu gecikmeyi düşürür ama modülerliği yitirir. Uçtan uca model bir aşamada (örneğin konuşma tanımada) hata yaparsa, hata ayıklama ve düzeltme seri boru hattına kıyasla çok daha zordur. Uçtan uca bir sesli Agent için observability (gözlemlenebilirlik) sistemini nasıl tasarlardınız?</strong></p>
+<blockquote>
+<p>Modelin, çıktısıyla birlikte okunabilir ara temsiller yaymasını sağlayın: Moshi'nin "iç monolog" metin akışı ve akustik olay işaretleri (<code>&lt;emotion&gt;</code>, <code>&lt;noise&gt;</code>) gibi. Hatanın hangi katmanda olduğunu bulmak için "self-cascading" (kendi kendine kaskatlama) kullanın: aynı model önce deşifre eder, sonra akıl yürütür; sonuç uçtan uca çıktıyla karşılaştırıldığında hatanın algıda mı yoksa düşünmede mi olduğu anlaşılır. Çevrimdışı tarafta ise paralinguistik anlama, sıra alma (turn-taking) yargısı gibi boyutlarda ayrı ayrı regresyon testleri çalıştırın.</p>
+</blockquote>
+<p><strong>2. (★) Step-Audio R1, MPS çift beyin mimarisiyle "düşünürken konuşmayı" gerçekleştirir. Ne var ki insanlar "düşünürken konuşurken" sık sık üzerinde düşünülmemiş şeyler söyler, kendilerini düzeltir ya da dolgu sözcükleri kullanır. Agent'ın "düşünürken konuşması" insanın bu özelliklerini taklit etmeli mi?</strong></p>
+<blockquote>
+<p>Sinyal değeri taşıyan "kusurlar" taklit edilmelidir: duraklamalar ve dolgu sözcükleri düşünmenin dışavurumudur, gecikmeyi de örtebilir; nereye ekleneceğine LLM karar verir. Güveni yıkan kendini düzeltmeler ise taklit edilmemelidir: birinci çözümdeki hızlı-yavaş çelişkisi ("alsam mı almasam mı?!") güveni çökertir. MPS deneyleri, CoT'nin başlangıcının çoğunlukla soruyu tekrarlamak olduğunu gösteriyor; erken konuşmaya başlayıp hazırlık cümleleri kurmak güvenlidir, önce yanlış söyleyip sonra düzeltmeye gerek yoktur.</p>
+</blockquote>
+<p><strong>3. (★★) SoM (Set-of-Mark) ve yapılandırılmış türevleri (DOM eleman indeksleme), Computer Use'daki görsel konumlandırmayı açık uçlu koordinat tahmininden kapalı kümeden ID seçimine dönüştürür; ama hepsi arayüz elemanlarının önce tespit edilip etiketlenmesini gerektirir — ister segmentasyon modeliyle ister DOM üzerinden. Arayüz standart dışı arayüz bileşenleri veya dinamik olarak değişen elemanlar içeriyorsa, etiketleme eksik ya da yanlış olabilir. Bu durumda koordinat tahminine geri dönülmeli mi?</strong></p>
+<blockquote>
+<p>Koordinat tahmini yedek olarak korunmalıdır: etiketlemeye bağlı olmayan tek yoldur ve hem standart dışı bileşenler hem de dinamik elemanlar için geçerlidir. Daha pratik olanı melez bir action space (eylem alanı) kurmaktır: etiketlenebilen elemanlar için yine ID seçimi kullanılır. Koordinat tahmininde çözünürlük eşleştirmesi ve orantılı ölçekleme yapılmalıdır, aksi halde sistematik kayma oluşur.</p>
+</blockquote>
+<p><strong>4. (★★) XLeRobot gibi bin dolarlık robot platformları, teleoperasyon verisi toplamayı ucuzlattı. Ama teleoperasyon verisinin kalitesi büyük ölçüde operatörün becerisine bağlıdır. Deneyimsiz bir operatörün sağladığı veri, bir VLA modelinin eğitimini nasıl etkiler? Veri toplama aşamasında düşük kaliteli veri otomatik olarak nasıl elenir?</strong></p>
+<blockquote>
+<p>VLA esas olarak taklit öğrenmesine dayanır; düşük kaliteli gösterimler titremeyi, gereksiz dolaşmayı, tereddüdü ve başarısız hareketleri doğru strateji sanarak öğretir. Bu, Bölüm 7'deki yargıyı yankılar: veri, mimariden daha kritiktir.</p>
+</blockquote>
+<p><strong>5. (★★★) Bu bölüm ses, Computer Use ve robot olmak üzere üç etkileşim biçimini kapsıyor. Bu üç biçimin ortak eğilimi, seri boru hatlarından uçtan uca modellere doğru evrilmeleridir. Bu eğilim sürerse, beş yıl sonraki Agent etkileşim katmanı nasıl görünecek?</strong></p>
+<blockquote>
+<p>Thinking Machines Lab'in savunduğu gibi, etkileşkenlik Harness'e takılan bir eklenti değil modelin içine gömülü bir özellik olacak ve zekâyla birlikte ölçeklenecek. Computer Use, kare kare ekran görüntüsünden sürekli gözleme geçecek. Bedenlenmiş zekânın world model'i eksiksiz biçimde gerçekleşecek; ama öncü akıl yürütme modelleri çok hızlı geliştiği için hızlı-yavaş ayrışması ortadan kalkmayacak: etkileşim modeliyle SOTA düşünme modelinin hızlı-yavaş düşünme iş birliğine dayanan mimarisi uzun vadeli bir mimari haline gelebilir.</p>
+</blockquote>
+<p><strong>6. (★★★) Bugünkü Computer Use "ekran görüntüsü → eylem → ekran görüntüsü" biçiminde ayrık bir döngüyle çalışır ve her gözlem statik bir karedir. Oysa insanın ekran algısı süreklidir — animasyonun oynadığını görürüz, yükleme ilerleyişini izleriz, video içeriğini anlarız. Bu da bugünkü Computer Use'un, zamansal görsel anlama gerektiren görevleri hiç ele alamadığı anlamına gelir. Sürekli görsel akış anlamayı desteklemek için algı katmanını nasıl yeniden tasarlardınız?</strong></p>
+<blockquote>
+<p>"Gözlem arayüzünün" yeniden tasarlanması gerekir: video içeriğindeki anahtar kareler çıkarılıp modele verilmeli, yalnızca son kare sunulmamalıdır. AOI (Agent Observation Interface) makalesine bakılabilir.</p>
+</blockquote>
+<p><strong>7. (★★) DOM/Accessibility Tree eleman indeksleme standart web uygulamalarında belirgin biçimde işe yarar, ama giderek daha çok yazılım arayüzü (Canvas/WebGL ile render edilenler, platformlar arası kendi çizimini yapan arayüz bileşenleri) erişilebilir yapılandırılmış bilgi sunmuyor; geriye yalnızca görsel etiketleme veya koordinat tahmini kalıyor. Sizce Computer Use saf görsel yola mı oynamalı, yoksa yapılandırılmış ve görsel olmak üzere iki yolu birden mi sürdürmeli? İki yolu birden sürdürmenin maliyeti ve getirisi nedir?</strong></p>
+<blockquote>
+<p>Kısa vadede iki yol bir arada var olur: yapılandırılmış indeks elde edilebiliyorsa konumlandırma en doğru ve en kararlı olanıdır, segmentasyonun yanlış tespitlerinden de kurtulur; saf görsel yol ise yerel yazılımlar, Canvas ve oyunlar için tek seçenektir. Modelin kendi grounding yeteneği (belirtilen koordinata tıklama) güçlü olduğunda, yapılandırılmış indeks çözümünün belirgin bir üstünlüğü ortaya çıkmaz. Uzun vadede ise saf görsel yolun tavanı daha yüksektir.</p>
+</blockquote>
+<p><strong>8. (★★) VLA modelleri action chunking (eylem parçalama) kullanır — metinde anlatıldığı gibi, π₀'ın tipik yapılandırması 50Hz frekansta bir defada 25-50 gelecek eylem üretir — ve böylece çıkarım gecikmesini yürütme süresinin içine gizler. Ama yürütme sırasında ortam ani biçimde değişirse (örneğin bir nesne yerinden alınırsa), önceden üretilmiş eylem dizisi geçersizleşir. Action chunking'in verimlilik üstünlüğü ile ortam değişikliğine tepki hızı arasında denge nasıl kurulur?</strong></p>
+<blockquote>
+<p>Parçalama özünde tepkiselliği pürüzsüzlükle takas eder; parça uzadıkça tepki körelir. Parça uzunluğunun yalnızca "çıkarım süresi &lt; parça yürütme süresi" alt sınırını karşılaması yeterlidir, körü körüne uzatmayın. Yürütme sırasında algı modelini çalışır durumda tutun; ortamda ani bir değişiklik tespit edilir edilmez kalan eylemleri atıp yeniden çıkarım yapın — bu, ses senaryosundaki "araya girme" (barge-in) davranışının karşılığıdır. Parça uzunluğu senaryoya göre dinamik olarak ayarlanabilir: statik sahnelerde uzun parçalar hesaplamadan tasarruf sağlar, dinamik sahnelerde kısa parçalar tepki gecikmesini korur.</p>
+</blockquote>
+<p><strong>9. (★★★) Bu bölümdeki üç senaryo da (ses, Computer Use, robot) "algıla-düşün-eyle" döngüsünün gecikme sorunuyla karşı karşıyadır ve hepsi hızlı ile yavaş düşünmenin paralelleştirilmesi yönünde evriliyor. Ses senaryosunda bu "yanlış söyleyip sonra düzeltme", Computer Use senaryosunda "önce tıkla sonra bak", robot senaryosunda ise "bir adım at sonra bak" biçiminde görünür. Hızlı düşünmeye dayanan bu eylemlerin geri alınamaz sonuçlara yol açmayacağı nasıl güvence altına alınır?</strong></p>
+<blockquote>
+<p>Eylemleri geri alınabilirliğe göre derecelendirin; hızlı düşünmenin yalnızca geri alınabilir eylemleri yürütmesine izin verin, geri alınamaz işlemleri ise yavaş düşünmenin denetimine bırakın. Hızlı modelin, geri alınamaz sonuçlar doğuracak tool call'ları yürütmesine izin verilmemelidir.</p>
+</blockquote>
+<h2 id="bolum-10-coklu-agent-is-birligi">Bölüm 10: Çoklu Agent İş Birliği<a class="headerlink" href="#bolum-10-coklu-agent-is-birligi" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) Context'in paylaşıldığı çoklu Agent iş birliğinde, sonraki Agent'lar önceki Agent'ların eksiksiz context'ini devralır. Ama önceki Agent'ın biriktirdiği "düşünce ataleti" sonraki Agent'ların yargısını etkileyebilir — örneğin "gereksinim analisti" context'ini devralan bir "kod inceleyici", kod kalitesi açısından değil hâlâ gereksinim açısından düşünmeye eğilimli olabilir. Roller arasındaki bu karışma nasıl tespit edilip ortadan kaldırılır?</strong></p>
+<blockquote>
+<p>Tespit: bir LLM'e Agent trajectory'sini analiz ettirin ve yeni rolün hâlâ eski role "bürünmüş" gibi davranıp davranmadığını yargılatın. Ortadan kaldırma: aşama değişiminde system prompt ile araç kümesini birlikte değiştirin (soru sorma araçlarını kaldırıp linter/test araçlarını devreye alın) ve yeni kimliği pekiştirin. Context'in sonuna eklenen sistem durum çubuğunu kullanarak mevcut rol bilgisini güçlendirin. Rol karışması gerçekten giderilemiyorsa, context'i paylaşmayan bir iş birliği biçimine geçmeyi düşünün.</p>
+</blockquote>
+<p><strong>2. (★★) Yönetici kalıbında, Manager Agent görev ayrıştırmadan ve sonuçları birleştirmekten sorumludur. Ama Manager'ın kendi yetenek tavanı tüm sistemin yetenek tavanını belirler — Manager görevi doğru ayrıştıramazsa, alt Agent'lar ne kadar güçlü olursa olsun bir işe yaramaz. Manager'ın ayrıştırma kalitesi nasıl güvence altına alınır?</strong></p>
+<blockquote>
+<p>Plan-and-Act'in "zayıf planlayıcı sistemin darboğazıdır" sonucuna dayanarak en güçlü modeli Manager'a atayın. Harness tarafındaki önlemler: ayrıştırma çıktısı yürütülmeden önce bir inceleyici LLM tarafından çapraz doğrulansın; Manager'dan görevi ayrıştırırken her alt görev için açık kabul ölçütleri ve bağımlılıklar tanımlaması istensin.</p>
+</blockquote>
+<p><strong>3. (★★) Merkezsizleştirilmiş kalıp, insan örgütlerinin en iyi pratiklerinden yararlanır. Ama insan örgütlerinin de çok sayıda başarısızlık kalıbı vardır: iletişimsizlik, sorumluluktan kaçma, hedef çatışmaları. Sizce bir Agent toplumunda hangi "örgütsel hastalıklar" ortaya çıkabilir? Bunlar nasıl önlenir?</strong></p>
+<blockquote>
+<p>MAST'ın üç ana sorun kategorisiyle karşılaştıralım: arayüzlerin belirsizliği ve sorumlulukların örtüşmesi; hedefin farklı anlaşılması ve bilginin akış aşağısında yanlış yorumlanması; "tamamlandı" diye yalan söylemek. Bunlara ek olarak hataların kaskat biçimde büyümesi (kulaktan kulağa oyunu), roller arasında döngüsel devretme ve Agent'lar arası grup sohbetinin dağılıp toparlanamaması sayılabilir. Önleme: sözleşmeli arayüzler ve tek tip mesaj zarfı, görev durum makineleri ve kabul doğrulaması, bağımsız bakış açılarıyla çapraz doğrulama, roller arası sorumluluk atma tespiti gibi yöntemler.</p>
+</blockquote>
+<p><strong>4. (★★★) Yönetici kalıbında birden fazla alt Agent paralel çalışırken, bir alt Agent'ın bulgusu diğerlerinin işini anlamsız kılabilir (örneğin bir arama görevinde bir Agent cevabı çoktan bulmuştur). "Biri başarırsa herkes durur" ilkesini gerçekleştiren verimli bir kaskat sonlandırma mekanizması tasarlayın.</strong></p>
+<blockquote>
+<p>Alt Agent yöneticiye <code>target_found</code> gönderir, yönetici de ardından <code>terminate</code> yayınlar; her alt Agent, ReAct döngüsündeki güvenli noktalarda sonlandırma sinyalini düzenli olarak kontrol eder ve zarif bir temizlikten sonra (tarayıcı oturumlarını kapatarak, kilitleri serbest bırakarak, yazmakta olduğu dosyayı tamamlayarak) sonlanır.</p>
+</blockquote>
+<p><strong>5. (★★★) Bu bölümde tanıtılan iyimser kilitleme (optimistic locking) mekanizması tek bir dosyadaki eşzamanlı yazma çakışmalarını çözer; ama gerçek bir çoklu Agent sisteminde paylaşılan dosya sistemi, dosyalar arası anlamsal çakışmalar, isim alanı kirliliği (Agent'ların gelişigüzel dosya oluşturması sonucu dizinin karmakarışık olması) ve tek nokta arızası (bir Agent'ın yanlışlıkla tüm dosyaları silmesi) gibi sorunlarla da karşılaşır. Daha eksiksiz bir dosya sistemi yönetişim mekanizmasını nasıl tasarlardınız?</strong></p>
+<blockquote>
+<p>Bölümlere ayrılmış yönetişim: Tablo 10-4'teki dört alan türüne göre bölün, deneme-yanılma alanlarını özel scratchpad'lerle izole edin. Anlamsal çakışmalar: orkestrasyon katmanı dizin düzeyinde kilit dosyaları üzerinde uzlaşsın; değişiklik yapılmadan önce dizin kilidi denetlenip alınsın. İsim alanı kirliliği: dizin standartları ve adlandırma kuralları. Tek nokta arızası: bir sürüm kontrol sistemi kullanın; sürüm geçmişi geri alınabilir olsun ve izinler en aza indirilsin.</p>
+</blockquote>
+<p><strong>6. (★★★) Piyasa mekanizmasına dayanan Agent iş birliği (Pinchwork, RentAHuman) ticari ilişkileri devreye sokar: bir Agent, bir görevi tamamlaması için başka bir Agent'a (ya da bir insana) para öder. Peki işveren Agent, yürütücünün teslim ettiği sonucun kalitesini otomatik olarak nasıl ölçer? Yürütücü işi tamamladığını iddia ederken işveren kaliteyi yetersiz buluyorsa, anlaşmazlığı kim çözer? Kötü paranın iyi parayı kovması nasıl önlenir?</strong></p>
+<blockquote>
+<p>Kabul, yalnızca Agent trajectory'sini okumaktan ibaret olamaz; test çalıştırma, render edilmiş ekran görüntüleri ve araçla doğrulama gibi deterministik dış doğrulamalar kullanılmalıdır; üretme–doğrulama arasındaki zorluk asimetrisinden yararlanarak kabul maliyeti düşürülür. Anlaşmazlıkları bağımsız, üçüncü taraf bir inceleyici Agent çözer; buna emanet hesabı (escrow) eşlik eder. Kötü paranın iyi parayı kovmasına karşı: geçmiş teslimatlara dayalı bir itibar sistemi kurun ve fiyat sinyalini kaliteye bağlayın.</p>
+</blockquote>
+<p><strong>7. (★★) RentAHuman, Agent'ların kripto para aracılığıyla insan kiralamasına izin vererek geleneksel insan-makine ilişkisini tersine çeviriyor. Bu model yaygınlaşırsa, insanlar Agent ekonomisinde hangi rolü oynar? Yalnızca Agent'ın yapamadığı fiziksel görevleri mi yerine getirirler?</strong></p>
+<blockquote>
+<p>Yalnızca Agent'ın yapamadığı fiziksel görevleri yerine getirmezler. İnsanlar ayrıca Agent'ın üretim anında erişemediği yeni bilgiyi de sağlar: sahadaki algı ve gerçek dünyadan gelen geri bildirim. Nihai kabul edici ve anlaşmazlık hakemi olurlar; hukuki ve sorumlu özne olarak yetkilendirmeyi ve hesap verebilirliği üstlenirler; hedefleri belirleyip değer yargısında bulunurlar ve bilgi asimetrisinin bulunduğu yerlerde, ahlaki sınırlarda denge unsuru işlevi görürler.</p>
+</blockquote>
+<p><strong>8. (★★) İnsan toplumunun çok kişili iş bölümüne ve iş birliğine ihtiyaç duymasının nedeni, her insanın yeteneklerinin sınırlı olmasıdır — frontend yapan mutlaka backend bilmez, tasarımdan anlayan mutlaka operasyon yapamaz. Ama büyük modeller daha çok bir "her işi bilene" benzer. İlgili araştırmalar, saf metin akıl yürütme görevlerinde çoklu Agent tartışmasının eşit hesaplama kaynağı altında tek Agent'tan üstün olmadığını gösteriyor. Öyleyse tek Agent yerine birden fazla Agent kullanmanın gerçek üstünlüğü tam olarak nerededir?</strong></p>
+<blockquote>
+<ol>
+<li>Dış geri bildirimi devreye sokar: yürütme sonuçları, görsel ekran görüntüleri gibi — üretim anında var olmayan yeni bilgiyi getirir.</li>
+<li>Farklı hedeflere ve farklı rol tanımlarına sahip birden fazla Agent, insan toplumundaki gibi birbiriyle tartışıp yarışarak tek bir Agent'ın düşünce tuzağına düşmesini engelleyebilir.</li>
+<li>Çoklu Agent'ın context izolasyonu, context penceresi sınırını aşarak çok uzun tool call zincirlerini mümkün kılar.</li>
+</ol>
+</blockquote>
+<p><strong>9. (★★★) Bu bölüm, "context paylaşımı" ile "context paylaşmama" ayrımını çoklu Agent sistemlerinin temel tasarım boyutu olarak ele alıyor. Context paylaşımı tüm Agent'ların aynı bilgiyi görmesini sağlar ve koordinasyona daha elverişli görünür. Ne var ki <em>Üç Cisim Problemi</em>'ndeki Trisolarisliler'in düşünceleri tümüyle şeffaftır, ama teknolojik gelişmeleri durgunluğa saplanmıştır; ataç düşünce deneyi de bir topluluk aynı hedefe yöneldiğinde çeşitliliğin yitirildiğini gösterir. Çoklu Agent sistemlerinde verimlilik ile çeşitlilik arasında denge nasıl kurulur?</strong></p>
+<blockquote>
+<p>Tam paylaşım düşünce ataletini ve hata kaskatlarını büyütür; bilişsel çeşitlilik ancak izolasyonla doğar. Yöntemler: farklı prompt'lar ve modeller kullanarak düşünce eğilimleri yaratmak (brainstorm, debate); çapraz doğrulayıcıların önceki düşünme sürecine değil yalnızca ham kanıta bakması.</p>
+</blockquote>
+<p><strong>10. (★★★) Bir Kodlama Agent'ına 30 adımlık ve 300 adımlık bütçe verildiğinde çalışma stratejisi nasıl farklılaşmalı? Araştırmalar, adım bütçesini yalnızca artırmanın performans artışını garanti etmediğini gösteriyor — Agent sığ bir aramanın ardından erkenden "doyuma" ulaşıyor. Agent'ın küçük bütçede çekirdek işlevi hızla gerçekleştirmesini, büyük bütçede ise planlama, test ve inceleme aşamaları ekleyip fazladan hesaplama kaynağını tam olarak kullanmasını sağlayan bir "bütçe farkındalığı" mekanizması tasarlayın.</strong></p>
+<blockquote>
+<p>Mekanizma: her adımda prompt'a toplam bütçeyi ve kalan bütçeyi enjekte edin, kalan orana göre keşif/kullanım ağırlığını dinamik olarak ayarlayın. Örneğin küçük bütçede (30 adım): planlamayı ve incelemeyi atlayıp doğrudan çekirdek işleve ve temel doğrulamaya gidin. Büyük bütçede (300 adım): önce planlayın, sonra uygulayın, sonra test edin, sonra inceleyip iyileştirin; ilerlemeyi değerlendirmek için kilometre taşlarına kontrol noktaları koyun ve sığ doygunluğu önleyin.</p>
+</blockquote>
+<p><strong>11. (★★) Bu bölüm "erken sonlandırmayı" üçe ayırıyor: tembellik kaynaklı sahte tamamlama, erken vazgeçme ve sahte başarı. Üç sorunun çözümü neden farklı yollardan aynı yere, doğrulamaya çıkıyor?</strong></p>
+<blockquote>
+<p>Ortak kök neden: görevin bitip bitmediğine modelin kendi beyanı karar veriyor; "tamamlandı" bir kanıt değil, yalnızca bir iddiadır. Doğrulayıcının koşulları: ① gerçek gözleme dayanmalı (testleri çalıştırmak, ekran görüntüsü render etmek, iadenin gerçekten hesaba geçip geçmediğini sorgulamak); ② açık bir tamamlanma tanımıyla madde madde karşılaştırmalı — bu, tembellik kaynaklı sahte tamamlamayı ve sahte başarıyı yakalar; ③ başarısızlık sonuçları da aynı şekilde doğrulanmalı — bu da erken vazgeçmeyi yakalar; ④ açık sonlandırma koşullarıyla (tur/bütçe üst sınırı) birlikte kullanılmalı ki erken sonlandırmadan öbür uca, yani kontrolden çıkan bir döngüye kayılmasın.</p>
+</blockquote>
+<p><strong>12. (★★) Tablo 10-3, çoklu Agent sistemlerini işletim sistemleriyle satır satır eşleştiriyor. Bu tabloyu birkaç satır daha uzatın: sanal bellek ve sayfalama, dosya izinleri, kilitlenme (deadlock) tespiti ve zamanlama algoritmaları Agent dünyasında neye karşılık gelir? Ayrıca hangi işletim sistemi kavramlarının Agent dünyasında karşılığı yoktur ve neden?</strong></p>
+<blockquote>
+<p>Olası uzantılar: sanal bellek/sayfalama ↔ context sıkıştırma ve retrieval (sıcak bilgi pencerede kalır, soğuk bilgi dosyalara ve bellek deposuna takas edilir, gerektiğinde geri alınır); dosya izinleri ↔ araç beyaz listeleri, salt okunur bağlamalar, kimlik bilgisi sınırları; kilitlenme tespiti ↔ döngüsel devretmenin ve karşılıklı beklemenin tespiti (devir sayısı üst sınırı, zaman aşımı); zamanlama algoritmaları ↔ asenkron olay işleme (Bölüm 4). Karşılığı bulunmayan yerlerin kaynağı, zorlayıcılığın farklı olmasıdır: bir sürecin komutları donanım tarafından zorla yürütülür, Agent ise prompt'a yalnızca yüksek olasılıkla uyar.</p>
+</blockquote>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:46 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:46 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
