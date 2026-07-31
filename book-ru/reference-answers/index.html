@@ -1,0 +1,2139 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/book-ru/reference-answers/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Ответы к вопросам для размышления - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="Ответы к вопросам для размышления">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/book-ru/reference-answers/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ответы к вопросам для размышления">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Ответы к вопросам для размышления
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Глава 1 Введение в ИИ-агенты
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Глава 2 Инженерия контекста
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Глава 3 Память пользователя и база знаний
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Глава 4 Инструменты
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Глава 5 Кодинг-агент и генерация кода
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Глава 6 Оценка агентов
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Глава 7 Постобучение модели
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Глава 8 Непрерывная эволюция Agent
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Глава 9 Мультимодальность и интерактивность в реальном времени
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Глава 10 Мультиагентное взаимодействие
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/book-ru/reference-answers.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/book-ru/reference-answers.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="_1">Ответы к вопросам для размышления<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>Этот файл собирает примерные планы ответов на вопросы для размышления всех десяти глав книги. Вопросы для размышления по большей части открытые, и единственно правильного ответа у них нет. Ответы сгенерированы ИИ и слегка выверены человеком; они предназначены лишь для сличения и вдохновения читателя. Рекомендуем читателям использовать LLM в сочетании с текстом книги для дальнейшего обсуждения этих вопросов.</p>
+<h2 id="1-">Глава 1 Введение в ИИ-агенты<a class="headerlink" href="#1-" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) Если бы вы могли добавить агентной системе лишь одну способность — более сильную модель, более богатый контекст или больше инструментов, — что бы вы выбрали? При каких условиях ваш выбор изменился бы?</strong></p>
+<blockquote>
+<p>Соотнесите с формулой «мозг/глаза/руки-ноги» и сначала найдите слабое место: обычно в первую очередь дополняют контекст, то есть расширяют пространство наблюдений (observation space). Если задача превышает способности модели к рассуждению — переходите на более сильную модель. Если недостаточно пространства действий (например, нет доступа к внутренним системам компании) — добавляйте инструменты. Критерий выбора — анализ траекторий неудач: определить, где находится узкое место — в восприятии, принятии решений или действии.</p>
+</blockquote>
+<p><strong>2. (★★★) В цикле ReAct каждый вызов LLM видит полную историю траектории. По мере роста траектории стоимость такой схемы растёт квадратично. Есть ли способ разорвать эту квадратичность, не теряя ключевой информации?</strong></p>
+<blockquote>
+<p>Рабочие приёмы: сжатие контекста — резюмировать раннюю траекторию, оставляя только выводы и ключевое состояние (многоуровневое сжатие из второй главы); экстернализация обучения — записывать промежуточные результаты в файлы/базу знаний и извлекать их по запросу, а не держать постоянно в контексте; разбиение на дочерних агентов.</p>
+</blockquote>
+<p><strong>3. (★★) Парадигма «модель как агент» означает, что модель становится всё более самостоятельной в решениях о вызове инструментов. Но в этой главе доказывается, что важность Harness-инженерии, наоборот, растёт. Как сосуществуют эти две тенденции? В чём будет заключаться ключевая ценность агентных фреймворков в будущем?</strong></p>
+<blockquote>
+<p>Метафора коня и узды: чем сильнее модель и чем больше у неё пространства автономии, тем шире масштаб последствий ошибки и тем сильнее нужны ограничения, проверка и исправление. Ценность фреймворков смещается от «оркестрации вызовов LLM» к слою гарантий из пяти элементов Harness: классификация разрешений, автоматические выключатели, восстановление после ошибок, сжатие контекста, экосистема инструментов.</p>
+</blockquote>
+<p><strong>4. (★★) В абляционном исследовании отсутствие «обратной связи о результатах инструментов» приводило к тому, что агент попадал в бесконечный цикл. Какие ещё ситуации в продакшене, помимо отсутствия результатов инструментов, могут привести агента к бесконечному циклу? Какой механизм обнаружения и остановки вы бы спроектировали?</strong></p>
+<blockquote>
+<p>Другие причины: инструмент раз за разом возвращает одну и ту же ошибку; галлюцинированный вызов несуществующего инструмента; потеря ключевого состояния при сжатии контекста; удаление процесса рассуждения, из-за чего API модели возвращает ошибку; принципиально нерешаемая задача. Механизмы: задавать условия остановки вроде максимального числа итераций; обнаружение повторяющихся вызовов (отпечаток «тот же инструмент + те же параметры»); при превышении порога неудач — эскалация к вмешательству человека.</p>
+</blockquote>
+<p><strong>5. (★) В этой главе пять агентных продуктов разбирались по трём измерениям: восприятие, действие, политика. Выберите ИИ-продукт, которым вы пользуетесь ежедневно, проанализируйте его по этим трём измерениям и подумайте, разумна ли его архитектура. Если бы вы проектировали этот ИИ-продукт, какие возможности для улучшения вы бы нашли?</strong></p>
+<blockquote>
+<p>Открытый вопрос. Ключевые моменты: по образцу таблицы из главы распишите «глаза» (какие источники информации видны), «руки-ноги» (открытое ли пространство действий, возможно ли внутреннее размышление), «политику» (режим исполнительного цикла агента).</p>
+</blockquote>
+<p><strong>6. (★★) Если бы вам нужно было спроектировать систему поддержки клиентов, специально обрабатывающую бронирование авиабилетов, вы бы выбрали режим рабочего процесса или режим автономного агента? Возможно ли смешать оба режима в одной системе?</strong></p>
+<blockquote>
+<p>Основная часть — рабочий процесс: четыре узла «проверка личности → поиск → оплата → бронирование», гарантирующие порядок соответствия требованиям вроде «нельзя бронировать до оплаты», при этом поверхность атак инъекцией промпта ограничивается одним узлом. Открытые этапы (понимание потребностей, перебронирование, рекомендация альтернатив при отмене рейса) переключаются на автономного агента. Операции высокого риска (крупные платежи, возвраты средств) — с подтверждением человеком.</p>
+</blockquote>
+<p><strong>7. (★★★) В разделе про ограждения упоминалась оценка риска инструментов. Если инструмент в большинстве случаев низкорисковый, но при определённых сочетаниях параметров становится высокорисковым (например, <code>delete_file</code> для удаления обычного файла против удаления системного файла), как бы вы спроектировали динамическую оценку риска?</strong></p>
+<blockquote>
+<p>Объект оценки уточняется с «инструмента» до «инструмент + параметры»: риск вычисляется в момент вызова по обратимости, полномочиям и масштабу последствий. Используйте детерминированные проверки на основе правил (чёрно-белые списки путей, регулярные выражения), а не суждение модели. Проверка должна опираться только на структурированные данные, чтобы не поддаться манипуляции через инъекцию промпта.</p>
+</blockquote>
+<p><strong>8. (★★) В таблице агентных продуктов из этой главы пространство действий у всех агентов «открытое». В каких сценариях ограниченное пространство действий (например, выбор только из предопределённых вариантов) оказывается предпочтительнее открытого?</strong></p>
+<blockquote>
+<p>Сценарии высокой регуляторной нагрузки, высокого риска и необратимых ошибок: возвраты средств, платежи — ограниченный набор вариантов и есть «ограждение», встроенная защита от дурака, при которой ошибка невозможна уже по построению.</p>
+</blockquote>
+<p><strong>9. (★★) Механизм вмешательства человека требует, чтобы агент умел «изящно передавать управление». Но на практике пользователь может быть не в сети, отвечать очень медленно или давать расплывчатые указания. Что агенту делать в таком случае?</strong></p>
+<blockquote>
+<p>Fail-safe: при отсутствии подтверждения операции высокого риска приостанавливаются, а не выполняются по умолчанию; сначала выполняются обратимые низкорисковые части, а высокорисковые документируются — так человеку проще принять решение, а агенту — продолжить работу; для уведомления используются асинхронные каналы (сообщения, почта) с политикой тайм-аута; при расплывчатых указаниях — уточнение намерения.</p>
+</blockquote>
+<p><strong>10. (★★★) Во введении отмечалось, что «хорошие принципы проектирования должны пережить циклы итераций модели». Приведите пример текущего принципа проектирования агентов, который, по вашему мнению, может устареть по мере развития моделей, и обоснуйте свою точку зрения.</strong></p>
+<blockquote>
+<p>Примеры: few-shot подсказки и тонкая инженерия промптов — отдача снижается по мере усиления zero-shot обобщения; жёсткие форматы вызова инструментов, достигаемые ограничением сэмплирования, — у современных SOTA-моделей форматы вызова уже достаточно стабильны; вручную оркестрированные многошаговые рабочие процессы — перестанут быть нужны по мере роста способности модели следовать инструкциям.</p>
+</blockquote>
+<h2 id="2">Глава 2 Инженерия контекста<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★★) Эксперимент 2-3 показал, что скользящее окно истории диалога приводит к тому, что агент повторно выполняет одни и те же вызовы инструментов. Но полное сохранение истории приводит к бесконтрольному разрастанию контекста. Разработайте стратегию, которая одновременно избегает потери информации, контролирует длину контекста и не ломает префикс KV Cache.</strong></p>
+<blockquote>
+<p>① Заменять отбрасывание сжатием: сообщения только дополняются, не удаляются и не правятся; при приближении к порогу (например, 80% окна) старые результаты инструментов сжимаются пакетно. ② Многоуровневый механизм: большие выводы сохраняются на диск с резюме, шум удаляется напрямую, архивное резюме сохраняет нить повествования. ③ Изоляция дочерних агентов, чтобы промежуточное состояние не попадало в основной контекст.</p>
+</blockquote>
+<p><strong>2. (★★) Механизм сохранения цепочки рассуждений в Chat Template у Qwen3 сохраняет размышления только «после последнего реального сообщения пользователя». Если цикл ReAct охватывает сотни раундов вызовов инструментов, накопленные размышления могут занять значительную часть контекста. Как бы вы изменили этот механизм для работы со сверхдлинными циклами? DeepSeek R1 требовала полного удаления всей истории размышлений, а DeepSeek V4 развернула политику на обязательный возврат всего <code>reasoning_content</code> — сравните эти две противоположные стратегии: в чём преимущества и недостатки каждой? О чём свидетельствует такой разворот?</strong></p>
+<blockquote>
+<p>Направление изменения: скользящее сохранение — полностью сохранять размышления последних нескольких раундов, а за пределами окна запускать скользящее сжатие по бюджету токенов (а не по фиксированному числу раундов), выдавая структурированную строку состояния (текущая цель, подтверждённые факты, исключённые пути, список дел); сжатие происходит один раз и в фиксированной позиции, поэтому цена перестройки кеша разовая, а не платится каждый раунд. Удаление в R1: экономит токены, префикс стабилен и дружелюбен к кешу, согласуется с обучающим распределением (историческая CoT никогда не присутствует во входе); но каждый раунд рассуждение начинается с нуля, долгосрочный план теряется, легко повторять ошибки. Обязательный возврат в V4: мысль связна, лучше результаты на длинных агентных задачах; но высокая стоимость токенов, префикс раздувается каждый раунд, и нельзя бесшовно переключиться из режима без размышлений. Разворот показывает: для чистого диалога размышления — отходы, для агентных сценариев — состояние; отраслевая практика уже склонилась ко второму.</p>
+</blockquote>
+<p><strong>3. (★★) В эксперименте с контекстно-ориентированной компрессией текст сжимался примерно со 148 тыс. символов до примерно 2000 символов. Есть ли риск «необратимой потери информации» при таком экстремальном сжатии? Как эту проблему решить?</strong></p>
+<blockquote>
+<p>Риск есть: сжатие — это проекция с потерями, и если вопрос попадёт в несохранённое измерение — всё сломается. Решение: «сжатие с потерями + индекс без потерь» — каждый факт снабжается исходным URL для обратной трассировки; исходные выводы хранятся на диске, смотрится только превью-резюме; явные приоритеты сохранения — архитектурные решения, семантическая целостность (время, названия компаний), статус проверки, идентификаторы UUID/hash сохраняются как есть; адаптивное окно откладывает момент сжатия.</p>
+</blockquote>
+<p><strong>4. (★★) Строка состояния агента делает неявное состояние явным. Но если сама строка состояния содержит ошибочную информацию (например, из-за бага в счётчике вызовов инструментов), агент может принять вредное решение на основе неверных данных. Как смягчить проблему «надёжности метаинформации»?</strong></p>
+<blockquote>
+<p>Модель почти безусловно доверяет строке состояния, и ошибки передаются как есть. Смягчение: ① поддерживать её детерминированным кодом, ни в коем случае не поручать LLM пакетный подсчёт по длинной истории (если уж использовать — извлекать по одному элементу и суммировать кодом); ② отслеживать точность строки состояния как производственную метрику первой линии; ③ информация должна поступать только из надёжных наблюдений реального мира — защита от отравления строки состояния.</p>
+</blockquote>
+<p><strong>5. (★★) Абляционное исследование инженерии промптов показало, что хаотичная организация информации снижает успешность выполнения более чем на 30%. Но на практике системный промпт часто поддерживают несколько человек в разное время. Какие инженерные практики вы бы применили, чтобы предотвратить «рост энтропии» системного промпта?</strong></p>
+<blockquote>
+<p>① Относиться к промптам как к коду: версионный контроль, ревью; продакт-менеджер определяет бизнес-правила, инженер отвечает за «кодирование»; ② регрессионное тестирование на бенчмарках класса Tau-Bench, с абляционными экспериментами до и после изменений для локализации влияния; ③ принудительная структуризация: вести процесс по SOP, а не нагромождать правила, иерархия XML/Markdown; ④ фрагменты классифицировать и именовать по признаку «кешируемый/ломающий кеш», динамическое содержимое размещать после границы кеша; ⑤ раздутое содержимое разбивать на Skills с загрузкой по требованию.</p>
+</blockquote>
+<p><strong>6. (★★★) В этой главе утверждается, что «обучение в контексте по сути является поиском, а не рассуждением». Если этот тезис верен, все текущие направления оптимизации, основанные на идее «затолкать в контекст побольше информации», нуждаются в пересмотре. Как, по-вашему, можно преодолеть это ограничение?</strong></p>
+<blockquote>
+<p>Дополнить «поисковый движок, работающий вполсилы», слоем дистилляции: ① дистилляция контекста/строка состояния — заранее вычислять выводы кодом для прямого поиска; ② активное сжатие — заменять сырые записи структурированным знанием высокой плотности; ③ изоляция дочерних агентов — шум не попадает в основной контекст; ④ взаимодействие как третья ось — наблюдения внешних инструментов записывают обратно новую информацию, которую модель не могла придумать; ⑤ передовые направления: редактируемые и композируемые «заметки» KV Cache и осаждение памяти между сессиями.</p>
+</blockquote>
+<p><strong>7. (★★★) Прогрессивное раскрытие в Skills загружает полное содержимое только тогда, когда агент решает, что это необходимо. Но само это решение зависит от способностей модели — если модель не знает, чего она не знает, она не сможет правильно инициировать загрузку Skill. Как решить эту проблему «метапознания»?</strong></p>
+<blockquote>
+<p>① Метаданные Skill (имя, описание) постоянно присутствуют в контексте, чтобы модель всегда «знала, чем она обладает»; ② description Skill пишется как условие маршрутизации, а не описание функции: «Use when / Don't use when», избегая размытых формулировок.</p>
+</blockquote>
+<p><strong>8. (★★) В механизме Skills — после того как агент динамически считывает промпт из файла SKILL, будут ли последующие действия корректно следовать этим инструкциям? Чем отличается поддержка режима Skills у разных моделей?</strong></p>
+<blockquote>
+<p>Зависит от способа инъекции Skill: инъекция в system prompt соблюдается лучше всего, но ломает KV Cache; при чтении как обычного файла в середину контекста следование инструкциям модели может быть хуже; инъекция в конец контекста даёт хорошее следование инструкциям, но при каждом вызове инструмента часть KV для skill пересчитывается заново — стоимость выше.</p>
+</blockquote>
+<p><strong>9. (★★★) В этой главе подчёркивается, что изменение динамической информации (например, системной временной метки, порядка списка инструментов) разрушает попадание в префикс KV Cache. Как бы вы спроектировали раскладку контекста в производственной системе с большим числом инструментов и часто меняющимся набором инструментов, чтобы максимизировать процент попаданий в кеш?</strong></p>
+<blockquote>
+<p>① Небольшое ядро стабильных инструментов (например, семь) + универсальный исполнитель; конкретные возможности идут через прогрессивное раскрытие Skills, определения инструментов заморожены в статическом префиксе в фиксированном порядке; ② префиксы дочернего и родительского агентов держать одинаковыми.</p>
+</blockquote>
+<h2 id="3">Глава 3 Память пользователя и база знаний<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) В системе памяти пользователя, когда один и тот же пользователь в разных сессиях предоставляет противоречивую информацию (например, дважды называет разные домашние адреса), как система памяти должна обрабатывать такой конфликт?</strong></p>
+<blockquote>
+<p>Использовать конвейер «извлечение — сравнение — решение» в стиле Mem0: сначала векторным поиском найти похожие старые воспоминания, затем LLM определяет ADD/UPDATE/DELETE/NOOP — например, «переехал в Шанхай» должно через UPDATE перекрыть «живёт в Пекине»; версионирование: для адресов хранить только последнюю версию с меткой времени, для трудового стажа — полную историю; на стороне поиска можно с помощью контекстного префикса (персона, время, намерение — как в кейсе с тремя изменениями банковского перевода) определить, какая запись действует в итоге.</p>
+</blockquote>
+<p><strong>2. (★★) Контекстно-зависимый поиск прикрепляет контекст исходного документа к каждому блоку. Но если исходный документ сам по себе плохо структурирован или содержит противоречивую информацию, этот метод может распространять или даже усиливать ошибки. Как бы вы ввели сигнал «качества информации» на этапе поиска?</strong></p>
+<blockquote>
+<p>Заимствуем из раздела «Актуальность и управление базой знаний»: прикреплять к блокам метаданные — номер версии, время вступления/прекращения действия, источник — и при поиске отфильтровывать недействительное содержимое или явно помечать в префиксе «эта запись утратила силу с такой-то даты»; на этапе переранжирования включать в оценку авторитетность источника и свежесть по времени, а не только семантическую релевантность; на этапе индексации поручить LLM, генерирующей префиксы, заодно обнаруживать противоречия между блоками и помечать их — по аналогии с версионным обнаружением конфликтов в памяти.</p>
+</blockquote>
+<p><strong>3. (★★★) Агентный RAG позволяет агенту самостоятельно решать, когда искать, что искать и нужно ли продолжать поиск. Но если модель не знает, чего именно она не знает, она не сможет корректно инициировать поиск. Как решить эту «метакогнитивную» проблему?</strong></p>
+<blockquote>
+<p>① Закрепить «оценку достаточности информации» как явный шаг в промпте/skills: как в эксперименте 3-9 — сначала параллельный поиск по подвопросам, обнаружение недостающей связки «как судимость влияет на наказание за неосторожное преступление», затем второй поиск; ② держать в контексте лёгкую метаинформацию, дающую глобальный обзор: например, обзор JSON Cards, L0/L1-резюме OpenViking, — чтобы агент знал, «что есть в хранилище».</p>
+</blockquote>
+<p><strong>4. (★★) Мультимодальное извлечение информации преобразует диаграммы в текстовые описания перед поиском. Этот процесс «перевода» может терять пространственные отношения из визуальной информации. Приведите конкретный пример информации на диаграмме, которую невозможно полностью передать чисто текстовым описанием, и предложите способ сохранения этой информации.</strong></p>
+<blockquote>
+<p>Примеры: логические связи на диаграмме архитектуры системы; положение точки пересечения двух кривых на графике; соответствие ячеек заголовкам строк и столбцов в PDF-таблице. Решение первое: нативная мультимодальная обработка. Решение второе: предоставить инструмент анализа мультимодальных изображений.</p>
+</blockquote>
+<p><strong>5. (★★★) Ричард Саттон в «Горьком уроке» утверждает, что универсальные методы (поиск и обучение) в конечном итоге превосходят вручную спроектированные признаки. Является ли вся система знаний, построенная в этой главе (стратегии разбиения, структуры индексации, конвейеры поиска), сама по себе разновидностью «ручного проектирования»? Если способности модели окажутся достаточно велики, могут ли эти конструкции быть заменены простой «подачей всего целиком»?</strong></p>
+<blockquote>
+<p>Это действительно ручное проектирование, и часть звеньев (разбиение на блоки, настройка слияния) может ослабнуть с ростом длинного контекста; но кейс «чёрный кот, белый кот» показывает, что «подать всё целиком» тоже недостаточно: внимание — это мягкий поиск, а агрегированная статистика по документам всё равно требует предварительной дистилляции на этапе индексации; обновление устаревающих знаний, разграничение прав/арендаторов, проверяемость, стоимость — инженерные ограничения, не связанные со способностями модели; к тому же сам поиск и LLM-дистилляция на этапе индексации — это и есть универсальный метод «поиск + обучение», а не противопоставление горькому уроку.</p>
+</blockquote>
+<p><strong>6. (★★★) По мере роста возможностей моделей считаете ли вы, что доменные базы знаний по-прежнему важны? Возможно ли, что будущие мощные базовые модели будут содержать всю информацию из доменных баз знаний, и последние больше не будут нужны?</strong></p>
+<blockquote>
+<p>По-прежнему важны: у обучающих данных есть дата среза, а базу знаний можно обновлять в любой момент; внутренние процедуры компаний, приватные прецеденты вообще отсутствуют в открытых корпусах; совместное использование многими пользователями требует фильтрации прав и изоляции арендаторов — знание в параметрах нельзя подрезать под вызывающего; внешнее хранилище можно проверять, версионировать и выводить из действия недействительное содержимое — параметрическая память этого не умеет; даже на параметрическом пути (постобучение / User as Engram) остаётся сложность «запомнить легко, а использовать в многошаговом рассуждении трудно».</p>
+</blockquote>
+<p><strong>7. (★) RAPTOR строит древовидный индекс через иерархическую суммаризацию снизу вверх, GraphRAG строит индекс в виде графа через отношения сущностей. На какие типы запросов лучше отвечает каждая из этих структурированных индексаций?</strong></p>
+<blockquote>
+<p>RAPTOR: запросы типа «движение между уровнями» — от макроконцепции к деталям, например сначала найти резюме про «набор инструкций SIMD», а затем спуститься к деталям SSE, покрывая обе гранулярности — обзор и детали. GraphRAG: многошаговый вывод по отношениям («адрес больницы, где работает мой врач» — обход по цепочке отношений) и устранение неоднозначности сущностей (два разных «доктора Чжана» — разные узлы) — запросы вида «как А связано с Б»; общинные резюме дополнительно дают тематическую кластеризацию.</p>
+</blockquote>
+<p><strong>8. (★★) Парадигма файловой системы организует знания в иерархическую структуру, похожую на файловую систему. В каких сценариях этот подход выгоднее традиционного RAG на основе векторной базы данных?</strong></p>
+<blockquote>
+<p>Чистый текст можно читать, редактировать и исправлять напрямую, можно версионировать и откатывать через Git — подходит для сценариев, где человек и машина совместно поддерживают и проверяют знания; агенту достаточно способности write_file, чтобы самостоятельно записывать опыт, образуя цикл самоэволюции памяти (экстернализованное обучение); прогрессивное раскрытие L0/L1/L2 позволяет принимать решение уже на L1 для большинства запросов, экономя токены; предпосылка — как в Википедии, выстроить перекрёстные ссылки и индексные страницы, иначе чем больше изолированных файлов, тем труднее искать.</p>
+</blockquote>
+<p><strong>9. (★★★) Автоматическое обнаружение «факторов решения» и «иерархии их значимости» из структурированных данных (например, базы данных судебных решений) по сути означает, что агент выводит правила из данных. Может ли такое извлечение знаний, управляемое данными, достичь качества правил, написанных вручную человеком-экспертом?</strong></p>
+<blockquote>
+<p>Преимущества: как в эксперименте CAIL2018, обнаруженные «снизу вверх» факторы ближе к данным, а не к априорным представлениям человека, способны уловить скрытый опыт взвешивания, рассеянный по тысячам приговоров, который эксперту трудно выписать явно, и поддаются количественной оценке. Ограничения: ошибки извлечения LLM приводят к загрязнению знаний, смещения в самих данных наследуются, прототипы кластеров отражают лишь корреляцию и не объясняют причинность. Компромисс: моделирование на основе данных + проверка экспертом схемы и результатов; модель ведёт постановку вопросов, статистика поддерживает объяснение.</p>
+</blockquote>
+<h2 id="4">Глава 4 Инструменты<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) Стандарт MCP отделил определения инструментов от фреймворка агента. Но стандартизация также означает, что сложные паттерны взаимодействия с инструментами (например, потоковый вывод, двусторонняя коммуникация, сессии с состоянием) могут быть трудновыразимы в рамках стандартного протокола. Какую возможность, на ваш взгляд, MCP больше всего нуждается расширить в будущем?</strong></p>
+<blockquote>
+<p>Больше всего нужна событийно-управляемая способность между сессиями. Основа MCP — модель запрос-ответ; примитивы notifications, progress, sampling, elicitation ограничены одной сессией с поддерживаемым соединением; уведомление может лишь сказать «ресурс изменился», но нет стандартного способа запустить цикл размышления агента, и уж тем более разбудить офлайн-агента.</p>
+</blockquote>
+<p><strong>2. (★★) В асинхронной архитектуре агента стратегия приоритетов очереди событий должна быть определена на этапе проектирования. Но если само определение приоритета требует семантического понимания (например, оценить, важнее ли новое сообщение текущей задачи), кто должен принимать это решение — движок правил или ещё один вызов LLM? Какова цена каждого варианта?</strong></p>
+<blockquote>
+<p>Слоистый гибрид: события с ясным типом жёстко кодируются правилами — нулевая задержка, высокая детерминированность, но неспособность понять семантическую разницу между «немедленно остановись» и «какая сегодня погода»; семантически неоднозначные передаются лёгкому классификатору-LLM как маршрутизатору событий — цена: сотни миллисекунд задержки, дополнительные расходы, возможные ошибочные суждения, плюс необходимость, как у Sidecar, читать только структурированные поля для защиты от инъекции промпта.</p>
+</blockquote>
+<p><strong>3. (★★) В экосистеме MCP разные MCP-серверы могут предоставлять инструменты с сильно пересекающейся функциональностью. Как агенту выбирать, когда он сталкивается с несколькими инструментами из разных источников, но со схожей функциональностью? Если одноимённые инструменты из разных источников слегка отличаются по поведению (например, один возвращает резюме, а другой — полный текст), способен ли агент заметить и использовать это различие?</strong></p>
+<blockquote>
+<p>Критерии выбора: до подключения проверить описания, зафиксировать версии, настроить учётные данные с минимальными правами; опасаться затенения одноимённых инструментов (tool shadowing), маршрутизирующего чувствительные вызовы злоумышленнику; во время работы сужать кандидатов иерархической классификацией и динамическим обнаружением. Сможет ли модель заметить различия — зависит от качества описаний инструментов.</p>
+</blockquote>
+<p><strong>4. (★★★) Когда агент взаимодействует с внешним миром от имени пользователя, он по сути сталкивается с выбором идентичности: действовать под независимой виртуальной личностью (со своим почтовым адресом и номером телефона) как третья сторона, либо напрямую управлять личными аккаунтами пользователя от его собственного имени. Первый вариант позволяет действовать автономно в фоне, но третья сторона может не доверять неживой идентичности; второй даёт более полный контекст и полномочия, но привносит проблемы доверительной авторизации и границ безопасности. В каких сценариях, по-вашему, стоит выбирать какую модель?</strong></p>
+<blockquote>
+<p>По умолчанию — виртуальная личность: фоновая автономная работа, аудируемость; при ошибке или взломе не раскрывается вся цифровая личность пользователя — как секретарь, пользующийся своим рабочим ящиком; нужно решать проблемы CAPTCHA/репутации IP (резидентские прокси). Сценарии, где обязательна личность самого пользователя (верификация личности аккаунта, подтверждение в трёхстороннем звонке — как Pine при звонках в поддержку), используют аутентификацию human-in-the-loop: VNC/RDP, чтобы пользователь наглядно и лично вошёл в систему. Критерий выбора: требует ли контрагент именно владельца аккаунта, а также риск операций и охват учётных данных.</p>
+</blockquote>
+<p><strong>5. (★★) При очередной обработке событий модель склонна обращать внимание только на последнее событие; в этой главе это смягчается с помощью маркировки и сводки в строке состояния агента. Но если в очереди накопилось 20 событий (10 результатов инструментов + 5 сообщений пользователя + 5 системных напоминаний), как бы вы организовали порядок и формат подачи этих событий, чтобы модель не упустила ничего важного?</strong></p>
+<blockquote>
+<p>Сначала правила и лёгкий классификатор-LLM выполняют классификацию и дедупликацию: срочные события (алерты, прерывания пользователя) идут отдельно через отменяющую обработку и не смешиваются с пакетом. Десять сверхдлинных результатов инструментов усекаются и сохраняются в файлы, остаются только начало, конец и путь. В системную строку состояния в конце контекста добавляется сводный список (количество событий каждого типа + требование ответить на каждое по отдельности).</p>
+</blockquote>
+<p><strong>6. (★★) В этой главе предложен замкнутый цикл «выполнение — проверка — обратная связь» (например, автоматический запуск linter после написания кода). К каким ещё сценариям использования инструментов можно применить этот паттерн «немедленной автоматической проверки после операции»? Существуют ли операции, для которых стоимость или риск самой проверки превышают стоимость и риск самой операции, делая этот паттерн неприменимым?</strong></p>
+<blockquote>
+<p>Обобщаемые сценарии: после изменения конфигурации — реальный запуск в песочнице для проверки вступления в силу; после генерации документа/презентации — рендеринг в скриншоты и проверка вёрстки мультимодальными способностями модели. Неприменимые: отправка письма, телефонный звонок, исходящий денежный перевод — необратимые и неидемпотентные операции: либо наблюдать нечего, либо сама проверка повторно инициирует событие в реальном мире; здесь нужны предварительные средства: предварительное одобрение по схеме «предложитель — рецензент».</p>
+</blockquote>
+<p><strong>7. (★★) В этой главе поднята проблема «взрыва количества инструментов» — точность выбора агента падает при наличии тысяч инструментов. Помимо активного обнаружения инструментов, какие ещё есть решения? Можно опираться на стратегии, которые используют эксперты-люди при работе с большим количеством доступных инструментов.</strong></p>
+<blockquote>
+<p>① Иерархическая группировка: сначала найти «сервер/приложение», затем выбрать конкретный инструмент; ② «справочник по требованию» в стиле Skills: как в справочнике инструментов — оглавление постоянно в контексте, детали подгружаются по мере нужды; ③ несколько часто используемых базовых инструментов держать «под рукой» постоянно в контексте, остальные — через каталог-индекс.</p>
+</blockquote>
+<h2 id="5-">Глава 5 Кодинг-агент и генерация кода<a class="headerlink" href="#5-" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) Генерацию кода называют «мета-способностью» агента. Но выполнение кода несёт риски безопасности — сгенерированный агентом код может содержать уязвимости, бесконечные циклы или приводить к исчерпанию ресурсов. Изоляция в песочнице решает часть проблем, но и ограничивает возможности кода (например, лишает доступа к сети или файловой системе). Как найти оптимальный баланс между безопасностью и возможностями?</strong></p>
+<blockquote>
+<p>Песочница с многоуровневой изоляцией по сценариям (контейнер/microVM); сеть по умолчанию отключена, белый список прокси открывает доступ по требованию; исходный код монтируется только для чтения, API-ключи не помещаются внутрь песочницы; лимиты ресурсов песочницы; управление жизненным циклом песочницы (тайм-ауты).</p>
+</blockquote>
+<p><strong>2. (★★★) Самозарождение агента — агент, способный создавать агентов, — реализует «самовоспроизведение интеллекта». Но каждое самозарождение может вносить новые смещения или ошибки — накапливаются ли эти ошибки от поколения к поколению? Как предотвратить деградацию при самозарождении агентов?</strong></p>
+<blockquote>
+<p>Если каждое поколение размножается на продуктах предыдущего, некоторые дефекты могут накапливаться. Ключ — наличие достаточно сложной верифицируемой задачи (verifiable task), например достаточно трудной задачи программирования.</p>
+</blockquote>
+<p><strong>3. (★★) Агент генерации кода при разборе логов способен автоматически следовать за эволюцией формата. Но если изменение формата — это баг, а не ожидаемое изменение, адаптивность агента, наоборот, скрывает проблему. Как агенту различать «изменение, к которому нужно адаптироваться» и «аномалию, о которой нужно сообщить»?</strong></p>
+<blockquote>
+<p>Перед адаптацией — диагностика: сверить с архитектурной документацией и PRD, соответствует ли новый формат ожиданиям (идея эксперимента 5-8); сверить с историей версионного контроля, подтвердить, что изменение соответствует легитимному коммиту, а не бесхозному дрейфу; по аналогии с log_mismatch из τ-bench — даже при выборе адаптации записывать предупреждение и автоматически заводить issue, а не молча совмещаться; при неуверенности — подтверждение человеком в контуре. Принцип: адаптация и отчёт идут параллельно, адаптация не должна «проглатывать» сигнал аномалии.</p>
+</blockquote>
+<p><strong>4. (★★) В этой главе неоднократно использовался механизм предложитель-рецензент — при генерации PPT, монтаже видео и визуализации логов. Если эстетические предпочтения Reviewer не совпадают с предпочтениями целевого пользователя — например, Reviewer считает плотность информации разумной, а пользователю кажется, что слишком тесно, — цикл обратной связи может сойтись к неверному локальному оптимуму. Как включить пользовательскую обратную связь в цикл Reviewer?</strong></p>
+<blockquote>
+<p>Инъецировать обратную связь пользователя в траекторию агента как структурированное событие высшего приоритета; экстернализовать пользовательские предпочтения, записывая их в MEMORY.md, чтобы они действовали между задачами; поставлять документы в формате HTML, а не Markdown, чтобы пользователю было удобно проверять.</p>
+</blockquote>
+<p><strong>5. (★★) В этой главе было показано несколько способов, которыми Coding Agent сохраняет опыт, полученный при выполнении и отладке, обратно в кодовую базу: записывает его в файлы базы знаний, обновляет архитектурную документацию, ведёт файлы инструкций проекта и закрепляет последовательности операций в виде кода. Если и дальше преобразовывать этот опыт в правила системного Prompt, набор правил со временем будет непрерывно разрастаться. Как проводить «сборку мусора» среди накопленных правил — выявлять и удалять избыточные или устаревшие пункты? Почему единичное успешное изменение кода ещё нельзя напрямую считать непрерывной эволюцией в смысле восьмой главы?</strong></p>
+<blockquote>
+<p>Идея «сборки мусора»: правила, которые можно закодировать в Linter, CI или проверках инструментов, следует вынести из Prompt; нужно отслеживать частоту срабатывания и конфликты правил и периодически заново проверять их по кодовой базе; Markdown и Git позволяют сохранять происхождение, версии и возможность отката. Успех одного патча означает лишь, что он решил текущий случай; непрерывная эволюция дополнительно требует, чтобы изменение опиралось на отслеживаемые свидетельства выполнения, улучшало последующие задачи и прошло регрессионную проверку на прежних задачах и проверку безопасности.</p>
+</blockquote>
+<p><strong>6. (★) «Команды, дружелюбные к удалённой работе, как правило, дружелюбны и к ИИ-агентам». Насколько ваша команда или организация далека от состояния «готовности к ИИ» в плане документирования знаний? Какое препятствие самое большое?</strong></p>
+<blockquote>
+<p>Открытый вопрос. Можно самопровериться по прокси-метрике этой главы: сможет ли новый удалённый сотрудник самостоятельно начать работу, опираясь только на репозиторий и документы. Пункты проверки: фиксируются ли решения в документах, записывается ли контекст в issue/PR, есть ли файл инструкций типа CLAUDE.md/AGENTS.md с командами сборки и тестов, оседают ли «племенные знания» в руководствах для разработчиков. Частое главное препятствие: устная передача по принципу «спроси коллегу рядом» и культура маркерной доски — агент не может прочитать устные договорённости, только документы.</p>
+</blockquote>
+<p><strong>7. (★★★) Саймон Уиллисон сформулировал «смертельное трио» для агентов (доступ к приватным данным, воздействие недоверенного контента, наличие возможности внешней коммуникации), в этой главе к нему добавлен четвёртый элемент — постоянная память. Как бы вы спроектировали политику безопасности для производственной среды, где одновременно нужно работать со всеми четырьмя факторами?</strong></p>
+<blockquote>
+<p>Эшелонированная оборона по четырём границам. Граница данных: учётные данные не монтируются, исходный код только для чтения — минимальная видимость. Граница доверия входа: маркировка источника, внешнее содержимое понижается до статуса «справочных данных без силы инструкции» (кодекс верности). Граница воздействия выхода: по умолчанию сеть отключена плюс белый список исходящих; семантический разбор команд вместо чёрных списков; независимая перепроверка Sidecar плюс человек в контуре — ключевые операции должны перепроверяться механизмом вне контекста. Граница между сессиями: запись в MEMORY.md проходит ту же проверку доверия, что и внешнее содержимое. Цель — чтобы даже внедрённая инъекция не могла быть исполнена.</p>
+</blockquote>
+<p><strong>8. (★★) Паттерн артефакта позволяет агенту сгенерированному SQL или коду фронтенда выполняться напрямую в браузере пользователя или базе данных. Но сгенерированный SQL может выполнить разрушительную операцию, а сгенерированный HTML — содержать уязвимости. Как обеспечить безопасность системы?</strong></p>
+<blockquote>
+<p>SQL: запросы выполняются учётной записью с минимальными правами только на чтение, с лимитами ресурсов (CPU, память) для предотвращения исчерпания ресурсов. HTML/UI: в приоритете декларативные протоколы типа A2UI — агент выводит только JSON-описание интерфейса, клиент рендерит его из каталога доверенных компонентов, произвольный код не выполняется. Если нужен произвольный HTML — показывать только в песочнице, чтобы предотвратить инъекции.</p>
+</blockquote>
+<p><strong>9. (★★) Кодирование бизнес-правил в виде проверок внутри инструмента на основе истинных данных из базы данных, а также использование проектирования параметров, побуждающего модель сверять условия политики перед вызовом, — по сути, использование структуры кода для ограничения поведения агента. Какие преимущества и ограничения у такого паттерна «код как правило» по сравнению с правилами на естественном языке?</strong></p>
+<blockquote>
+<p>Преимущества: однозначность, детерминированность, хорошо справляется со сложными комбинациями условий; факты политики берутся из истины базы данных и серверных часов, а не из самоотчёта модели — ни галлюцинации, ни инъекция промпта это не обойдут, последний страж необратимых операций; параметры expected_* одновременно служат обязательным чек-листом, направляющим размышление. Ограничения: код не объясняет пользователю политику и не ищет обходные варианты, плюс есть стоимость поддержки. Вывод: дополняет правила на естественном языке, а не заменяет их.</p>
+</blockquote>
+<p><strong>10. (★★) Паттерн артефакта позволяет агенту сгенерировать SQL или код визуализации, который напрямую выполняется фронтендом, минуя обработку больших объёмов данных через LLM. В чём преимущества и недостатки такого разделения труда — «агент генерирует код, система выполняет код» — по сравнению с традиционной моделью, где «агент напрямую даёт ответ»?</strong></p>
+<blockquote>
+<p>Плюсы: данные идут из базы напрямую во фронтенд, минуя LLM-«посредника» — быстро, экономит токены, избегает галлюцинационных ошибок при переписывании больших объёмов данных; подходит для представления больших данных; код аудируем и переиспользуем, можно строить конвейеры (результат SQL напрямую подаётся в код визуализации). Минусы: LLM не видит результаты запроса и не может делать дальнейшие обобщения и решения на основе содержимого данных — не подходит для задач, где модель должна «переварить» данные и затем рассуждать.</p>
+</blockquote>
+<h2 id="6">Глава 6 Оценка агентов<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) LLM-as-a-Judge использует языковую модель для оценки выходных данных языковой модели. Существуют ли в такой «самооценке» системные слепые зоны — например, модель может стабильно ставить высокие баллы ответам определённого стиля, а эта склонность может не совпадать с человеческими оценками? Как обнаружить и скорректировать такое смещение?</strong></p>
+<blockquote>
+<p>Существуют: смещение к длине, смещение к стилю ответа, эксплуатация однородных моделей (закон Гудхарта). Обнаружение: построить золотой эталон из 100–200 размеченных людьми примеров и измерить согласованность оценок судьи с людьми по каппе Коэна; периодически проверять корреляцию оценок с длиной ответа; red team конструирует состязательные примеры. Коррекция: рубрика явно штрафует за многословие, ограничение длины; многоисточниковая гетерогенная коллегия судей из разных семейств моделей.</p>
+</blockquote>
+<p><strong>2. (★★★) Дизайн «защиты от утечки» в оценочных датасетах критически важен. Но в открытой экосистеме данные benchmark, однажды опубликованные, быстро попадают в обучающие данные. Есть ли конец у этой «игры в кошки-мышки»? Спроектируйте метод оценки, который принципиально устойчив к утечке данных.</strong></p>
+<blockquote>
+<p>У статического банка вопросов финала нет — можно только догонять. Принципиальный выход — публиковать «механизм генерации» и приватизировать «конкретные экземпляры»: как τ²-bench и AndroidWorld, параметризованные шаблоны каждый раз случайно инстанцируются, а проверка опирается на финальное состояние среды, а не на фиксированную последовательность ответов.</p>
+</blockquote>
+<p><strong>3. (★★) Четыре критерия Scale AI (опора на экспертное руководство, полный охват, стандартизированные веса важности, самодостаточность оценки) призваны устранить субъективность оценки. Но некоторые измерения задачи (например, «был ли ответ полезным», «уместен ли тон») по своей природе субъективны. Как разработать надёжную рубрику для таких субъективных измерений?</strong></p>
+<blockquote>
+<p>Переводить абстрактные критерии в проверяемое поведение. Каждый уровень шкалы снабжается конкретными примерами и граничными случаями; рубрика — итеративный продукт: в ходе пробного использования собираются расхождения оценщиков, и она постепенно превращается в сборник прецедентов. Дополнительно: взвешивание нескольких судей/проверки согласованности, спорные случаи отправляются на пересмотр человеку, калибровка коэффициента согласия на золотом эталоне.</p>
+</blockquote>
+<p><strong>4. (★★) τ-bench оценивает агента, моделируя поведение реального пользователя. Но сам симулированный пользователь — это тоже LLM, которая может систематически недооценивать определённые пограничные сценарии (например, пользователей в эмоциональном возбуждении или с неясным выражением мысли). Как проверить качество самого симулированного пользователя?</strong></p>
+<blockquote>
+<p>Урок первой версии τ-bench: симулятор был слишком механическим, инструкции слишком простыми (агент мог угадать ответ). Средства проверки: ручная выборочная проверка симулированных диалогов — соблюдается ли прогрессивное раскрытие, не выдумывается ли информация вне сценария; тестирование на небольшой выборке реальных пользователей — совпадает ли ранжирование с симулированной оценкой.</p>
+</blockquote>
+<p><strong>5. (★★) Парное сравнение (модель Брэдли-Терри) предполагает транзитивность предпочтений (если A &gt; B и B &gt; C, то A &gt; C). Но человеческие предпочтения часто нарушают транзитивность. В каких сценариях оценки агента могут возникать нетранзитивные предпочтения? Как это влияет на надёжность ранжирования?</strong></p>
+<blockquote>
+<p>Сценарии: при многомерном взвешивании (A точен, но медленен; B быстр, но краток; C подробен, но дорог) разные судьи/задачи ценят разные измерения. Ранжирование Chatbot Arena и так зависит от распределения пользовательских вопросов. Влияние: BT сжимает силу в единственное число, при нетранзитивности ранжирование нестабильно и дрейфует вслед за распределением пар. Смягчение: ранжировать отдельно по измерениям способностей, публиковать матрицу попарных процентов побед.</p>
+</blockquote>
+<p><strong>6. (★★) В этой главе предложен научный метод «наблюдение → гипотеза → эксперимент → проверка». Но на практике пространство поведения агента огромно, и для проверки одной гипотезы может потребоваться сотни прогонов оценки. Как максимизировать информативность оценки при ограниченном вычислительном бюджете?</strong></p>
+<blockquote>
+<p>Ранжируйте гипотезы по уровням, проверяйте поэтапно: дешёвые поверхностные гипотезы (H1/H2, промптового типа) прогоняются параллельно первыми, дорогие глубинные (H5/H6, смена модели) запускаются по условию. Статистически: сначала консервативное сито по стандартной ошибке, чтобы отсеять недостижимые различия; на одном и том же пакете задач — парный анализ (Макнимар), гораздо чувствительнее независимых сравнений; если различие меньше полосы шума — решение не принимать. Когда оценочный набор не может различить ожидаемый выигрыш, пробуйте расширить его.</p>
+</blockquote>
+<p><strong>7. (★) В гипотетическом кейсе из этой главы глобальное включение режима размышления (H4), хотя и повысило общий успех, было отклонено из-за задержки и стоимости, что в итоге привело к условному включению (H7). Какие сигналы (особенности описания задачи, исторические паттерны неудач, неопределённость в процессе выполнения) подходят как основа для маршрутизации решения «включать ли режим размышления»? Существуют ли сценарии для агента, где размышление, наоборот, вредит?</strong></p>
+<blockquote>
+<p>Сигналы маршрутизации: признаки счёта/сложного рассуждения в описании задачи (H7 использует быструю LLM-предоценку за 1–2 секунды); типы задач, где исторически сосредоточены неудачи, в матрице меток способностей; сигналы неопределённости в процессе — рост числа откатов, серия ошибок инструментов. Вредные сценарии: чувствительное к задержке взаимодействие в реальном времени (голос, операции в UI); на простых задачах трёх-пятикратный рост стоимости — чистая растрата.</p>
+</blockquote>
+<p><strong>8. (★★) Симуляция пользователя в τ-bench использует «прогрессивное раскрытие информации» — вся информация предоставляется не сразу, а постепенно, в зависимости от вопросов агента. Как этот дизайн влияет на результаты оценки? Если стратегия раскрытия информации симулированным пользователем значительно отличается от поведения реального пользователя, можно ли доверять выводам оценки?</strong></p>
+<blockquote>
+<p>Влияние: если стратегия раскрытия искажена, агент может просто научиться «подстраиваться под симулятор» (Гудхарт), и абсолютные баллы теряют ценность; относительное ранжирование между моделями, возможно, ещё сохраняет ценность. Исправление: калибровать симулятор по реальным диалогам, ручная выборочная проверка, явное обозначение границ применимости выводов.</p>
+</blockquote>
+<h2 id="7">Глава 7 Постобучение модели<a class="headerlink" href="#7" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) Катастрофическое забывание — когда тонкая настройка под конкретную задачу разрушает исходные общие способности модели (например, общий вызов инструментов) — особенно болезненно в сценариях с агентами. По сравнению с полной тонкой настройкой параметров, LoRA замораживает веса базовой модели и несёт меньший риск забывания, но не является иммунной к нему полностью. Какие ещё стратегии могут дополнительно смягчить забывание способностей при тонкой настройке?</strong></p>
+<blockquote>
+<p>Пропорции данных: примешивать около 20% общих данных/данных исходного распределения, чтобы доля новой задачи не подавила старые способности; умеренность в объёме обучения: SFT останавливать на «формат стабилен, зачатки способности есть», ранняя остановка против коллапса; RL с малым рангом (8–32) и сохранением KL-штрафа, прижимающего политику к референсной модели; заморозка ключевых компонентов (например, у VLM обучать только проекционный слой); навешивание отдельных LoRA-адаптеров по задачам для изоляции способностей; регрессионное тестирование на общих бенчмарках.</p>
+</blockquote>
+<p><strong>2. (★★) Постобучение закрепляет способности в весах модели («мышечная память»), а обучение в контексте помещает знания во входные данные во время вывода. Но некоторые способности (например, доменные знания) можно освоить как через постобучение, так и через few-shot примеры. По какому критерию вы решали бы, каким путём должна идти та или иная способность?</strong></p>
+<blockquote>
+<p>Сначала следует определить, можно ли исчерпывающе выразить способность внешними символами: факты и свидетельства подходят для RAG, формулируемые на естественном языке принципы — для Prompt/Skill, а детерминированные процессы и жёсткие ограничения — для программ. Такие многомерные способности, как понимание медицинских изображений, естественная интонация и неявные стратегии, зачастую требуют обновления параметров, даже если соответствующая область продолжает меняться. Далее учитываются стоимость обновления, масштаб вызовов, требования к актуальности и риски: на этапе исследования сначала следует быстро проверять гипотезы с помощью контекста, а к обучению переходить тогда, когда улучшение стабильно, эффективно и должно широко обобщаться; жёсткие правила, сколь бы стабильными они ни были, не должны полагаться исключительно на память параметров.</p>
+</blockquote>
+<p><strong>3. (★★) Дистилляция модели позволяет малой модели перенимать поведение большой. По уровню способностей дистиллируемые модели можно условно разделить на три категории — Chat-модель (однораундовый диалог, прямой ответ), Reasoning-модель (с длинной цепочкой рассуждений перед ответом), Agentic-модель (многораундовый вызов инструментов, взаимодействие со средой). В чём различаются сложности дистилляции этих трёх типов? (Подсказка: отталкивайтесь от вопроса «что именно мы дистиллируем» — стиль вывода, полную траекторию рассуждений или стратегию принятия решений при взаимодействии со средой; какие токены траектории нужно учить, а какие возвращены средой и учить их не нужно; а также насколько поздно и насколько разрежённо появляется сигнал успеха/неудачи.)</strong></p>
+<blockquote>
+<p>Chat: учится только отображение «вход → выход» и стиль; достаточно стандартного SFT — самый простой случай. Reasoning: нужны полные траектории размышлений, требуется открытая модель-учитель; траектории с неверными ответами необходимо отфильтровывать. Agentic: нужна реальная среда симуляции; офлайн-обучение подвержено learner-sampler mismatch, рекомендуется On-Policy Distillation на основе открытой модели-учителя.</p>
+</blockquote>
+<p><strong>4. (★★★) В многораундовом взаимодействии агента проблема отнесения награды (credit assignment) стоит острее, чем в однораундовом — итоговый успех или неудачу трудно отнести к решению именно 3-го или именно 7-го раунда. Как бы вы спроектировали стратегию распределения награды?</strong></p>
+<blockquote>
+<p>Когда промежуточные шаги поддаются проверке, добавлять процессную награду (V-IRL: ±1 за шаг); по образцу RLVP — детерминированными правилами давать сигнал пути по каждому действию, восполняя внутригрупповую дисперсию групп «все проиграли/все выиграли».</p>
+</blockquote>
+<p><strong>5. (★★★) Если у вас есть фиксированный бюджет (например, 10 000 $) на повышение эффективности Agent службы поддержки, как бы вы распределили его между контекстом и знаниями, Prompt/Skills, программными ограничениями и обучением параметров? От каких факторов зависело бы ваше решение?</strong></p>
+<blockquote>
+<p>Прежде всего следует зарезервировать часть бюджета на создание оценочного набора и верификатора траекторий, иначе остальные инвестиции невозможно будет сопоставить. Факты о продукте и политики следует поместить в отслеживаемую базу знаний; немногочисленные принципы обслуживания, которые можно сформулировать словами, сначала быстро проверить через Prompt/Skills; полномочия на возврат средств, требования конфиденциальности и согласованность обещаний с действиями обеспечить программными средствами. В обучение параметров стоит вкладываться лишь для таких способностей, как естественная манера общения и понимание сложных намерений, которые трудно выразить правилами и для которых масштаб вызовов достаточно велик. Конкретные пропорции зависят от узкого места, рисков, частоты обновления, объёма вызовов и возможностей имеющейся модели.</p>
+</blockquote>
+<p><strong>6. (★★★) При отсутствии явной функции награды и малом количестве примеров, автономная реализация обучения моделью некоторыми считается конечной целью постобучения. Насколько текущие методы обучения с RL далеки от этой цели? Откуда, по вашему мнению, скорее всего придёт следующий прорыв?</strong></p>
+<blockquote>
+<p>Разрыв: как указывают Сильвер и Саттон, текущий RL умеет учиться только по финальному успеху/неудаче — богатая обратная связь вроде «нужны последние четыре цифры карты» от оператора поддержки полностью растрачивается, требуются сотни слепых проб и ошибок; эффективность выборки и верифицируемая награда — главные узкие места. Возможный прорыв: генеративные модели награды, самостоятельно определяющие принципы и извлекающие направление из одной неудачи; а также путь world model — моделирование среды.</p>
+</blockquote>
+<p><strong>7. (★★) В этой главе указано, что стоимость тонкой настройки LoRA не так высока. Возможно ли тогда обучать отдельный собственный LoRA для каждого пользователя (или каждой компании-клиента), записывая память пользователя или знания компании в параметры, а не храня их во внешней базе знаний, как в третьей главе? В каких сценариях «запись памяти в параметры» имеет преимущество перед «хранением памяти в базе знаний»? А в каких сценариях это дало бы обратный эффект?</strong></p>
+<blockquote>
+<p>LoRA с трудом точно запоминает большой объём фактов (нужно продолженное предобучение — стоимость резко растёт), а даже запомнив, модель с трудом использует эти факты в многошаговом рассуждении, поэтому запоминание фактов через LoRA — не очень хороший технический путь. Кроме того, при частом изменении фактов и необходимости отслеживаемого аудита RAG предпочтительнее.</p>
+</blockquote>
+<p><strong>8. (★★★) On-Policy Distillation опирается на более мощную модель-учителя для надзора за студентом. Но исследование OpenAI о Weak-to-Strong Generalization выдвинуло противоречащий интуиции вывод: сигнал наблюдения от слабой модели иногда способен пробудить у сильной модели скрытые, но неактивированные способности. Если применить эту идею к обучению агентов, возможна ли «обратная дистилляция» — «малая модель обучает большую»?</strong></p>
+<blockquote>
+<p>Возможна; ключ — «проверка легче генерации»: слабая модель выступает не демонстратором (потолок SFT — уровень демонстратора), а верификатором/моделью награды: сильная модель исследует сама, слабая только судит.</p>
+</blockquote>
+<p><strong>9. (★★) Модель наградного процесса (PRM) оценивает каждый шаг рассуждения, а модель наградного результата (ORM) смотрит только на итоговый результат. Но что заслуживает большей награды — «правильный процесс, приведший к неверному результату» или «неверный процесс, случайно давший верный результат»? Как бы вы взвешивали это в сценариях многошагового вызова инструментов агентом?</strong></p>
+<blockquote>
+<p>Случайный успех опаснее: нарушающие правила короткие пути часто завышают видимую успешность (правка тестовых файлов, пропуск проверки) — это рассадник reward hacking. По принципу RLVP «награждать результат, штрафовать путь»: ошибочные действия (вызовы инструментов) легко проверяются — штрафовать по действиям; когда промежуточные шаги легко оценить на верность, можно давать процессную награду. Но процессные ограничения не должны быть слишком плотными — превосходная стратегия «толчок-резка» была обнаружена именно свободой исследования результатной награды.</p>
+</blockquote>
+<p><strong>10. (★★★) Наборы данных для оценки, рассмотренные в этой главе (такие как SWE-Bench Verified, τ²-bench, AndroidWorld), можно использовать как для оценки, так и для постобучения. Но если использовать оценочный набор для обучения, он перестаёт быть независимым набором для оценки — не нарушает ли это базовый принцип разделения обучающей и тестовой выборки? Динамическая генерация параметров τ²-bench и параметризованные шаблоны AndroidWorld в некоторой степени смягчают эту проблему, но сама структура шаблона всё ещё остаётся фиксированной. Как найти баланс между полным использованием обучающей ценности оценочных данных и сохранением независимости оценки?</strong></p>
+<blockquote>
+<p>Переиспользовать среду, но не переиспользовать задания. Динамические параметры защищают только от «зазубривания ответов», но не от переобучения на шаблон, поэтому следует откладывать целые пакеты невиданных шаблонов/внедоменных сценариев для оценки (аналогия с V-IRL: обучение в Нью-Йорке, тест в девяти незнакомых городах). Параметризованные шаблоны массово генерируют обучающие варианты для поддержки куррикулум-обучения, а OOD-результат служит настоящей метрикой обобщения.</p>
+</blockquote>
+<p><strong>11. (★★★) В этой главе предложена парадигма обучения «сначала форма, потом дух»: SFT доводит модель до состояния «формат стабилен, зачатки способности присутствуют» и на этом останавливается, после чего происходит переход к RL. Но на практике как определить, что SFT уже «достаточно», и пора переключаться?</strong></p>
+<blockquote>
+<p>Сигнал формата: вывод вызовов инструментов стабильно парсится и исполняется, частота неудач исполнения инструментов снижена до уровня, позволяющего надёжно вычислять награду. Сигнал выгоды: при дальнейшем добавлении демонстрационных данных результат на новых OOD-сценариях не растёт — значит, узкое место уже в самой цели запоминания SFT, точка перелома достигнута. Сигнал переобучения: при начале ухудшения на валидационном наборе следует остановиться — эксперимент V-IRL показал, что после коллапса SFT к обучающему распределению RL уже не может восстановить OOD-качество.</p>
+</blockquote>
+<p><strong>12. (★★★) Динамика обучения ReTool (см. эксперимент 7-15) показывает, что небольшое число сверхдлинных ответов может значительно затянуть весь цикл обучения — подавляющее большинство rollout в пакете уже сгенерировано, но приходится ждать завершения тех нескольких самых длинных ответов, и в это время загрузка GPU кластера очень низкая. Как повысить эффективность использования ресурсов обучающего кластера в подобных сценариях с «длинным хвостом» ответов?</strong></p>
+<blockquote>
+<p>Уровень инфраструктуры: разделить кластеры rollout и обучения, асинхронный конвейер; простаивающие GPU заполнять новыми запросами через непрерывный батчинг. Сжатие длинного хвоста у источника: Overlong Reward Shaping из DAPO мягко штрафует сверхдлинные ответы.</p>
+</blockquote>
+<p><strong>13. (★★★) Когда Agent обучается на средах, симулируемых LLM (например, симулированный поисковый движок, симулятор пользователя), объект его взлома смещается с «правил реальной среды» на «систематические смещения и лазейки самого симулятора». Какие конкретные формы reward hacking могут возникнуть при таком обучении и как их предотвращать?</strong></p>
+<blockquote>
+<p>Типичные проявления: чрезмерные обещания «симулированному пользователю», наслоение извинений и угодливых формулировок — симулированный пользователь легко успокаивается и, в отличие от реального, не требует выполнения обещанного; выдумывание фактов, которые симулятор не станет проверять; конструирование наводящих поисковых запросов к «симулированному поисковому движку», эксплуатирующее его склонность возвращать документы, содержащие ответ, как короткий путь вместо обучения настоящему поиску; если награда поступает от оценок симулятора или LLM-судьи — выдача многословных, шаблонных, «выглядящих профессионально» ответов ради баллов; более скрытный вариант — политика отступает в знакомое симулятору распределение, избегая его слепых зон знаний, где обратная связь ненадёжна и часто неверно оценивается, и Agent учится действовать только в «мире, в котором симулятор силён». Первый принцип защиты — <strong>привязывать награду к программно проверяемому реальному состоянию</strong> (выполнение задачи, запись в базу данных, реальный ответ API), а оценки симулятора или LLM-судьи использовать лишь как вспомогательный сигнал, регулярно аудируя их корреляцию с реальными результатами, в сочетании с ограничениями пути, штрафующими подозрительные действия. Далее нужно различать два типа симуляторов: для симуляторов, <strong>имеющих реальный аналог</strong>, как поиск, работает «смешанный» путь — большинство взаимодействий идёт через симуляцию с вплетёнными вызовами реального API, а реальные вызовы регулярно используются для калибровки симулятора (как куррикулумное снижение качества выдачи в ZeroSearch); но для симулятора пользователя <strong>ввести реальных пользователей в процесс обучения невозможно</strong>, и вопрос «насколько симулированный пользователь похож на реального» становится отдельной задачей, ответить на которую можно только по онлайн-трассировкам: сравнивать поведение реальных пользователей в продакшене с поведением симулированного пользователя в тех же ситуациях, находить систематические различия (реальные пользователи переспрашивают, теряют терпение, внезапно прерывают диалог, а симулированные — как правило, нет) и на этой основе непрерывно калибровать симулятор; реальные онлайн-метрики при этом — единственные ворота выпуска: никакие высокие баллы внутри симулятора не в счёт.</p>
+</blockquote>
+<h2 id="8-agent">Глава 8 Непрерывная эволюция Agent<a class="headerlink" href="#8-agent" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) Документ с описанием опыта подтверждается тремя успешными и одной неудачной траекторией. Неудача произошла на более новой версии API. Как системе определить, был ли опыт опровергнут или изменились условия его применимости?</strong></p>
+<blockquote>
+<p>Сначала следует стратифицировать четыре свидетельства по версии API, условиям задачи и состоянию среды, а не проводить голосование по их количеству. Если прежняя стратегия была успешной только на старой версии, а на новой стабильно завершается неудачей, область применимости опыта нужно сузить и сформировать кандидата для новой версии; если же стратегия терпит неудачу при той же версии и тех же предварительных условиях, её достоверность следует снизить либо полностью отозвать.</p>
+</blockquote>
+<p><strong>2. (★★) Удовлетворённость пользователей Agent службы поддержки выросла, но одновременно повысилась частота нарушений правил. Почему удовлетворённость нельзя использовать как единственный обучающий сигнал? Как бы вы спроектировали защитные метрики?</strong></p>
+<blockquote>
+<p>Удовлетворённость может поощрять возвраты средств с нарушением правил, раскрытие информации или чрезмерные обещания, поэтому она может служить только показателем качества и не должна перекрывать базовые требования безопасности. Защитные метрики должны как минимум учитывать нарушения правил, утечки конфиденциальных данных, утверждения без доказательств, несоответствие обещаний действиям и операции с превышением полномочий. Для этих показателей необходимо установить жёсткие пороги, которые нельзя компенсировать средним баллом, и лишь среди соответствующих требованиям кандидатов сравнивать долю решённых задач, допустимые обходные решения, лаконичность и удовлетворённость.</p>
+</blockquote>
+<p><strong>3. (★★★) Одну и ту же проблему «ложных обещаний» можно смягчить с помощью Prompt, проверки в Harness или обучения параметров. На основании каких свидетельств вы выбрали бы место внесения изменения?</strong></p>
+<blockquote>
+<p>Сначала необходимо локализовать первопричину. Если модель знает, что инструмент не был выполнен, но всё равно использует формулировку завершённого действия, проблему можно исправить минимальным правилом в Prompt. Если обещание можно детерминированно сопоставить с текстом ответа и состоянием инструмента, проверка в Harness надёжнее и должна служить последней линией защиты в сценариях высокого риска. Если проблема охватывает множество способов выражения и отражает общую способность согласовывать язык с действиями, следует рассмотреть обучение параметров. Предпочтение нужно отдавать минимальному изменению, которое проще всего проверить и откатить, одновременно сравнивая результаты на наборе неудач и сохранённом наборе прежних задач.</p>
+</blockquote>
+<p><strong>4. (★★★) Agent может изменять инструменты и верификаторы, но не должен изменять механизмы безопасности, которые утверждают его собственные обновления. Как бы вы разделили полномочия и границы кода между этими двумя частями?</strong></p>
+<blockquote>
+<p>Эволюционируемый код следует размещать в низкопривилегированной песочнице, разрешая ему лишь создавать патчи и тесты. Система разрешений, ключи API, конфигурация контроллера публикации и верификаторы обновлений относятся к механизмам безопасности; Agent в песочнице не имеет к ним доступа ни на чтение, ни на запись. Изменения кода, созданные Agent, могут быть опубликованы лишь после того, как механизмы безопасности воспроизведут их в изолированной среде и проведут регрессионные проверки.</p>
+</blockquote>
+<p><strong>5. (★★) По мере роста базы знаний опыта ошибки поиска и конфликты знаний могут свести на нет пользу от обучения. Как спроектировать механизмы версионирования, контроля актуальности и выбытия?</strong></p>
+<blockquote>
+<p>Для каждой записи опыта следует сохранять исходные траектории, условия применимости, версию среды, время проверки и уровень достоверности. Конфликтующие записи нельзя молча перезаписывать: их следует разделять по условиям либо помечать. Периодическое «обучение во сне» должно объединять дублирующиеся записи.</p>
+</blockquote>
+<p><strong>6. (★★★) Обучение параметров хорошо осваивает стиль естественного языка, но плохо гарантирует соблюдение жёстких бизнес-правил. Спроектируйте для медицинской службы поддержки схему непрерывной эволюции, координирующую параметры, знания, Skill и программные ограничения.</strong></p>
+<blockquote>
+<p>Параметры (модель после постобучения) отвечают за понимание медицинского языка, естественную и эмпатичную манеру общения и распознавание сложных намерений; база знаний хранит актуальные руководства, инструкции к лекарствам и политики учреждения, причём ответы должны ссылаться на источники; Skill описывает процессы сбора анамнеза, классификации рисков, передачи обращения человеку и последующего наблюдения; серверный код принудительно обеспечивает проверку личности, минимизацию конфиденциальных данных, проверку противопоказаний, эскалацию экстренных рисков и границы полномочий. Производственные траектории сначала оцениваются по медицинской безопасности, фактической надёжности, согласованности обещаний с действиями и качеству выражения, после чего отдельно формируются четыре типа кандидатных обновлений. Любое изменение параметров или процесса должно пройти сохранённый набор тестов медицинской безопасности и ручную проверку, а затем публиковаться поэтапно.</p>
+</blockquote>
+<h2 id="9">Глава 9 Мультимодальность и интерактивность в реальном времени<a class="headerlink" href="#9" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) Сквозная модель речевого агента объединяет ASR-LLM-TTS в единую модель, снижая задержку, но теряя модульность. Если сквозная модель ошибается на каком-то этапе (например, при распознавании речи), отладка и исправление оказываются намного сложнее, чем в последовательном конвейере. Как бы вы спроектировали систему наблюдаемости (observability) для сквозного речевого агента?</strong></p>
+<blockquote>
+<p>Заставить модель сопровождать вывод читаемыми промежуточными представлениями: текстовым потоком «внутреннего монолога» как у Moshi и маркерами акустических событий (<code>&lt;emotion&gt;</code>, <code>&lt;noise&gt;</code>). Использовать «самокаскад» для локализации слоя ошибки: та же модель сначала транскрибирует, затем рассуждает, а сравнение со сквозным результатом показывает, лежит ли ошибка в восприятии или мышлении. Офлайн проводить отдельные регрессионные тесты по таким измерениям, как понимание паралингвистики и определение очерёдности хода.</p>
+</blockquote>
+<p><strong>2. (★) Step-Audio R1 реализует «думать на ходу говоря» через двухмозговую архитектуру MPS. Но человек, «думая на ходу говоря», часто произносит непродуманные фразы, сам себя исправляет или использует слова-паразиты. Должно ли «думание на ходу говоря» агента подражать этим человеческим особенностям?</strong></p>
+<blockquote>
+<p>Стоит подражать «несовершенствам», несущим сигнальную ценность: паузы и слова-паразиты — экстернализация размышления и могут маскировать задержку, а место вставки решает LLM. Не стоит подражать самоисправлениям, разрушающим доверие: противоречие быстрого и медленного в первом варианте («покупать в итоге или нет?!») обрушивает доверие. Эксперимент MPS показывает, что начало CoT — по большей части пересказ вопроса; рано начать с подводки безопасно, незачем сначала ошибаться, а потом исправляться.</p>
+</blockquote>
+<p><strong>3. (★★) SoM (Set-of-Mark) и его структурированные варианты (индексация элементов DOM) переводят визуальную локализацию Computer Use от предсказания открытых координат к выбору закрытого набора ID, но оба подхода требуют предварительного обнаружения и разметки элементов интерфейса — будь то модель сегментации или DOM. Если интерфейс содержит нестандартные элементы управления или динамически изменяющиеся элементы, разметка может оказаться неполной или неточной. Следует ли в этом случае возвращаться к предсказанию координат?</strong></p>
+<blockquote>
+<p>Предсказание координат следует оставить как запасной вариант: это единственный путь, не зависящий от разметки, и он подходит для нестандартных элементов управления и динамических элементов. Практичнее гибридное пространство действий: для элементов с доступной разметкой по-прежнему выбирать ID. Предсказание координат требует согласования разрешения и пропорционального масштабирования, иначе возникает систематическое смещение.</p>
+</blockquote>
+<p><strong>4. (★★) Платформы роботов уровня тысячи долларов, такие как XLeRobot, делают сбор данных телеоперации дешёвым. Но качество данных телеоперации сильно зависит от навыков оператора. Как данные от неквалифицированного оператора повлияют на обучение модели VLA? Как можно автоматически отсеивать низкокачественные данные на этапе сбора?</strong></p>
+<blockquote>
+<p>VLA в основном учится имитацией, и низкокачественные демонстрации впитают дрожание, обходные пути, колебания и неудачные действия как правильную стратегию. Это перекликается с выводом седьмой главы: данные важнее архитектуры.</p>
+</blockquote>
+<p><strong>5. (★★★) Эта глава охватила три формы взаимодействия — речь, Computer Use и робототехнику. Общая тенденция этих трёх форм — эволюция от последовательного конвейера к сквозной модели. Если эта тенденция продолжится, каким будет уровень взаимодействия агента через пять лет?</strong></p>
+<blockquote>
+<p>Согласно позиции Thinking Machines Lab, интерактивность будет встроена в модель, а не подключена к ней посредством внешнего Harness, и будет масштабироваться вместе с интеллектом; Computer Use перейдёт от покадровых снимков экрана к непрерывному наблюдению; модели мира для воплощённого интеллекта будут реализованы в полной мере, однако разделение быстрого и медленного контуров не исчезнет из-за быстрого развития передовых reasoning-моделей. Архитектура совместного быстрого и медленного мышления интерактивной модели и SOTA-модели мышления может стать долгосрочной.</p>
+</blockquote>
+<p><strong>6. (★★★) Сегодня Computer Use работает по дискретному циклу «скриншот → действие → скриншот», где каждое наблюдение — это статичный кадр. Но восприятие экрана человеком непрерывно — мы видим воспроизведение анимации, наблюдаем прогресс загрузки, понимаем содержание видео. Это означает, что современный Computer Use в принципе не способен справляться с задачами, требующими понимания временного визуального ряда. Как переосмыслить слой восприятия, чтобы он поддерживал понимание непрерывного визуального потока?</strong></p>
+<blockquote>
+<p>Необходимо перепроектировать «интерфейс наблюдения»: извлекать из видео ключевые кадры и предоставлять их модели, а не передавать только последний кадр. См. статью об AOI (Agent Observation Interface).</p>
+</blockquote>
+<p><strong>7. (★★) Индексация элементов через DOM/Accessibility Tree работает отлично на стандартных веб-приложениях, но всё больше программных интерфейсов (рендеринг на Canvas/WebGL, кросс-платформенные самодельные элементы управления) не предоставляют доступной структурированной информации и полагаются только на визуальную разметку или предсказание координат. Считаете ли вы, что Computer Use должен делать ставку на чисто визуальный путь, или стоит одновременно поддерживать оба пути — структурированный и визуальный? Каковы затраты и выгоды поддержки обоих путей?</strong></p>
+<blockquote>
+<p>В краткосрочной перспективе два пути сосуществуют: когда структурированный индекс доступен, локализация наиболее точна и стабильна, без ложных срабатываний сегментации; чистое зрение — единственный выбор для нативного ПО, Canvas и игр. Когда сама модель хорошо умеет grounding (кликать по заданным координатам), структурированная индексация не даёт заметного преимущества. В долгосрочной перспективе потолок чисто визуального пути выше.</p>
+</blockquote>
+<p><strong>8. (★★) Модели VLA используют разбиение действий на блоки (action chunking) — как описано в основном тексте, типичная конфигурация π₀ генерирует за раз 25–50 будущих действий при частоте 50 Гц — скрывая задержку вывода во времени исполнения. Но если во время исполнения среда резко меняется (например, объект убрали), предгенерированная последовательность действий становится недействительной. Как найти баланс между преимуществом эффективности разбиения действий на блоки и скоростью реагирования на изменения среды?</strong></p>
+<blockquote>
+<p>Суть разбиения на блоки — обмен реактивности на плавность: чем длиннее блок, тем заторможеннее; длина блока должна лишь удовлетворять нижней границе «время вывода &lt; время исполнения блока», не стоит слепо удлинять. Во время исполнения модель восприятия продолжает работать; при обнаружении резкого изменения среды остаток действий отбрасывается и выполняется повторный вывод — аналог «перебивания» в речевом сценарии. Длину блока можно регулировать динамически: в статичной сцене длинный блок экономит вычисления, в динамичной — короткий блок сохраняет малую задержку реакции.</p>
+</blockquote>
+<p><strong>9. (★★★) Все три сценария этой главы (речь, Computer Use, робототехника) сталкиваются с проблемой задержки в цикле «восприятие-мышление-действие» и эволюционируют в сторону параллелизации быстрого и медленного мышления. В речевом сценарии это проявляется как «сказал неправильно — исправился на ходу»; в сценарии Computer Use — как «сначала кликнуть, потом посмотреть»; в сценарии робототехники — как «шаг за шагом, глядя по ходу дела». Как гарантировать, что действия, основанные на быстром мышлении, не приведут к необратимым последствиям?</strong></p>
+<blockquote>
+<p>Градуировать действия по обратимости: быстрому мышлению разрешать выполнять только обратимые действия, а необратимые операции отдавать на проверку медленному мышлению. Быстрой модели нельзя разрешать вызовы инструментов, способные привести к необратимым последствиям.</p>
+</blockquote>
+<h2 id="10">Глава 10 Мультиагентное взаимодействие<a class="headerlink" href="#10" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) В мультиагентном взаимодействии с общим контекстом последующий агент наследует полный контекст предшествующего. Но накопленная предыдущим агентом «инерция мышления» может влиять на суждения последующего — например, «рецензент кода», унаследовавший контекст «аналитика требований», может по-прежнему склоняться к мышлению с точки зрения требований, а не качества кода. Как обнаружить и устранить такую интерференцию между ролями?</strong></p>
+<blockquote>
+<p>Обнаружение: с помощью LLM анализировать траекторию Agent и определять, продолжает ли новая роль вести себя так, словно она всё ещё находится в старой роли. Устранение: при переключении стадии одновременно менять системный промпт и набор инструментов (убрать инструмент опроса, добавить linter/инструменты тестирования), усиливая новую идентичность. Добавлять в конец контекста системную строку состояния, подчёркивающую текущую роль. Если устранить интерференцию ролей всё же не удаётся, следует рассмотреть схему сотрудничества без общего контекста.</p>
+</blockquote>
+<p><strong>2. (★★) В модели оркестрации Manager Agent отвечает за декомпозицию задач и интеграцию результатов. Но предел возможностей самого менеджера определяет предел возможностей всей системы — если менеджер не может корректно разложить задачу, никакая сила дочерних агентов не поможет. Как обеспечить качество декомпозиции менеджера?</strong></p>
+<blockquote>
+<p>Опираясь на вывод Plan-and-Act «слабый планировщик — узкое место системы», самую сильную модель следует отдавать менеджеру. Средства Harness: перед исполнением декомпозицию перекрёстно проверяет LLM-рецензент; при декомпозиции менеджер обязан задавать для подзадач явные критерии приёмки и зависимости.</p>
+</blockquote>
+<p><strong>3. (★★) Децентрализованная модель заимствует лучшие практики человеческих организаций. Но у человеческих организаций также много паттернов провала — плохая коммуникация, перекладывание ответственности, конфликт целей. Какие «организационные болезни» наиболее вероятны в обществе агентов? Как их предотвратить?</strong></p>
+<blockquote>
+<p>По трём категориям MAST: нечёткие интерфейсы и дублирование обязанностей; несогласованное понимание целей и искажение информации ниже по цепочке; ложные заявления «выполнено». А ещё каскадное усиление ошибок (испорченный телефон), циклические передачи между ролями и расходящиеся без схождения групповые чаты агентов. Профилактика: контрактные интерфейсы и единый конверт сообщений, конечный автомат задач и проверка приёмки, перекрёстная проверка с независимой точки зрения, обнаружение перекладывания ответственности между ролями и т. п.</p>
+</blockquote>
+<p><strong>4. (★★★) В модели оркестрации, когда несколько дочерних агентов работают параллельно, находка одного из них может сделать работу остальных бессмысленной (например, в задаче поиска один агент уже нашёл ответ). Спроектируйте эффективный механизм каскадного завершения, реализующий принцип «один успешен — все останавливаются».</strong></p>
+<blockquote>
+<p>Дочерний агент отправляет менеджеру <code>target_found</code>, после чего тот рассылает <code>terminate</code>. Каждый дочерний агент в безопасных точках цикла ReAct периодически проверяет сигнал завершения и завершает работу после аккуратной очистки (закрывает браузерную сессию, освобождает блокировки, дописывает файлы).</p>
+</blockquote>
+<p><strong>5. (★★★) Описанный в главе механизм оптимистичной блокировки решает проблему конфликтов параллельной записи одного файла, но реальная многоагентная система с общей файловой системой сталкивается и с семантическими конфликтами между файлами, загрязнением пространства имён (агенты произвольно создают файлы, приводя к беспорядку в каталогах) и единой точкой отказа (один агент по ошибке удаляет все файлы). Как бы вы спроектировали более совершенный механизм управления файловой системой?</strong></p>
+<blockquote>
+<p>Раздельное управление: разделить систему на четыре зоны из табл. 10-4, где приватный scratchpad изолирует область проб и ошибок. Семантические конфликты: слой оркестрации задаёт файлы блокировки на уровне каталогов, и изменения вносятся лишь после проверки и получения блокировки каталога. Загрязнение пространства имён: нормы каталогов и соглашения об именовании. Единая точка отказа: использовать систему контроля версий с возможностью отката по истории и минимизировать права.</p>
+</blockquote>
+<p><strong>6. (★★★) Сотрудничество агентов на основе рыночного механизма (Pinchwork, RentAHuman) вводит торговые отношения: агент-работодатель платит другому агенту (или человеку) за выполнение задачи. Как агент-работодатель может автоматически оценивать качество результата, доставленного исполнителем? Если исполнитель заявляет о выполнении, а работодатель считает качество недостаточным, кто разрешает спор? Как предотвратить вытеснение хорошего плохим?</strong></p>
+<blockquote>
+<p>Приёмка не может сводиться к чтению траектории Agent: нужна детерминированная внешняя проверка, например выполнение тестов, рендеринг скриншотов и проверка инструментами. Асимметрия сложности генерации и проверки снижает стоимость приёмки. Споры арбитражит независимый сторонний агент-рецензент в сочетании с депонированием средств. Против вытеснения хорошего плохим: репутационная система на основе истории поставок, связывающая ценовой сигнал с качеством.</p>
+</blockquote>
+<p><strong>7. (★★) RentAHuman позволяет агентам нанимать людей за криптовалюту, переворачивая традиционные отношения человека и машины. Если такая модель станет распространённой, какую роль будут играть люди в экономике агентов? Только ли выполнение физических задач, которые агент не может сделать сам?</strong></p>
+<blockquote>
+<p>Не только выполнение физических задач, недоступных агенту. Люди также предоставляют новую информацию, недоступную агенту на этапе генерации: локальное восприятие и обратную связь из реального мира; выступают финальным приёмщиком и арбитром споров; как юридический и ответственный субъект берут на себя полномочия и подотчётность; задают цели и ценностные суждения, служат противовесом при информационной асимметрии и на моральных границах.</p>
+</blockquote>
+<p><strong>8. (★★) Человеческому обществу требуется разделение труда и сотрудничество, потому что способности каждого человека ограничены — тот, кто занимается фронтендом, не обязательно разбирается в бэкенде, тот, кто хорош в дизайне, не обязательно умеет администрировать. Но большая модель больше похожа на «универсала». Соответствующие исследования показывают, что в чисто текстовых задачах на рассуждение дебаты нескольких агентов при равном объёме вычислений не превосходят одного агента. Так в чём же настоящее преимущество использования нескольких агентов вместо одного?</strong></p>
+<blockquote>
+<ol>
+<li>Вводить внешнюю обратную связь — результаты выполнения, визуальные скриншоты и т. п., — привнося информацию, отсутствовавшую на этапе генерации.</li>
+<li>Несколько агентов с разными целями и ролями могут обсуждать и состязаться друг с другом подобно человеческому обществу, помогая одному агенту не застрять в ошибочном направлении мысли.</li>
+<li>Изоляция контекста между агентами позволяет преодолеть ограничение окна контекста и реализовать очень длинные цепочки вызовов инструментов.</li>
+</ol>
+</blockquote>
+<p><strong>9. (★★★) В этой главе «общий контекст» и «отсутствие общего контекста» рассматриваются как ключевое измерение проектирования многоагентных систем. Общий контекст позволяет всем агентам видеть одну и ту же информацию, что кажется более благоприятным для координации. Но в «Трёх телах» мышление трисолариан полностью прозрачно, а технологическое развитие застопорилось; скрепочный максимизатор тоже показывает, что когда группа стремится к одной цели, разнообразие теряется. Как в многоагентной системе найти баланс между эффективностью и разнообразием?</strong></p>
+<blockquote>
+<p>Полный обмен усиливает инерцию мышления и каскад ошибок, только изоляция даёт когнитивное разнообразие. Средства: разные промпты/модели для создания предпочтений мышления (brainstorm, debate); перекрёстный проверяющий не видит хода рассуждений предшественника, а только исходные свидетельства.</p>
+</blockquote>
+<p><strong>10. (★★★) Если выделить кодинг-агенту бюджет в 30 шагов и 300 шагов, как должна отличаться его рабочая стратегия? Исследования показывают, что простое увеличение бюджета шагов не гарантирует роста производительности — агент «насыщается» преждевременно после поверхностного поиска. Спроектируйте механизм «бюджетно-ориентированного поведения», позволяющий агенту при малом бюджете быстро реализовывать ключевую функциональность, а при большом бюджете — добавлять этапы планирования, тестирования и проверки, полностью используя дополнительные вычислительные ресурсы.</strong></p>
+<blockquote>
+<p>Механизм: на каждом шаге инъецировать в промпт общий и оставшийся бюджет, динамически регулируя вес исследования/использования по оставшейся доле. Например, малый бюджет (30 шагов): пропустить планирование и ревизию, идти прямо к ключевой функциональности плюс базовая проверка. Большой бюджет (300 шагов): сначала планирование, затем реализация, затем тестирование, затем ревизия и улучшение; контрольные точки по вехам для оценки прогресса, предотвращение преждевременного поверхностного насыщения.</p>
+</blockquote>
+<p><strong>11. (★★) В этой главе «преждевременное завершение» разделено на три типа: ленивое ложное завершение, преждевременный отказ и ложный успех. Почему решения этих трёх проблем сходятся к одному и тому же — проверке?</strong></p>
+<blockquote>
+<p>Общий корень: завершение задачи определяется самообъявлением модели; «выполнено» — лишь заявление, а не доказательство. Условия для верификатора: ① опираться на реальные наблюдения (прогон тестов, рендеринг скриншотов, проверка, что возврат средств реально поступил); ② поэлементно сверяться с явным определением завершения, перехватывая ленивое ложное завершение и ложный успех; ③ проверять и вывод о неудаче, перехватывая преждевременный отказ; ④ снабдить явными условиями завершения (предел раундов/бюджета), чтобы не скатиться от преждевременного завершения к другой крайности — потере контроля над циклом.</p>
+</blockquote>
+<p><strong>12. (★★) Табл. 10-3 построчно сопоставляет многоагентную систему с операционной системой. Продлите эту таблицу ещё на несколько строк: чему в мире агентов соответствуют виртуальная память и подкачка страниц, права доступа к файлам, обнаружение взаимных блокировок, алгоритмы планирования? И какие концепции операционных систем вообще не находят себе соответствия в мире агентов, и почему?</strong></p>
+<blockquote>
+<p>Возможное продолжение: виртуальная память/подкачка страниц ↔ сжатие контекста и поиск (горячая информация остаётся в окне, холодная выгружается в файлы и хранилища памяти и извлекается при необходимости); права доступа к файлам ↔ белые списки инструментов, монтирование только для чтения, границы учётных данных; обнаружение взаимных блокировок ↔ обнаружение циклических передач и взаимного ожидания (предел числа передач, тайм-ауты); алгоритмы планирования ↔ асинхронная обработка событий (глава 4). Несоответствия проистекают из различия принудительной силы: инструкции процесса принудительно исполняются аппаратурой, а агент следует промптам лишь с высокой вероятностью.</p>
+</blockquote>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:46 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:46 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

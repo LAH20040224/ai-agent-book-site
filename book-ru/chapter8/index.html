@@ -1,0 +1,2195 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/book-ru/chapter8/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Непрерывная эволюция агентов - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="Непрерывная эволюция агентов">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/book-ru/chapter8/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Непрерывная эволюция агентов">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Непрерывная эволюция агентов
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Получение обучающих сигналов из траекторий выполнения
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Четыре метода непрерывной эволюции Agent
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Четыре метода непрерывной эволюции Agent">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Преобразование опыта в знания
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Преобразование опыта в инструкции
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Преобразование опыта в программы
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Преобразование опыта в параметры
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        От обновления артефактов к обновлению «способа обновления»
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Построение устойчивого замкнутого цикла непрерывной эволюции
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Построение устойчивого замкнутого цикла непрерывной эволюции">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        От локализации проблемы к закреплению опыта
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Проверка, выпуск и откат
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Граница проверяемого цикла: когда «готово» не означает «прогресс»
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Границы безопасности непрерывной эволюции
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Обучение во сне: интеграция, забывание и актуальность способностей
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Итоги главы
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вопросы для размышления
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/book-ru/chapter8.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/book-ru/chapter8.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="_1">Непрерывная эволюция агентов<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>Современные Agent сталкиваются с ярко выраженным парадоксом возможностей: они способны без примеров решать ранее не встречавшиеся сложные задачи, но даже после десяти тысяч сходных задач на следующий день могут повторить ошибку первого дня. <strong>Способность автономно учиться на опыте</strong> становится ключевым условием перехода Agent от «умения выполнять задачи» к «способности надёжно работать», а также центральной темой исследований моделей следующего поколения. Однако возможности современных моделей в области непрерывного обучения всё ещё крайне ограничены.</p>
+<p>Причина состоит в том, что после развёртывания модель не изменяет свои параметры автоматически по итогам отдельного вывода. Рассмотренные во второй главе контекстное обучение, поддержание состояния и сжатие позволяют Agent адаптироваться <strong>в пределах текущей задачи</strong>; однако после завершения контекста эти изменения естественным образом не переносятся в следующую задачу. Сохранение диалога в памяти также не означает освоения нового поведения: исходная траектория может быть длинной и содержать как эффективные стратегии, так и случайные успехи, ошибочную атрибуцию причин и недостоверный ввод.</p>
+<p>Здесь важно различать два понятия, которые легко спутать: <strong>сохранение опыта не равнозначно обучению на опыте</strong>. Если поместить сто траекторий в длинный контекст или векторную базу, модель сможет при необходимости найти отдельный пример, но это само по себе не обеспечит сопоставление разных случаев: какие шаги многократно встречаются в успешных траекториях, какие приёмы работают только со старой версией интерфейса и обусловлен ли конкретный успех правильной стратегией или случайностью среды. Обучение происходит после того, как система активно выполнила «оценку, сопоставление, обобщение и проверку», а не в момент записи журнала на диск. Пользовательская память из третьей главы главным образом закрепляет сведения о том, «каковы пользователь и мир»; обучение на опыте в этой главе должно также закрепить, «как следует действовать при определённых условиях». Первое помогает Agent больше помнить, а второе превращает его из просто умного в опытного исполнителя.</p>
+<p>Почему же не позволить модели обучать себя непосредственно после каждой задачи? Потому что производственная среда редко предоставляет чистые обучающие сигналы. Удовлетворённость пользователя не означает соблюдения требований, а прохождение тестов может быть следствием удаления неуспешных тестовых случаев. Даже локальное обновление способно вызвать забывание навыков, дрейф стратегии или ухудшение безопасности. Если разрешить работающей модели напрямую изменять себя на основе непроверенной обратной связи, ошибочный опыт и Prompt-инъекции могут закрепиться и последовательно усиливаться в дальнейших задачах. Периодическое обучение базовой модели способно повышать общие возможности, но не позволяет своевременно усваивать частные правила, изменения инструментов и локальный опыт, с которыми каждый Agent сталкивается ежедневно.</p>
+<p>Поэтому, пока сама модель не способна надёжно осуществлять непрерывное обучение, «обучение» необходимо сначала оформить как автономную внешнюю систему: фиксировать свидетельства выполнения, проверять результат и процесс, извлекать общие закономерности из множества траекторий, а затем решать, что следует обновить — знания, инструкции, программы или параметры модели. Любые изменения сначала должны оформляться как кандидатная версия и лишь после регрессионного тестирования и проверок безопасности влиять на следующий цикл работы. Это не замена обучающих возможностей модели, а инженерный путь наделения Agent способностью к непрерывному обучению при современном уровне технологий.</p>
+<p>Предыдущие главы уже представили основные компоненты такой системы. Вторая глава рассматривает состояние внутри задачи, третья создаёт инфраструктуру знаний, пятая наделяет Agent метаспособностью создавать инструменты и изменять систему, шестая формирует механизмы оценки и проверки, а седьмая объясняет обновление параметров модели. Задача восьмой главы — организовать эти компоненты в показанный на рисунке 8-1 замкнутый цикл непрерывной эволюции.</p>
+<p><img alt="Рисунок 8-1. Общий замкнутый цикл непрерывной эволюции Agent" src="../images/fig8-1.svg" /></p>
+<p>Непрерывная эволюция должна опираться на прослеживаемый опыт выполнения, изменять последующее поведение и проходить проверку на отсутствие заметной деградации. Сначала в этой главе рассматривается, как определить, что именно в отдельном выполнении было сделано правильно или неправильно; затем сравниваются четыре метода обновления и границы их применимости; наконец, обсуждается, как эти обновления проверяются, выпускаются, пересматриваются и выводятся из эксплуатации в ходе длительной работы.</p>
+<h2 id="_2">Получение обучающих сигналов из траекторий выполнения<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Отправной точкой непрерывной эволюции является не «обобщение», а «оценка». Если система не знает, выполнена ли задача и какой шаг обусловил успех или неудачу, то созданная языковой моделью рефлексия остаётся лишь предположением. Если ошибочная оценка попадёт в долговременные знания, системный Prompt или обучающие данные, её влияние будет усиливаться во всех последующих задачах.</p>
+<p>Результаты некоторых задач проверяются сравнительно легко. Coding Agent может запускать тесты, проверку типов и тесты производительности; Agent, оформляющий возврат средств от имени пользователя, может проверить состояние заказа и фактическую сумму возврата. Такие сигналы поступают из реального состояния среды и обычно надёжнее описания моделью собственных действий. Однако правильный результат не означает правильности процесса. Удаление неуспешных тестовых случаев также позволяет пройти тесты, а устное обещание пользователю «мы вернём средства в течение семи дней, пожалуйста, ожидайте» может вызвать временную удовлетворённость. Поэтому надёжная оценка должна учитывать не только результат, но и путь его достижения.</p>
+<p>У ещё большего числа задач нет единственного правильного ответа. Терпеливо ли работает служба поддержки, предложила ли она допустимый нормативами обходной вариант, выделены ли в исследовательском отчёте ключевые доказательства, естественен и лаконичен ли сгенерированный текст — всё это требует контекстной оценки. В таких случаях можно использовать представленный в шестой главе LLM-as-a-Judge, однако нельзя ограничиваться просьбой к Judge выставить один расплывчатый итоговый балл. Эффективнее заранее определить оценочную шкалу (Rubric), потребовать от проверяющего выставить оценки по каждому пункту, сослаться на свидетельства из траектории и явно указать неопределённость при недостатке данных.</p>
+<p>На рисунке 8-2 представлена трёхуровневая структура проверки. Нижний уровень — проверяющий результат — считывает результаты тестов, состояние базы данных и ответы инструментов, отвечая на вопрос: «Действительно ли задача выполнена?» Средний уровень — проверяющий процесс — анализирует бизнес-правила, полномочия и последовательность действий, отвечая на вопрос: «Выполнена ли задача разрешённым способом?» Верхний уровень — проверяющий качество — оценивает язык и стратегию по Rubric, отвечая на вопрос: «Выполнена ли задача надлежащим образом?» Чем ниже уровень метрики, тем сильнее она должна опираться на код и эталонное состояние среды; языковой модели следует передавать только трудноформализуемые аспекты.</p>
+<p><img alt="Рисунок 8-2. Трёхуровневая проверка траектории: от результатов среды до LLM Rubric" src="../images/fig8-2.svg" /></p>
+<p>Для Agent службы поддержки полезная Rubric должна охватывать как минимум несколько измерений из таблицы 8-1. Первые пять в основном задают обязательные ограничения, последние два оценивают качество обслуживания. Такое разделение диагностически полезнее вопроса «Удовлетворён ли пользователь?»: пользователь может быть доволен неправомерным возвратом средств и недоволен нормативным ограничением, поэтому единая оценка удовлетворённости не позволяет различить эти ситуации.</p>
+<p>Таблица 8-1. Измерения оценки траектории Agent службы поддержки</p>
+<table>
+<thead>
+<tr>
+<th>Измерение</th>
+<th>Проверочный вопрос</th>
+<th>Основные свидетельства</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Результат задачи</td>
+<td>Удовлетворена ли основная потребность пользователя</td>
+<td>Итоговое состояние среды, результаты инструментов</td>
+</tr>
+<tr>
+<td>Соблюдение правил</td>
+<td>Не нарушены ли политики, полномочия или обязательные процедуры</td>
+<td>База политик, траектория действий</td>
+</tr>
+<tr>
+<td>Границы конфиденциальности</td>
+<td>Не раскрыта ли информация, которую нельзя предоставлять</td>
+<td>Текст ответа, журналы доступа к данным</td>
+</tr>
+<tr>
+<td>Фактическая надёжность</td>
+<td>Подкреплены ли утверждения знаниями или результатами инструментов</td>
+<td>Указанные источники, ответы инструментов</td>
+</tr>
+<tr>
+<td>Согласованность обещаний и действий</td>
+<td>Действительно ли выполнены операции, о завершении которых заявлено</td>
+<td>Сопоставление ответа с журналами инструментов</td>
+</tr>
+<tr>
+<td>Качество выражения</td>
+<td>Является ли ответ естественным и лаконичным, лишён ли он повторов и шаблонности</td>
+<td>Полный диалог, языковая Rubric</td>
+</tr>
+<tr>
+<td>Допустимый обходной путь</td>
+<td>Найден ли разрешённый альтернативный путь, когда исходный вариант невозможен</td>
+<td>Цель пользователя, политики и последующие действия</td>
+</tr>
+</tbody>
+</table>
+<p>«Согласованность обещаний и действий» особенно важна в сценариях Agent. Традиционная оценка текста, анализирующая только итоговый ответ, легко может счесть фразу «Я уже оформил для вас возврат» признаком хорошего обслуживания. Оценка траектории дополнительно проверит, действительно ли был вызван инструмент возврата, успешно ли завершился вызов и изменилось ли состояние заказа. «Допустимый обходной путь» также не означает поощрение произвольного нарушения правил: Agent должен понять реальную цель пользователя и, если возврат невозможен, проверить законные варианты вроде переоформления, отсрочки или частичной компенсации.</p>
+<p>Результат проверки не следует сжимать до одного скаляра. Оценка траектории больше похожа на структурированный диагноз: задача частично выполнена, требования соблюдены, но присутствуют одно неподтверждённое утверждение и одно ложное обещание, а политика объяснена трижды. Многомерный сигнал сохраняет как характер проблемы, так и положение свидетельств. Только после этого последующие модули могут определить, вызвано ли неподтверждённое утверждение нехваткой знаний, отсутствием требования ссылаться на источники или ограниченными возможностями модели; следует ли исправлять ложное обещание в Prompt или добавить в Harness проверку согласованности ответа с состоянием инструментов.</p>
+<p>Сам LLM-проверяющий также нуждается в калибровке. Производственная система обычно использует небольшой набор размеченных экспертами траекторий, чтобы проверить согласованность оценок по каждому измерению; случаи высокого риска или низкой уверенности передаются второй модели либо человеку; после смены версии модели калибровочный набор запускается повторно. Проверяющий должен выдавать оценку и свидетельства, а решение о том, какую часть Agent следует изменить, должно приниматься отдельным модулем диагностики и эволюции. Это предотвращает ситуацию, когда одна и та же модель одновременно выступает судьёй и непосредственно переписывает правила.</p>
+<blockquote>
+<p><strong>Эксперимент 8-1 ★★: построение проверяющего траекторий для Agent службы поддержки</strong></p>
+<p><strong>Цель эксперимента</strong>: преобразовать одну траекторию работы службы поддержки в структурированный диагноз, пригодный для последующего обучения, и проверить, позволяет ли «многомерное заключение со свидетельствами» точнее локализовать первопричину, чем единый итоговый балл.</p>
+<p><strong>Данные и процедура</strong>: подготавливаются четыре типа размеченных экспертами траекторий: нормальный возврат средств, ложное обещание, утечка конфиденциальных данных и чрезмерный отказ. Первый уровень считывает итоговое состояние заказа и журналы инструментов, определяя, действительно ли состоялись возврат или переоформление. Второй пошагово сопоставляет действия с бизнес-политиками и проверяет полномочия, обязательные процедуры, конфиденциальность, фактические основания и согласованность обещаний с действиями. Третий оценивает качество выражения и допустимые обходные пути по Rubric из таблицы 8-1, сохраняя для отрицательных заключений соответствующие ходы как свидетельства. По умолчанию Judge качества использует детерминированные правила; также предоставляется настоящий LLM Judge. Какую бы модель ни использовал верхний уровень, уровень результата и уровень правил нельзя отдавать на откуп догадкам языковой модели.</p>
+<p><strong>Сравнение и метрики</strong>: базовый вариант выдаёт только итоговый балл, а экспериментальный — <code>pass</code>, <code>fail</code> или <code>uncertain</code>, свидетельства и уверенность для каждого измерения. На этапе калибровки по каждому измерению рассчитываются precision и recall выявления неудач, а также доля полного совпадения с экспертной разметкой. Дополнительно проверяется, что для ложных обещаний и других неудач приведены непустые свидетельства, а не только заключение.</p>
+<p><strong>Критерии приёмки</strong>: проверяющий должен стабильно выявлять критические нарушения, ложные обещания и чрезмерные отказы. Высокий итоговый балл не может скрывать неудачу по конфиденциальности или правилам. Случаи низкой уверенности и высокого риска должны передаваться второму проверяющему или человеку, а не автоматически становиться обучающими сигналами.</p>
+<p>Сопутствующая реализация находится в <a href="../chapter8/trajectory-verifier/"><code>trajectory-verifier</code></a>; по умолчанию используется воспроизводимый офлайн Judge качества, а параметр <code>--judge llm</code> запускает уже реализованный настоящий LLM-проверяющий.</p>
+</blockquote>
+<h2 id="agent">Четыре метода непрерывной эволюции Agent<a class="headerlink" href="#agent" title="Permanent link">&para;</a></h2>
+<p>Обучающий сигнал указывает, что Agent должен измениться, но не определяет, где именно должно произойти изменение. Главный критерий выбора способа обновления — не давность опыта, а возможность естественно выразить целевую способность с помощью определённого носителя. Факты и опыт удобно оформлять как документы знаний; стратегии, ясно выражаемые на естественном языке, — включать в Prompt или Skill; точно исполняемые процессы и ограничения — реализовывать в программах; высокоразмерные способности, такие как восприятие, языковой стиль и неявные стратегии, — записывать в параметры модели. На рисунке 8-3 показаны эти четыре способа и отношения между ними.</p>
+<p><img alt="Рисунок 8-3. Четыре способа обновления при непрерывной эволюции" src="../images/fig8-3.svg" /></p>
+<p>В таблице 8-2 приведено их краткое сравнение. Эти способы не исключают друг друга: медицинский визуальный Agent распознаёт патологию с помощью параметров, получает актуальные рекомендации из базы знаний и вычисляет показатели риска посредством кода; естественный тон модели службы поддержки формируется постобучением, конкретные корпоративные политики задаются знаниями и Skill, а критически важное соблюдение требований гарантируется серверным кодом.</p>
+<p>Таблица 8-2. Границы применимости четырёх способов непрерывной эволюции</p>
+<table>
+<thead>
+<tr>
+<th>Способ обновления</th>
+<th>Подходящее содержимое</th>
+<th>Основные преимущества</th>
+<th>Основные ограничения</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>База знаний об опыте</td>
+<td>Факты, эмпирические закономерности, исключения и источники</td>
+<td>Быстрое обновление, прослеживаемость, извлечение по запросу</td>
+<td>Зависимость от извлечения и правильного применения моделью</td>
+</tr>
+<tr>
+<td>Prompt и Skill</td>
+<td>Выражаемые на естественном языке принципы принятия решений и операционные нормы</td>
+<td>Объяснимость, контролируемая область действия</td>
+<td>Склонность к разрастанию, конфликтам и игнорированию</td>
+</tr>
+<tr>
+<td>Программы и Harness</td>
+<td>Детерминированные процессы, инструменты и жёсткие ограничения</td>
+<td>Тестируемость, стабильное исполнение, низкая стоимость</td>
+<td>Более высокие затраты на разработку и сопровождение</td>
+</tr>
+<tr>
+<td>Параметры модели</td>
+<td>Высокоразмерное восприятие, стиль генерации и неявные стратегии</td>
+<td>Высокая обобщающая способность, низкие затраты при выводе</td>
+<td>Высокая стоимость обновления и регрессионного тестирования</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_3">Преобразование опыта в знания<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>Самый лёгкий способ эволюции — оформлять многократно повторяющийся опыт выполнения в доступные для поиска документы знаний. Упоминаемая здесь «база знаний об опыте» использует общие с третьей главой технологии хранения, индексирования и извлечения, однако источник знаний и цели проверки отличаются. В третьей главе из пользовательских диалогов, документов и наборов данных главным образом извлекается информация о том, «каковы пользователь и мир»; здесь же из траекторий действий Agent и их результатов извлекаются сведения о том, «как следует действовать при определённых условиях». Например, «эта авиакомпания требует заказывать специальное питание за двадцать четыре часа» — предметное знание, а «перед бронированием сначала проверять крайний срок заказа специального питания, чтобы не обнаружить невозможность выполнить требование уже после оплаты» — опыт действий.</p>
+<p>Исходная траектория не подходит на роль формальной единицы знаний. Она длинна и зашумлена, включает необработанные ответы инструментов, случайные обходные действия и детали среды. Более надёжная система сохраняет три уровня данных: неизменяемые исходные траектории для аудита; анализ отдельного выполнения с описанием успехов, неудач и потенциальных уроков; сопоставление, кластеризацию и обобщение множества однотипных траекторий с формированием ориентированных на будущее документов знаний в Markdown. Формальный документ обычно описывает область применимости, рекомендуемую стратегию, запрещённые действия, условия исключений, источники свидетельств и время последней проверки, а не пересказывает полный ход одной задачи.</p>
+<p>Этот подход разделяет двухэтапный принцип User-as-Code из третьей главы. User-as-Code сначала добавляет факты из диалога в неизменяемый журнал, а затем периодически перестраивает структурированную модель пользователя; обучение на опыте также должно сначала сохранять свидетельства, а затем в офлайн-режиме создавать изменяемые знания. Этот процесс показан на рисунке 8-4. Разделение фиксации и систематизации предотвращает немедленное изменение Agent из-за единичного случайного успеха или сетевого сбоя и позволяет выявлять общие закономерности только после анализа нескольких успешных и неуспешных случаев.</p>
+<p><img alt="Рисунок 8-4. От оценённых траекторий к документам знаний об опыте" src="../images/fig8-4.svg" /></p>
+<p>Документ об опыте — не простое резюме траектории. Реальную переносимость обеспечивает сопоставление: что присутствует в успешных траекториях определённого класса и отсутствует в неуспешных; в каких версиях среды стратегия эффективна и при каких предварительных условиях перестаёт работать. В третьей главе уже представлены методы извлечения, кластеризации и поиска знаний, поэтому здесь эти алгоритмы не повторяются. Основное внимание уделяется тому, как оценка траектории становится условием извлечения и повышают ли извлечённые знания эффективность последующих задач.</p>
+<p>Полный конвейер извлечения знаний можно разделить на пять этапов. Сначала сохраняются неизменяемые траектории и результаты среды. Затем для каждого выполнения создаётся структурированный анализ с типом задачи, требуемыми способностями, наблюдаемыми стратегиями, ошибками и исключениями. Далее выполнения одного семейства задач агрегируются, а для каждой потенциальной закономерности составляется таблица: «какие траектории подтверждают её, а какие опровергают». В формальный документ попадают лишь кандидаты, достигшие порога поддержки. Наконец, перенос проверяется на новых задачах, не участвовавших в извлечении. Раздельное хранение формальных знаний и кандидатного анализа позволяет повторно выполнять обобщение без изменения исходных свидетельств и точно отменять отдельные выводы при смене версии среды.</p>
+<p>Обучение на опыте GAIA служит наглядным примером. GAIA<sup id="fnref:gaia-2023"><a class="footnote-ref" href="#fn:gaia-2023">2</a></sup> содержит многоэтапные вопросы, требующие сочетания поиска, чтения веб-страниц, обработки файлов и вычислений, а AWorld<sup id="fnref:aworld-2025"><a class="footnote-ref" href="#fn:aworld-2025">3</a></sup> предоставляет среду для запуска Agent, вызова этих инструментов и сохранения траекторий. Первое можно сравнить с экзаменационным листом, второе — с экзаменационной аудиторией и системой записи эксперимента. В прежнем подходе после единственного успеха немедленно создавалось краткое описание стратегии, которое векторизовалось и сохранялось. Более строгая реализация сначала отмечает успех, частичный успех и неудачу посредством проверки ответов GAIA или другого проверяющего среды, а затем сопоставляет несколько путей в одном семействе задач. Успешные траектории дают потенциальные стратегии, неуспешные — исключающие знания, а частично успешные помогают понять, «какая часть сработала, а какая всё ещё проблемна». Предложенная в Reflexion<sup id="fnref:reflexion-2023"><a class="footnote-ref" href="#fn:reflexion-2023">1</a></sup> рефлексия на естественном языке может участвовать в создании потенциальных уроков, однако сама по себе она не является свидетельством. В формальный документ опыта следует включать лишь материалы, согласующиеся с результатами среды, поддерживаемые несколькими траекториями и демонстрирующие положительный перенос на новые задачи.</p>
+<blockquote>
+<p><strong>Эксперимент 8-2 ★★: извлечение документов знаний об опыте из траекторий GAIA</strong></p>
+<p><strong>Цель эксперимента</strong>: проверить, лучше ли «документ знаний по нескольким траекториям» переносится, чем «запомненное резюме одного успеха», и снижает ли он отрицательный перенос от случайных успехов и ошибочного опыта.</p>
+<p><strong>Данные и процедура</strong>: <code>gaia-experience</code> сначала сохраняет полную траекторию и внешний <code>environment_score</code> каждого выполнения, а затем преобразует их в минимальную обучающую запись: <code>task_family</code>, требуемые <code>capabilities</code>, <code>applies_when</code>, наблюдаемая стратегия, ошибки, исключения и ID исходных траекторий. Проверяющий результата делит выполнения на успешные, частично успешные и неуспешные. Обучающий модуль сопоставляет пути одного семейства задач; LLM может предлагать потенциальные обобщения, но рекомендуемая стратегия должна быть подтверждена как минимум двумя не завершившимися неудачей траекториями. Итоговый документ Markdown содержит область применимости, рекомендуемую стратегию, распространённые ошибки, условия исключений, источники и время последней проверки. На этапе применения извлекаются только эти документы, без помещения длинных исходных траекторий непосредственно в контекст.</p>
+<p><strong>Три группы сравнения</strong>: первая не использует прошлый опыт; вторая извлекает резюме одной траектории, наиболее похожей на текущую задачу; третья извлекает документ знаний, совместно подтверждённый несколькими траекториями. Обучающий набор не должен пересекаться с набором переноса, чтобы ответ на ту же задачу GAIA не просочился в оценку под видом «опыта».</p>
+<p><strong>Метрики и приёмка</strong>: одновременно сообщаются доля успешных задач переноса, среднее число извлечённых символов или Token и доля отрицательного переноса; для каждого формального вывода проверяется наличие списка исходных траекторий. Если документ по нескольким траекториям лишь сокращает контекст, но не улучшает новые задачи, это не доказывает обучение на опыте. Если единичный случайный успех можно повысить до формального знания или документ нельзя проследить до исходных траекторий, эксперимент также не проходит приёмку.</p>
+<p>Сопутствующая реализация находится в <a href="../chapter8/gaia-experience/"><code>gaia-experience</code></a>. <code>demo_documents.py</code> по умолчанию работает офлайн, а параметр <code>--extractor llm</code> позволяет настоящей LLM предлагать кандидатов опыта, обобщающих несколько траекторий.</p>
+</blockquote>
+<h3 id="_4">Преобразование опыта в инструкции<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>База знаний об опыте предоставляет Agent справочные материалы, тогда как Prompt и Skill обладают более выраженной директивностью. Когда множество траекторий неоднократно выявляет одну и ту же стратегическую ошибку, а закономерность можно ясно выразить на естественном языке, система может повысить её статус с «рекомендуемого опыта» до «обязательного правила». Правила, действующие почти во всех задачах, целесообразно включать в системный Prompt; сложные процессы, применимые только к определённой области, проекту или инструменту, удобнее оформлять как загружаемый по требованию Skill либо файл проектных инструкций.</p>
+<p>Обучение Prompt отличается по назначению от Prompt-инжиниринга второй главы. Вторая глава отвечает на вопрос, как создавать структурированные и удобные для кэширования Prompt; здесь же рассматривается, какая производственная обратная связь достаточна для изменения Prompt и как проверять новые правила перед развёртыванием. Изменение не должно выражаться в многократном переписывании всего системного Prompt. Надёжнее создавать минимальный diff на основе группы однотипных неудач, указывать область действия правила, проверять его на конфликты с существующими правилами, а затем одновременно оценивать на пограничных случаях, вызвавших неудачу, и сохранённом наборе старых задач.</p>
+<p>В длинной публикации 2025 года Andrej Karpathy предварительно назвал эту потенциальную новую парадигму <strong>обучением системного Prompt</strong> (System Prompt Learning)<sup id="fnref:karpathy-system-prompt-learning"><a class="footnote-ref" href="#fn:karpathy-system-prompt-learning">7</a></sup>. По его формулировке, предобучение главным образом осваивает знания, а тонкая настройка формирует привычное поведение. Но человек учится и иначе: столкнувшись с проблемой и поняв способ её решения, он явно напоминает будущему себе: «В следующий раз при такой задаче сначала попробуй этот подход». LLM без такого блокнота он сравнил с героем фильма <em>Memento</em>. Он также отметил, что обучение системного Prompt и обучение с подкреплением улучшают поведение на основе опыта, но используют разные алгоритмы обновления: первое редактирует текст, второе меняет параметры градиентным спуском. В качестве примера Karpathy привёл системный Prompt Claude того времени объёмом около 17 тысяч слов: он отдельно требовал в задачах на подсчёт слов, букв или символов сначала пронумеровать элементы и явно пересчитать их, а затем отвечать. Именно так предполагалось решать вопросы вроде «сколько букв <code>r</code> в слове <code>strawberry</code>».</p>
+<p>В системе Agent это означает, что после неудачи урок, который можно выразить словами, записывается как кандидатное правило, доступное будущим выполнениям. В отличие от скалярного результата «успех/неудача», диагноз со свидетельствами может указать, была ли ошибка в проверке личности, выборе инструмента или границе перевода на оператора, и тем самым породить более адресное изменение. Наблюдение Karpathy о том, что «рефлексия, направляемая знаниями, предоставляет более высокоразмерный канал обратной связи, чем скалярная награда», объясняет потенциальную эффективность этого метода по данным. Однако больше информации не означает автоматической истинности: один и тот же отзыв пользователя может относиться лишь к конкретному клиенту или старой версии политики, поэтому по-прежнему необходимы кластеризация, определение области действия и регрессионное тестирование.</p>
+<p>Для автоматической оптимизации Prompt уже существует несколько подходов. DSPy<sup id="fnref:dspy-2023"><a class="footnote-ref" href="#fn:dspy-2023">4</a></sup> рассматривает программу из нескольких вызовов языковой модели как оптимизируемый объект и ищет инструкции и примеры на наборе разработки. OPRO<sup id="fnref:opro-2023"><a class="footnote-ref" href="#fn:opro-2023">5</a></sup> поручает языковой модели предлагать следующие варианты на основе прошлых Prompt и их оценок. GEPA<sup id="fnref:gepa-2025"><a class="footnote-ref" href="#fn:gepa-2025">6</a></sup> использует естественно-языковую рефлексию о неуспешных траекториях для создания и отбора взаимодополняющих кандидатных Prompt. Эти методы главным образом предназначены для пакетной оптимизации на офлайн-наборах. Минимальные diff в производственной системе больше похожи на постоянное сопровождение: они запускаются новыми пограничными случаями и подчёркивают происхождение, аудит и быстрый откат. На практике сначала можно найти хорошую начальную версию офлайн-поиском, а после выпуска поддерживать длинный хвост правил отдельными исправлениями.</p>
+<p>Например, Agent авиационной службы поддержки может слишком рано переводить пользователя на оператора, если тот оспаривает политику. Оценка траекторий показывает отсутствие нарушений, но выявляет нехватку допустимых обходных вариантов. Кандидатное исправление может потребовать, чтобы Agent сначала объяснил политику, определил истинную цель пользователя и нашёл разрешённую альтернативу, а переводил на оператора только по явному запросу пользователя или при реальном выходе за пределы полномочий. Если новое правило сокращает число избыточных переводов, но заставляет Agent продолжать обрабатывать инциденты безопасности, которые следует передавать человеку, оно не проходит регрессионную проверку. Ценность обучения системного Prompt состоит не в автоматическом добавлении всё большего объёма текста, а в постоянном уточнении области применимости правил на основе пограничных производственных случаев.</p>
+<p>Обучение Skill следует тому же принципу, но имеет более локальную область действия. Skill можно воспринимать как должностную инструкцию, открываемую по мере необходимости. Если несколько элементов опыта совместно образуют целостный процесс обработки страховых требований, система может создать или пересмотреть соответствующий Skill. Кандидатный Skill не должен быть лишь резюме одного диалога: как минимум он описывает, когда его загружать, предварительные условия, рабочие шаги, известные ловушки и способ проверки, а также сохраняет исходные траектории. Система сначала ищет близкую способность в существующей библиотеке Skill: если такой же процесс уже есть, предпочтителен локальный <code>patch</code>; новый каталог создаётся только для действительно новой независимой способности, чтобы библиотека не заполнялась инструкциями с разными названиями и почти одинаковым содержанием. Skill Creator от Anthropic<sup id="fnref:anthropic-skill-creator"><a class="footnote-ref" href="#fn:anthropic-skill-creator">8</a></sup> демонстрирует цикл «черновик — тестирование — оценка — исправление». Он отвечает на вопрос, как создавать и улучшать Skill, но сложными остаются критерии достаточности свидетельств для запуска, разрешение конфликтов и проверка на предметных и старых задачах после изменения.</p>
+<blockquote>
+<p><strong>Эксперимент 8-3 ★★: оптимизация системного Prompt на основе неуспешных траекторий</strong></p>
+<p><strong>Цель эксперимента</strong>: научить Agent авиационной службы поддержки на неуспешных траекториях, где при оспаривании политики пользователь слишком рано переводился на оператора, и одновременно доказать, что новое правило не нарушает старые сценарии, действительно требующие перевода.</p>
+<p><strong>Процедура</strong>: сначала отдельно запускаются сохранённый набор старых задач и пограничный набор избыточного перевода. <code>learning_signal.py</code> разделяет неудачу на соблюдение правил, решение задачи и допустимый обходной путь, сохраняя ID исходного случая. Затем Coding Agent читает существующий Prompt и создаёт только одно аудируемое минимальное изменение <code>old_str → new_str</code>: требует сначала объяснить политику, определить истинную цель и найти допустимую альтернативу, сохраняя перевод при явной просьбе пользователя или инциденте безопасности. Исправление, источник, целевое правило и обоснование записываются в кандидатный manifest.</p>
+<p><strong>Три группы сравнения</strong>: исходный Prompt, автоматически созданный кандидатный Prompt и однократно настроенный человеком Prompt. Все три используют одну модель и одинаковые сохранённые/пограничные задачи. Параметр <code>--quick</code> лишь сокращает число случаев, но по-прежнему вызывает настоящие Task Agent, LLM Judge и Coding Agent, поэтому его результаты нельзя считать офлайн-имитацией.</p>
+<p><strong>Порог выпуска и метрики</strong>: кандидат должен удовлетворять четырём условиям: исправление непусто, источник прослеживается, результат на пограничном наборе действительно улучшился, сохранённый набор не деградировал. Сравниваются точность пограничных и сохранённых задач, увеличение длины Prompt, число внесённых регрессий и время от обнаружения неудачи до создания кандидата. Прохождение порога даёт лишь <code>release_to_canary</code>, не заменяя стабильный Prompt; нарушение любого условия возвращает <code>reject_candidate</code>.</p>
+<p>Сопутствующая реализация находится в <a href="../chapter8/prompt-auto-optimization/"><code>prompt-auto-optimization</code></a>. Офлайн-тесты охватывают диагностику и пороговые условия выпуска, а параметр <code>--quick</code> запускает настоящие Task Agent, LLM Judge и Coding Agent.</p>
+</blockquote>
+<h3 id="_5">Преобразование опыта в программы<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>Когда опыт описывает стабильные, повторяющиеся и проверяемые операции, нецелесообразно каждый раз заставлять модель заново читать документы и рассуждать. В таком случае опыт лучше компилировать в рабочий процесс, инструмент или код Harness, превращая однократное исследование в многократно исполняемую программу. В пятой главе уже объяснялось, как Coding Agent читает и записывает файлы, запускает тесты и создаёт системы; здесь рассматривается не общее создание кода, а изменение будущей версии Agent на основе его собственных траекторий.</p>
+<p>Изменяемыми объектами могут быть не только новые инструменты. На операционном уровне браузерные траектории можно компилировать в параметризованные рабочие процессы или создавать адаптеры для изменившихся API; на уровне управления — изменять маршрутизацию инструментов, повторные попытки, автоматические выключатели и стратегии сжатия контекста; на уровне проверки — добавлять по итогам производственных сбоев проверки параметров, проверяющие состояния и регрессионные тесты; на архитектурном уровне — вводить Reviewer Agent и изменять информационные потоки между планированием и исполнением.</p>
+<p>Браузерные рабочие процессы демонстрируют ценность программируемого опыта. Их можно сравнить с записью макросов в электронной таблице. При первой отправке письма мультимодальный Agent в цикле «наблюдение — размышление — действие» находит элементы «создать письмо, получатель, тема, текст, отправить». При следующей отправке процесс не меняется, отличаются лишь получатель и содержимое, поэтому нет необходимости снова вызывать модель, чтобы по пикселям и DOM заново открывать весь путь. Система должна скомпилировать траекторию первого исследования в небольшую программу с параметрами, проверками состояния и сведениями о версии.</p>
+<p>Показанное на рисунке 8-4 извлечение знаний в браузерном сценарии соответствует более конкретному жизненному циклу:</p>
+<ol>
+<li><strong>Запись траектории</strong>: фиксируются переходы, щелчки, ввод и выбор из списков; сохраняются параметры действий, текущий URL и свидетельства для поиска элемента — XPath, CSS, <code>id</code>, <code>role</code>, <code>aria-label</code>, <code>data-testid</code> и другие. Эти сведения помогают повторно найти элемент, но не доказывают выполнение задачи.</li>
+<li><strong>Параметризация</strong>: литералы первого выполнения распознаются как переменные шаблона. Например, <code>test@example.com</code>, тема и текст заменяются на <code>{recipient}</code>, <code>{subject}</code> и <code>{content}</code>, а остальные стабильные действия сохраняются. Учебная реализация использует регулярные выражения и подстановку шаблонов; производственная может применять структурированный ввод задачи или ограниченную модель извлечения.</li>
+<li><strong>Определение проверок состояния</strong>: для действий добавляются проверки до и после выполнения, например «кнопка отправки сейчас видна» и «URL после перехода относится к целевому сайту». Для процесса в целом добавляется итоговая проверка: «новое письмо появилось в отправленных» или «значение состояния тестовой страницы изменилось ожидаемым образом». Успешное исполнение действия и успех задачи — разные вещи; итоговая проверка должна считывать реальное состояние страницы или серверной части.</li>
+<li><strong>Проверка кандидата</strong>: первый успех создаёт только <code>candidate</code>. Система должна сбросить тестовую учётную запись или сайт в независимое исходное состояние и полностью воспроизвести кандидата. Лишь после прохождения всех проверок до действия, после действия и итогового состояния его можно выпустить как <code>validated</code>. Для задач с побочными эффектами, таких как отправка письма или заказ, при отсутствии безопасного обратного вызова сброса кандидат можно только сохранить для аудита; нельзя повторять операцию в производственной учётной записи ради проверки.</li>
+<li><strong>Сопоставление и воспроизведение</strong>: при новой задаче система сначала ищет рабочий процесс в официальной библиотеке способностей по намерению и ключевым словам, извлекает текущие параметры и исполняет его напрямую через Playwright. На пути воспроизведения не требуется пошагово вызывать LLM, но необходимо дождаться доступности элементов и выполнить все проверки состояния.</li>
+<li><strong>Признание недействительным и переобучение</strong>: если целевой элемент не найден, проверка состояния не проходит, Schema API изменилась или итоговое состояние неверно, последующие действия немедленно прекращаются. Старая версия переносится из доступной для поиска библиотеки в область <code>invalid</code>, а полный Agent повторно исследует задачу. Старый файл сохраняется для аудита и сравнения, но не должен незаметно продолжать находиться поиском.</li>
+</ol>
+<p>Для отправки письма результат компиляции — не просто «последовательно щёлкнуть эти кнопки», а небольшая программа с параметрами получателя, темы и текста. Перед отправкой она проверяет окно создания и поля ввода, после отправки — сообщение об успехе, а затем подтверждает появление соответствующего письма в отправленных. В экспериментах PreAct<sup id="fnref:preact"><a class="footnote-ref" href="#fn:preact">9</a></sup> такие программы обеспечили ускорение повторяющихся задач в 8,5–13 раз от начала до конца, причём на этапе воспроизведения не требовали пошаговых вызовов языковой модели. Ещё важнее, память процесса должна сочетать <strong>проверку до действия, проверку после действия и независимую проверку перед сохранением</strong>. Иначе возникает опасная иллюзия: покрытие воспроизведения составляет 100 %, каждая кнопка нажата, но одно поле фактически осталось пустым и задача ни разу не была выполнена.</p>
+<blockquote>
+<p><strong>Эксперимент 8-4 ★★★: создание проверяемого рабочего процесса из браузерной траектории</strong></p>
+<p><strong>Цель эксперимента</strong>: проверить, способен ли веб-Agent превратить одно дорогостоящее исследование в повторно используемый рабочий процесс и при изменении страницы отвергать ошибочное воспроизведение, а не объявлять успех лишь потому, что «все действия выполнены».</p>
+<p><strong>Четыре этапа сценария</strong>: на первом этапе на тестовом почтовом сайте или имитаторе сообщений выполняется задача «отправить на <code>test@example.com</code> сообщение с темой „Тестовое письмо“». Полный Agent исследует сайт, а обёртка фиксирует действия, параметры и состояние страницы, создавая <code>candidate</code>. На втором этапе <code>validation_reset</code> возвращает песочницу в исходное состояние, после чего выполняется независимое полное воспроизведение. Кандидат попадает в официальную библиотеку только после прохождения всех проверок до действия, после действия и итогового состояния. На третьем этапе выполняется однотипная задача с другими получателем, темой и текстом; система должна найти проверенный процесс, подставить новые параметры и воспроизвести его через Playwright без пошагового цикла LLM. На четвёртом изменяется локатор кнопки, текст страницы или итоговое состояние, чтобы проверить немедленный переход старого процесса в <code>invalid</code> и возврат <code>fallback_required=True</code>.</p>
+<p><strong>Схема сравнения</strong>: упрощённый базовый вариант учитывает только отсутствие исключений при щелчках, вводе и других действиях. Экспериментальный вариант дополнительно проверяет страницу до действия, страницу после действия и итоговое состояние задачи. Обоим даются одинаковые траектории и изменения страницы; сравнивается доля ошибочных решений в случаях ложного успеха, например «поле пусто, но кнопка отправки нажата» или «Save нажата, но данные не записаны».</p>
+<p><strong>Метрики и приёмка</strong>: фиксируются полное время первого исследования и воспроизведения, число вызовов LLM, доля успехов, доля ложных успехов, доля сопоставленных процессов, доля обнаруженных изменений страницы и число возвратов к переобучению. Без обратного вызова сброса процесс должен оставаться в кандидатной области; не прошедшая проверку версия не должна извлекаться; параметризованное воспроизведение не должно повторно использовать получателя или текст первого запуска; после изменения страницы опасные последующие действия должны прекращаться. Ускорение имеет смысл только при одновременном выполнении всех этих условий.</p>
+<p>Сопутствующая реализация находится в <a href="../chapter8/browser-use-rpa/"><code>browser-use-rpa</code></a> и предоставляет как демонстрацию детерминированного конечного автомата, так и путь запуска с настоящим браузерным Agent.</p>
+</blockquote>
+<p>Способность Agent изменять собственный код не означает, что работающий процесс должен напрямую перезаписывать себя. Производственная система должна создать кандидатную ветвь из текущей стабильной версии, поручить Coding Agent сформировать минимальное исправление, а затем последовательно выполнить статические проверки, модульные тесты, сканирование безопасности, воспроизведение неуспешных траекторий и регрессию на старых задачах. Только после этого создаётся новая версия для постепенного развёртывания. Так «самомодификация» превращается в аудируемый процесс выпуска программного обеспечения. В этом проходит граница между восьмой и пятой главами: пятая предоставляет способность изменять систему, а настоящая глава — метод самомодификации, запускаемый опытом и ограниченный замкнутым циклом проверки.</p>
+<p>Одного требования «минимальное исправление» недостаточно для надёжной атрибуции. Каждый запрос на изменение должен быть <strong>фальсифицируемым контрактом изменения</strong>: в нём перечисляются свидетельства сбоя, предполагаемая первопричина, отвечающий компонент Harness, кандидатное изменение, поведение, которое должно улучшиться, существующее поведение, которое может пострадать, и тесты обоих эффектов. Agentic Harness Engineering описывает это как наблюдаемость на уровнях компонентов, опыта и решений: каждый редактируемый компонент имеет файловое представление; большие массивы траекторий сводятся в свидетельства с возможностью постепенного углубления; перед каждым изменением формулируется прогноз эффекта, который проверяется следующим раундом результатов<sup id="fnref:ahe-2026"><a class="footnote-ref" href="#fn:ahe-2026">19</a></sup>. Тогда рост оценки можно связать с конкретным механизмом, а не с непрозрачной пробой.</p>
+<p>Генератор кандидатов должен видеть не только неудачи. Self-Harness также передаёт успешные свойства, которые необходимо сохранить, и историю ранее отклонённых изменений<sup id="fnref:self-harness-2026"><a class="footnote-ref" href="#fn:self-harness-2026">20</a></sup>. Первое показывает, что нельзя сломать при исправлении; второе не позволяет снова предложить тот же неудачный подход другими словами. Свидетельства сбоев, ограничения успешного поведения и предыдущие попытки образуют ограниченное пространство кандидатов и полезнее, чем без разбора загружать в изменяющий Agent весь код и сырые журналы.</p>
+<p>Создание инструментов подчиняется тому же протоколу. В примере Alita<sup id="fnref:alita-2025"><a class="footnote-ref" href="#fn:alita-2025">10</a></sup> Agent должен найти число, упомянутое сразу после первого появления динозавра в панорамном YouTube-видео 360 VR, которое комментирует актёр озвучивания Голлума из «Властелина колец». Обнаружив отсутствие доступа к субтитрам, Agent находит и тестирует <code>youtube-transcript-api</code>, оформляет её как новый инструмент для субтитров и в итоге получает из текста ответ <code>100000000</code>. Новый инструмент попадает в библиотеку способностей лишь после сканирования безопасности, функционального тестирования и успешного переиспользования в последующих задачах. Активное обнаружение инструментов из четвёртой главы отвечает на вопрос «какой из существующих инструментов подходит», пятая — «как написать инструмент», а эта глава — «какие свидетельства выполнения запускают создание и как новый инструмент становится проверенной долгосрочной способностью».</p>
+<blockquote>
+<p><strong>Эксперимент 8-5 ★★★: самомодификация Agent, инициированная неуспешными траекториями</strong></p>
+<p><strong>Цель эксперимента</strong>: по нескольким траекториям, где ошибка с <code>retryable=false</code> продолжает вызываться, определить первопричину в коде повторных попыток и автоматического выключателя и создать кандидатное исправление, не нарушив повторные попытки при временных сбоях.</p>
+<p><strong>Процедура</strong>: модуль диагностики сначала агрегирует одинаковую неисправность в разных задачах. Запрос на изменение создаётся лишь после достижения порога поддержки между траекториями, а целью назначается <code>retry_policy.py</code> стабильной версии. Генератор кандидата читает диагноз, поведение восстановления после временных сбоев, которое нужно сохранить, ранее отклонённые изменения и стабильный исходный код. До выдачи минимального diff он прогнозирует, что число вызовов после неповторяемой ошибки снизится, а доля восстановления после временного тайм-аута не уменьшится. И детерминированный генератор, и настоящий LLM Coding Agent могут записывать результат только в изолированный кандидатный каталог. Затем Harness компилирует кандидата, воспроизводит исходные неуспешные траектории, проверяет немедленную остановку неповторяемой ошибки и открытие выключателя, а также повторно тестирует, что временный тайм-аут по-прежнему повторяется до прежнего порога.</p>
+<p><strong>Диагностическое сравнение и метрики</strong>: подход «добавить в Prompt фразу не вызывать повторно» служит концептуальным примером выбора неверного уровня и объясняет, почему детерминированно исполняемое ограничение повторов должно находиться в программе. В исполняемом эксперименте сравниваются детерминированный и LLM-генератор исправлений при одном пороге выпуска. Фиксируются число вызовов неповторяемых ошибок, доля восстановления после временных ошибок, число регрессий старых задач, размер исправления и доля принятых кандидатов.</p>
+<p><strong>Критерии приёмки</strong>: даже после прохождения всех проверок создаётся лишь <code>release_to_canary</code>. Неудача любой статической проверки, воспроизведения сбоя или регрессии старых задач возвращает <code>reject_candidate</code>. В <code>release_manifest.json</code> должны быть записаны кластер сбоя, исходные траектории, предполагаемая первопричина, целевой компонент и файл, diff кода, ожидаемое исправление, возможные регрессии, результаты проверок, кандидатная и откатная версии. Для отклонённых кандидатов сохраняется причина отказа для следующего раунда генерации. Создающий исправление Agent не может изменять стабильный код, проверяющие механизмы, журнал аудита или порог утверждения собственного выпуска.</p>
+<p>Сопутствующая реализация находится в <a href="../chapter8/self-modifying-agent/"><code>self-modifying-agent</code></a>. Можно выбрать детерминированный генератор кандидатов или настоящий LLM Coding Agent; оба пути используют одинаковые пороговые условия выпуска.</p>
+</blockquote>
+<h3 id="_6">Преобразование опыта в параметры<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>Знания, инструкции и программы основаны на одном предположении: целевая способность может быть достаточно полно выражена внешними символами. Однако такие способности, как понимание медицинских изображений, естественная речевая просодия, устранение шаблонного «привкуса AI» в тексте и долгосрочное планирование, трудно свести к нескольким правилам или рабочим процессам. Подобные способности необходимо записывать в параметры модели посредством постобучения.</p>
+<p>Решение о параметризации не определяется исключительно долгосрочной стабильностью задачи. Сдвиг домена из-за нового оборудования медицинской визуализации всё равно может потребовать LoRA или непрерывного дообучения; быстро меняющийся языковой стиль также можно адаптировать посредством периодического обучения предпочтениям. Стабильность влияет на частоту и стоимость обновлений, но основной носитель определяется характером представления способности. И наоборот, долгосрочно стабильное правило утверждения банковских переводов нельзя оставлять только в параметрической памяти: серверный код по-прежнему должен обеспечивать детерминированную гарантию.</p>
+<p>В седьмой главе уже подробно рассмотрены SFT, дистилляция и RL, поэтому алгоритмы здесь не повторяются. Для непрерывной эволюции важно преобразовать оценённые производственные траектории в обучающие данные: высококачественные демонстрации могут использоваться в SFT, явно выраженные предпочтения — формировать парные данные, а взаимодействия с надёжной наградой среды — применяться для RL. До начала обучения необходимо удалить конфиденциальную информацию, отфильтровать ошибочные траектории и сохранить независимый регрессионный набор; после обучения — проверить, не были ли забыты общие способности и выравнивание безопасности.</p>
+<p>Параметрическое обучение обычно взаимодействует с внешними методами. Модель медицинской визуализации изучает визуальные представления через параметры, получает актуальные рекомендации из базы знаний, а посредством кода измеряет патологические области и рассчитывает риск. Естественный тон службы поддержки можно сформировать обучением предпочтениям на уровне общего распределения, затем задать текущую идентичность бренда через Prompt и адаптироваться к индивидуальным коммуникативным предпочтениям посредством пользовательской памяти. Непрерывная эволюция не требует выбирать единственный из четырёх способов: каждую способность следует разместить там, где её удобнее всего выражать и контролировать.</p>
+<h3 id="_7">От обновления артефактов к обновлению «способа обновления»<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>Предыдущие четыре метода отвечали на вопрос, <strong>куда записывается опыт</strong>, но у непрерывной эволюции есть ещё одна независимая ось: оптимизирует ли система содержимое артефакта или способ создания, управления и проверки артефактов. По этой оси объект оптимизации расширяется так: <strong>отдельное правило или память → структурированный контекст → рабочий процесс → код Harness → код оптимизатора, создающего кандидатов</strong><sup id="fnref:weng-harness-2026"><a class="footnote-ref" href="#fn:weng-harness-2026">14</a></sup>. Это не пять новых носителей обновления, а пять масштабов поиска; знания, Prompt, Skill и программы могут встречаться на нескольких уровнях.</p>
+<p>На внутреннем уровне меняется только содержимое: например, после неудачной траектории в системный Prompt добавляется локальное правило или в документ опыта — исключение. Область воздействия мала, атрибуция и откат проще, поэтому это вариант по умолчанию. Но многократное полное переписывание Prompt или памяти порождает другую деградацию: стремление к краткости постепенно стирает редкие важные детали, а взаимосвязанные ограничения сворачиваются в чрезмерно общее правило. Agentic Context Engineering (ACE) хранит контекст как набор записей со стабильными идентификаторами. Модули генерации, рефлексии и курации предлагают инкрементальные обновления, которые затем детерминированно объединяются и дедуплицируются, вместо полного переписывания всё более короткого текста<sup id="fnref:ace-2026"><a class="footnote-ref" href="#fn:ace-2026">15</a></sup>. Это конкретный пример принципов минимального diff и сохранения происхождения.</p>
+<p>На следующем уровне оптимизируется не только содержимое контекста, но и способ его построения. Meta Context Engineering (MCE) разделяет внутренний и внешний циклы: внутренний улучшает контекстный артефакт текущей задачи при заданном методе управления, внешний по результатам нескольких запусков и проверок меняет сами операции поиска, выбора, фильтрации и форматирования<sup id="fnref:mce-2026"><a class="footnote-ref" href="#fn:mce-2026">16</a></sup>. Изменить правило извлечения — значит изменить механизм управления содержимым; сравнить несколько таких механизмов и сохранить лучше переносящийся — значит научиться управлять контекстом.</p>
+<p>Та же идея распространяется на рабочие процессы и весь Harness. AFlow представляет цепочки из нескольких вызовов LLM как графы кода и по обратной связи исполнения ищет комбинации узлов и потока управления<sup id="fnref:aflow-2025"><a class="footnote-ref" href="#fn:aflow-2025">17</a></sup>. В Meta-Harness Coding Agent читает исходный код, оценки и траектории кандидатных Harness и ищет код, определяющий хранение, извлечение и представление информации<sup id="fnref:meta-harness-2026"><a class="footnote-ref" href="#fn:meta-harness-2026">18</a></sup>. Пятая глава уже показала код как универсальный язык структуры Agent; здесь он вместе с историей оценок становится объектом непрерывного поиска, а не одноразовым результатом.</p>
+<p>Более высокий уровень не обязательно лучше. Для поиска локального правила достаточно нескольких пограничных случаев; поиск целого процесса или Harness означает большее пространство кандидатов, более дорогую оценку и сложную атрибуцию. Ясный повторяющийся сбой в одном компоненте следует сначала исправить локальным аудируемым патчем. Переход к процессу, Harness или оптимизатору оправдан лишь тогда, когда локальные изменения систематически не решают межкомпонентную проблему или сам способ управления стал узким местом. На любом уровне оценщики, границы полномочий и отложенные тесты должны оставаться вне изменяемой области: чем больше пространство поиска, тем важнее доверенное ядро.</p>
+<h2 id="_8">Построение устойчивого замкнутого цикла непрерывной эволюции<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+<p>Четыре способа обновления превращаются из однократной оптимизации в непрерывную эволюцию только внутри единого автономного цикла. На рисунке 8-5 показана более надёжная двухконтурная структура производственной системы: онлайн-контур исполнения только выполняет задачи и фиксирует свидетельства, не изменяя непосредственно официальный Agent; офлайн-контур эволюции агрегирует траектории, диагностирует первопричины, создаёт кандидатные изменения и публикует новую версию после прохождения пороговых условий проверки. Контуры связаны версионируемой базой опыта и оценочными наборами.</p>
+<p><img alt="Рисунок 8-5. Два контура: онлайн-исполнение и офлайн-эволюция" src="../images/fig8-5.svg" /></p>
+<p>Voyager<sup id="fnref:voyager-2023"><a class="footnote-ref" href="#fn:voyager-2023">13</a></sup> демонстрирует сравнительно полный цикл непрерывной эволюции. В Minecraft он выбирает новую цель с учётом текущих способностей, итеративно совершенствует программу на основе обратной связи среды, после подтверждения успеха сохраняет код в библиотеку навыков и затем комбинирует старые навыки для решения более сложных задач. Автоматическая учебная программа, исполняемые навыки и проверка средой одинаково необходимы: если есть библиотека навыков, но нет учебной программы, Agent не знает, чему учиться дальше; если есть саморефлексия, но нет проверки средой, библиотека накапливает ошибки; если есть исследование, но нет постоянного хранения, каждую задачу по-прежнему приходится начинать с нуля. Хотя знания, Prompt, инструменты и параметры реальных Agent значительно сложнее, базовый процесс обучения остаётся сходным.</p>
+<p>В частности, Voyager объединяет три взаимосвязанных механизма. <strong>Генератор автоматической учебной программы</strong> предлагает следующую цель умеренной сложности на основе текущих предметов, среды и освоенных навыков, не позволяя исследованию превратиться в случайное блуждание. <strong>Библиотека навыков</strong> хранит успешные программы как доступный для поиска и композиции код: например, сложный навык добычи может вызывать базовые навыки перемещения и создания предметов. <strong>Итеративный механизм Prompt</strong> возвращает наблюдения среды, ошибки исполнения и результаты самопроверки в следующий цикл генерации кода, пока задача действительно не будет решена. Согласно статье, по сравнению с тогдашними базовыми вариантами Voyager получил в 3,3 раза больше уникальных предметов, исследовал в 2,3 раза большее расстояние и достигал ключевых этапов технологического дерева до 15,3 раза быстрее, а также переносил библиотеку навыков в новые миры Minecraft. Эти показатели измеряют рост способностей с опытом, а не результат однократного экзамена замороженного Agent.</p>
+<h3 id="_9">От локализации проблемы к закреплению опыта<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>Одна и та же внешняя проблема может требовать разных способов изменения. Галлюцинации с выдуманными фактами у Agent службы поддержки могут быть вызваны отсутствием фактов в базе знаний или отсутствием в Prompt требования ссылаться на источники. Ложное обещание «уже выполнено», когда задача ещё не завершена, можно исправить инструкцией или принудительной проверкой согласованности ответа с состоянием инструментов в Harness. Модуль эволюции должен сначала локализовать первопричину, а затем выбрать минимальный и наиболее легко проверяемый и откатываемый объект изменения. Единичный сбой с недостатком свидетельств не должен немедленно запускать обучение — следует продолжить накопление примеров.</p>
+<p>Выбор может меняться по мере накопления опыта. Новая стратегия сначала предоставляется для извлечения как документ опыта; после многократной проверки на нескольких случаях она может быть повышена до знания. Знание имеет три формы выражения: ясно описываемое на естественном языке правило можно закрепить как Skill; если шаги стабильны и не требуют понимания естественного языка, их можно скомпилировать в код инструмента; если правило фактически отражает широкую неявную способность принимать решения, оно может войти в постобучение.</p>
+<h3 id="_10">Проверка, выпуск и откат<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>Любое изменение сначала создаёт кандидатную способность или кандидатный Agent, а не напрямую заменяет производственную версию. Для документов знаний необходимо проверить, улучшают ли они после извлечения результаты новых задач; Prompt и Skill должны проходить проверку на пограничных случаях и регрессию старых задач; программы должны тестироваться в песочнице и сброшенной среде; обновления параметров — проверяться на забывание, безопасность и задачи вне распределения. Даже после успешной проверки необходимо постепенное развёртывание с наблюдением за реальным трафиком; при ухудшении ключевых показателей система должна автоматически откатываться к заведомо безопасной версии.</p>
+<p>При проверке нужно разделять две часто смешиваемые способности. <strong>Способность обновлять Harness</strong> (harness-updating) — получать из траекторий полезные постоянные изменения; <strong>способность извлекать пользу из Harness</strong> (harness-benefit) — находить, активировать и правильно применять эти изменения в последующих задачах. Skill может быть написан верно, но слабая модель задачи не загрузит его в нужной ситуации или не сможет долго следовать инструкции; итоговая оценка в обоих случаях выглядит как отсутствие эволюции. Поэтому по одной сквозной метрике нельзя судить о качестве обновляющего механизма. Эксперименты Lin и соавторов с заменой моделей показывают, что эти способности по-разному связаны с силой базовой модели<sup id="fnref:harness-benefit-2026"><a class="footnote-ref" href="#fn:harness-benefit-2026">21</a></sup>. Конкретное соотношение ещё требует проверки на других задачах, но раздельная оценка полезна в общем случае.</p>
+<p>Таблица 8-3. Многоуровневые метрики непрерывной эволюции</p>
+<table>
+<thead>
+<tr>
+<th>Метрика</th>
+<th>На какой вопрос отвечает</th>
+<th>Основные свидетельства</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Доля полезных кандидатных изменений</td>
+<td>Предлагает ли обновляющий механизм полезные изменения?</td>
+<td>Доля принятия и прирост на независимой проверке</td>
+</tr>
+<tr>
+<td>Доля активации артефакта</td>
+<td>Загружает ли Agent новый Skill, память или инструмент в нужной ситуации?</td>
+<td>Траектории извлечения, маршрутизации и вызова инструментов</td>
+</tr>
+<tr>
+<td>Доля успешного соблюдения</td>
+<td>Следует ли Agent новому правилу после активации?</td>
+<td>Последовательности действий и проверяющие процессы</td>
+</tr>
+<tr>
+<td>Прирост на отложенных задачах</td>
+<td>Улучшилась ли система на задачах вне цикла эволюции?</td>
+<td>Успех, качество и стоимость на held-out-наборе</td>
+</tr>
+</tbody>
+</table>
+<p>Для диагностики можно зафиксировать кандидатный Harness и менять только модель задачи. Если сильная модель получает пользу, а слабая не активирует новый артефакт, узкое место — извлечение или маршрутизация. Если обе активируют его, но только сильная выполняет правильно, проблема в следовании инструкции или долгосрочном планировании. Если деградируют все модели, подозрительнее само изменение. И наоборот, можно зафиксировать модель задачи и менять модель, предлагающую изменения. Такая двусторонняя замена точнее указывает, куда направить бюджет способностей, чем одна итоговая оценка после эволюции.</p>
+<p>Оценка — не экзамен после завершения обучения, а неотъемлемая часть процесса самоэволюции. Долгосрочная оценка должна одновременно учитывать не менее пяти категорий результатов:</p>
+<ul>
+<li>регрессия (regression): конфликтует ли новый опыт с другим накопленным опытом и перестают ли проходить ранее успешные случаи;</li>
+<li>способность к обобщению: какой прирост даёт новый опыт в сценариях, ещё не охваченных тестовым набором;</li>
+<li>Token-эффективность: сколько token расходуется на выполнение задачи;</li>
+<li>безопасность: дрейфуют ли в ходе эволюции правила, конфиденциальность и границы отказа;</li>
+<li>долгосрочное инженерное качество: не ухудшаются ли сложность сопровождения, согласованность архитектуры, границы владения, обратная совместимость и будущая стоимость миграции и отладки.</li>
+</ul>
+<p>Устранение только текущего неуспешного случая при деградации других известных случаев или новых областей не является успешным непрерывным обучением.</p>
+<h3 id="_11">Граница проверяемого цикла: когда «готово» не означает «прогресс»<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>Предыдущий цикл естественнее всего работает в кодинге, вызовах инструментов и изменениях бизнес-состояния, где тесты, состояние среды или детерминированные правила быстро дают обратную связь. В открытых исследованиях, стратегическом планировании и сложном проектировании сигнал запаздывает, единственного ответа нет, а важнейшие цели — исследовательский вкус, долгосрочная ценность и сопровождаемость — трудно выразить мгновенной оценкой. Harness может безупречно выполнить процесс, но стабильно создавать лишь «похожие на результат» материалы, не продвигая настоящую цель.</p>
+<p>Автономное исследование — показательный стресс-тест. Trehan и Chopra описали четыре сквозные попытки превратить идею в статью: три провалились на реализации или оценке, и лишь одна прошла весь конвейер<sup id="fnref:llm-scientists-2026"><a class="footnote-ref" href="#fn:llm-scientists-2026">22</a></sup>. Выделяются три проблемы. <strong>Дрейф реализации</strong>: при усложнении исходного метода Agent возвращается к знакомому по обучающим данным, но уже не проверяющему гипотезу решению. <strong>Эпистемическая чрезмерная уверенность</strong>: пока сигнал может быть шумом, система уже объясняет результат, вносит патчи и объявляет открытие, а отрицательные результаты игнорируются. <strong>Недостаток неявного суждения</strong>: Agent способен запустить эксперимент, но не всегда понимает, какой baseline важен, какую аномалию исследовать и когда отказаться от гипотезы.</p>
+<p>Здесь нужно менять структуру свидетельств и надзора, а не только модель, лучше пишущую статьи:</p>
+<ul>
+<li><strong>Разделять выводы и свидетельства</strong>: отдельно хранить происхождение цитат, чисел, методов и выводов; итоговый текст — лишь представление графа свидетельств. Chain-of-Evidence в ScientistOne связывает классы утверждений с аудируемыми источниками, повышая прослеживаемость, но не гарантируя ценность вопроса<sup id="fnref:scientistone-2026"><a class="footnote-ref" href="#fn:scientistone-2026">23</a></sup>.</li>
+<li><strong>Сохранять отрицательные результаты</strong>: записывать неудачные эксперименты, отклонённые кандидаты и причины остановки в неизменяемый журнал наравне с успехами. Иначе цикл видит только выжившие решения, повторяет опровергнутые пути и учится объявлять неоднозначность успехом.</li>
+<li><strong>Сохранять разнообразие поиска</strong>: не оставлять только цепочку с максимальной оценкой, а удерживать различающиеся по механизму, новизне кода или типу гипотезы ветви, даже если их текущий балл ниже.</li>
+<li><strong>Переносить участие человека на верхний уровень</strong>: человек не только утверждает опасные вызовы, но и определяет проблему, проверяет критерии оценки, интерпретирует аномалии и решает, когда остановиться. При неоднозначной обратной связи эти решения ценнее пошагового перехвата исполнения.</li>
+</ul>
+<p>То же ограничение действует в обычной разработке: прохождение модульных тестов доказывает соответствие наблюдаемого поведения тестам, но не сопровождаемость через несколько месяцев. Поэтому долгосрочное инженерное качество оценивается отдельно, а не выводится из текущего успеха задачи. Потолок непрерывной эволюции определяется тем, способна ли система оценивать настоящую цель, а не только самый удобный прокси-показатель.</p>
+<h3 id="_12">Границы безопасности непрерывной эволюции<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<p>Способность Agent к самоэволюции может превратить единичную ошибку в долгосрочный риск. Если <strong>Prompt-инъекция из веб-страницы, письма или ответа инструмента будет обобщена как опыт</strong>, она сможет многократно действовать в последующих сеансах. Если автоматически найденный вредоносный пакет оформить как инструмент, его воздействие распространится с одного запуска в песочнице на все дальнейшие задачи. Неисправный проверяющий может постоянно одобрять кандидатные версии, которые выглядят улучшенными, но фактически деградируют. Поэтому система самоэволюции должна проверять не только, «стала ли она сильнее», но и ограничивать, «кто что может менять и откуда поступили основания».</p>
+<p>Первая граница — <strong>разделение свидетельств и инструкций</strong>. Исходные веб-страницы и необработанные ответы инструментов являются недостоверными свидетельствами и не могут напрямую записываться в Skill и подобные материалы; перед записью их должна обобщить LLM. Запись следует выполнять через контроль версий: создать pull request и объединить его только после проверки reviewer LLM, опирающейся на другой источник.</p>
+<p>Вторая граница — <strong>разделение кандидатных и официальных способностей</strong>. Новые знания, Prompt, Skill, программы и параметры сначала поступают в кандидатную область, которая не обслуживает реальный трафик. Созданный код и внешние зависимости дополнительно проходят песочницу, проверку полномочий, сканирование цепочки поставок, поведенческие тесты и другие проверки безопасности. Только после проверок безопасности и регрессии они могут обслуживать реальный трафик и стать официальными способностями.</p>
+<p>Третья граница — <strong>запрет самомодификации механизмов безопасности</strong>. Бизнес-Agent может изменять Prompt, Skill, базу знаний и инструменты, но не проверяющие механизмы, тестовые случаи, пороги выпуска, журналы аудита и резервные копии стабильных версий, утверждающие его собственные обновления. Иначе достаточно снизить тестовый порог или удалить неуспешный случай, чтобы выдать деградацию за прогресс.</p>
+<h3 id="_13">Обучение во сне: интеграция, забывание и актуальность способностей<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<p>«Обучение во сне» — когнитивная аналогия офлайн-интеграции, а не требование запускать задачу именно ночью. Главная обязанность онлайн-Agent — выполнить текущую задачу и добавить неизменяемые свидетельства. Фоновый обучающий процесс в период простоя или при выполнении условий допуска считывает пакет нового опыта, сопоставляет новые и старые выводы, объединяет дубли, разрешает конфликты, предлагает кандидатные обновления и запускает регрессию. Разделение сбора и систематизации не позволяет случайному успеху, сетевому сбою или вредоносному вводу немедленно переписать долгосрочную способность и даёт возможность использовать для систематизации большие пакеты и более дешёвые модели.</p>
+<p>Типичный цикл обучения во сне включает пять этапов:</p>
+<ol>
+<li><strong>Запуск</strong>: достигнут порог времени, числа новых траекторий, объёма хранилища или частоты ошибок и подтверждено отсутствие приоритетных онлайн-задач.</li>
+<li><strong>Ориентация</strong>: считываются официальные знания, каталоги Prompt и Skill и их версии, чтобы понять текущие способности и неизменяемые границы.</li>
+<li><strong>Сбор и интеграция</strong>: в недавно оценённых траекториях ищутся новые сигналы, дубли объединяются, конфликты и условия применимости помечаются, приоритет отдаётся локальным исправлениям.</li>
+<li><strong>Проверка и утверждение</strong>: кандидаты оцениваются на наборах переноса, сохранения и безопасности; высокорисковые записи ожидают одобрения человеком.</li>
+<li><strong>Очистка и индексирование</strong>: поисковый индекс обновляется; давно не использовавшиеся или опровергнутые новыми свидетельствами способности отмечаются как устаревшие, архивируются или удаляются, но источники и откатные версии сохраняются.</li>
+</ol>
+<p>Пользовательская память — самый наглядный пример, однако её следует отличать от опыта действий. Автоматическая память Claude Code поддерживает для каждого проекта индекс <code>MEMORY.md</code> и разделённые по темам подробные файлы. При запуске сеанса загружается только ограниченный префикс индекса, остальное считывается по требованию. Когда индекс приближается к пределу, Agent получает указание объединить или переместить детали. Это показывает, что даже текстовой памяти нужны ограничение ёмкости, многоуровневая загрузка и активная систематизация. Однако публично описанный механизм главным образом постоянно записывает сведения во время сеанса и не равнозначен фиксированной ночной фоновой задаче<sup id="fnref:claude-code-memory"><a class="footnote-ref" href="#fn:claude-code-memory">11</a></sup>.</p>
+<p>Hermes представляет более полный пример фоновой эволюции. Долгосрочная информация разделена на ограниченные <code>MEMORY.md</code> и <code>USER.md</code>, поиск прошлых сеансов на основе SQLite/FTS5, загружаемые по требованию Skill и необязательных внешних поставщиков памяти вроде Honcho. Поиск истории возвращает исходные сообщения, не передавая их предварительно LLM для обобщения, и тем самым не смешивает извлечение и генерацию в один неаудируемый шаг. Если задача содержит много вызовов инструментов, восстановление после ошибки или тупика, исправление пользователя либо неочевидный процесс, фоновая рефлексия может создать или локально пересмотреть Skill; записи памяти и Skill также могут проходить контроль утверждения. Отдельный Curator отслеживает использование, устаревание и архивный статус Skill, в периоды простоя выполняет детерминированную очистку и при необходимости запускает объединение через LLM. Перед изменениями сохраняется снимок, поэтому ошибочную систематизацию можно откатить<sup id="fnref:hermes-memory"><a class="footnote-ref" href="#fn:hermes-memory">12</a></sup>. Этот пример превращает «запись — интеграцию — проверку — очистку» из метафоры в исполняемый жизненный цикл способности.</p>
+<p>Непрерывная эволюция также не означает неограниченного роста знаний, Prompt и инструментов. Рассмотренная во второй главе деградация контекста воспроизводится на более длительном временном масштабе: документы опыта начинают конфликтовать, Prompt переполняется пограничными правилами, в библиотеке Skill возникают дублирующие способности, а многократное дообучение вызывает катастрофическое забывание. Система нуждается в периодической офлайн-реорганизации:</p>
+<ul>
+<li>объединять дублирующийся опыт, сохраняя источники и версии;</li>
+<li>переносить локальные правила из глобального Prompt в предметный Skill, сохраняя глобальный Prompt чистым;</li>
+<li>поддерживать чёткую структуру Prompt и Skill, подобную руководству для нового сотрудника, и избегать перечней в стиле «99 суровых правил»;</li>
+<li>повторно проверять давно не использовавшиеся инструменты;</li>
+<li>удалять знания, опровергнутые новыми свидетельствами;</li>
+<li>заново обучать LoRA от исходной базовой модели.</li>
+</ul>
+<blockquote>
+<p><strong>Эксперимент 8-6 ★★★: оценка непрерывной эволюции Agent</strong></p>
+<p><strong>Цель эксперимента</strong>: различить три вида долгосрочного поведения — «сохранить одну обратную связь», «только добавлять» и «обновлять, переносить и сохранять способности», — чтобы повторный прогон одного набора вопросов не выдавался за непрерывное обучение.</p>
+<p><strong>Четыре этапа потока задач</strong>: на этапе обучения предоставляются задачи о возвратах, проверке личности и правилах провоза багажа, имеющие общие скрытые закономерности. На этапе переноса меняются формулировки, пользователи и локальная среда, чтобы проверить применимость старого опыта к новым задачам. На этапе изменения правил лимит багажа меняется с 20 кг на 23 кг, и система должна заменить или вывести из эксплуатации старое знание. На этапе сохранения повторно проверяются неизменившиеся способности и действующие правила, чтобы измерить забывание после обновления. Внешнюю память разрешается обновлять только после завершения каждой задачи с обратной связью; ожидаемое действие в текущем вопросе нельзя заранее раскрывать Agent.</p>
+<p><strong>Группы сравнения</strong>: <code>static</code> не сохраняет обратную связь; <code>append_only</code> помнит первую версию правила, но не разрешает конфликты и не удаляет устаревшее; <code>evolving</code> хранит версии и заменяет старое правило новыми свидетельствами. Эталонная реализация проверяет, способен ли оценочный Harness различать эти виды поведения. В настоящем эксперименте LLM может пройти тот же последовательный поток из 14 задач, но результат должен рассчитываться Harness вне модели.</p>
+<p><strong>Метрики и приёмка</strong>: для каждого этапа сообщаются точность и кривая обучения; отдельно рассчитываются точность переноса, число задач до восстановления правильных ответов после нового правила, доля сохранённых старых способностей, доля отрицательного переноса, доля прохождения Rubric безопасности, а также стоимость Token, задержки и хранения. Для реальных систем, обновляющих Prompt, Skill или Harness, также фиксируются доля полезных кандидатных изменений, доля активации артефактов и доля успешного соблюдения, чтобы случай «обновление верно, но не было загружено» не считать ошибкой обновления. Даже высокая итоговая точность не позволяет считать Agent непрерывно эволюционирующим, если он продолжает ссылаться на отменённое правило, использует запрещённый обходной путь или после обновления забывает прежние способности.</p>
+<p>Сопутствующая реализация находится в <a href="../chapter8/self-evolution-eval/"><code>self-evolution-eval</code></a>; по умолчанию сравниваются три эталонных Agent: обновляемый, только добавляющий и статический. Параметр <code>--profile llm</code> позволяет настоящей LLM пройти тот же долгосрочный поток задач.</p>
+</blockquote>
+<h2 id="_14">Итоги главы<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h2>
+<p>Непрерывное обучение становится одной из важнейших способностей Agent, однако современные модели пока не могут самостоятельно осуществлять его надёжным образом. Контекстная адаптация во время вывода не сохраняется автоматически, а непроверенное онлайн-обновление параметров усиливает шум, атаки и дрейф способностей. Поэтому практический путь сегодня — построить вокруг модели проверяемую обучающую систему.</p>
+<p>Agent получает обучающий сигнал из взаимодействия и оценки, а затем в зависимости от представления способности обновляет знания, Prompt, Skill, программы или параметры модели. Система может также улучшать способы управления и создания этих артефактов, но по умолчанию следует выбирать локальные изменения, которые можно атрибутировать, проверить и откатить.</p>
+<p>Непрерывная эволюция должна разделять онлайн-исполнение и офлайн-обучение: онлайн фиксируются свидетельства, офлайн создаются и проверяются кандидаты, после чего они постепенно выпускаются, упорядочиваются или откатываются. Этот цикл надёжнее всего для автоматически проверяемых результатов; в открытых задачах с неясной целью и запаздывающей обратной связью человек по-прежнему участвует в постановке проблемы и определении критериев оценки.</p>
+<h2 id="_15">Вопросы для размышления<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h2>
+<ol>
+<li>★★ Один документ опыта подтверждается тремя успешными и одной неуспешной траекторией. Неудача произошла на более новой версии API. Как системе определить, опровергнут ли опыт или изменились условия его применимости?</li>
+<li>★★ Удовлетворённость пользователей Agent службы поддержки выросла, но одновременно увеличилась частота нарушений правил. Почему удовлетворённость нельзя использовать как единственный обучающий сигнал? Как бы вы спроектировали защитные метрики?</li>
+<li>★★★ Одну и ту же проблему «ложного обещания» можно смягчить посредством Prompt, проверки в Harness или параметрического обучения. На основании каких свидетельств следует выбирать место изменения?</li>
+<li>★★★ Agent может изменять инструменты и проверяющие механизмы, но не должен изменять доверенное ядро, утверждающее его собственные обновления. Как разделить полномочия и границы кода этих двух частей?</li>
+<li>★★ По мере роста базы знаний об опыте ошибки извлечения и конфликты знаний могут нейтрализовать пользу обучения. Как спроектировать механизмы версионирования, актуальности и вывода из эксплуатации?</li>
+<li>★★★ Параметрическое обучение хорошо формирует естественный языковой стиль, но плохо гарантирует соблюдение жёстких бизнес-правил. Спроектируйте для медицинской службы поддержки схему непрерывной эволюции, совместно использующую параметры, знания, Skill и ограничения кода.</li>
+</ol>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:reflexion-2023">
+<p>Shinn, N., et al. <em>Reflexion: Language Agents with Verbal Reinforcement Learning.</em> arXiv:2303.11366, 2023.&#160;<a class="footnote-backref" href="#fnref:reflexion-2023" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:gaia-2023">
+<p>Mialon, G., et al. <em>GAIA: a benchmark for General AI Assistants.</em> arXiv:2311.12983, 2023.&#160;<a class="footnote-backref" href="#fnref:gaia-2023" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:aworld-2025">
+<p>Yu, C., et al. <em>AWorld: Orchestrating the Training Recipe for Agentic AI.</em> arXiv:2508.20404, 2025.&#160;<a class="footnote-backref" href="#fnref:aworld-2025" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:dspy-2023">
+<p>Khattab, O., et al. <em>DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines.</em> arXiv:2310.03714, 2023.&#160;<a class="footnote-backref" href="#fnref:dspy-2023" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:opro-2023">
+<p>Yang, C., et al. <em>Large Language Models as Optimizers.</em> arXiv:2309.03409, 2023.&#160;<a class="footnote-backref" href="#fnref:opro-2023" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:gepa-2025">
+<p>Agrawal, L., et al. <em>GEPA: Reflective Prompt Evolution Can Outperform Reinforcement Learning.</em> arXiv:2507.19457, 2025.&#160;<a class="footnote-backref" href="#fnref:gepa-2025" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:karpathy-system-prompt-learning">
+<p>Karpathy, A. “We’re missing (at least one) major paradigm for LLM learning … system prompt learning?” X, May 11, 2025. https://x.com/karpathy/status/1921368644069765486&#160;<a class="footnote-backref" href="#fnref:karpathy-system-prompt-learning" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+<li id="fn:anthropic-skill-creator">
+<p>Anthropic. <em>Skill Creator.</em> 2026. https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md&#160;<a class="footnote-backref" href="#fnref:anthropic-skill-creator" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+</li>
+<li id="fn:preact">
+<p>Li, Bojie. <em>PreAct: Computer-Using Agents that Get Faster on Repeated Tasks.</em> arXiv:2606.17929, 2026.&#160;<a class="footnote-backref" href="#fnref:preact" title="Jump back to footnote 9 in the text">&#8617;</a></p>
+</li>
+<li id="fn:alita-2025">
+<p>Qiu, J., et al. <em>Alita: Generalist Agent Enabling Scalable Agentic Reasoning with Minimal Predefinition and Maximal Self-Evolution.</em> arXiv:2505.20286, 2025.&#160;<a class="footnote-backref" href="#fnref:alita-2025" title="Jump back to footnote 10 in the text">&#8617;</a></p>
+</li>
+<li id="fn:claude-code-memory">
+<p>Anthropic, “How Claude remembers your project”, 2026. https://code.claude.com/docs/en/memory&#160;<a class="footnote-backref" href="#fnref:claude-code-memory" title="Jump back to footnote 11 in the text">&#8617;</a></p>
+</li>
+<li id="fn:hermes-memory">
+<p>Nous Research, <em>Hermes Agent Documentation: Persistent Memory, Skills System, and Curator</em>, 2026. https://hermes-agent.nousresearch.com/docs/user-guide/features/memory ; https://hermes-agent.nousresearch.com/docs/user-guide/features/skills ; https://hermes-agent.nousresearch.com/docs/user-guide/features/curator&#160;<a class="footnote-backref" href="#fnref:hermes-memory" title="Jump back to footnote 12 in the text">&#8617;</a></p>
+</li>
+<li id="fn:voyager-2023">
+<p>Wang, G., et al. <em>Voyager: An Open-Ended Embodied Agent with Large Language Models.</em> arXiv:2305.16291, 2023.&#160;<a class="footnote-backref" href="#fnref:voyager-2023" title="Jump back to footnote 13 in the text">&#8617;</a></p>
+</li>
+<li id="fn:weng-harness-2026">
+<p>Weng, Lilian. “Harness Engineering for Self-Improvement.” <em>Lil’Log</em>, 2026. https://lilianweng.github.io/posts/2026-07-04-harness/&#160;<a class="footnote-backref" href="#fnref:weng-harness-2026" title="Jump back to footnote 14 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ace-2026">
+<p>Zhang, Qizheng, et al. <em>Agentic Context Engineering: Evolving Contexts for Self-Improving Language Models.</em> ICLR 2026. arXiv:2510.04618.&#160;<a class="footnote-backref" href="#fnref:ace-2026" title="Jump back to footnote 15 in the text">&#8617;</a></p>
+</li>
+<li id="fn:mce-2026">
+<p>Ye, Haoran, et al. <em>Meta Context Engineering via Agentic Skill Evolution.</em> arXiv:2601.21557, 2026.&#160;<a class="footnote-backref" href="#fnref:mce-2026" title="Jump back to footnote 16 in the text">&#8617;</a></p>
+</li>
+<li id="fn:aflow-2025">
+<p>Zhang, Jiayi, et al. <em>AFlow: Automating Agentic Workflow Generation.</em> ICLR 2025. arXiv:2410.10762.&#160;<a class="footnote-backref" href="#fnref:aflow-2025" title="Jump back to footnote 17 in the text">&#8617;</a></p>
+</li>
+<li id="fn:meta-harness-2026">
+<p>Lee, Yoonho, et al. <em>Meta-Harness: End-to-End Optimization of Model Harnesses.</em> arXiv:2603.28052, 2026.&#160;<a class="footnote-backref" href="#fnref:meta-harness-2026" title="Jump back to footnote 18 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ahe-2026">
+<p>Lin, Jiahang, et al. <em>Agentic Harness Engineering: Observability-Driven Automatic Evolution of Coding-Agent Harnesses.</em> arXiv:2604.25850, 2026.&#160;<a class="footnote-backref" href="#fnref:ahe-2026" title="Jump back to footnote 19 in the text">&#8617;</a></p>
+</li>
+<li id="fn:self-harness-2026">
+<p>Zhang, Hangfan, et al. <em>Self-Harness: Harnesses That Improve Themselves.</em> arXiv:2606.09498, 2026.&#160;<a class="footnote-backref" href="#fnref:self-harness-2026" title="Jump back to footnote 20 in the text">&#8617;</a></p>
+</li>
+<li id="fn:harness-benefit-2026">
+<p>Lin, Minhua, et al. <em>Harness Updating Is Not Harness Benefit: Disentangling Evolution Capabilities in Self-Evolving LLM Agents.</em> arXiv:2605.30621, 2026.&#160;<a class="footnote-backref" href="#fnref:harness-benefit-2026" title="Jump back to footnote 21 in the text">&#8617;</a></p>
+</li>
+<li id="fn:llm-scientists-2026">
+<p>Trehan, Dhruv and Paras Chopra. <em>Why LLMs Aren't Scientists Yet: Lessons from Four Autonomous Research Attempts.</em> arXiv:2601.03315, 2026.&#160;<a class="footnote-backref" href="#fnref:llm-scientists-2026" title="Jump back to footnote 22 in the text">&#8617;</a></p>
+</li>
+<li id="fn:scientistone-2026">
+<p>Meng, et al. <em>ScientistOne: Towards Human-Level Autonomous Research via Chain-of-Evidence.</em> arXiv:2605.26340, 2026.&#160;<a class="footnote-backref" href="#fnref:scientistone-2026" title="Jump back to footnote 23 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:46 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:46 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

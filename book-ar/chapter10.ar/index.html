@@ -1,0 +1,2598 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/book-ar/chapter10.ar/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>التعاون متعدد الوكلاء - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="التعاون متعدد الوكلاء">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/book-ar/chapter10.ar/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="التعاون متعدد الوكلاء">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              التعاون متعدد الوكلاء
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        إطار تصنيف للتعاون متعدد الوكلاء
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="إطار تصنيف للتعاون متعدد الوكلاء">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        البعد 1: السياق المشترك مقابل السياق غير المشترك
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        البعد الثاني: طوبولوجيا التعاون
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        متى يكون الوكيل المتعدد أفضل حقًا من الوكيل الفردي؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        تعاون متعدد الوكلاء مع سياق مشترك
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="تعاون متعدد الوكلاء مع سياق مشترك">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        تبديل الأدوار متعدد المراحل
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        تبديل الأدوار عبر المجال
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        تعاون متعدد الوكلاء بدون سياق مشترك
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="تعاون متعدد الوكلاء بدون سياق مشترك">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        نظام الملفات من منظور الوكيل
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        التواصل والتحكم بين الوكلاء
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        نمط التعاون بين الأقران: الفحوصات المتبادلة والتحسين التكراري
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        نمط المدير: التنسيق المركزي
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        النمط اللامركزي: التسليم من نظير إلى نظير
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a2a" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        التعاون بين المنظمات: بروتوكول A2A
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        طرق الفشل في التعاون متعدد الوكلاء
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="طرق الفشل في التعاون متعدد الوكلاء">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        وضع الفشل الأول: تعارضات التزامن في أنظمة الملفات المشتركة
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        وضع الفشل الثاني: التضخيم المتتالي للأخطاء
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مجتمع الوكلاء
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="مجتمع الوكلاء">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مدينة ستانفورد للذكاء الاصطناعي: المحاكاة الاجتماعية للوكلاء المولدين
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agentopia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentopia: محاكاة للحياة لمدة عقد من الزمن
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#moltbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Moltbook: عندما يكون لدى الوكلاء شبكة اجتماعية خاصة بهم
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vending-bench" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        من المجتمع الافتراضي إلى المنافسة الاقتصادية: ساحة Vending-Bench
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pinchwork-rentahuman" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        وكيل الاقتصاد: Pinchwork وRentAHuman
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        اللعب الاستراتيجي في ظل عدم تماثل المعلومات: لعبة الذئب
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ملخص الفصل
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        أسئلة للتأمل
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/book-ar/chapter10.ar.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/book-ar/chapter10.ar.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="_1">التعاون متعدد الوكلاء<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>اقترحت OpenAI مقياسًا من خمسة مستويات لقدرات الذكاء الاصطناعي: المحاورون، ثم المفكرون، ثم الوكلاء، ثم المبتكرون، وأخيرًا المؤسسات. ويُطرح التعاون متعدد الوكلاء كثيرًا بوصفه طريقًا إلى المستوى الخامس. لكن «المؤسسات» هنا تصف مستوى قدرة، أي ذكاءً اصطناعيًا ينجز عمل مؤسسة كاملة، لا بنية إلزامية بعينها؛ فمن حيث المبدأ قد يبلغها وكيل واحد بالغ القوة. أما في الواقع الهندسي الحالي، فما زال الوكيل الواحد مقيدًا بقدرة نموذجه وسعة نافذة سياقه.</p>
+<p>لا يقتصر جمع عدة وكلاء على جعل متخصصين مختلفين يسد بعضهم ثغرات بعض، بل يستند إلى فكرة أعمق: <strong>قد يتجاوز ذكاء الجماعة ذكاء أي فرد فيها</strong>. والحضارة الإنسانية خير دليل؛ فذكاء الفرد محدود، لكن تقسيم العمل والتعاون والنقاش وتراكم المعرفة عبر الأجيال منح المجتمع قدرة تفوق أي عبقرية منفردة. وقد تنتج مجموعات الوكلاء صورة مشابهة من الذكاء الجمعي: فحتى إن لم يتجاوز كل وكيل مستوى خبير بشري، قد تحقق مجموعة محكمة التنظيم قدرات أوسع بكثير. وفي ورقة <em>من AGI إلى ASI</em>، تضع Google DeepMind «المجموعات واسعة النطاق متعددة الوكلاء» ضمن المسارات الرئيسية إلى الذكاء الفائق؛ فكما يتجمع الذكاء البشري في مجتمعات ومنظمات تتجاوز أفرادها، قد تولّد مجموعة من وكلاء AGI قدرة معرفية تتجاوز مجموع قدرات أعضائها<sup id="fnref:agi-asi"><a class="footnote-ref" href="#fn:agi-asi">1</a></sup>. ومن ثم فالتعاون متعدد الوكلاء ليس مجرد حل هندسي لحدود النموذج ونافذة السياق، بل قد يكون طريقًا أساسيًا من ذكاء بمستوى الخبير إلى ذكاء يتجاوز القدرة البشرية الجمعية.</p>
+<h2 id="_2">إطار تصنيف للتعاون متعدد الوكلاء<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>يبدأ تصميم المنظومة متعددة الوكلاء بقرارين أساسيين يحددان معًا بنيتها وطريقة تنفيذها.</p>
+<h3 id="1">البعد 1: السياق المشترك مقابل السياق غير المشترك<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<p>هذا هو القرار المعماري الأساسي الذي يحدد كيفية تمرير المعلومات بين الوكلاء المتعددين.</p>
+<p><strong>السياق المشترك</strong> يعني أن الوكيل اللاحق يتلقى سجل المحادثة الكامل ومساره (كما هو محدد في الفصل 1) للوكيل السابق. عندما يتغير موجّه النظام ومجموعة الأدوات في كل مرحلة، يعامل النظام المرحلة الجديدة كوكيل مختلف لأن هويته ومسؤولياته وقدراته قد تغيرت، على الرغم من احتفاظه بكل ذاكرة سابقته. على سبيل المثال، بعد أن يكتب محلل المتطلبات مستند المتطلبات، لا يتلقى المطور المستند فحسب، بل يتلقى أيضًا السجل الكامل للاتصالات بين المحلل والمستخدم. يتولى المطور دورًا جديدًا مع الاحتفاظ بكل السياق السابق. الميزة هي عدم فقدان أي معلومات؛ يمكن لكل وكيل مراجعة التفاصيل من أي مرحلة سابقة. ويتمثل التحدي في أن السياق يمكن أن يتوسع بسرعة.</p>
+<p><strong>السياق غير المشترك</strong> يعني أن كل وكيل يحتفظ بسياق مستقل وسجل محادثة ولا يمكنه الوصول مباشرة إلى آثار عمل الوكلاء الآخرين. وهذا يشبه التعاون بين الأقسام المختلفة: حيث يعمل الجميع بشكل مستقل في مكاتبهم الخاصة، ويتبادلون المعلومات من خلال المستندات المشتركة ومحاضر الاجتماعات بدلاً من مشاهدة شاشات بعضهم البعض باستمرار. يقدم هذا النموذج نمطية وعزلة أفضل؛ يحتاج كل وكيل فقط إلى التركيز على المعلومات ذات الصلة بمسؤولياته. كما أن النظام أسهل في التوسع والصيانة - فإضافة وكيل جديد لا يتطلب تعديل المنطق الداخلي للوكلاء الحاليين، بل يتطلب فقط تحديد الواجهات وتنسيقات البيانات.</p>
+<p>نظرًا لأن الوكلاء لا يشاركون السياق، فيجب تمرير المعلومات من خلال آليات اتصال واضحة. لقد حسمت الأنظمة الموزعة الكلاسيكية هذا السؤال منذ فترة طويلة: تخبرنا الكتب المدرسية لأنظمة التشغيل أن الاتصال بين العمليات (IPC) يأتي في النهاية في نموذجين فقط: <strong>الذاكرة المشتركة</strong> (أحد الجانبين يكتب والآخر يقرأ نفس كتلة التخزين) و<strong>تمرير الرسائل</strong> (يتم إرسال البيانات بشكل صريح إلى الجانب الآخر). تقع آليات الاتصال بين الوكلاء ضمن هذين النموذجين. هناك ثلاث طرق شائعة:</p>
+<ul>
+<li><strong>معلمات استدعاء الأداة</strong>: يقوم الوكيل الأولي بتمرير البيانات المنظمة كمعلمات إلى أداة الوكيل النهائي، وهي مناسبة للسيناريوهات التي تتطلب بيانات جيدة الكتابة ومنظمة بشكل واضح.</li>
+<li><strong>نظام الملفات المشترك</strong>: يتبادل الوكلاء المعلومات عن طريق قراءة وكتابة العناصر الوسيطة (المستندات، التعليمات البرمجية، وما إلى ذلك) في دليل مشترك، وهو مناسب للسيناريوهات التي تحتوي على عناصر كبيرة أو حيث تكون هناك حاجة إلى المثابرة.</li>
+<li><strong>ناقل الرسائل</strong>: وسيط مخصص يقوم بتمرير الرسائل بين الوكلاء. لا يتصل الوكلاء ببعضهم البعض بشكل مباشر ولكنهم يرسلون رسائل إلى الحافلة، والتي تقوم بإعادة توجيهها إلى الوكيل المستهدف.</li>
+</ul>
+<p>وإذا أسقطنا هذه الآليات على نموذجي الاتصال بين العمليات (IPC)، كان نظام الملفات المشترك نظيرًا <strong>للذاكرة المشتركة</strong>، وكانت معاملات استدعاء الأدوات وناقل الرسائل صورتين من <strong>تمرير الرسائل</strong>. تُمرَّر معاملات الأداة بالتزامن مع الاستدعاء، أما رسائل الناقل فيسلّمها وسيط على نحو غير متزامن. ولكل نموذج كلفته وفوائده. ومن العبارات الشائعة في مجتمع Go: «لا تتواصل بمشاركة الذاكرة؛ بل شارك الذاكرة بالتواصل». فالذاكرة المشتركة سريعة، لكنها تلقي على المطور عبء ضبط التزامن، بينما يحتاج تمرير الرسائل إلى مزيد من شفرات التنسيق لكنه يُبقي ملكية البيانات واضحة وقابلة للتتبع. وسنرى هذه المقايضة مجددًا عند مناقشة الاستعلام عن الحالة وتعارضات التزامن.</p>
+<p>يوفر ناقل الرسائل <strong>اتصالًا غير متزامن</strong> بطبيعته؛ فلا يلزم أن يكون المرسل والمتلقي متاحين في اللحظة نفسها. وهو يشبه البريد الإلكتروني الداخلي: ترسل الرسالة الآن، فيحفظها الخادم إلى أن يصبح زميلك مستعدًا لقراءتها. ويلائم هذا الأسلوب خصوصًا الأنظمة التي يعمل فيها وكلاء عدة بالتوازي ويحتاجون إلى تنسيق أعمالهم (راجع قسم «التنسيق المتوازي» لاحقًا).</p>
+<p><img alt="الشكل 10-1: السياق المشترك مقابل السياق غير المشترك" src="../images/fig10-1.svg" /></p>
+<p>للتوضيح، كلا البنيتين عبارة عن أنظمة حقيقية متعددة الوكلاء لأن موجّه النظام ومجموعة الأدوات تختلف في كل مرحلة، مما يجعلهما وكلاء مختلفين. الفرق يكمن في طريقة التنسيق. <strong>يعتمد السياق المشترك</strong> على التنسيق الضمني: يرث الوكلاء اللاحقون سجل السياق الكامل للوكلاء السابقين، ويمكنهم مراجعة تواريخ تفاعلاتهم المرئية وآثار العمل، وتلقي المعلومات من خلال السياق نفسه. <strong>السياق غير المشترك</strong> يعتمد على التنسيق الواضح: يتبادل الوكلاء المعلومات من خلال الملفات أو الرسائل أو واجهات البيانات المنظمة، ويرى كل وكيل فقط المحتوى ذي الصلة بعمله.</p>
+<p>على سبيل القياس: الأول عبارة عن فريق حول طاولة واحدة، حيث يسمع الجميع كل شيء؛ والأخير عبارة عن أقسام تتعاون عبر البريد الإلكتروني والمستندات، ولكل منها مساحة عمل خاصة بها.</p>
+<p>قد يجد القراء المطلعون على أنظمة التشغيل تشبيهًا مفيدًا: يشبه وكلاء السياق المشترك الخيوط، بينما يشبه وكلاء السياق غير المشترك العمليات. تشترك الخيوط في مساحة عنوان، مما يجعل التبديل والاتصال غير مكلف ولكنه يوفر القليل من العزلة؛ يمكن أن يؤدي تلف الذاكرة في مؤشر ترابط واحد إلى تعطل العملية بأكملها. كل عملية لها مساحة عنوان خاصة بها، مما يوفر عزلة أقوى وتوازيًا أكثر أمانًا، ولكن يجب أن يستخدم الاتصال IPC بشكل واضح. وتنبع المعايير الواردة في الجدول 10-1 من هذه المفاضلات.</p>
+<p>ويلخص الجدول 10-1 معايير الاختيار للمعماريتين من خمس وجهات نظر: عدد المهام الفرعية، ونافذة السياق، والتوازي، وعزل المعلومات، وموازنة التكلفة. يمكن أن تكون بمثابة قائمة مرجعية للاختيار المعماري المبكر.</p>
+<p>جدول 10-1 معايير الاختيار للسياق المشترك مقابل السياق غير المشترك</p>
+<table>
+<thead>
+<tr>
+<th>معيار الاختيار</th>
+<th>السياق المشترك</th>
+<th>السياق غير المشترك</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>عدد المهام الفرعية</td>
+<td>قليل (2-3 أدوار)</td>
+<td>متعدد (يلزم معالجة متوازية)</td>
+</tr>
+<tr>
+<td>نافذة السياق</td>
+<td>يمكن أن تستوعب المعلومات لجميع الأدوار</td>
+<td>النافذة الواحدة غير كافية</td>
+</tr>
+<tr>
+<td>التوازي</td>
+<td>تسلسلي في الغالب؛ تتناوب الأدوار على المسار نفسه</td>
+<td>قابل للتوسع بالتوازي؛ فالسياقات مستقلة ولا تعيق بعضها</td>
+</tr>
+<tr>
+<td>عزل المعلومات</td>
+<td>غير مطلوب (جميع الأدوار تشارك المعلومات)</td>
+<td>مطلوب (على سبيل المثال، يجب ألا تتلقى المراجعة الأمنية السياق الداخلي للوكلاء الآخرين)</td>
+</tr>
+<tr>
+<td>ميزانية التكلفة</td>
+<td>مسار واحد يتم ترحيله عبر المراحل؛ تتراكم الرموز مرحلة بعد مرحلة</td>
+<td>يعمل الوكلاء المتعددون بشكل مستقل؛ عادةً ما يكون إجمالي الرموز المميزة عدة مرات أعلى من حيث الحجم</td>
+</tr>
+</tbody>
+</table>
+<p><strong>قاعدة عملية</strong>: إذا كان متوقعًا أن يتجاوز السياق التراكمي نصف النافذة، وهي عتبة إرشادية لا حدًا صارمًا، فلا تشاركه كاملًا. أما إذا كان فقدان أي معلومة يهدد صحة المهمة، فالسياق المشترك أنسب. وتمزج الأنظمة الواقعية غالبًا بين الأسلوبين: تشترك الأدوار الأولى في السياق، ثم ينتقل النظام إلى سياقات منفصلة حين يكبر السجل، ويتولى الوكيل الرئيسي اختيار ما ينبغي تمريره صراحةً في كل تسليم.</p>
+<h3 id="_3">البعد الثاني: طوبولوجيا التعاون<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>البعد الثاني هو <strong>طوبولوجيا التعاون</strong>، أي البنية التي يتدفق عبرها التحكم والمعلومات بين الوكلاء. وهي تختلف مفهوميًا عن مشاركة السياق، وإن ارتبطا عمليًا. فللنظام ذي السياق المشترك طوبولوجيا أيضًا؛ إذ يشكل نمط <code>transfer_to_agent</code> في التجربة 10-2 سلسلة من عمليات التسليم. لكن كل تسليم يحمل السجل كاملًا، فلا يحتاج المصمم عادةً إلى اختيار المعلومات المنقولة، وتختزل البنية غالبًا إلى تعاقب بسيط في الأدوار. ويُستثنى من ذلك نمط الدردشة الجماعية الذي سنراه في قسم اللامركزية. أما حين لا يكون السياق مشتركًا، فلا بد من تحديد مسار المعلومات والجهة التي تنسقه تحديدًا صريحًا.</p>
+<blockquote>
+<p><strong>ملاحظة مصطلحية: Graph Engineering.</strong> يشير مصطلح «Graph Engineering»، الذي شاع في يوليو 2026، في سياق الوكلاء الحالي عادةً إلى التصميم الصريح لرسم التنفيذ: تكون العُقد وكلاء أو برامج عادية أو قرارات بشرية، وتحدد الحواف اعتماديات المهام والتوجيه الشرطي ومسارات الفشل، وتتدفق الحالة المهيكلة بين العُقد<sup id="fnref:ch10-graph-engineering-ar"><a class="footnote-ref" href="#fn:ch10-graph-engineering-ar">2</a></sup>. وتمثل «طوبولوجيا التعاون» التي يناقشها هذا الفصل الجزء متعدد الوكلاء من هذه الفكرة؛ فالتعاون بين النظراء، وتنسيق المدير، وعمليات التسليم اللامركزية طوبولوجيات رسم مختلفة. ولأن الاسم لا يزال حديثًا ويسهل الخلط بينه وبين الرسوم المعرفية وGraphRAG ومسارات التنفيذ المسجلة، يواصل هذا الكتاب استخدام المصطلحين الأكثر استقرارًا: «طوبولوجيا التعاون» و«التنسيق».</p>
+</blockquote>
+<p>نظريًا، يشكّل البعدان مصفوفة 2 × 3: سياق مشترك أو منفصل، في مقابل ثلاث طوبولوجيات. لكن صف السياق المشترك ينتهي في الغالب إلى سلسلة تبديل أدوار لا يبقى فيها كثير من قرارات التوجيه، وهو النمط الذي سنناقشه تحت عنوان «تبديل الأدوار متعدد المراحل». لذلك يركّز الفصل في الطوبولوجيات الثلاث ضمن السياق غير المشترك، مرتبةً من الأبسط إلى الأعقد:</p>
+<ul>
+<li><strong>نمط التعاون بين النظراء</strong>: يتفاعل عدد صغير من الوكلاء (عادةً 2-3) على قدم المساواة، مما يشكل حلقة تحسين متكررة - مثل كتابة ورقة حيث يقوم شخص واحد بصياغتها ويقوم شخص آخر بتعليقها ومراجعتها، مع جودة بعد عدة جولات تتجاوز بكثير ما يمكن أن يحققه شخص واحد بمفرده.</li>
+<li><strong>نمط المدير</strong> (نمط التنسيق): يتولى وكيل المدير المركزي مسؤولية تخطيط المهام وجدولتها، بينما يتعامل كل من الوكلاء الفرعيين المتعددين مع مهام فرعية محددة - مثل مدير المشروع الذي يقود العديد من المهندسين المتخصصين في المشروع.</li>
+<li><strong>النمط اللامركزي</strong>: لا توجد وحدة تحكم مركزية لوقت التشغيل؛ يتواصل الوكلاء مع بعضهم البعض مثل البشر للتعاون في المهام.</li>
+</ul>
+<p>ستتم مناقشة التصميم التفصيلي والسيناريوهات القابلة للتطبيق لكل نمط في أقسام فرعية مخصصة لاحقًا.</p>
+<h2 id="_4">متى يكون الوكيل المتعدد أفضل حقًا من الوكيل الفردي؟<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>قبل التعمق في بنيات التعاون المحددة، دعنا نجيب على سؤال أكثر جوهرية: <strong>متى تكون هناك حاجة فعلية إلى وكلاء متعددين، ومتى يكون وكيل واحد كافيًا؟</strong> ستكون الإجابة بمثابة نقطة مرجعية لكل منهج هندسي يتبع. تتقارب سلسلة من الدراسات الحديثة حول إطار عمل واضح، والمعيار الأساسي هو سؤال واحد: <strong>هل يوفر التعاون معلومات لا يستطيع وكيل واحد الحصول عليها أثناء تقديم إجابته؟</strong></p>
+<p>يوضح الجدول 10-2 أوضاع التعاون التي تقدم معلومات جديدة وتساعد في تقييم ما إذا كان التعاون متعدد الوكلاء يوفر قيمة جوهرية على وكيل واحد.</p>
+<p>جدول 10-2 مقارنة الحصول على المعلومات بين أوضاع التعاون متعدد الوكلاء</p>
+<table>
+<thead>
+<tr>
+<th>وضع التعاون</th>
+<th>يقدم معلومات جديدة؟</th>
+<th>تأثير</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>المراجعة الذاتية لنفس النموذج (إعادة قراءة مخرجاته الخاصة)</td>
+<td>لا</td>
+<td>عادة ما تكون غير فعالة أو حتى ضارة</td>
+</tr>
+<tr>
+<td>وكلاء مختلفون يناقشون نفس النص</td>
+<td>لا</td>
+<td>يمكن مقارنته بوكيل واحد يتمتع بحساب متساوٍ</td>
+</tr>
+<tr>
+<td>يستخدم المراجع نتائج تنفيذ الاختبار لمراجعة التعليمات البرمجية</td>
+<td>نعم (تعليقات التنفيذ)</td>
+<td>تحسن كبير</td>
+</tr>
+<tr>
+<td>يستخدم المراجع لقطات الشاشة المقدمة لمراجعة كود الواجهة الأمامية/PPT</td>
+<td>نعم (تعليقات مرئية)</td>
+<td>تحسن كبير</td>
+</tr>
+<tr>
+<td>يستخدم المراجع أدوات خارجية للتحقق من الحقائق</td>
+<td>نعم (تعليقات الأداة)</td>
+<td>تحسن كبير</td>
+</tr>
+</tbody>
+</table>
+<p>أظهرت ورقة RLEF لعام 2025، أي التعلم المعزز من ملاحظات التنفيذ<sup id="fnref:rlef-2025"><a class="footnote-ref" href="#fn:rlef-2025">3</a></sup>، أن تدريب النموذج على الاستفادة من نتائج تشغيل الشفرة في التحسين التكراري يتفوق بوضوح على أخذ عينات مستقلة منه مرات عدة. والسبب أن كل دورة تضيف <strong>دليلًا حقيقيًا من التنفيذ</strong>، مثل أخطاء الترجمة البرمجية وفشل الاختبارات واستثناءات وقت التشغيل؛ وهي معلومات لم تكن متاحة حين كتب النموذج الشفرة أول مرة. وفي مهام إنشاء صفحات الويب، أفادت دراسة WebGen-Agent لعام 2025<sup id="fnref:webgen-agent-2025"><a class="footnote-ref" href="#fn:webgen-agent-2025">4</a></sup> بأن التغذية الراجعة المرئية متعددة المستويات، التي تجمع لقطات الشاشة بأوصاف نموذج لغوي بصري، رفعت نتيجة Claude 3.5 Sonnet في المعيار من 26.4% إلى 51.9%، أي قاربت مضاعفة الأداء.</p>
+<p>يساعد هذا الإطار في حل التناقض الواضح: وجدت بعض الدراسات الأكاديمية أن وجود وكيل واحد يكفي، في حين أن الأنظمة متعددة الوكلاء غالبًا ما تؤدي أداءً أفضل في الممارسة الهندسية. غالبًا ما تختبر الدراسات العديد من الوكلاء الذين يقومون بفحص النص نفسه ومناقشته، كما هو الحال في المناظرة، في حين تضيف الأنظمة الهندسية الفعالة عادةً تعليقات خارجية من تنفيذ التعليمات البرمجية أو العرض المرئي أو الأدوات. هذا الأخير فقط يقدم معلومات جديدة. يمكن فهم جميع الاستخدامات الفعالة تقريبًا للبنى الثلاثة التي تمت مناقشتها لاحقًا - التعاون بين الأقران، والتنسيق، واللامركزية - من خلال هذا المعيار.</p>
+<p><strong>ميزانية الخطوة وأداء الوكيل.</strong> هناك سؤال ذو صلة وهو كيف تؤثر ميزانية خطوة الوكيل - عدد استدعاءات الأداة أو جولات التكرار التي قد يستخدمها - على الأداء. قد يبدو من المؤكد أن المزيد من الخطوات ستساعد: مع 30 خطوة، قد يكون لدى الوكيل الوقت فقط لتنفيذ الوظائف الأساسية، في حين أن 300 خطوة تسمح له بالتخطيط والتنفيذ والاختبار والتحسين. ومع ذلك، توصلت دراسة Google لعام 2025 <em>استخدام الأدوات المدركة للميزانية إلى تمكين توسيع نطاق الوكيل الفعال</em> إلى نتيجة غير بديهية: <strong>مجرد إعطاء الوكيل المزيد من الخطوات لا يضمن أداء أفضل.</strong> يفتقر الوكلاء القياسيون إلى "الوعي بالميزانية"؛ حتى مع 300 خطوة، فإنهم يميلون إلى إجراء عمليات بحث سطحية والوصول بسرعة إلى الهضبة. لاستخدام الخطوات الإضافية بفعالية، يحتاج الوكلاء إلى آلية تعمل على تكييف استراتيجيتهم مع الموارد المتبقية، والاستكشاف على نطاق واسع في البداية وتضييق نطاق تركيزهم لاحقًا. قدم نهج BAVT (البحث في شجرة القيمة المدركة للميزانية) لعام 2026 تقييمًا للقيمة على مستوى الخطوة، وضبط التوازن بين الاستكشاف والاستغلال وفقًا لنسبة الميزانية المتبقية. ومع انخفاض الميزانية، ينتقل الوكيل من الاستكشاف الواسع إلى التحقيق الأعمق.</p>
+<p>هذه النتائج لها آثار مباشرة على تصميم نظام متعدد الوكلاء. على سبيل المثال، في نمط التنسيق، لا ينبغي للوكيل الإداري أن يقوم ببساطة بتوزيع المهام على الوكلاء الفرعيين وانتظار النتائج. وبدلاً من ذلك، يجب <strong>تخصيص ميزانيات الخطوات ديناميكيًا</strong> استنادًا إلى مدى تعقيد المهام، حيث تحصل المهام الفرعية البسيطة على عدد أقل من الخطوات؛ تحصل المهام الفرعية المعقدة على خطوات واسعة. وينبغي لها أيضًا توجيه الوكلاء الفرعيين لاستخدام هذه الميزانيات بحكمة (التخطيط أولاً، ثم التنفيذ، ثم الاختبار، ثم التحسين)، بدلاً من الغوص مباشرة.</p>
+<p>ولا يكتمل قرار التصميم من دون حساب <strong>الكلفة</strong>. فالاستكشاف المتوازي والتحسين التكراري يستهلكان موارد فعلية؛ وقد ذكرت Anthropic أن نظامها للبحث متعدد الوكلاء يستخدم نحو خمسة عشر ضعف عدد الرموز في المحادثة العادية، وأن هذا الاستهلاك يفسر وحده قرابة 80% من تفاوت الأداء. لذلك ينبغي أن تكون فائدة تعدد الوكلاء كبيرة بما يكفي لتبرير كلفة قد تتضاعف مرات عدة؛ وإلا كان وكيل واحد مضبوط بعناية خيارًا أجدى.</p>
+<h2 id="_5">تعاون متعدد الوكلاء مع سياق مشترك<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>في التعاون متعدد الوكلاء مع سياق مشترك، تكون كل مرحلة وكيلًا مستقلاً (مع موجّه النظام الخاص بها ومجموعة الأدوات الخاصة بها)، ولكنها ترث المسار الكامل للوكيل السابق - تمامًا مثل زميل يتولى نوبة عمل ويمكنه تصفح كل سجل عمل تركه سلفه وراءه. الميزة الأساسية لهذا التعاون القائم على الميراث هي عدم فقدان المعلومات: يمكن لكل وكيل مراجعة التفاصيل من أي مرحلة سابقة. يتمثل التحدي في إبقاء الوكيل الحالي يركز على مسؤولياته الخاصة بدلاً من تشتيت انتباهه بسبب كتلة التاريخ الموروث.</p>
+<h3 id="_6">تبديل الأدوار متعدد المراحل<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>دعونا نضع نزاعًا تعريفيًا على الطاولة أولاً: في لغة الفصل الأول، يعد تبديل الأدوار متعدد المراحل <strong>تنسيقًا على نمط سير العمل</strong> - مسار التنفيذ (على سبيل المثال، توضيح المتطلبات ← التنفيذ ← المراجعة) محدد مسبقًا. من منظور العملية، تنفذ عملية واحدة المراحل المختلفة بالتسلسل مع الاحتفاظ بنفس الذاكرة طوال الوقت. ولذلك فإن الادعاء بأن هذا "ليس متعدد الوكلاء حقًا" له ما يبرره. ومع ذلك فإن هذا الفصل يتعامل معه كنمط متعدد الوكلاء لأن هذا الإطار له فوائد عملية: يمكن أن يكون لكل مرحلة موجّه النظام والأدوات والتركيز الخاص بها، بينما يمكن أن تكون حدود المرحلة بمثابة بوابات الجودة.</p>
+<p>في المهام المعقدة، قد يتغير دور الوكيل ومسؤولياته بشكل كبير عبر المراحل. إذا تم استخدام موجّه نظام ثابت واحد طوال الوقت، فسيكون إما عامًا جدًا بحيث لا يوفر إرشادات خاصة بالمرحلة أو طويلًا جدًا لأنه يتضمن تعليمات لكل مرحلة. يؤدي تبديل الأدوار متعدد المراحل بدلاً من ذلك إلى تغيير موجّه النظام ومجموعة الأدوات وفقًا للمرحلة الحالية، مما يسمح للوكيل بالعمل في الدور الأكثر ملاءمة. لا يتطلب هذا التبديل إنشاء مثيلات جديدة أو بدء عمليات جديدة؛ فهو يقوم فقط بتغيير موجّه النظام ومجموعة الأدوات خلال نفس جلسة التنفيذ. على الرغم من تغير الدور، يظل سجل المحادثة وحالة المهمة مشتركين، لذلك لا يزال بإمكان الوكيل في دوره الجديد الوصول إلى جميع المعلومات المتراكمة في المراحل السابقة.</p>
+<p><img alt="الشكل 10-2: تبديل الأدوار على أساس المرحلة" src="../images/fig10-2.svg" /></p>
+<blockquote>
+<p><strong>التجربة 10-1 ★★: تحديد موجّهات النظام بناءً على مرحلة التنفيذ</strong></p>
+<p>توضح هذه التجربة كيف يمكن لموجّهات النظام الخاصة بالمرحلة تحسين الأداء عبر سير عمل وكيل البرمجة الكامل.</p>
+<p><strong>سيناريو المهمة</strong>: يرسل المستخدم طلب تطوير برنامج، ويمر الوكيل عبر ثلاث مراحل: توضيح المتطلبات، وتنفيذ التعليمات البرمجية، ومراجعة الجودة.</p>
+<p><strong>المرحلة الأولى: توضيح المتطلبات</strong> (الدور: محلل المتطلبات)</p>
+<p>يؤكد موجّه النظام على ما يلي:
+- "تتمثل مسؤوليتك في فهم احتياجات المستخدم بشكل كامل. اطرح الأسئلة لتوضيح أوجه الغموض، مما يضمن فهمك الكامل للوظائف المتوقعة وسيناريوهات الاستخدام ومتطلبات الأداء."
+- "لا تتعجل في التنفيذ. في هذه المرحلة، مهمتك هي طرح الأسئلة والتأكيد، وليس كتابة التعليمات البرمجية."
+- "بمجرد التأكد من أن جميع المتطلبات الأساسية واضحة، اتصل بأداة <code>complete_requirements_analysis()</code> لإنهاء هذه المرحلة."</p>
+<p>مجموعة الأدوات محدودة: <code>ask_clarifying_question(question)</code> لطرح أسئلة توضيحية على المستخدم، و<code>save_requirement(key, value)</code> لتسجيل المتطلبات المؤكدة، و<code>complete_requirements_analysis()</code> لوضع علامة على اكتمال المرحلة.</p>
+<p>يسأل الوكيل المستخدم عن أنواع الملفات التي يحتاج البرنامج النصي إلى معالجتها، وما إذا كان يجب عليه معالجة المجلدات الفرعية بشكل متكرر، وما إذا كان يجب عليه الاحتفاظ بأسماء الملفات الأصلية بعد نقل الملفات. تساعدها هذه التبادلات في بناء وتسجيل مجموعة منظمة من المتطلبات. بمجرد أن تكون المتطلبات واضحة بما فيه الكفاية، فإنه يستدعي <code>complete_requirements_analysis()</code>. تخبر إشارة الإكمال هذه النظام بتحميل تكوين المرحلة التالية.</p>
+<p><strong>المرحلة الثانية: تنفيذ التعليمات البرمجية</strong> (الدور: مهندس برمجيات)</p>
+<p>يؤكد موجّه النظام الجديد على ما يلي:
+- "مسؤوليتك هي كتابة كود Python عالي الجودة بناءً على المتطلبات المؤكدة."
+- "اتبع أفضل الممارسات: اجعل التعليمات البرمجية معيارية، وتعامل مع الأخطاء بشكل مناسب، وقم بتضمين التعليقات حيثما تكون مفيدة."
+- "بعد الانتهاء من الكود واجتياز الاختبارات الأساسية، اتصل بـ <code>submit_for_review()</code> للدخول إلى مرحلة المراجعة."</p>
+<p>تتغير الأدوات أيضًا: يتم استبدال أدوات توضيح المتطلبات بأدوات التطوير مثل <code>write_file(path, content)</code> و<code>read_file(path)</code> و<code>execute_code(code)</code>. باستخدام المتطلبات المسجلة في المرحلة الأولى، يكتب الوكيل المنطق الأساسي ويضيف معالجة الأخطاء وينشئ الاختبارات. لا يزال بإمكانه الرجوع إلى المحادثة السابقة للحصول على تفاصيل المتطلبات، ولكنه يركز الآن فقط على التنفيذ بدلاً من طرح المزيد من الأسئلة. عند الانتهاء، فإنه يستدعي <code>submit_for_review()</code>.</p>
+<p><strong>المرحلة 3: مراجعة الكود</strong> (الدور: مراجع الكود)</p>
+<p>يؤكد موجّه النظام الجديد على ما يلي:
+- "راجع التعليمات البرمجية للتأكد من صحتها الوظيفية والالتزام بمعايير الترميز ومعالجة الأخطاء والأداء والأمان."
+- "اتخذ نهجًا نقديًا وحدد المشكلات والفرص المحتملة لتحسين الكود."
+- "إذا تم العثور على مشكلات خطيرة، فاتصل بـ <code>request_revision(issues)</code> للعودة إلى مرحلة التنفيذ للتعديل؛ وإذا كانت الجودة مقبولة، فاتصل بـ <code>approve_code()</code> لإكمال المهمة."</p>
+<p>تتغير مجموعة الأدوات مرة أخرى: يتم استبدالها بأدوات تحليل جودة التعليمات البرمجية مثل <code>run_linter(file)</code> و<code>run_tests(file)</code> و<code>analyze_complexity(file)</code>. يقوم الوكيل بإعادة فحص التعليمات البرمجية من وجهة نظر المراجع، وإجراء تحليل ثابت، والتحقق من الأخطاء المحتملة، أو مشكلات الأداء، أو المخاطر الأمنية.</p>
+<p>يسمح هذا التصميم المكون من ثلاث مراحل للوكيل بالتركيز على المهمة الأساسية في كل مرحلة. والأهم من ذلك، أن التحولات الواضحة للمراحل تضمن اكتمال كل مرحلة: لا يمكن للوكيل تخطي تحليل المتطلبات والبدء في الترميز على الفور، أو تسليم النتيجة دون مراجعة.</p>
+<p><strong>متطلبات التجربة</strong>:
+1. قم بتنفيذ موجّهات النظام المكونة من ثلاث مراحل، ولكل منها تعريف واضح للدور وتوجيه سلوكي
+2. تكوين مجموعات الأدوات المطابقة لكل مرحلة
+3. تنفيذ آلية تشغيل المرحلة الانتقالية (عبر استدعاءات أدوات محددة)
+4. ضمان استمرارية السياق بين المراحل
+5. تعامل مع سيناريوهات التراجع - عندما تجد مراجعة التعليمات البرمجية مشكلات، ارجع إلى مرحلة التنفيذ
+6. قم بتسجيل النشاط من كل مرحلة لتوضيح كيف تنتج الموجّهات المختلفة سلوكًا مختلفًا
+</p>
+</blockquote>
+<h3 id="_7">تبديل الأدوار عبر المجال<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>أظهر تبديل الأدوار متعدد المراحل تنفيذًا مرحليًا ضمن نوع مهمة واحدة (تطوير البرامج). يذهب تبديل الأدوار عبر المجالات إلى أبعد من ذلك: يقوم الوكيل بتغيير الأدوار ديناميكيًا مع تحرك المهمة عبر المجالات. فبدلاً من اتباع عملية خطية محددة مسبقًا، فإنه يختار الدور المهني الذي سيتم تبنيه استجابةً لاحتياجات المستخدم المتغيرة.</p>
+<blockquote>
+<p><strong>التجربة 10-2 ★★: التبديل متعدد الأدوار</strong></p>
+<p><strong>المتطلبات الأساسية</strong>: من المستحسن أن يقوم القراء أولاً بمراجعة آلية مهارات الوكيل في الفصل الثاني.</p>
+<p><strong>بنية النظام</strong>: تم تحديد خمسة أدوار:</p>
+<ul>
+<li><strong>الفرز (مكتب الاستقبال؛ نقطة الإدخال الافتراضية)</strong>: يحدد احتياجات المستخدم الإجمالية، ويقسم العمل إلى مهام فرعية متسلسلة، ويوجه كل مهمة فرعية إلى المتخصص المناسب، ويجري فحصًا نهائيًا عند اكتمال جميع المهام الفرعية. أداتها الوحيدة هي <code>transfer_to_agent</code>.</li>
+<li><strong>البحث (خبير استرجاع المعلومات)</strong>: يستخدم <code>web_search</code> للعثور على البيانات والحقائق والمواد.</li>
+<li><strong>الترميز (خبير برمجة)</strong>: يستخدم <code>execute_python</code> لكتابة التعليمات البرمجية وتشغيلها لمهام البرمجة والبرمجة النصية.</li>
+<li><strong>تحليل البيانات (خبير تحليل البيانات)</strong>: يستخدم <code>calculate</code> / <code>descriptive_stats</code> للحسابات والإحصائيات الكمية (على سبيل المثال، معدل النمو على أساس سنوي، ومعدل النمو السنوي المركب (CAGR)، والمتوسط).</li>
+<li><strong>الكتابة (خبير الكتابة)</strong>: يحول البيانات المستردة والنتائج التحليلية إلى مسودة واضحة مصممة خصيصًا للجمهور (ويمكن استخدام <code>count_characters</code> لإجراء فحص تقريبي).</li>
+</ul>
+<p><strong>الآلية الأساسية: أداة <code>transfer_to_agent</code></strong></p>
+<p>تحتوي جميع الأدوار على أداة <code>transfer_to_agent(target_role, reason)</code>. عندما يستدعيه أحد الأدوار، يقوم النظام بحفظ سجل المحادثة الحالي، وتحميل موجّه الدور المستهدف ومجموعة الأدوات، وتمرير السجل إلى هذا الدور، واستئناف التنفيذ.</p>
+<p><strong>سيناريو التجربة</strong>: يبدأ النظام في الدور <code>triage</code> بشكل افتراضي. يرسل المستخدم مهمة تشمل عدة مجالات: "أقوم بإعداد المواد للمستثمرين. ساعدني في البحث عن مبيعات مركبات الطاقة الجديدة في الصين للأعوام 2021 و2022 و2023، وحساب معدل النمو السنوي المركب لهذه السنوات الثلاث، ثم اكتب ملخصًا باللغة الصينية للمستثمرين، بما لا يزيد عن 120 حرفًا." <code>triage</code> يقسمها إلى "البحث عن البيانات ← حساب المقاييس ← كتابة المسودة" ويسلمها أولاً إلى <code>research</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">transfer_to_agent</span><span class="p">(</span><span class="n">target_role</span><span class="o">=</span><span class="s2">&quot;research&quot;</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;البحث عن أرقام المبيعات السنوية لمركبات الطاقة الجديدة للفترة 2021-2023&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>يستخدم <code>research</code> <code>web_search</code> للعثور على أرقام المبيعات، ويضيف البيانات الأساسية إلى المحادثة، ويسلم المهمة إلى <code>data_analysis</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">transfer_to_agent</span><span class="p">(</span><span class="n">target_role</span><span class="o">=</span><span class="s2">&quot;data_analysis&quot;</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;البيانات جاهزة؛ احسب معدل النمو السنوي المركب من 2021 إلى 2023&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>يستخدم <code>data_analysis</code> <code>calculate</code> لحساب معدل النمو. ثم يقوم بعد ذلك بتسليم المهمة إلى <code>writing</code>، الذي يقوم بصياغة الملخص وإعادته إلى <code>triage</code> للتأكيد النهائي. السلسلة الكاملة هي <code>triage</code> → <code>research</code> → <code>data_analysis</code> → <code>writing</code> → <code>triage</code>. يمكن لكل دور رؤية سجل المحادثة بالكامل، وبالتالي فإن الدور التالي يعرف بطبيعة الحال ما تم إنجازه بالفعل.</p>
+<p>يعتمد قرار تبديل الأدوار على التوجيهات الواردة في النظام. يسرد موجّه <code>triage</code> قواعد التوجيه صراحةً: البحث عن البيانات أو المادة المصدر → <code>research</code>؛ كتابة الشفرة وتشغيلها → <code>coding</code>؛ إجراء الحسابات والتحليلات الإحصائية → <code>data_analysis</code>؛ صقل المادة وتحويلها إلى مسودة → <code>writing</code>. وينبغي تسليم المهمة عندما تتطلب خبرة عميقة في مجال معين أو أدوات متخصصة. كما يحدد موجّه كل متخصص الدور المناسب التالي، أو يرشده إلى إعادة المهمة إلى <code>triage</code>.</p>
+<p><strong>متطلبات التجربة</strong>:
+1. قم بتنفيذ موجّهات النظام ومجموعات الأدوات المتخصصة لثلاثة أدوار مهنية على الأقل
+2. قم بتنفيذ أداة <code>transfer_to_agent</code> التي تدعم التبديل الديناميكي
+3. ضمان استمرارية السياق بعد تبديل الأدوار
+4. منع عمليات التسليم الدائرية التي تتسبب في قيام الوكيل بالتبديل بشكل متكرر بين الأدوار
+5. قم بتصميم تدفقات المهام المعقدة التي تغطي مجالات متعددة لتوضيح قيمة تبديل الأدوار
+</p>
+</blockquote>
+<h2 id="_8">تعاون متعدد الوكلاء بدون سياق مشترك<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+<p>في بنية بدون سياق مشترك، يعمل كل وكيل ككيان مستقل له سياقه ومساره وحالته الخاصة. لا يمكن للوكلاء الوصول مباشرة إلى السياق الداخلي لبعضهم البعض؛ ويعتمد التعاون كليًا على عمليات نقل البيانات الواضحة والمنظمة من خلال آليات الاتصال الثلاث التي تم تقديمها في بداية هذا الفصل: معلمات استدعاء الأداة، ونظام الملفات المشترك، وحافلة الرسائل.</p>
+<p>في وقت سابق من هذا الفصل، قمنا بمقارنة آليات الاتصال بأشكال الاتصال بين العمليات والسياق المشترك مقابل السياق المعزول بالخيوط مقابل العمليات. ويمكن توسيع هذا التشبيه أكثر (الجدول 10-3):</p>
+<p>جدول 10-3 المراسلات بين الأنظمة متعددة الوكلاء وأنظمة التشغيل</p>
+<table>
+<thead>
+<tr>
+<th>نظام التشغيل</th>
+<th>نظام متعدد الوكلاء</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>البرنامج (ملف قابل للتنفيذ)</td>
+<td>البادئة الثابتة (موجّه النظام + تعريفات الأداة)</td>
+</tr>
+<tr>
+<td>ذاكرة العملية</td>
+<td>المسار</td>
+</tr>
+<tr>
+<td>وحدة المعالجة المركزية</td>
+<td>LLM</td>
+</tr>
+<tr>
+<td>نواة</td>
+<td>وقت تشغيل الوكيل</td>
+</tr>
+<tr>
+<td>مكالمة النظام</td>
+<td>استدعاء الأداة</td>
+</tr>
+<tr>
+<td>شوكة (إنشاء عملية فرعية)</td>
+<td>Spawn_subagent</td>
+</tr>
+<tr>
+<td>قتل (إرسال إشارة)</td>
+<td>Cancel_subagent</td>
+</tr>
+<tr>
+<td>ملاحظة (عمليات القائمة)</td>
+<td>list_agents</td>
+</tr>
+<tr>
+<td>رمز الخروج والانتظار ()</td>
+<td>ملخص منظم تم إرجاعه بواسطة الوكيل الفرعي</td>
+</tr>
+<tr>
+<td>الذاكرة المشتركة / تمرير الرسالة</td>
+<td>نظام الملفات المشترك / تمرير الرسائل</td>
+</tr>
+</tbody>
+</table>
+<p>البرنامج عبارة عن رمز ثابت؛ العملية هي مثيل واحد قيد التشغيل للبرنامج. وبالمثل، تحدد البادئة الثابتة من هو الوكيل، بينما يسجل المسار مدى تقدمه. يلعب LLM دور وحدة المعالجة المركزية: فهو لا يحمل أي حالة خاصة به ويتم مشاركته بالوقت عبر العديد من الوكلاء عن طريق تحميل سياقات مختلفة - وقد تم استعارة مصطلح "تبديل السياق" من أنظمة التشغيل. وللسبب نفسه، يؤدي التبديل في وحدة المعالجة المركزية الأسرع إلى استمرار تشغيل البرنامج كما كان من قبل؛ إن التبديل في نموذج أقوى يبقي الوكيل هو نفس الوكيل - حيث تعيش هويته وذاكرته في البادئة والمسار، وليس في أوزان النموذج.</p>
+<p>هذا التجريد ليس جديدًا: الحالة الخاصة، والرسائل غير المتزامنة، والقدرة على إنشاء أعضاء جدد هي بالضبط الإعداد الأساسي لنموذج الممثل في السبعينيات<sup id="fnref:actor-model"><a class="footnote-ref" href="#fn:actor-model">5</a></sup>. وبالتالي يمكن النظر إلى النظام متعدد الوكلاء على أنه إصدار قائم على LLM لنموذج الممثل، وينطبق الكثير من المعرفة المتراكمة من أنظمة التشغيل والأنظمة الموزعة بشكل مباشر. ينهار هذا التشبيه في مكان واحد مهم: العمليات تمرر البايتات بأمانة، قطعة مقابل قطعة، في حين أن الوكلاء يمررون المعنى، وكل إعادة سرد يمكن أن تشوهه. هذه هي المشكلة الجديدة التي تم تناولها في قسم "أوضاع الفشل" في هذا الفصل.</p>
+<p>ويحقق هذا العزل، الشبيه بعزل العمليات، فوائد هندسية ملموسة: يمكن تطوير كل وكيل واختباره مستقلًا، وإضافة قدرات جديدة من دون تعديل الشفرة القائمة، واحتواء خطأ الوكيل بدل انتقاله تلقائيًا إلى الآخرين، وتشغيل وكلاء عدة بالتوازي من دون تزاحم على سياق واحد.</p>
+<p>ومع ذلك، فإن عدم مشاركة السياق له تكاليفه أيضًا. المشكلة الأكثر وضوحًا هي مشكلة مزامنة المعلومات: كيف يحافظ الوكلاء على فهم متسق لحالة المهمة؟ هل سيتم فقدان المعلومات أو تكرارها أثناء النقل؟ يصبح تصحيح الأخطاء أيضًا أكثر صعوبة - عند ظهور مشكلات، يجب مراجعة السجلات من العديد من الوكلاء لتجميع عملية التنفيذ الكاملة معًا. تجعل هذه المشكلات تصميم مواصفات الواجهة وتنسيقات البيانات وبروتوكولات الاتصال أمرًا بالغ الأهمية.</p>
+<p>يعتمد التعاون الصريح دون سياق مشترك على بنيتين أساسيتين مستقلتين عن الهيكل. الأول هو <strong>نظام الملفات المشترك</strong>، وهو الوسيط المستمر الذي من خلاله يتبادل الوكلاء العناصر مع بعضهم البعض ومع المستخدم، مما يشكل مستوى بيانات التعاون. والثاني هو <strong>آلية الاتصال والتحكم</strong>، التي تدعم تمرير الرسائل واستعلامات الحالة وإنهاء التنفيذ وجدولة الموارد بين الوكلاء، مما يشكل مستوى التحكم في التعاون. تم بناء الطبولوجيا الثلاثة أدناه على هذين الأساسين.</p>
+<h3 id="_9">نظام الملفات من منظور الوكيل<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>عرضنا في بداية الفصل «نظام الملفات المشترك» بوصفه إحدى آليات الاتصال الثلاث في البنى التي لا تتشارك سياقًا واحدًا. لكن ما يراه الوكيل في النظام الفعلي ليس مخزنًا وحيدًا، بل <strong>نظام ملفات افتراضيًا</strong> يجمع تحت شجرة أدلة واحدة مخازن مختلفة في مصدرها وعمرها وصلاحياتها. يتعامل الوكيل معها عبر واجهات موحدة مثل <code>read_file</code> و<code>write_file</code> و<code>list_dir</code>، مع أن ما تحتها قد يكون قرصًا محليًا مؤقتًا، أو مخزن كائنات دائمًا، أو واجهة لخدمة سحابية خارجية، أو حزمة موارد للقراءة فقط.</p>
+<p>ومن شروط التصميم السليم توضيح بنية هذه الشجرة: من يرى كل منطقة، وكم تدوم، ومن يملك الكتابة فيها. فكثير من تعارضات التزامن وتسرب المعلومات سببه خلط مساحات كان ينبغي عزلها. ويمكن تشبيه المناطق الأربع الآتية بمقاطع ذاكرة ذات صلاحيات مختلفة داخل فضاء عناوين الوكيل: منها الخاص القابل للكتابة، والمشترك بين أطراف عدة، والمخصص للقراءة فقط. وينطبق هنا مبدأ حماية أنظمة التشغيل نفسه: العزل هو الوضع الافتراضي، والمشاركة قرار صريح.</p>
+<p><strong>أولًا: مساحة العمل الخاصة بالوكيل (مساحة المسودات).</strong> وهي دليل لا يراه إلا مثيل الوكيل المالك، تُحفظ فيه النتائج الوسيطة والملفات المؤقتة والمسودات وسجلات التنقيح، وتنتهي دورة حياته بانتهاء ذلك المثيل. ويحقق عزله غرضين: يمنع وكلاء عدة من الكتابة فوق ملفات بعضهم، ويبقي سياق الوكيل الرئيسي نظيفًا؛ إذ تظل محاولات الوكيل الفرعي ومسوداته في مساحته الخاصة، ولا ينتقل إلى المساحة المشتركة إلا الناتج النهائي. وهذا هو المقابل التخزيني لمبدأ الفصل الرابع القائل إن الوكيل الفرعي يعيد ملخصًا منظمًا لا مساره كاملًا.</p>
+<p><strong>ثانيًا: مساحة العمل المشتركة بين الوكلاء.</strong> وهي منطقة تعاون يستطيع وكلاء عدة القراءة منها والكتابة فيها، وتكون <strong>مرئية للمستخدم</strong> أيضًا. تمثل هذه المساحة الوسيلة الأساسية لتبادل العناصر حين لا يشترك الوكلاء في السياق؛ فقد يكتب وكيل المصطلحات مسردًا يقرأه وكيل الترجمة، ويستطيع المستخدم رفع الملفات المصدر وتنزيل المخرجات النهائية من الموضع نفسه. يمتد عمرها عادةً طوال المهمة، ولذلك تحتاج إلى تخزين دائم. ولأن أطرافًا عدة قد تكتب فيها بالتزامن، فهي بؤرة محتملة للتعارضات، وتفيد فيها آليات مثل القفل المتفائل وعزل أشجار العمل، كما سيأتي في «وضع الفشل الأول». ويقدم استخدام <code>/workspace/shared</code> في تجربة الفصل الرابع للربط بين الوكيل الرئيسي والحاسوب والهاتف الافتراضيين مثالًا واضحًا على هذه الطبقة.</p>
+<p><strong>ثالثا. الموارد الخارجية المثبتة.</strong> يتم تعيين مصادر معلومات الجهات الخارجية المعتمدة من قبل المستخدم - Google Drive، وNotion، وDropbox، ومواقع wiki الخاصة بالمؤسسة، وما إلى ذلك - لنقاط التثبيت في نظام الملفات (على سبيل المثال، <code>/mnt/gdrive</code>) عبر المحولات. يصل الوكيل إلى مستند Notion من خلال قراءة ملف؛ يقوم المحول الأساسي باستدعاء API المطابق. ثلاث خصائص تميز هذه الطبقة عن التخزين المحلي ويجب التعامل معها بوضوح أثناء التصميم: <strong>الوصول مقيد بأذونات خارجية</strong> (أذونات المستخدم في النظام المصدر تحدد رؤية الوكيل)، <strong>زمن الاستجابة أعلى والاتساق أضعف</strong> (تتضمن كل قراءة رحلة ذهابًا وإيابًا للشبكة، وقد لا تكون التغييرات الخارجية مرئية على الفور، لذلك يجب التعامل مع البيانات على أنها متسقة في النهاية)، و <strong>يتم الوصول في المقام الأول عند الطلب والقراءة فقط</strong> (يجب أن تتم الكتابة إلى المصادر الخارجية بحذر، حيث قد تؤدي عمليات الكتابة الخاطئة إلى تلويث البيانات الحقيقية للمستخدم). تعني واجهة الملف الموحدة أن الوكيل لا يحتاج إلى أداة مخصصة لكل مصدر بيانات، ولكنها تخفي أيضًا هذه الاختلافات في الأداء والأمان. ولذلك، يجب إدارة حالة القراءة فقط/القابلة للكتابة، والمهلات، وحدود بيانات الاعتماد بشكل صريح على مستوى التحميل.</p>
+<p><strong>رابعا. موارد النظام المضمنة.</strong> حزمة موارد تم تثبيتها مسبقًا بواسطة النظام ومشاركتها للقراءة فقط مع جميع الوكلاء. ومن الأمثلة النموذجية <strong>المهارات</strong> التي تم تقديمها في الفصلين الثاني والرابع، وهي وثائق ونصوص معرفية منظمة كملفات، مثبتة في مسارات مثل <code>/skills</code>، ويمكن الوصول إليها عن طريق الكشف التدريجي (الفهرسة أولاً، ثم التوسع عند الطلب). تتضمن الأمثلة الأخرى الأدلة المرجعية ومكتبات النماذج وتعريفات الأدوات المشتركة. هذه الطبقة مشتركة عالميًا، للقراءة فقط، ومستقرة عبر الجلسات، ويمكن لجميع الوكلاء قراءتها بشكل متزامن دون التحكم في التزامن.</p>
+<p>يوضح الشكل 10-3 كيفية تركيب أنواع المناطق الأربعة هذه بشكل موحد تحت شجرة دليل واحدة: يصل الوكيل إلى الشجرة بأكملها من خلال واجهة موحدة، ويقوم المستخدمون بتحميل الملفات وتنزيلها من المساحة المشتركة، ويتم تركيب مصادر البيانات الخارجية عبر المحولات، ويتم توفير موارد النظام المضمنة للقراءة فقط.</p>
+<p><img alt="الشكل 10-3: هيكل التركيب لأنواع المناطق الأربعة في نظام الملفات الظاهري للوكيل" src="../images/fig10-3.svg" /></p>
+<p>يقارن الجدول 10-4 أنواع المناطق الأربعة هذه عبر أربعة أبعاد — الرؤية، ودورة الحياة، وأذونات القراءة/الكتابة، والتحكم في التزامن — لتكون بمثابة قائمة مرجعية لتصميم تخطيط نظام الملفات.</p>
+<p>جدول 10-4 أربعة أنواع من مناطق نظام الملفات الظاهري للوكيل</p>
+<table>
+<thead>
+<tr>
+<th>المنطقة</th>
+<th>الرؤية</th>
+<th>دورة الحياة</th>
+<th>القراءة/الكتابة</th>
+<th>التحكم في التزامن</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>مساحة عمل خاصة بالوكيل</td>
+<td>الوكيل المالك فقط</td>
+<td>دمرت مع مثيل الوكيل</td>
+<td>القراءة/الكتابة</td>
+<td>غير مطلوب (خاص)</td>
+</tr>
+<tr>
+<td>مساحة عمل مشتركة متعددة الوكلاء</td>
+<td>جميع الوكلاء المتعاونين والمستخدم</td>
+<td>يستمر طوال مدة المهمة</td>
+<td>القراءة/الكتابة</td>
+<td>مطلوب (قفل متفائل / شجرة العمل)</td>
+</tr>
+<tr>
+<td>الموارد الخارجية المركبة</td>
+<td>يعتمد على الترخيص الخارجي</td>
+<td>يتم تحديده من خلال مصدر خارجي</td>
+<td>في الغالب للقراءة فقط، تتطلب الكتابة الحذر</td>
+<td>تدار من قبل مصدر خارجي</td>
+</tr>
+<tr>
+<td>موارد النظام المضمنة</td>
+<td>جميع الوكلاء</td>
+<td>مستقرة عبر الجلسات</td>
+<td>للقراءة فقط</td>
+<td>غير مطلوب (للقراءة فقط)</td>
+</tr>
+</tbody>
+</table>
+<p>تكمن قيمة <strong>"مسار الملف كواجهة عالمية"</strong> في التعامل مع المسار باعتباره وحدة التبادل. سواء قام الوكلاء بتبادل القطع الأثرية، أو قام الوكيل الرئيسي بتسليم المدخلات إلى وكيل فرعي، أو تعاونت المؤسسات من خلال A2A، فإنهم يمررون سلسلة مسار خفيفة الوزن بدلاً من تحميل محتويات الملف في نافذة السياق (الفصل 4). يتوافق هذا مع مفهوم الفصل الخامس الخاص بـ "نظام الملفات كمركز للوكيل"، والذي يصف كيفية استخدام وكيل واحد لنظام الملفات لاستضافة الذاكرة والقدرات. هنا، يمتد نفس التجريد إلى وكلاء متعددين: توفر شجرة الدليل الظاهري التي تحتوي على وحدات تخزين خاصة ومشتركة وخارجية ومدمجة أساسًا للتخزين للتعاون متعدد الوكلاء.</p>
+<h3 id="_10">التواصل والتحكم بين الوكلاء<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>في حين أن نظام الملفات يحل مشكلة <strong>تبادل العناصر</strong> بين الوكلاء، فإن التعاون يتطلب أيضًا <strong>مستوى تحكم</strong>. هذا هو بالضبط المكان الذي تلعب فيه صفوف دورة الحياة في الجدول 10-3: أساسيات الأداة الواردة في الفصل 4 - الإنشاء (<code>spawn_subagent</code>)، وإرسال الرسائل (<code>send_message_to_subagent</code>)، والإلغاء (<code>cancel_subagent</code>)، والاكتشاف (<code>list_agents</code>) - تتوافق مع التفرع والرسالة والقتل والملاحظة في عالم العمليات. لا يكرر هذا القسم تعريفات الواجهة ولكنه يركز على أربع إمكانات غالبًا ما يتم التغاضي عنها وهي ضرورية للتعاون متعدد الوكلاء.</p>
+<p><strong>أولًا: تمرير الرسائل.</strong> أبسط صورة هي الاتصال المباشر من نقطة إلى نقطة، كأن يستدعي الوكيل A الدالة <code>send_message_to_agent_b(content)</code>. ويلائم ذلك البنى الثابتة ذات العدد القليل من الوكلاء، مثل إعداد الهاتف والحاسوب في التجربة 10-4. لكن عدد الوصلات المباشرة ينمو تربيعيًا مع عدد الوكلاء، كما يشترط توافر المرسل والمتلقي في الوقت نفسه. وعند اتساع النظام أو الحاجة إلى توازٍ غير متزامن، يكون <strong>ناقل الرسائل</strong> أنسب: ينشر الوكلاء رسائلهم عليه، ثم يوجهها وفق الاشتراكات، فلا يحتاج المرسل إلى معرفة المتلقين. وفي الحالتين ينبغي أن تحمل الرسالة <strong>غلافًا</strong> منظمًا يتضمن هوية المرسل والوجهة، ونوع الرسالة مثل <code>task_assigned</code> أو <code>status_update</code> أو <code>result</code> أو <code>terminate</code>، وحمولة JSON. ويجعل هذا التنسيق التوجيه والتحليل أكثر موثوقية، ويحافظ على سلسلة تعاون قابلة للتتبع والتنقيح.</p>
+<p><strong>ثانيا. الاستعلام عن الحالة.</strong> هذا هو الجزء الأكثر استخفافًا في مستوى التحكم. بمجرد قيام الوكيل الرئيسي بإرسال وكيل فرعي، فإنه يحتاج إلى رؤية تقدم الوكيل الفرعي؛ وبخلاف ذلك، لا يمكنه أن يقرر ما إذا كان سيستمر في الانتظار أم لا، ولا يمكنه التدخل عندما يتعطل الوكيل الفرعي. يتمثل الأسلوب البديهي في الاقتراض من RPC وتحديد واجهة استعلام <code>get_subagent_status(agent_id)</code> التي تُرجع "قيد التشغيل/مكتمل/فشل" بالإضافة إلى نسبة التقدم. ولكن تبين أن واجهة السحب هذه أقل فائدة بكثير مما كان متوقعًا: يبدأ الوكيل الفرعي في التنفيذ لحظة إنشائه ويعمل حتى يكتمل أو يفشل. فهو لا يتنقل عبر سلسلة من الحالات الموضوعة في قائمة الانتظار بالطريقة التي تعمل بها الوظائف في نظام الدُفعات التقليدي، تمامًا كما نادرًا ما تحتاج برمجة Unix إلى استقصاء عملية أخرى بواسطة PID الخاص بها لمعرفة حالة التشغيل. يحمل الاقتراع أيضًا معضلة متأصلة: قم بالتصويت في كثير من الأحيان، مما يؤدي إلى إهدار الرموز المميزة؛ نادرًا ما تقوم بالاستطلاع وتتفاعل متأخرًا. الطريقة الأكثر طبيعية للحصول على المكانة هي العودة إلى نموذجي الاتصال اللذين تم تقديمهما في بداية هذا الفصل.</p>
+<p><strong>معرفة الحالة بتمرير الرسائل.</strong> يرسل الوكيل الرئيسي سؤالًا إلى الوكيل الفرعي، فيجيبه الأخير عندما تسمح مرحلته الحالية. لا يوقف الإرسال عمل الوكيل الرئيسي، كما أن توقيت الرد، أو عدم وروده، مسألة مستقلة؛ يشبه ذلك سؤال مديرٍ أحد زملائه عن تقدم العمل برسالة فورية من دون مطالبته بترك ما في يده حالًا. ويمكن للوكيل الفرعي أن يبادر كذلك بإرسال تحديث عند بلوغ محطة مهمة. وإذا كان النظام يملك ناقل رسائل أصلًا، فما عليه إلا نشر حدث <code>status_update</code>، وهو نمط «المراقبة في الوقت الحقيقي» في التجربة 10-6. وسواء طُلب التحديث أم أُرسل تلقائيًا، ينبغي أن يستخدم مفردات موحدة لآلة الحالة، مثل: قيد التنفيذ، يحتاج إلى مدخلات، مكتمل، وفاشل. وهذا بالضبط ما يوحّده بروتوكول A2A لاحقًا في الفصل.</p>
+<p><strong>معرفة الحالة عبر نظام الملفات المشترك.</strong> أكثر الأساليب شمولًا هو <strong>حفظ المسار</strong>: يرمّز الوكيل الفرعي كل حدث أثناء التنفيذ بصيغة JSON ويلحقه بملف سجل، غالبًا ملفًا واحدًا لكل جلسة وحدثًا واحدًا في كل سطر، أي بصيغة JSONL. وكما عرّفنا في الفصل الأول، يشمل المسار رسائل المستخدم وردود النموذج واستدعاءات الأدوات ونتائجها. وبذلك لا يحتاج الوكيل الرئيسي إلى بروتوكول خاص لطلب الحالة؛ إذ يستطيع قراءة السجل ومعرفة الأداة التي استُدعيت، وما حدث في الخطوة الأخيرة، وهل علق الوكيل في حلقة من المحاولات الفاشلة. يشبه هذا، من منظور أنظمة التشغيل، قراءة ذاكرة عملية أخرى مباشرة. وهو لا يستهلك سياق الوكيل الفرعي ولا يتوقف على تعاونه، ويوفر أدق مستوى من المراقبة.</p>
+<p>مثل هذه التفاصيل الشاملة تشكل أيضًا عبئًا. يمكن أن يمتد المسار بسهولة إلى عشرات الآلاف من الرموز، ويجب على الوكيل الرئيسي استخلاصه بعد القراءة، مما يستهلك الوقت والرموز. في معظم السيناريوهات، يكون <strong>ملف التقدم المتفق عليه</strong> أكثر عملية: عند بدء تشغيل الوكيل الفرعي، يوجهه الوكيل الرئيسي إلى تحديث <code>progress.md</code> عند إكمال كل عنصر. يمكن للوكيل الرئيسي قراءة هذا الملف خفيف الوزن في أي وقت لقياس التقدم. وهذا يشبه عمليتين تحجزان كتلة صغيرة من الذاكرة المشتركة بتنسيق متفق عليه، مما يكشف التقدم المحرز بدلاً من حالة الذاكرة بأكملها.</p>
+<p>يمكّن ملف التقدم أيضًا <strong>الكشف عن التوقف</strong>. إذا لم يتغير وقت التعديل الأخير لـ <code>progress.md</code> أو ملف المسار لأكثر من N دقيقة، فيمكن للنظام التعامل مع الوكيل الفرعي على أنه غير نشط وتشغيل شبكة أمان المهلة (تكرار آليات Heartbeat و<code>monitor_shell</code> من الفصل 4). وهذا يمنع الوكيل الفرعي المتوقف من سحب النظام بأكمله إلى الأسفل.</p>
+<p>إن قيمة استمرارية المسار تتجاوز مجرد الرصد. تذكر نتيجة الفصل الأول: "سياق الوكيل = بادئة ثابتة + مسار." يتم تحديد البادئة الثابتة (موجّه النظام، تعريفات الأداة) عن طريق التعليمات البرمجية، وليس لدى الوكيل نفسه حالة وقت تشغيل تتجاوز المسار (العناصر العاملة موجودة بالفعل في نظام الملفات) —<strong>المسار هو حالة الوكيل بالكامل</strong>. إن استمرار المسار إلى الملف في الوقت الفعلي يعادل الاحتفاظ بنقطة تحقق كاملة في جميع الأوقات: سواء تعطلت عملية الوكيل، أو فقد الجهاز الطاقة، أو قام المستخدم بإغلاق الجلسة بشكل فعال، فإن إعادة تحميل ملف المسار ببساطة وتعليق البادئة الثابتة مسبقًا يسمح باستئناف التنفيذ من حيث توقف - وهذا هو بالضبط كيفية تنفيذ ميزة استئناف الجلسة لوكلاء البرمجة مثل Claude Code وCodex CLI. هذه هي نفس فكرة سجل الكتابة المسبقة لقاعدة البيانات (WAL): يتم إلحاق كل حدث أولاً بسجل إلحاق فقط، ويمكن دائمًا إعادة تشغيل الحالة من السجل (تصميم الذاكرة "سجل الحقائق + نقطة التفتيش الدورية" للفصل الثالث هو نفس الفكرة المطبقة على أنظمة الذاكرة). بالنسبة لنظام متعدد الوكلاء، يعني هذا أن الوكلاء الفرعيين بطبيعة الحال <strong>قابلون للاسترداد والتدقيق وسهل التسليم</strong>: يمكن للمدير إعادة تشغيل وكيل فرعي من آخر حالة صالحة له بعد العطل، وإعادة تشغيل حدث المسار حسب الحدث بعد ذلك لتحديد سبب الفشل، وحتى تسليم المسار مع المهمة إلى وكيل آخر للمتابعة.</p>
+<p><strong>ثالثا. إنهاء التنفيذ.</strong> في التعاون الموازي، السيناريو الشائع هو "نجاح أحدهم، والباقي يصبح غير ذي صلة" - يقوم العديد من الوكلاء بالبحث بشكل منفصل، وبمجرد العثور على الهدف، يجب على الآخرين التوقف فورًا (الإنهاء المتتالي في التجربة 10-6 من هذا الفصل). هناك مستويان من الإنهاء، وسيتعرف مستخدمو Unix عليهما باعتبارهما الفرق بين SIGTERM وSIGKILL. <strong>يُفضل الإنهاء اللطيف</strong>: يرسل الوكيل الرئيسي إشارة <code>terminate</code>، ويستجيب الوكيل الفرعي عند نقطة آمنة في خطوته الحالية، وينظف الموارد (يغلق جلسات المتصفح، ويكتب الملفات المعلقة، ويحرر الأقفال)، ويرسل إقرارًا (ack)، ثم يخرج. <strong>الإنهاء القسري</strong> هو إجراء احتياطي: إنهاء العملية مباشرة، ويتم استخدامه فقط عندما لا يستجيب الوكيل الفرعي للإشارة اللطيفة، على حساب احتمال ترك موارد متدلية وعمليات كتابة غير مكتملة. هناك نقطتان هندسيتان تحتاجان إلى الاهتمام. أولاً، يتطلب الإنهاء الآمن أن يقوم الوكيل الفرعي بالتحقق دوريًا من إشارة الإنهاء في حلقته (على غرار آلية المقاطعة في الفصل 4)؛ وإلا فلن يتمكن من استقبال الإشارة. ثانيًا، الإنهاء المتتالي له حالة سباق: قد يقوم العديد من الوكلاء الفرعيين بالإبلاغ عن النجاح في وقت واحد تقريبًا. يجب على الوكيل الرئيسي استخدام تصميم قفل أو غير فعال لضمان قبول نجاح واحد فقط وبث إشارة الإنهاء مرة واحدة. انظر مناقشة ظروف السباق في التجربة 10-6.</p>
+<p>لا تزال هناك نهاية واحدة غير واضحة: بعد انتهاء عمل الوكيل الرئيسي، ماذا يحدث للوكلاء الفرعيين الذين ما زالوا قيد التشغيل؟ يستعير النهج الهندسي الأنظف من سياق Go - حيث يتسلسل الإنهاء إلى أسفل علاقة الإنشاء: قم بإلغاء وكيل واحد ويتم إلغاء جميع الوكلاء الفرعيين الذين تم إنتاجهم معه، مما يمنع الوكلاء الصغار اليتيمين من تركهم في الخلف. يتوافق "الوكيل الفرعي للتحقق من إشارة الإنهاء عند نقطة آمنة" أعلاه بدقة مع استقصاء <code>ctx.Done()</code> في Go. على العكس من ذلك، إذا كنت حقًا بحاجة إلى وكيل خلفية طويل الأمد منفصل عن الوكيل الرئيسي (مثل <code>nohup</code> الخاص بـ Unix)، فليبدأ من شجرة دورة حياة جديدة (تتوافق مع <code>context.Background()</code>)، معلنًا صراحةً أنه لا ينتهي مع الأصل.</p>
+<p><strong>رابعا. إدارة الموارد والجدولة.</strong> النصف الآخر من مهمة نظام التشغيل هو تخصيص الموارد النادرة. في عالم العمليات، الموارد النادرة هي وقت وحدة المعالجة المركزية والذاكرة؛ في عالم الوكيل، هي الرموز المميزة والمال وميزانية التزامن - كل خطوة يتخذها الوكيل الفرعي تستهلك الثلاثة. تقع هذه المسؤولية عادةً على عاتق المدير أو وقت التشغيل: قم بتعيين خطوة أو ميزانية رمزية عند بدء وكيل فرعي، وتوقف بمجرد تجاوزها؛ إعطاء المهام الصعبة لنموذج قوي والمهام الميكانيكية لنموذج منخفض التكلفة؛ الحد الأقصى للتزامن بحيث لا يستنفد العشرات من الوكلاء حصة API مرة واحدة؛ وعندما تصل مهمة أكثر إلحاحًا، قم بمقاطعة وكيل فرعي منفذ - وهذا إجراء استباقي. تعتبر الممارسة في هذا المجال أقل نضجًا بكثير من جدولة وحدة المعالجة المركزية، ولكنها تحدد سقف التكلفة لنظام متعدد الوكلاء ويجب أخذها في الاعتبار في مرحلة التصميم المعماري.</p>
+<p>يدعم تبادل العناصر (مستوى البيانات) وتمرير الرسائل والاستعلام عن الحالة وإنهاء التنفيذ وجدولة الموارد (مستوى التحكم) معًا الأنظمة متعددة الوكلاء التي لا تشارك السياق. إن طبولوجيا التعاون الثلاثة أدناه هي، في الأساس، خيارات مختلفة - مبنية على هاتين المستويتين - حول من يملك السيطرة وكيفية تدفق المعلومات.</p>
+<p>استنادًا إلى العلاقات التعاونية وخصائص تدفق التحكم بين الوكلاء، يمكن تقسيم التعاون دون سياق مشترك إلى ثلاث بنيات رئيسية - نمط التعاون بين الأقران، ونمط المدير، والنمط اللامركزي - كل منها مناسب لأنواع مختلفة من المهام.</p>
+<h3 id="_11">نمط التعاون بين الأقران: الفحوصات المتبادلة والتحسين التكراري<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>يتضمن التعاون بين الأقران عادةً 2-3 وكلاء يتمتعون بمكانة متساوية ويقدمون تعليقات لبعضهم البعض عبر جولات متعددة من التكرار. قيمته الأساسية هي التنوع المعرفي: يقوم وكلاء مختلفون بدراسة نفس المشكلة من زوايا مختلفة، وتحقيق التوازن بين الابتكار والقوة لتحقيق نتيجة أفضل من أي وكيل واحد.</p>
+<p>بالمقارنة مع أنماط المدير واللامركزية، يعد التعاون بين الأقران أسهل بكثير في التنفيذ — حدد أدوار الوكيلين، وآلية الاتصال، وشرط إنهاء التكرار، ويصبح لديك نظام تشغيل. إنه خيار مثالي للتحقق بسرعة من الأفكار وبناء النماذج الأولية.</p>
+<p>أحد الاستخدامات الأكثر شيوعًا للتعاون بين الأقران هو مواجهة الفشل المتكرر في ممارسة الوكيل: <strong>الإنهاء المبكر</strong> — التوقف مع نصف المهمة المنجزة. ويأخذ ثلاثة أشكال نموذجية؛ الأمثلة أدناه تأتي من Coding Agents ومن Pine AI، الوكيل المقدم في المقدمة والذي يقوم بإجراء مكالمات هاتفية نيابة عن المستخدمين للتعامل مع التجار ومقدمي الخدمات. الأول هو <strong>التزوير البطيء</strong>: القيام بجزء من العمل والإعلان عن إنجازه كله — يقوم وكيل البرمجة بكتابة التعليمات البرمجية، ولا يقوم مطلقًا بإجراء الاختبارات أو محاولة النشر، ويبلغ عن "اكتمال المهمة"؛ يقوم المستخدم بإعطاء Pine AI مهمتين، فينهي المهمة الأولى، وينسى الثانية، ويبلغ بمرح "تم الاعتناء بكل شيء". والثاني هو <strong>الاستسلام المبكر</strong>: الإعلان عن استحالة المهمة برمتها بعد مسار واحد مسدود — يمكن لـ Pine AI الوصول إلى التاجر عن طريق الهاتف أو نموذج الويب أو البريد الإلكتروني، ولكن بعد مكالمة مرفوضة واحدة يخبر المستخدم "لا يمكن القيام بذلك"، في حين أن تبديل القنوات والمحاولة مرة أخرى من المرجح أن ينجح. والثالث هو <strong>النجاح الزائف</strong>: يعتقد الوكيل أن المهمة قد انتهت، لكن الحلقة لم يتم إغلاقها فعليًا أبدًا - يوافق الجانب الآخر شفهيًا على استرداد الأموال عبر الهاتف، ومع ذلك لا يزال يتعين على المستخدم تأكيد الخطوة في تطبيق الهاتف المحمول؛ يبلغ الوكيل أن "كل شيء جاهز"، ولا يعلم المستخدم أبدًا بوجود إجراء متابعة، ولن يتم استرداد الأموال أبدًا. تشير جميع النماذج الثلاثة إلى السبب الجذري نفسه: <strong>إلى أن يتم التحقق من ذلك، فإن "تم" هو مجرد ادعاء النموذج، وليس دليلاً.</strong></p>
+<p>إن تحويل الموجّهات إلى أدلة هو على وجه التحديد عمل <strong>هندسة الحلقات</strong>، وهي المرحلة الأخيرة من القوس التطوري للفصل الأول: تصميم حلقة تحافظ على تشغيل الوكيل — اكتشاف الجزء التالي من العمل، وتنفيذه، والتحقق منه، وتسجيل التقدم — والسماح للمدقق، وليس النموذج نفسه، بأن يقرر ما إذا كان التوقف آمنًا حقًا. ويتحول دور الإنسان وفقًا لذلك من "المشغل الذي يحفز الوكيل" إلى "المهندس الذي يصمم الحلقة". تمت صياغة هذا المصطلح في يونيو 2026 بواسطة آدي عثماني<sup id="fnref:loop-engineering-2026"><a class="footnote-ref" href="#fn:loop-engineering-2026">6</a></sup>؛ قال بوريس تشيرني، رئيس قسم الكود Claude في Anthropic، الأمر بشكل أكثر صراحة: "لم أعد أطالب Claude بعد الآن. وظيفتي هي كتابة الحلقات." وكان الاستنتاج الرئيسي الذي تم التوصل إليه من تلك المناقشة هو أن <strong>عنق الزجاجة في الحلقة هو المتحقق، وليس النموذج</strong>: مع التحقق غير الموثوق، فإن الحلقة الأسرع تشير فقط إلى أن المخرجات الضعيفة مكتملة في وقت أقرب. وكما تقول المقدمة، فإن الممارسة تأتي أولاً، وتأتي التسمية لاحقًا. قبل وقت طويل من ظهور هذا المصطلح، كانت فرق الوكلاء الرائدة، ومن بينها Pine AI، تستخدم بالفعل "حلقة بالإضافة إلى التحقق" ضد الإنهاء المبكر. الطريقة الأكثر فعالية لتنظيم هذا التحقق هي نموذج المقترح والمراجع أدناه.</p>
+<p><strong>نموذج المقترح والمراجع.</strong></p>
+<p><img alt="الشكل 10-4: حلقة المقترح والمراجع" src="../images/fig10-4.svg" /></p>
+<p>المقترح والمراجع هو النموذج الأساسي للتعاون بين الأقران. لقد تناول الفصل الخامس بالفعل مبادئ التصميم والتطبيقات العملية في ثلاث تجارب: إنشاء PPT، وتحرير الفيديو، وتصور السجل. يقوم وكيل المقترح بإنشاء التعليمات البرمجية، بينما يقدم وكيل المراجع نتائج التنفيذ، ويقيم جودتها باستخدام نموذج لغة الرؤية، ويقدم اقتراحات منظمة للتحسين. يتكرر الاثنان حتى تفي النتيجة بالمعيار المطلوب.</p>
+<p>ينطبق هذا النموذج أيضًا على سيناريوهات مثل المراجعة الأمنية (ينشئ مقدم العرض خطة عمل، ويتحقق المراجع من الامتثال والمخاطر المحتملة)، والإشراف على المحتوى (يقوم مقدم العرض بصياغة الرد، ويتحقق المراجع من قواعد العمل ومعايير اللغة)، ومراجعة التعليمات البرمجية (يكتب مقدم العرض التعليمات البرمجية، ويتحقق المراجع من الأمان وأفضل الممارسات).</p>
+<p><strong>لماذا لا يستطيع وكيل واحد إنشاء عمله الخاص ثم مراجعته؟</strong> هذا هو بالضبط المعيار الذي جاء منه "متى يكون الوكيل المتعدد أفضل حقًا من الوكيل الفردي؟" ينطبق ما سبق في هذا الفصل - إذا لم تقدم المراجعة معلومات جديدة، فهي مجرد "مطالبة النموذج بالتفكير مرة أخرى". توفر الأبحاث ذات الصلة إجابة واضحة. في بحثهم ICLR 2024 بعنوان "نماذج اللغة الكبيرة لا يمكنها تصحيح الاستدلال ذاتيًا بعد"، هوانغ وآخرون. وجدت أن مطالبة GPT-4 بمراجعة وتصحيح إجاباتها دون تعليقات خارجية أدى في الواقع إلى تقليل الدقة، حيث قام النموذج بتغيير الإجابات الصحيحة إلى الإجابات غير الصحيحة في كثير من الأحيان أكثر من تغيير الإجابات غير الصحيحة إلى الإجابات الصحيحة.</p>
+<p>ورقة استطلاع عام 2024 منشورة في TACL، "متى يمكن لـ نماذج LLM تصحيح أخطائهم فعليًا؟" (arXiv:2406.01297)، أكد أيضًا هذا الاستنتاج: ما لم يتم تقديم تعليقات خارجية موثوقة (على سبيل المثال، نتائج تنفيذ حالة الاختبار، ومخرجات التحقق من الأدوات الخارجية)، فإن الاعتماد فقط على "التصحيح الذاتي" الخاص بالنموذج سيكون غير فعال إلى حد كبير.</p>
+<p>توفر الورقة النقدية في ICLR 2024 تجربة مقارنة بديهية. جعل CRITIC النموذج يستخدم أدوات خارجية (محرك بحث، مترجم Python) للتحقق من إجاباته، مما أدى إلى تحسينات كبيرة في الأداء. ومع ذلك، عندما أزال المجربون خطوة التحقق من الأداة واحتفظوا فقط بالتقييم الذاتي للنموذج، اختفى معظم التحسن. ويشير هذا إلى أن قيمة المراجعة لا تكمن في "مطالبة النموذج بالتفكير مرة أخرى"، ولكن في <strong>تقديم معلومات جديدة لم تكن متاحة أثناء إنشاء النموذج</strong> — نتائج الاختبار، ولقطات الشاشة المعروضة، وأخطاء التجميع، ونتائج البحث الخارجية.</p>
+<p>هذا هو مبدأ التصميم الأساسي لنموذج المقترح والمراجع. في تجربة إنشاء PPT للفصل 5، لم تكن قيمة وكيل المراجع هي "استخدام نفس النموذج للنظر إلى الكود مرة أخرى"، ولكن <strong>عرض PPT والتقاط لقطة شاشة</strong> - لقطة شاشة تحتوي على معلومات مرئية لم يتمكن وكيل المقترح من الحصول عليها عند إنشاء الكود. وبالمثل، في سيناريوهات إنشاء التعليمات البرمجية، تكون نتائج النجاح/الفشل من تنفيذ حالات الاختبار بمثابة إشارات جديدة لم تكن موجودة عندما تمت كتابة التعليمات البرمجية - تنبع القيمة المستقلة للمراجع على وجه التحديد من وصوله إلى هذه التعليقات الخارجية غير المتاحة لمقدم الاقتراح.</p>
+<p>من خلال عدسة Loop Engineering، فإن أنماط الحلقات المفهرسة بواسطة الصناعة ترسم خريطة للأنماط الموجودة في هذا الكتاب. تتوافق الحلقة المغلقة بموافقة الإنسان مع الموافقة المسبقة للفصل 4، حيث يكون الإنسان هو المراجع النهائي. تتوافق الحلقة المفتوحة ذات الميزانية أو الحد الأقصى الدائري مع تكرار PPT متعدد الجولات في الفصل الخامس، والذي يسمح بخمس جولات على الأكثر. تتوافق الوكلاء الفرعيون المنظمون مع نمط المدير في القسم التالي. وبالتالي، لا تصف هندسة الحلقات بنية جديدة، بل تصف إطارًا مشتركًا - حلقة + التحقق + شروط التوقف - الذي يوحد أنماط التعاون هذه. يملأ نموذج المقترح والمراجع دور التحقق ضمن هذا الإطار.</p>
+<p><strong>الملحقات: أنماط أخرى للتعاون بين النظراء.</strong></p>
+<p><strong>المناقشة</strong>: يشغل العديد من الوكلاء مناصب مختلفة، ويستكشفون مساحة المشكلة من خلال حوار الخصومة. على سبيل المثال، عند تقييم حل تقني، يلعب الوكيل "أ" دور "المؤيد"، ويدرج مزايا الحل وفرصه، بينما يلعب الوكيل "ب" دور "الخصم"، مشيرًا إلى المخاطر والقيود. تتضمن كل جولة من المناقشات دحض أو توسيع حجج الطرف الآخر. عندما يحلل وكيل واحد بتحليل مشكلة ما، فإنه غالبًا ما يفضل وجهة نظر واحدة ويتجاهل الأدلة المضادة. إن النقاش المنظم يفرض تطوير كلا الموقفين بشكل كامل، مما يساعد صناع القرار على التوصل إلى حكم أكثر توازنا.</p>
+<p>ومع ذلك، فإن الفعالية العملية للنقاش لا تزال موضع خلاف في الأوساط الأكاديمية. قامت دراسة أجراها تران وكيلا في عام 2026 <sup id="fnref:single-agent-2026"><a class="footnote-ref" href="#fn:single-agent-2026">7</a></sup> بمقارنة وكيل واحد بخمس بنيات متعددة الوكلاء (متسلسلة، ومناظرة، ومجموعة، وأدوار متوازية، ومهام فرعية متوازية) في مهام الاستدلال متعددة القفزات. لقد وجدوا أنه <strong>عندما ظلت ميزانية رمز التفكير ثابتة، كان أداء الوكيل الفردي على قدم المساواة أو حتى أفضل من الأنظمة متعددة الوكلاء</strong> (ما لم يتدهور استخدام السياق إلى نقطة معينة). وقد قدم الباحثون تفسيراً مبنياً على عدم مساواة معالجة البيانات في نظرية المعلومات: يقوم العديد من الوكلاء في المناقشة بمعالجة نفس المعلومات النصية بالضبط، وكل عملية نقل تسلسلية للاستنتاجات الوسيطة بين الوكلاء يمكن أن تفقد المعلومات فقط، ولا يمكنها إنشاؤها. من المحتمل أن تنبع فوائد وضع المناقشة في بعض الأوراق الأكاديمية من قيام العديد من الوكلاء باستهلاك قدر أكبر من الحساب الإجمالي. ومن المهم توضيح حدود هذه الحجة: فهو يستهدف اختناق المعلومات الناجم عن "النقل التسلسلي متعدد الوكلاء للاستنتاجات الوسيطة" ولا ينفي الأساليب الأخرى، مثل <strong>عينات مستقلة متعددة من نفس المشكلة متبوعة بالتجميع</strong> (على سبيل المثال، الاتساق الذاتي، تصويت الأغلبية)، أو الاستفادة من <strong>عدم التماثل في الصعوبة بين التوليد والتحقق</strong> (كتابة إجابة صعبة، والتحقق منها سهل) لتقسيم العمل للتحقق من الأجيال. تقدم هذه السيناريوهات إما عينات مستقلة إضافية أو تستغل البنية غير المتماثلة للمهمة نفسها، ولا تقع ضمن نطاق عدم المساواة في معالجة البيانات.</p>
+<p><strong>العصف الذهني</strong>: يقوم العديد من الوكلاء بتوليد الأفكار بشكل مستقل، ثم يشاركونها مع بعضهم البعض، ويلهم بعضهم بعضًا. على سبيل المثال، في مهمة ابتكار منتج، يقترح الوكيل 1 "إضافة ميزات المشاركة الاجتماعية"، ويتم إلهام الوكيل 2 لاقتراح "ليس فقط المشاركة على الشبكات الاجتماعية، ولكن أيضًا إنشاء ملصقات مشاركة مخصصة"، ويقوم الوكيل 3 بتجميع الأولين لاقتراح "قوالب ملصقات قابلة للتخصيص من قبل المستخدم تشكل سوقًا للقوالب". لدى الوكلاء المختلفين "تفضيلات تفكير" مختلفة (يتم تحقيقها من خلال موجّهات أو نماذج مختلفة)، ومن خلال تحفيز بعضهم البعض، يستكشفون مساحة حل أوسع للعثور على مجموعات إبداعية قد يجد وكيل واحد صعوبة في تصورها.</p>
+<p><strong>حلقة النقاش:</strong> يتبنى كل وكيل منظور تخصص مهني، ثم يناقش الوكلاء معًا مسألة تتقاطع فيها تخصصات عدة. فعند تقييم جدوى منتج جديد، يحلل الوكيل الهندسي صعوبة التنفيذ، ويقدّر وكيل المنتج جاذبية السوق وتجربة المستخدم، ويدرس وكيل العمليات الجدوى من زاوية الكلفة والموارد. لا تتعارض أدوارهم هنا، بل تتكامل لبناء صورة أشمل وكشف القيود والفرص المشتركة بين المجالات.</p>
+<h3 id="_12">نمط المدير: التنسيق المركزي<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<p>عندما تتضمن مهمة ما أكثر من خمس مهام فرعية، أو تحتاج إلى جدولة ديناميكية، أو تحتوي على تبعيات معقدة بين المهام الفرعية، فإن التعاون بين الأقران يكون خارج نطاق العمق، وتكون هناك حاجة إلى نمط المدير. تشبه وظيفة المدير الوكيل وظيفة مدير المشروع: فهم المهمة الإجمالية، وتقسيمها إلى مهام فرعية قابلة للتعيين، واختيار الوكيل المناسب لكل منها، وتتبع التقدم، والتعامل مع الاستثناءات عن طريق إعادة محاولة المهام، واستبدال الوكلاء، أو مراجعة الخطة، وأخيرًا دمج مخرجات الوكلاء في النتيجة النهائية.</p>
+<p>في تصميم النظام، يعامل نمط المدير كل وكيل متخصص كأنه أداة قابلة للاستدعاء. لذلك لا تقتصر مجموعة أدوات المدير على البحث والملفات وسائر الأدوات الخارجية، بل تضم واجهات تشغيل الوكلاء الآخرين. يختار المدير الوكيل المناسب، ويمرر إليه معاملات المهمة وما يلزمه من سياق، ثم يتلقى النتيجة عند اكتماله. ومن زاوية المدير لا يختلف ذلك جوهريًا عن استدعاء أداة عادية: طلب يُرسل واستجابة تعود. يسهّل هذا التجريد الموحد توسيع النظام؛ فإضافة قدرة جديدة لا تتطلب سوى بناء وكيلها وتسجيله كأداة، من دون المساس بالمنطق الأساسي للمدير. كما يسمح بتنوع المكونات، إذ يمكن لكل وكيل استخدام نموذج وموجّه وأدوات وبيئة تشغيل مختلفة.</p>
+<p>تم إنشاء فكرة "الوكلاء كأدوات لبعضهم البعض" في قسم "أدوات التعاون" في الفصل 4: ينطبق تصميم واجهة <code>spawn_subagent / send_message_to_subagent / cancel_subagent / list_agents</code> مباشرة على استدعاء المدير للوكلاء الفرعيين هنا. أما بالنسبة لما يتم تمريره في اتجاه "المدير → الوكيل الفرعي"، فراجع تصميم حزمة التسليم لاحقًا في هذا الفصل (وصف المهمة، والحقائق والقيود المؤكدة، والإشارات إلى العناصر المنظمة). السؤال المقابل هو ما الذي يعود به الوكيل الفرعي في اتجاه "الوكيل الفرعي → المدير". الإجابة هي <strong>ملخصات منظمة بدلاً من المسارات الكاملة</strong>: يجب على الوكيل الفرعي إرجاع نتيجة المهمة والنتائج الرئيسية ومسارات الملفات الخاصة بالعناصر والمشكلات التي تمت مواجهتها، مع ترك مسار التنفيذ الكامل في سجلاته الخاصة. بهذه الطريقة فقط يمكن لسياق المدير أن ينمو ببطء وبشكل خطي مع عدد المهام الفرعية، بدلاً من الانفجار. ولهذا السبب أيضًا يحتفظ المدير في التجربة 10-3 أدناه بفهرسات الملفات فقط ولا يخزن محتوى الترجمة.</p>
+<p>ومع ذلك، ينطوي نمط المدير على تحديات جوهرية. فالمدير يصبح عنق الزجاجة الوحيد في النظام: عليه أن يفهم طبيعة كل مهمة فرعية، ويختار الوكيل المناسب، ويمرر السياق بدقة؛ وأي سوء تقدير منه يمتد أثره إلى سير العمل كله. كذلك يجب عليه الاحتفاظ بالسياق العام للمهمة، وقد يتضخم هذا السياق كلما تعمقت المهمة وتراكمت استدعاءات الوكلاء. لذلك يحتاج المدير إلى موجّه محكم، واستراتيجية فعالة لإدارة السياق، وتحليل دقيق للمهام.</p>
+<p>تقدم ورقة Plan-and-Act المنشورة عام 2025 <sup id="fnref:plan-and-act-2025"><a class="footnote-ref" href="#fn:plan-and-act-2025">8</a></sup> تحليلًا تجريبيًا لهذه المسألة. ففي بنية ثنائية تتكون من مخطِّط ومنفِّذ، <strong>يكون المخطِّط الضعيف أهم عنق زجاجة في النظام كله</strong>. وعندما تبلغ جودة التخطيط مستوى كافيًا، يمكن تحقيق نتائج جيدة حتى بمنفّذ بسيط نسبيًا. أما إذا أخطأ المخطِّط في تحليل المهمة، فستُبنى أعمال المنفّذ اللاحقة كلها على فرضية خاطئة. وقد حققت الدراسة معدل نجاح قدره 54% على معيار WebArena-Lite، وكان إسهامها الأساسي تحسين قدرة المخطِّط، لا آلية التنفيذ. والخلاصة أن النموذج الأقوى والموجّه الأدق تصميمًا ينبغي أن يُخصَّصا للمدير (المخطِّط)، بدل توزيع الموارد بالتساوي على جميع الوكلاء.</p>
+<p>وهذا لا يتعارض مع حجة من الفصل 4. عند مناقشة نموذج الاقتراح ونموذج المراجعة، رأى الفصل 4 أن قدراتهما يجب أن تكون متشابهة - ولكن هذا يتعلق بـ <strong>سيناريو المراجعة</strong>: يجب على المراجع مواكبة منطق الطرف قيد المراجعة لاكتشاف عيوبه. إذا كان المراجع أقل قدرة بكثير من الطرف قيد المراجعة، فقد لا يتمكن من متابعة المنطق عن كثب بما يكفي لتحديد العيوب. يتعلق نمط المدير بشيء آخر: <strong>تقسيم العمل بين التخطيط والتنفيذ</strong>. وبمجرد أن يقوم المخطط بتحليل المهمة بشكل غير صحيح، فلن يتمكن أي منفذ، مهما كان قويا، من التعافي. ومن ثم فإن النموذج الأقوى والأكثر دقة يذهب إلى المخطط أولاً. ما إذا كان المنفذون بحاجة إلى قدرات متوازنة يعتمد على مدى اقتران المهام الفرعية. وعندما يتعين في النهاية تجميع مخرجاتهم في وحدة واحدة، فإن الحلقة الأضعف غالبًا ما تؤدي إلى انخفاض الجودة الإجمالية.</p>
+<p><strong>نمط التنسيق المتسلسل.</strong></p>
+<p><img alt="الشكل 10-5: التنسيق التسلسلي للمدير" src="../images/fig10-5.svg" /></p>
+<p>يقوم المدير باستدعاء الوكلاء المتخصصين بالتسلسل. يقوم كل وكيل بإرجاع النتائج عند الانتهاء، ويقرر المدير الخطوة التالية. يكون تدفق التحكم خطيًا وبسيطًا وواضحًا، مما يجعله مناسبًا للسيناريوهات التي يكون فيها للمهام الفرعية تبعيات تسلسلية واضحة.</p>
+<blockquote>
+<p><strong>التجربة 10-3 ★★: وكيل ترجمة الكتب</strong></p>
+<p>تعد ترجمة الكتب مهمة معقدة ومناسبة تمامًا للتعاون بين وكلاء متعددين. لا تتضمن ترجمة كتاب تقني تحويل النص من لغة إلى أخرى فحسب، بل تتضمن أيضًا ضمان اتساق المصطلحات المتخصصة، ودقة السياق، والطلاقة العامة. على سبيل المثال، قد يستخدم كتاب باللغة الإنجليزية حول نماذج اللغات الكبيرة العديد من المصطلحات المتكررة مع العديد من الترجمات التقليدية. يجب الحفاظ على الاتساق في جميع أنحاء الكتاب: إذا تم تقديم <code>agent</code> كـ "智能体" ("كيان ذكي،" المصطلح الصيني القياسي) في الفصل الأول، فلا يمكن للكتاب التبديل إلى العرض البديل "代理" ("الوكيل") لاحقًا.</p>
+<p>يؤدي استخدام وكيل واحد إلى حدوث مشكلات خطيرة في إدارة السياق. أثناء قيام الوكيل بمعالجة الكتاب فصلاً تلو الآخر، يقوم سياقه بتجميع مسرد الكتاب الكامل، والفصول المترجمة، والفقرة الحالية، وآثار أعمال الترجمة، ونتائج الأداة. يمكن للكتاب الفني الذي يبلغ طوله عدة مئات من الصفحات، مع هذه المواد الوسيطة، أن يتجاوز بسهولة نافذة السياق. والأهم من ذلك، أن الوكيل الذي يعمل في سياق طويل للغاية يكون عرضة "للضياع": قد ينسى اصطلاحات المصطلحات السابقة ويستخدم ترجمة مختلفة في الفصل الثامن عما كانت عليه في الفصل الثاني، أو يهدر الموارد في عمليات فحص زائدة عن الحاجة أثناء التدقيق اللغوي، أو حتى "يتذكر" قواعد المصطلحات غير الموجودة لأن انتباهه منتشر بشكل ضئيل للغاية.</p>
+<p>يعالج نمط المدير هذه المشكلات من خلال تحليل المهام وفصل المسؤولية:</p>
+<ul>
+<li><strong>وكيل المسرد</strong>: يتلقى الكتاب الكامل، ويحدد المصطلحات المتخصصة المتكررة، ويستشير القواميس المتخصصة وإرشادات الترجمة، وينشئ مسردًا منظمًا (تنسيق JSON/CSV، بما في ذلك المصطلح الإنجليزي، والترجمة الصينية، وجزء من الكلام، وسياق الاستخدام). عند الانتهاء، يكتب المسرد إلى نظام الملفات المشترك، ويمكن إنهاء الوكيل لتحرير الموارد.</li>
+<li><strong>وكيل الترجمة</strong>: يتلقى الفصل الحالي والمسرد وإرشادات الترجمة (مستوى القارئ المستهدف ونمط اللغة)، ويترجمه إلى اللغة الصينية بطلاقة. ويستخدم بشكل صارم الترجمات المحددة للمصطلحات الموجودة في المسرد، وبالنسبة للمصطلحات الجديدة، فإنه يستنتج ترجمة ويضع علامة عليها للمراجعة. يعمل كل مثيل في سياق مستقل دون تدخل. تتم كتابة النص المترجم إلى نظام الملفات (على سبيل المثال، <code>chapter1_zh.md</code>). يمكن للمدير إطلاق مثيلات متعددة بالتوازي أو بالتسلسل.</li>
+<li><strong>وكيل التدقيق اللغوي</strong>: يتلقى جميع النصوص المترجمة والمسرد، ويجري فحوصات الاتساق — للتحقق مما إذا كانت ترجمات المصطلحات موحدة، وتحديد أوجه عدم الاتساق، والتحقق من الطلاقة وسهولة القراءة بشكل عام. يقوم بإنشاء تقرير التدقيق المكتوب إلى نظام الملفات.</li>
+<li><strong>الوكيل الإداري</strong>: يخزن سياقه بشكل أساسي وصف المهمة وخطة التنفيذ وسجلات المكالمات لكل وكيل وحالة التقدم. ولا يقوم بتخزين النص المترجم الكامل، والذي يبقى في نظام الملفات؛ بدلاً من ذلك، فإنه يحتفظ بفهرس الملفات فقط. واستنادًا إلى تقرير التدقيق اللغوي، يمكن للمدير إرسال فصول محددة مرة أخرى إلى وكيل الترجمة للمراجعة.</li>
+</ul>
+<p>ونتيجة لذلك، يظل سياق المدير قابلاً للإدارة حتى مع تزايد عدد الفصول المترجمة.</p>
+<p>الميزة الرئيسية هي <strong>عزل السياق</strong>: يرى وكيل المسرد فقط المحتوى المطلوب لاستخراج المصطلح، ويرى وكيل الترجمة الفصل الحالي والمسرد فقط، بينما يركز وكيل التدقيق اللغوي، على الرغم من حاجته إلى الوصول إلى النص الكامل، على عمليات التحقق من الاتساق فقط. يؤدي هذا إلى إبقاء سياق كل وكيل بسيطًا ومركزًا، مما يؤدي إلى تحسين الكفاءة وتقليل الأخطاء الناتجة عن التحميل الزائد للمعلومات.</p>
+<p><strong>متطلبات التجربة</strong>:
+1. اختر كتابًا تقنيًا مصورًا بشكل كبير يحتوي على التعليمات البرمجية كنص مصدر
+2. تنفيذ أربعة أنواع من الوكلاء: المدير، المسرد، الترجمة، التدقيق اللغوي
+3. قم بتسجيل استخدام سياق كل وكيل للتحقق من مدى فعالية نمط المدير في التحكم في نمو السياق
+4. قارن وكيلًا واحدًا بنمط المدير من حيث جودة الترجمة وكفاءة التنفيذ واستهلاك الموارد</p>
+<p><img alt="الشكل 10-6: بنية وكيل ترجمة الكتب" src="../images/fig10-6.svg" /></p>
+</blockquote>
+<p><strong>نمط التنسيق الموازي.</strong></p>
+<p><img alt="الشكل 10-7: مدير التنسيق الموازي" src="../images/fig10-7.svg" /></p>
+<p>عندما يمكن تنفيذ مهام فرعية متعددة بالتوازي، يصبح النمط التسلسلي غير فعال. يتيح التنسيق الموازي للعديد من الوكلاء العمل في وقت واحد، مما يزيد الإنتاجية بشكل كبير. يجب على الوكيل الإداري تخطيط المهام الموازية، ومراقبة جميع الوكلاء العاملين في الوقت الفعلي، وتنسيق اتصالاتهم، واتخاذ قرارات على مستوى النظام عندما ينجح الوكلاء أو يفشلون. يتطلب هذا عادةً <strong>ناقل الرسائل</strong> كبنية أساسية — فكر في الأمر على أنه "لوحة إعلانات عامة" حيث يمكن للوكلاء نشر الرسائل والاشتراك في أنواع الرسائل التي تهمهم، مما يتيح الاتصال غير المتزامن وغير المحظور. هناك تطبيقان شائعان، من الأبسط إلى الأكثر تعقيدًا، هما <strong>Redis Pub/Sub</strong> وقوائم انتظار الرسائل مثل <strong>RabbitMQ</strong>. يعد Redis Pub/Sub خفيف الوزن ويقوم بتسليم الرسائل على الفور، لكنه لا يحفظها، لذلك سيفقدها جهاز الاستقبال غير المتصل بالإنترنت. يقوم RabbitMQ والأنظمة المشابهة بحفظ الرسائل على القرص، مع الاحتفاظ بها عندما يكون جهاز الاستقبال غير متصل بالإنترنت مؤقتًا. تستخدم الرسائل عادةً مظروف JSON يحتوي على معرف المرسل والوكيل المستهدف (أو علامة البث) ونوع الرسالة والحمولة.</p>
+<p><strong>Lingtai: مثيل منتج لنمط المدير.</strong> Lingtai هو منزل محلي قائم على الملفات للوكلاء ذوي العمر الطويل<sup id="fnref:lingtai"><a class="footnote-ref" href="#fn:lingtai">9</a></sup>. وترتبط أدوارها الثلاثة بشكل وثيق بالمفاهيم الواردة في هذا القسم. <strong>الوكيل الرئيسي</strong> هو المحور المستمر الذي يتفاعل معه المستخدم؛ إنها تحمل الخطة والذاكرة وتفرز الأدوار الأخرى، وتحتل منصب الوكيل المدير. <strong>البرنامج الخفي</strong> هو وكيل فرعي متوازٍ قصير العمر تم إنشاؤه لمهمة محدودة ومزعجة ويتم التخلص منه بعد ذلك؛ يتم الاحتفاظ فقط باستنتاجاتها. يؤدي هذا إلى إنتاج كل من مبدأ قيام الوكلاء الفرعيين بإرجاع ملخصات منظمة بدلاً من المسارات الكاملة ونمط التنسيق الموازي. <strong>الصورة الرمزية</strong> هي عضو مثابر ومتخصص في الفريق وله ذاكرته وصندوق بريده ومسؤولياته الخاصة، وهو مصمم للتخصصات التي تستحق الاحتفاظ بها عبر الجلسات.</p>
+<p>يعكس باقي تصميم Lingtai أيضًا الأقسام السابقة. تتواجد المعرفة في ملفات الذاكرة الخاصة الدائمة لكل وكيل، في حين أن المهارات هي قواعد تشغيل Markdown التي يتقاسمها جميع الوكلاء - وهي موارد النظام المضمنة الموضحة في "نظام الملفات من منظور الوكيل". عندما تمتلئ نافذة سياق الوكيل، فإنه <strong>يتحرك</strong>: فهو يكتب ملخصًا دقيقًا، ثم يبدأ بسياق جديد مع الاحتفاظ بهذا الملخص وذاكرته الدائمة، باتباع نهج ضغط السياق من الفصل 2. يمكن استبدال النموذج الأساسي دون تغيير الوكيل لأن هويته وذاكرته وقدراته كلها تعيش كملفات عادية في دليل المشروع. وبهذا المعنى، الوكيل هو ملفاته. يؤدي هذا إلى إنتاج أول صفين من الجدول 10-3: يتم تحويل كل من البرنامج والذاكرة إلى ملفات، بحيث يمكن إعادة بناء العملية في أي وقت.</p>
+<blockquote>
+<p><strong>التجربة 10-4 ★★★: الوكيل يتحدث على الهاتف أثناء استخدام الكمبيوتر</strong></p>
+<p><strong>المتطلبات الأساسية</strong>: تدمج هذه التجربة تقنيات استخدام الكمبيوتر والوكيل الصوتي من الفصل 9. ومن المستحسن أن يقوم القراء بإكمال تجارب الفصل 9 ذات الصلة أولاً.</p>
+<p>تحتاج مهام واقعية كثيرة إلى قدرات تعمل في الوقت نفسه لا واحدة بعد أخرى. فقد يتحدث المستخدم إلى المساعد بينما يبحث المساعد في المستندات ويدوّن الملاحظات. وإذا كُلّف وكيل واحد بإدارة الحوار الفوري والتعامل مع الحاسوب معًا، اضطر إلى التنقل المتواصل بين المهمتين وقد يقطع إحداهما لصالح الأخرى. أما النظام متعدد الوكلاء فيسند كل مهمة حساسة للزمن إلى وكيل متخصص، ثم ينسق بينهما برسائل غير متزامنة. يحتاج وكيل الهاتف إلى تعرف على الكلام وتوليده بزمن استجابة منخفض، في حين يحتاج وكيل الحاسوب إلى فهم بصري قوي وتخطيط جيد للأفعال.</p>
+<p><strong>السيناريو</strong>: يساعد وكيل الذكاء الاصطناعي المستخدم على ملء نموذج معقد لحجز رحلة طيران. ويجب أن تقوم بتشغيل صفحة ويب أثناء مطالبة المستخدم بالمعلومات الشخصية وتأكيدها (الاسم ورقم الهوية وتفضيلات الرحلة وما إلى ذلك) عبر الهاتف. يجب أن تظل كل من المحادثة الهاتفية والتفاعل عبر الويب مستجيبين، مما يجعل هذه حالة كلاسيكية يكافح فيها وكيل واحد ولكن نظام الوكيل المزدوج يسمح لكل وكيل بالتركيز على دور واحد.</p>
+<p><strong>بنية الوكيل المزدوج</strong>:</p>
+<p><strong>وكيل الهاتف</strong>: وكيل صوتي مصمم باستخدام ASR وLLM وTTS. فهو يفسر استجابات المستخدم باللغة الطبيعية، ويستخرج المعلومات الأساسية، ويرسل تلك المعلومات إلى وكيل الكمبيوتر من خلال نظام المراسلة. كما يتلقى أيضًا رسائل من وكيل الكمبيوتر (على سبيل المثال، "بحاجة إلى رقم معرف المستخدم"، "خطأ في تحميل الصفحة") ويستجيب بشكل مناسب للمستخدم.</p>
+<p><strong>وكيل الكمبيوتر</strong>: يستخدم إطار عمل أتمتة المتصفح مثل Anthropic Computer Use أو <code>browser-use</code> لتفسير الصفحة وتحديد حقول النموذج وملؤها وطلب المساعدة من وكيل الهاتف عند الضرورة.</p>
+<p><strong>آلية الاتصال</strong>: خياران:
+- <strong>حل بسيط</strong>: الاتصال من نقطة إلى نقطة عبر استدعاءات الأداة، على سبيل المثال، <code>send_message_to_computer_agent(message)</code> / <code>send_message_to_phone_agent(message)</code>
+- <strong>الحل الكامل</strong>: ناقل الرسائل + وكيل المدير، مع تنسيق رسالة موحد يشمل المرسل والمستقبل والنوع والمحتوى</p>
+<p><strong>آلية التعاون المتوازي</strong> (مشتركة بين تجربتي "الهاتف + الكمبيوتر" في هذا الفصل): يعمل الوكيلان في سلاسل أو عمليات منفصلة، ويحتفظ كل منهما بحلقة ReAct مستقلة. يتلقى وكيل الهاتف الصوت بشكل متكرر، وينسخه باستخدام ASR، وينشئ استجابة باستخدام LLM، ويجمع الاستجابة باستخدام TTS، ويقوم بتشغيلها، ويتحقق من الرسائل الواردة من وكيل الكمبيوتر. يلتقط وكيل الكمبيوتر لقطة شاشة بشكل متكرر، ويفسر الصفحة باستخدام نموذج لغة الرؤية، ويخطط لإجراء ما وينفذه، ويتحقق من الرسائل الواردة من وكيل الهاتف. يجب أن يعمل كلاهما بالتوازي: بينما يقوم وكيل الكمبيوتر بتحديد العناصر وإدخال النص، يجب أن يظل وكيل الهاتف متصلاً بالإنترنت ويتحدث مع المستخدم ("حسنًا، أنا أكتب اسمك... هل يمكنني أن أسأل ما هو رقم هويتك؟"). يمكن تضمين الرسائل من الوكيل الآخر في سياق الوكيل المتلقي باستخدام تسميات مثل <code>[FROM_COMPUTER_AGENT] Cannot find the 'Next' button; user confirmation might be needed</code> و<code>[FROM_PHONE_AGENT] User said name is 'Zhang San'; ID number is 123456</code>.</p>
+<p><strong>متطلبات التجربة</strong>:
+1. تنفيذ بنية وكيل مزدوج تعتمد على واجهات برمجة تطبيقات ASR/TTS وإطار تشغيل المتصفح
+2. تنفيذ آلية اتصال فعالة ثنائية الاتجاه
+3. ضمان التشغيل المتوازي حقًا، مع جمع المعلومات وملء النماذج في وقت واحد
+4. التعامل مع الاستثناءات وحالات الخطأ</p>
+<p><strong>التجربة 10-5 ★★★: وكلاء الهاتف والكمبيوتر المنظمون بشكل مستقل</strong></p>
+<p>في التجربة 10-4، تم تصميم التعاون الثنائي مسبقًا. تذهب هذه التجربة إلى أبعد من ذلك من خلال استكشاف <strong>تنسيق الوكيل المستقل</strong>: يقرر الوكيل بنفسه متى يطلق متعاونًا بدلاً من اتباع التدفق المخطط له من قبل الإنسان.</p>
+<p><strong>السيناريو</strong>: يطلب المستخدم "ساعدني في إكمال التسجيل على موقع الويب هذا"، مع تقديم عنوان URL ولكن دون تحديد المعلومات التي يجب ملؤها. يقوم وكيل المدير بتشغيل وكيل استخدام الكمبيوتر للوصول إلى موقع الويب وتحميل صفحة التسجيل.</p>
+<p>أثناء العملية، اكتشف وكيل استخدام الكمبيوتر أن نموذج التسجيل معقد للغاية، ويحتوي على العديد من الحقول المطلوبة: المعلومات الشخصية الأساسية (الاسم، الجنس، تاريخ الميلاد)، تفاصيل الاتصال (رقم الهاتف، البريد الإلكتروني، العنوان البريدي)، معلومات التحقق من الهوية (نوع المعرف، رقم المعرف)، إعدادات التفضيلات، وما إلى ذلك. بعد التحقق من سياقها، يدرك الوكيل أنه لا يملك هذه المعلومات - قال المستخدم فقط "ساعدني في التسجيل" دون تقديم أي بيانات محددة.</p>
+<p>سيطلب الوكيل التقليدي من المستخدم إدخال المعلومات في الدردشة. وهذا غير فعال بالنسبة للكميات الكبيرة من البيانات ويزيد من خطر حدوث أخطاء في التنسيق أو السهو. يجب أن يدرك الوكيل الأكثر ذكاءً أن <strong>هذا السيناريو أكثر ملاءمة لجمع المعلومات عبر الهاتف</strong>. تدعم المحادثة الهاتفية الأسئلة والتأكيدات المتسلسلة وتسهل توضيح الإجابات الغامضة.</p>
+<p>الفكرة الأهم أن القرار ليس مبرمجًا سلفًا، بل <strong>يتخذه الوكيل بنفسه</strong>. ينص موجّه وكيل استخدام الحاسوب على ما معناه: «عندما تحتاج إلى جمع قدر كبير من المعلومات المنظمة من المستخدم، ويمكن جمعها تدريجيًا بالحوار، فكّر في الاستعانة بوكيل الهاتف». ولهذا تتضمن مجموعة أدواته <code>initiate_phone_call_agent(purpose, required_info)</code>.</p>
+<p>يؤدي استدعاء الأداة إلى إنشاء وكيل هاتف بسياق مهمة واضح يحدد هدف ملء النموذج والمعلومات المطلوب جمعها ومتطلبات التنسيق لكل حقل.</p>
+<p>يدخل الوكيلان بعد ذلك إلى وضع التعاون غير المتزامن في الوقت الفعلي من التجربة 10-4. يسأل وكيل الهاتف سؤالاً واحدًا في كل مرة: "مرحبًا، أنا أساعدك في ملء نموذج التسجيل. أولاً، هل يمكنني الحصول على اسمك؟" بعد أن يستجيب المستخدم، يرسل على الفور <code>{"type": "info_collected", "field": "Name", "value": "Zhang San"}</code> إلى وكيل الكمبيوتر، الذي يحدد موقع الحقل المقابل ويملأه. يتابع وكيل الهاتف طرح السؤال التالي دون انتظار انتهاء عملية الكمبيوتر. يعمل سير العمل <strong>اسأل واحدًا واملأ واحدًا</strong> هذا على منع التأخيرات التشغيلية من حظر المحادثة. بعد جمع كافة المعلومات المطلوبة، يرسل وكيل الهاتف <code>{"type": "task_completed"}</code>، ويقوم وكيل الكمبيوتر بإرسال النموذج.</p>
+<p><strong>متطلبات التجربة</strong>:
+1. تنفيذ وكيل استخدام الكمبيوتر القادر على اتخاذ القرار بشكل مستقل بإطلاق وكيل الهاتف
+2. تنفيذ الاتصال ثنائي الاتجاه في الوقت الحقيقي والعمل الموازي الحقيقي
+3. تعامل مع الاستثناءات من خلال تقديم الملاحظات والسؤال مرة أخرى عندما تكون المعلومات بتنسيق غير صحيح
+4. تسجيل الطوابع الزمنية للرسائل المتبادلة وتسجيل القرارات الرئيسية للوكلاء</p>
+<p><img alt="الشكل 10-8: بنية الوكيل المزدوج للهاتف والكمبيوتر" src="../images/fig10-8.svg" /></p>
+<p><strong>التجربة 10-6 ★★★: وكيل يجمع المعلومات من مواقع ويب متعددة في وقت واحد</strong></p>
+<p><strong>المتطلبات الأساسية</strong>: من المستحسن أن يقوم القراء أولاً بمراجعة الآليات المعتمدة على الأحداث وآليات المقاطعة من الفصل الرابع.</p>
+<p>تستكشف هذه التجربة تطبيق التنفيذ المتوازي متعدد الوكلاء في سيناريوهات جمع المعلومات. على عكس التجارب 10-4 و10-5، التي تركز على التعاون بين وكيلين غير متجانسين، تركز هذه التجربة على <strong>البحث المتوازي بواسطة العديد من الوكلاء المتجانسين</strong> وكيفية تحقيق إكمال المهام بكفاءة وتحسين الموارد من خلال التنسيق المركزي.</p>
+<p><strong>المشكلة</strong>: في ضوء مواقع دليل أعضاء هيئة التدريس لعدة كليات داخل الجامعة، ابحث في كل موقع عن عضو هيئة تدريس محدد (على سبيل المثال، "Zhang Wei"). إذا تم العثور عليه، فأعد كلية الشخص ومنصبه ومجال بحثه والمعلومات الأخرى ذات الصلة.</p>
+<p><strong>التحديات الأساسية</strong>:</p>
+<p><strong>1. التشغيل المتوازي</strong>: يقوم وكيل المدير بشكل ديناميكي بإنشاء 10 مثيلات لوكيل استخدام الحاسوب، واحدة لكل موقع ويب للكلية. يجب أن يكون كل مثيل عبارة عن عملية أو سلسلة رسائل مستقلة مع جلسة متصفح خاصة به، وقادرة على التشغيل دون حظر الآخرين. تتضمن المعلمات التي تم تمريرها عند الإطلاق عنوان URL لموقع الويب المستهدف، واسم الكلية المطلوب البحث عنه، ومعرف المهمة لتوجيه الرسائل.</p>
+<p><strong>2. المراقبة في الوقت الفعلي</strong>: يرسل كل وكيل بشكل دوري تحديثات الحالة أثناء التنفيذ ("جاري تحميل موقع الويب"، "تحليل دليل أعضاء هيئة التدريس"، "لم يتم العثور على الهدف؛ اكتملت المهمة"، "تم العثور على تطابق؛ التفاصيل أدناه"). يتلقى وكيل المدير هذه التحديثات من خلال ناقل الرسائل، ويحتفظ بجدول حالة المهمة، ويتتبع في الوقت الفعلي أي الوكلاء قيد التشغيل أو أكملوا أو هم في حالة خطأ.</p>
+<p><strong>3. الإنهاء المتتالي</strong>: لنفترض أن الوكيل المعين في كلية علوم الكمبيوتر عثر على عضو هيئة التدريس. فهو يرسل <code>{"type": "target_found", "agent_id": "agent_3", "data": {...}}</code> إلى وكيل المدير، والذي يرسل على الفور <code>{"type": "terminate", "reason": "target_found_by_agent_3"}</code> إلى كل وكيل آخر لا يزال قيد التشغيل. يجب أن يكون كل وكيل قادرًا على تلقي هذه الرسالة في أي وقت، والتوقف بأمان، وتحرير موارده، والإقرار بالإنهاء. ينتظر وكيل المدير كافة الإقرارات، أو حتى انتهاء المهلة، قبل تجميع النتائج. يجب أن يتعامل التنفيذ أيضًا مع ظروف السباق.</p>
+<p><strong>ملحق المفهوم: ما هي حالة السباق؟</strong> لنفترض أن الوكيل (أ) والوكيل (ب) عثرا على عضو هيئة التدريس المستهدف خلال نفس المللي ثانية، وأبلغ كلاهما "لقد وجدته!" إلى وكيل المدير. إذا تعامل المدير مع هذا بشكل سيئ، فقد يبدأ في تجميع النتائج بعد تلقي تقرير الوكيل "أ"، ثم يبدأ التجميع الثاني عند وصول تقرير الوكيل "ب". قد يؤدي هذا إلى نتائج مكررة أو حالات متناقضة. الحل المعتاد هو القفل: يقوم التقرير الأول بتأمين الحالة، ويتم التعرف على التقارير اللاحقة كتقارير مكررة ويتم تجاهلها.</p>
+<p><strong>4. معالجة الفشل</strong>: يمكن أن تحدث استثناءات مختلفة أثناء التشغيل: قد يتعذر الوصول إلى موقع الكلية على الويب بسبب خطأ في الشبكة أو انقطاع الخدمة، أو قد تمنع بنيته الوكيل من تحليله بشكل صحيح. يمكن لجميع الوكلاء أيضًا إكمال عمليات البحث دون العثور على الهدف. يجب على وكيل المدير تعيين مهلة لكل وكيل (على سبيل المثال، دقيقتين)، والتعامل مع المهلة على أنها فشل، وعزل الأخطاء حتى لا تقاطع الوكلاء الآخرين. بعد انتهاء جميع الوكلاء، قم بإرجاع المعلومات إذا عثر أي وكيل على الهدف؛ بخلاف ذلك، قم بالإبلاغ عن "لم يتم العثور على عضو هيئة التدريس المستهدف" ولخص أي إخفاقات.</p>
+<p><strong>متطلبات التجربة</strong>:
+1. تنفيذ وكيل مدير قادر على إطلاق العديد من الوكلاء المتوازيين ديناميكيًا
+2. تنفيذ وكيل استخدام الكمبيوتر بناءً على مشاريع مفتوحة المصدر مثل استخدام المتصفح
+3. قم بتنفيذ ناقل رسائل يدعم الاتصال ثنائي الاتجاه بين وكيل المدير والوكلاء الفرعيين المتعددين
+4. قم بتنفيذ آلية إنهاء متتالية عند النجاح، مما يضمن توقف جميع الوكلاء الآخرين بسرعة بمجرد العثور على الهدف
+5. التعامل مع سيناريوهات الاستثناء المتنوعة (فشل الوصول إلى موقع الويب، أخطاء التحليل، عدم العثور على الهدف بواسطة أي وكيل)
+6. قياس ومقارنة أوقات التنفيذ التسلسلية والمتوازية لتحديد مدى سرعة الموازاة</p>
+<p><img alt="الشكل 10-9: بنية تجريف الويب المتوازية" src="../images/fig10-9.svg" /></p>
+</blockquote>
+<h3 id="_13">النمط اللامركزي: التسليم من نظير إلى نظير<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<p><img alt="الشكل 10-10: نمط سلسلة التسليم" src="../images/fig10-10.svg" /></p>
+<p>يوفر نمط المدير هيكل تحكم واضح ورؤية عالمية، ولكن النمط اللامركزي ليس مجرد علاج لأوجه القصور فيه. الدافع وراء إزالة وحدة التحكم المركزية هو في المقام الأول محاكاة الطريقة التي ينظم بها المجتمع البشري نفسه: السماح لأدوار النظراء المتعددة بتقسيم العمل والتحقق من بعضها البعض، حيث يقوم كل منهم بفحص المشكلة من منظوره المهني الخاص ويقرر بنفسه من سيتحدث إليه، بدلاً من توجيه كل حكم إلى مدير واحد. يُطلق حقل الخدمات الصغيرة على هذا الزوج من الاختيارات <strong>التنسيق</strong> و<strong>تصميم الرقصات</strong>: الأول لديه قائد يقوم بجدولة كل شيء مركزيًا، والأخير يعتمد على استشعار كل راقص لنفسه عند الدخول.</p>
+<p>يأخذ النمط اللامركزي نهجًا معماريًا مختلفًا: <strong>لا توجد وحدة تحكم مركزية واحدة؛ يتعاون الوكلاء كأقران</strong>. يقرر كل وكيل، بناءً على حكمه المهني الخاص، بنفسه متى يتواصل مع وكيل آخر - لتسليم المهمة ("لقد تم الجزء الخاص بي، إليك")، أو طلب التعليقات ("هل هذه الخطة مجدية من الناحية الفنية؟")، أو الإبلاغ عن مشكلة ("المتطلبات التي قدمتها لي متناقضة؛ نحتاج إلى التحدث عن هذا الأمر مرة أخرى").</p>
+<p>الحالات التالية تتطور من اللامركزية الجزئية إلى اللامركزية الكاملة. يستخدم MetaGPT خط أنابيب ثابتًا ويحقق اللامركزية في الاتصال فقط. يجمع AutoGen بين سجل المحادثات المشترك والجدولة المركزية. يقوم OpenAI Swarm بتوزيع قرارات التحكم في التدفق مباشرة بين الوكلاء الأقران.</p>
+<p><strong>ما الذي يتم تمريره أثناء عملية التسليم دون سياق مشترك؟</strong> يقارن الشكل 10-10 بين نوعين من عمليات التسليم. في التجربة 10-2، يستخدم <code>transfer_to_agent</code> سياقًا مشتركًا، وبالتالي يرث الدور الجديد السجل الكامل تلقائيًا. في نمط سلسلة التسليم، لا تتم مشاركة السياق، لذلك يجب على الوكيل المرسل تجميع المعلومات التي يحتاجها الوكيل المتلقي بشكل صريح.</p>
+<p>من الناحية العملية، تحتوي "حزمة التسليم" الفعالة عادةً على ثلاثة أجزاء: <strong>وصف المهمة</strong> (ما يجب على المتلقي القيام به ومعايير القبول)، <strong>الحقائق والقيود المؤكدة</strong> (تفضيلات المستخدم، وقواعد العمل، والقرارات المتخذة في المراحل السابقة)، و <strong>مراجع إلى العناصر المنظمة</strong> (مسارات الملفات بدلاً من محتويات الملف، التي يقرأها المتلقي حسب الحاجة). تستبعد الحزمة عمدًا المسار الكامل - عملية التجربة والخطأ للوكيل المرسل، والعمل الوسيط، والمحاولات الفاشلة - والتي تكون في الغالب ضجيجًا للمستقبل.</p>
+<p>هذا هو الفرق الأساسي بين نوعي التسليم. تحتفظ عملية التسليم ذات السياق المشترك بالسجل الكامل، مع الحفاظ على جميع المعلومات مع توسيع السياق بشكل مستمر. تمرر عملية التسليم بدون سياق مشترك حزمة منقحة، وتقبل فقدان بعض المعلومات حتى يتمكن كل وكيل من العمل في سياق نظيف ومركّز. لا يحتاج أي وكيل إلى فهم إجراءات عمل وكيل آخر؛ فهو يحتاج فقط إلى تنسيق ومعنى حزمة التسليم وعناصر الإخراج الخاصة بها. يعتمد هذا التعاون القائم على الواجهة على مبدأ هندسة البرمجيات للتصميم بموجب العقد.</p>
+<p><strong>MetaGPT: محاكاة شركة برمجيات تعتمد على SOP (حالة انتقالية من الاتصال المباشر إلى الاتصال المنفصل).</strong></p>
+<p><img alt="الشكل 10-11: شبكة تعاون MetaGPT متعددة الوكلاء" src="../images/fig10-11.svg" /></p>
+<p>تتمثل الرؤية الأساسية لـ MetaGPT في أن <strong>إجراءات التشغيل القياسية</strong> (SOPs) التي تم تطويرها وتحسينها بواسطة شركات البرمجيات يمكن أن تكون بمثابة بروتوكولات تعاون للأنظمة متعددة الوكلاء. يسمح ترميز إجراءات التشغيل المعيارية (SOPs) هذه لكل دور، مثل العامل المتخصص على خط التجميع، بإنتاج مخرجات موحدة، ومن الطبيعي أن تصبح تلك التسليمات واجهات الاتصال بين الأدوار.</p>
+<p>في MetaGPT، تعمل الأدوار بتسلسل ثابت (مدير المنتج → المهندس المعماري → مدير المشروع → المهندس → ضمان الجودة)، مع إخراج كل دور تسليمات منظمة:</p>
+<ul>
+<li><strong>وكيل مدير المنتج</strong>: يتلقى أوصاف المتطلبات، ويقوم بإنشاء PRD منظم (وثيقة متطلبات المنتج، بما في ذلك قائمة الميزات، وقصص المستخدم، ومعايير القبول، وترتيب الأولويات)</li>
+<li><strong>الوكيل المعماري</strong>: يقرأ PRD، ويتخذ القرارات المعمارية (اختيار مجموعة التكنولوجيا، وتقسيم الوحدات، وتعريف الواجهة، وتصميم نموذج البيانات)، وإخراج مستند التصميم</li>
+<li><strong>وكيل مدير المشروع</strong>: يقرأ التصميم المعماري، ويقسم النظام إلى قوائم مهام محددة وتعيينات على مستوى الملف، ويوضح ترتيب تبعية الوحدات، ثم يعين المهام للمهندسين</li>
+<li><strong>الوكلاء الهندسيون</strong>: اقرأ مستند التصميم، وقم بتنفيذ الوحدات المخصصة لهم، وإنتاج التعليمات البرمجية. يمكن أن تعمل مثيلات متعددة بالتوازي.</li>
+<li><strong>وكيل مهندس ضمان الجودة</strong>: يقرأ الكود و PRD، وينشئ حالات اختبار، وينفذ الاختبارات، ويسجل الأخطاء، ويخرج تقرير اختبار</li>
+</ul>
+<p>تكمن مساهمة MetaGPT الحقيقية في الاتصالات اللامركزية في آلية تمرير المعلومات الخاصة بها: <strong>تجمع الرسائل المشتركة + الاشتراك حسب الدور</strong>. ينشر كل دور رسائل منظمة إلى مجموعة مرئية لجميع الأدوار. واستنادًا إلى تكوين الاشتراك الخاص بها، تستهلك الأدوار الأخرى فقط الرسائل ذات الصلة بمسؤولياتها بدلاً من التواصل من نقطة إلى نقطة. لا يحتاج الناشر إلى معرفة من سيستهلك مخرجاته. لإضافة دور، أعلن عن أنواع الرسائل التي يشترك فيها؛ الأدوار الحالية لا تحتاج إلى التغيير. وهذا يخلق فصلًا حقيقيًا: على سبيل المثال، لا يتطلب استبدال مدير المنتج بنموذج أكثر قوة أي تغييرات على الوكلاء الآخرين، طالما أن جهاز PRD الخاص به لا يزال مطابقًا للمواصفات.</p>
+<p>يحدث التحسين التكراري لـ MetaGPT بشكل أساسي في المرحلة الهندسية من خلال <strong>الملاحظات القابلة للتنفيذ</strong>. يقوم المهندس بتشغيل التعليمات البرمجية والاختبارات الخاصة به، ويستخدم الأخطاء والإخفاقات لتوجيه حلقة تصحيح الأخطاء، ويستمر حتى تنجح الاختبارات. تكون التصحيحات مدفوعة بنتائج التنفيذ الحتمية وليس رأي وكيل آخر.</p>
+<p>للتوضيح، MetaGPT <strong>ليس</strong> لامركزيًا من حيث <strong>تدفق التحكم</strong> — يتم تحديد تسلسل الأدوار مسبقًا بواسطة SOP، مما يجعل النظام العام أقرب إلى خط التجميع (سير العمل بلغة الفصل 1). تمت مناقشته في هذا القسم لأن آلية اتصال مجموعة الرسائل بالإضافة إلى الاشتراك توضح عنصر التصميم الأكثر أهمية للنظام اللامركزي: الفصل. أما بالنسبة للتعليقات الديناميكية متعددة الاتجاهات مثل "اتصال ضمان الجودة مباشرة بمدير المنتج لتوضيح المتطلبات" أو "المهندس يناقش الحلول البديلة مع المهندس المعماري"، فهذه امتدادات طبيعية متصورة لهذه البنية ولكن لم يتم تنفيذها في MetaGPT الأصلي.</p>
+<p><strong>الدردشة الجماعية لـ AutoGen: سجل المحادثات المشترك + الجدولة المركزية.</strong> تتيح الدردشة الجماعية لـ AutoGen للعديد من الوكلاء المشاركة في نفس المحادثة. في كل جولة، يقرر "محدد المتحدث" الوكيل الذي سيتحدث بعد ذلك. يمكن للمحدد اتباع قاعدة دائرية بسيطة أو استخدام LLM لتحديد الوكيل الأكثر ملاءمة للرد بناءً على المحادثة حتى الآن. تكون مساهمة كل وكيل مرئية لجميع المشاركين.</p>
+<p>هذا ليس لامركزيًا تمامًا من حيث التحكم في التدفق: يقوم <code>GroupChatManager</code> باختيار مكبر الصوت مركزيًا، ويشكل تحديد دوره قرارًا للتحكم في التدفق. وبالتالي فإن التصنيف الأكثر دقة هو <strong>سجل المحادثات المشترك + الجدولة المركزية</strong>. يرى جميع الوكلاء نفس السجل العام، ولكن يحتفظ كل منهم بموجّه نظام مستقل ومجموعة أدوات، بينما يحتفظ المحدد بسلطة الجدولة.</p>
+<p>يناسب هذا النموذج المهام التي تتطلب مناقشة من وجهات نظر متعددة والتي لا يمكن تحديد ترتيب التحدث بها مسبقًا، مثل مراجعة الخطة أو التحليل عبر المجالات. ومع ذلك، يمكن للمحادثة أن تنحرف: قد يستمر كل وكيل في التحدث دون أن تحرز المجموعة تقدمًا، وهو شكل من أشكال القفل المباشر. ولذلك فإن شروط الإنهاء الواضحة ضرورية. بالنسبة للأبعاد المستخدمة في هذا الفصل، يعد AutoGen مزيجًا مختلطًا: الجدولة مركزية، بينما يتم مشاركة السياق جزئيًا. يوضح هذا أن الطوبولوجيا ومشاركة السياق هما أبعاد تصميم مستقلة.</p>
+<p><strong>OpenAI Swarm وAgents SDK: شبكة تسليم المهام.</strong> في المقابل، يمثل Swarm من OpenAI وخليفته Agents SDK لامركزية نظير إلى نظير في تدفق التحكم. يتمتع كل وكيل بالعديد من خيارات التسليم ويمكنه نقل التحكم إلى وكيل آخر في الشبكة في أي وقت. يقوم وكيل فرز خدمة العملاء الذي يحدد مشكلة تتضمن استرداد الأموال بتسليم المهمة إلى وكيل استرداد الأموال؛ إذا اكتشف هذا الوكيل خطأً فنيًا، فيمكنه تسليم المهمة إلى وكيل الدعم الفني. لا توجد جدولة مركزية. يُمرر التحكم مثل العصا بين الوكلاء الأقران، ويتخذ كل وكيل قرارات التوجيه الخاصة به. هذا هو التنفيذ الهندسي لنمط سلسلة التسليم في الشكل 10-10. ويتمثل الخطر في الدورات: يسلّم A المهمة إلى B، ثم يعيدها B إلى A، فتظل تدور في حلقة. ويلزم حارس، مثل حد أقصى لعدد عمليات التسليم، لكسر هذه الحلقة.</p>
+<blockquote>
+<p><strong>ملاحظة مصطلحية: Agent Swarm.</strong> منذ عام 2025، أصبح مصطلح «Agent Swarm» (سرب الوكلاء) كلمة رائجة لدى مختلف المورّدين، غير أنه لا يقابل بنية واحدة. فالاستخدام الشائع في الصناعة ينقسم إلى فئتين تقريبًا: أولاهما شبكات التسليم على نمط OpenAI Swarm (وكذلك مكتبة swarm في LangGraph وتنسيق التسليم في Microsoft Agent Framework)، وهي النمط اللامركزي الذي يناقشه هذا القسم؛ وثانيتهما أن «Agent Swarm» في بعض المنتجات التجارية الرائدة هو نمط مدير واسع النطاق: فقد دشّن Kimi K2.5 «Agent Swarm» الذي ينشئ فيه الوكيل الرئيسي ديناميكيًا مئات الوكلاء الفرعيين لتنفيذ المهام بالتوازي، مع تدريب قرارات التنسيق — «متى تُقسَّم المهمة وإلى كم جزء» — مباشرةً داخل النموذج عبر التعلم المعزز بالوكلاء المتوازين، وقد واصل Kimi K3 هذا النهج بجعله فئة نماذج مستقلة وفتح مصدر صندوق اختبار تدريب الوكلاء المتوازين المرافق AgentEnv<sup id="fnref:ch10-kimi-swarm"><a class="footnote-ref" href="#fn:ch10-kimi-swarm">10</a></sup>؛ كما ينتمي كل من نظام الأبحاث متعدد الوكلاء لدى Anthropic وWide Research من Manus إلى الطوبولوجيا النجمية من نوع «المنسّق-العامل». ونأمل أن يتمكّن القارئ بعد إتمام هذا الكتاب من النفاذ إلى جوهر المفاهيم الكامنة وراء المصطلحات، وتحليل الأنظمة متعددة الوكلاء انطلاقًا من المبادئ الأولى.</p>
+</blockquote>
+<h3 id="a2a">التعاون بين المنظمات: بروتوكول A2A<a class="headerlink" href="#a2a" title="Permanent link">&para;</a></h3>
+<p>تفترض جميع الأنظمة المذكورة أعلاه أن جميع الوكلاء يتم تطويرهم بواسطة نفس الفريق ويتم تشغيلهم ضمن نفس النظام. في هذه الحالة، تكون آليات الاتصال الثلاث - تمرير المعلمة، والملفات المشتركة، وحافلة الرسائل - كافية. ومع ذلك، عندما يتجاوز التعاون الحدود التنظيمية - يحتاج وكيلك إلى الاتصال بوكيل شركة أخرى - يلزم وجود بروتوكول موحد لقابلية التشغيل البيني. اتبع عالم العمليات نفس التطور: يحكم IPC جهازًا واحدًا فقط، وبمجرد تجاوز حدود الجهاز، يجب عليك الاعتماد على البروتوكولات القياسية مثل TCP/IP واكتشاف الخدمة مثل DNS. تعتبر A2A بالنسبة للوكلاء بمثابة بروتوكولات الشبكة بالنسبة للعمليات. تم تصميم بروتوكول <strong>A2A</strong> (Agent2Agent) الذي أصدرته Google في عام 2025 (تم التبرع به لاحقًا لمؤسسة Linux للإشراف) خصيصًا لهذا الغرض. لديها ثلاثة عناصر أساسية:</p>
+<ul>
+<li><strong>بطاقة الوكيل</strong>: وثيقة بيانات وصفية تصف قدرات الوكيل (منشورة على عنوان عام محدد)، معلنة ما يمكن للوكيل فعله، وطرق الإدخال/الإخراج التي يدعمها، وكيفية المصادقة معها - بشكل أساسي "بطاقة العمل" الخاصة بالوكيل والتي تحل مشكلة اكتشاف القدرات عبر المؤسسات.</li>
+<li><strong>إدارة دورة حياة المهام</strong>: نماذج A2A لوحدات التعاون كمهام ذات حالة محددة (مرسلة، قيد التقدم، مدخلات احتياجات، مكتملة، فاشلة)، تدعم أصلاً المهام طويلة الأمد وتحديثات التقدم المتدفق.</li>
+<li><strong>التعاون المبهم</strong>: يتبادل الوكلاء المهام والعناصر فقط، دون الكشف عن الموجّهات الداخلية أو عمليات الاستدلال أو تطبيقات الأدوات - بما يتوافق مع مبدأ هذا الفصل المتمثل في "عدم مشاركة السياق" وخاصية الأمان الضرورية للتعاون عبر المؤسسات.</li>
+</ul>
+<p>يتيح MCP إمكانية التشغيل البيني بين الوكلاء والأدوات، بينما يتيح A2A إمكانية التشغيل البيني بين الوكلاء. A2A لا يحل محل آليات الاتصال الثلاثة المقدمة في هذا الفصل؛ فهو يوحّد التواصل عبر حدود الثقة. قد يكون ناقل الرسائل كافيًا داخل مؤسسة واحدة، ولكن عندما لا تثق الأطراف المتعاونة ببعضها البعض ولا يمكنها فحص تطبيقات بعضها البعض، فإنها تحتاج إلى بروتوكول عام مثل A2A.</p>
+<h2 id="_14">طرق الفشل في التعاون متعدد الوكلاء<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h2>
+<p>تقدم الأنظمة متعددة الوكلاء أوضاع فشل جديدة غير موجودة في الأنظمة ذات الوكيل الفردي. ورقة 2025 "لماذا تفشل أنظمة LLM متعددة العوامل؟" اقترح تصنيف وضع الفشل MAST من خلال دراسة منهجية. قام الباحثون بجمع آثار التنفيذ من سبعة أطر عمل متعددة الوكلاء، بما في ذلك MetaGPT وChatDev وAG2 وMagentic-One. قام المفسرون البشريون بشكل مستقل بتحليل ما يقرب من 150 أثرًا، وحققوا اتفاقًا عاليًا على أحكامهم (كابا كوهين = 0.88). حددت الدراسة <strong>14 وضعًا فريدًا للفشل</strong> في ثلاث مجموعات:</p>
+<ul>
+<li><strong>عيوب تصميم النظام</strong>: مشكلات على مستوى البنية مثل تعريفات الواجهة غير الواضحة بين الوكلاء، والأدوار والمسؤوليات المتداخلة، وتكوينات الأداة غير الصحيحة.</li>
+<li><strong>فشل المحاذاة بين الوكلاء</strong>: لدى الوكلاء المتعددين فهم غير متناسق لأهداف المهمة، أو يتم تفسير المعلومات المرسلة بشكل خاطئ من قبل الوكلاء النهائيين، أو أن عمليات الوكلاء المتعددين تتعارض منطقيًا مع بعضها البعض.</li>
+<li><strong>التحقق من المهمة المفقودة</strong>: يفتقر النظام إلى آليات فعالة لتأكيد ما إذا كانت المهمة مكتملة بالفعل أم لا، فقد يدعي الوكيل أنها "مكتملة" ولكن النتيجة الفعلية لا تفي بالمتطلبات.</li>
+</ul>
+<p>وحتى الإصلاحات البسيطة أنتجت مكاسب محدودة؛ على سبيل المثال، تحسن أداء ChatDev المُقاس بنسبة 15.6% فقط. وخلص الباحثون إلى أن هذه ليست مجرد أخطاء هندسية ولكنها <strong>عيوب تصميمية أساسية</strong> للبنى الحالية متعددة الوكلاء: تصحيح مكون واحد ليس كافيًا؛ ويجب إعادة النظر في تصميم النظام نفسه.</p>
+<p>تميز نظرية التسامح مع الأخطاء الموزعة بين نوعين من الأخطاء: <strong>أخطاء الأعطال</strong>، حيث يتوقف أحد المكونات عن العمل، و<strong>الأخطاء البيزنطية</strong>، التي يستمر فيها المكون في العمل ولكنه يقدم معلومات غير صحيحة. تم تصميم الأنظمة التقليدية بشكل أساسي لمقاومة الأعطال. ومع ذلك، غالبًا ما تكون إخفاقات الوكيل بيزنطية: نادرًا ما يتوقف الوكيل تمامًا ويستمر بدلاً من ذلك في تقديم استنتاجات معقولة ولكنها غير صحيحة، دون الإعلان عن الخطأ. وهذا ما يفسر لماذا يؤدي تصحيح مكون واحد إلى القليل جدًا: لن يكشف أي مكون بالضرورة عن المشكلة، لذلك يجب على النظام اكتشافها من خلال التكرار المستقل. يعد التحقق المتبادل وتصويت الأغلبية، والذي يتكرر خلال هذا الفصل، من الأساليب الكلاسيكية للتسامح مع الخطأ البيزنطي. تعتبر عمليات التحقق الحتمية مثل الاختبارات والمترجمين واستعلامات قاعدة البيانات ذات قيمة خاصة لأنها توفر أدلة مستقلة لا تعتمد على حكم نموذج آخر.</p>
+<p>يركز القسم التالي على نمطين شائعين وشديدي الضرر في الأنظمة الفعلية: تعارضات التزامن في أنظمة الملفات المشتركة، والتضخم المتسلسل للأخطاء. ننظر إليهما من زاوية هندسية، أي تزامن الملفات وانتقال المعلومة الخاطئة بين الوكلاء. وبذلك يكمّلان تصنيف MAST، الذي يركز على فشل التعاون القائم على الحوار، ولا يعيدان صياغة أنماطه الأربعة عشر.</p>
+<h3 id="_15">وضع الفشل الأول: تعارضات التزامن في أنظمة الملفات المشتركة<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<p>ما إن نختَر الاتصال عبر ذاكرة مشتركة حتى تظهر احتمالات تعارض التزامن. وليست المشكلة جديدة؛ فقد عالجتها أنظمة التشغيل وقواعد البيانات منذ عقود، ويمكن الإفادة من حلولها المعروفة. وتنقسم هذه التعارضات إلى نوعين:</p>
+<p><strong>التعارضات البسيطة (تعارضات الكتابة على مستوى الملف)</strong>: يقوم وكيلان بتعديل نفس الملف في وقت واحد، ويقوم الوكيل الذي يكتب لاحقًا بالكتابة فوق التغييرات التي أجراها الكاتب السابق. هذه هي مشكلة <strong>التحديث المفقود</strong> الكلاسيكية في مجال قاعدة البيانات — وقد تم تصميم آلية الكشف عن تعارض الدمج في Git بدقة لالتقاط مثل هذه عمليات الكتابة الفوقية.</p>
+<p><strong>التعارضات الدلالية، أو تعارض الاتساق المنطقي:</strong> لا يظهر خلاف مباشر في الملفات، لكن أعمال الوكلاء تتناقض في معناها، وهذا النوع أخفى وأخطر. لنفترض أن الوكيل «أ» يعيد ترقيم صور الكتاب، بينما يعدّل الوكيل «ب» نص فصل ويشير إلى الصور بأرقامها القديمة. قد يعمل الاثنان في ملفات مختلفة فلا يظهر تعارض عند الدمج، لكن مراجع الوكيل «ب» تصبح خاطئة فور اكتمال إعادة الترقيم.</p>
+<p><strong>الحل: آلية القفل المتفائلة</strong>. هذه إستراتيجية شائعة للتحكم في التزامن في قواعد البيانات. لفهم ذلك، فكر في مثال يومي: تقوم أنت وزميلك بفتح نفس المستند عبر الإنترنت في وقت واحد. سيؤدي "القفل المتشائم" إلى قفل المستند عند فتحه، وسيرى زميلك "الملف مغلقًا" عند محاولة التحرير. يعد هذا آمنًا ولكنه غير فعال لأنك ربما تشاهد المستند فقط. "القفل المتفائل" أكثر مرونة: يمكن للجميع فتح المستند وتحريره بحرية، ولكن عند الحفظ، يسأل النظام: "هل قام أي شخص آخر بتعديل المستند منذ أن فتحته؟" إذا كان الأمر كذلك، فإنه يطالبك بالتحديث وإعادة المحاولة.</p>
+<p>التنفيذ المحدد هو: يحتفظ كل ملف برقم الإصدار (أو الطابع الزمني للتعديل الأخير). عندما يقرأ الوكيل ملفًا، فإنه يسجل رقم الإصدار الحالي؛ عند الكتابة، يتحقق مما إذا كان رقم الإصدار لا يزال كما هو عند قراءته. إذا تم تعديل الملف بواسطة وكيل آخر في هذه الأثناء، فستفشل عملية الكتابة، وسيضطر الوكيل إلى إعادة قراءة الإصدار الأحدث وإعادة تنفيذ العملية بناءً على هذا الإصدار. تكلفة هذه الآلية هي إعادة المحاولة من حين لآخر، ولكنها تضمن اتساق البيانات - لا يتخذ الوكيل أبدًا قرارات بناءً على حالة الملف القديمة.</p>
+<p>لاحظ أن القفل المتفائل يمكنه فقط منع <strong>تعارضات الكتابة على نفس الملف</strong>. بالنسبة إلى <strong>التعارضات الدلالية عبر الملفات</strong> المذكورة أعلاه (على سبيل المثال، أرقام الصور المشار إليها في أماكن متعددة)، يلزم التنسيق على مستوى أعلى أو التحقق من صحة الدلالات، مثل تجنب التعديل المتوازي للملفات التابعة أو تشغيل فحص التناسق العام بعد الكتابة.</p>
+<p>على سبيل المثال، يقرأ الوكيل A <code>config.json</code> (الإصدار=3) عند t=0. يعدّل الوكيل B بتعديل نفس الملف عند t=1، وتغيير الإصدار إلى 4. عندما يحاول الوكيل A الكتابة عند t=2، يجد أن الإصدار لم يعد 3، لذلك يتم رفض الكتابة. يقوم الوكيل "أ" بعد ذلك بإعادة قراءة الإصدار 4، وإعادة بناء التغيير الذي تم إجراؤه وفقًا لأحدث محتوى، ويحاول الكتابة مرة أخرى.</p>
+<p>حين يعدّل وكلاء برمجة عدة قاعدة الشفرة نفسها بالتوازي، لا تقفل الممارسة الشائعة نسخة عمل واحدة في وجه الجميع، بل تعتمد <strong>عزل نسخ العمل</strong>. يحصل كل وكيل على فرع Git أو شجرة عمل مستقلة، فيعدّل نسخته من دون إرباك الآخرين، وتؤجل التعارضات إلى مرحلة الدمج حيث يحلها شخص أو إجراء مخصص. وتتبع آلية النسخ عند الكتابة، التي تستخدمها أنظمة التشغيل عند تفرّع عملية، الفكرة نفسها. وهذا تطبيق لمبدأ «العزل بدل الضغط» من الفصل الثاني: اعزل الحالة القابلة للتغيير منذ البداية، ثم ادفع كلفة التنسيق مرة واحدة عند نقطة دمج واضحة، بدل مشاركة الحالة ومعالجة النزاعات باستمرار.</p>
+<h3 id="_16">وضع الفشل الثاني: التضخيم المتتالي للأخطاء<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<p>تحدث تعارضات التزامن على مستوى الملفات، ويمكن معالجتها بأدوات معروفة من أنظمة التشغيل وقواعد البيانات. أما الأخطاء المتسلسلة فتظهر حين يتوقف تشبيه الوكيل بالعملية عن الصمود: فالعملية تنقل البايتات كما هي، بينما ينقل الوكيل المعنى، وقد تشوّه كل إعادة صياغة جزءًا منه. ومع تتابع التفاعلات بين وكلاء عدة، قد يلتقط كل وكيل خطأ سابقه ويضخمه، كما في لعبة «الهاتف المكسور» التي تزداد فيها الرسالة تحريفًا كلما انتقلت.</p>
+<p>النظر في سيناريو محدد. لنفترض أن نظام الترجمة يستخدم نمط المدير (الهندسة المعمارية من التجربة 10-3)، حيث يقوم المدير بتعيين فصول كتاب تقني لوكلاء ترجمة متعددين:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>وكيل المصطلحات: يترجم reasoning إلى «推理»، مع أن هذه الكلمة الصينية أشيع في معنى inference، فتخلق التباسًا
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>        ↓ يكتب القرار في glossary.json
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>وكيل الترجمة أ: يترجم الفصل الثاني، ويقرأ المسرد، فيترجم reasoning tokens إلى «推理 token»
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>وكيل الترجمة ب: يترجم الفصل السابع، ويترجم inference latency أيضًا إلى «推理 latency»
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        ↓ يكتب كل منهما ترجمته في ملف الفصل
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>وكيل التدقيق: يرى أن الكتاب يستخدم «推理» باتساق، فيحكم بأن المصطلحات متسقة والترجمة صحيحة ✗
+</code></pre></div>
+<p>أين الخطأ؟ <strong>التفكير</strong> (Reasoning)، أي عملية معالجة النموذج للمسألة، و<strong>الاستدلال</strong> (Inference)، أي تشغيل المرور الأمامي للنموذج عند النشر، مفهومان مختلفان. لكن وكيل المصطلحات ترجم Reasoning أولًا إلى <code>推理</code>، فاختار الوكلاء اللاحقون الكلمة نفسها حين صادفوا Inference. وهكذا اندمج مفهومان في ترجمة واحدة وتعذر على القارئ التمييز بينهما. والصواب في الصينية هو <code>思考</code> للتفكير و<code>推理</code> للاستدلال. غير أن وكيل التدقيق رأى استعمال <code>推理</code> «متسقًا» في الكتاب كله، فعد هذا الخطأ دليلًا على جودة الترجمة.</p>
+<p>بعد انتقال الخطأ عبر ثلاثة وكلاء، بدا أكثر مصداقية لمجرد تطبيقه باتساق. ولهذا يميز الكتاب بين Reasoning وInference بمصطلحي <strong>التفكير</strong> و<strong>الاستدلال</strong>، كما توضح المقدمة. ولا يلزم أن يكون الخطأ الأول هلوسة؛ فقد يكون قرارًا اصطلاحيًا سيئًا فحسب، ثم يعززه الوكلاء اللاحقون. وإذا كان منشؤه هلوسة فعلية، كأن «يتذكر» وكيل الترجمة قاعدة غير موجودة بسبب تشتت الانتباه، بقيت آلية التضخيم نفسها وصارت العواقب أخطر. ويكون نمط المدير معرضًا لذلك بوجه خاص، لأن ملخصًا خاطئًا من وكيل فرعي قد يصبح أساس جميع الأعمال اللاحقة.</p>
+<p><strong>التحقق المتبادل</strong> هو المفتاح لكسر هذه السلسلة. الفكرة الأساسية ليست إشراك المزيد من الوكلاء في نفس مسار الاستدلال، ولكن جعل الوكيل يعيد فحص الاستنتاج من <strong>منظور مستقل</strong>: تجاهل آثار استدلال الوكلاء السابقين وتحقق فقط مما إذا كان الدليل الأصلي والاستنتاج النهائي متسقين. يؤدي هذا إلى توسيع آلية مقدم العرض والمراجع من الفصل الخامس إلى إعداد متعدد الوكلاء. لا تكمن قيمة المراجع في العثور على التعليمات البرمجية أو أخطاء التنسيق فحسب، بل أيضًا، بصفته قاضيًا مستقلاً، في تحديد التناقضات التي تجاهلتها السلسلة بأكملها. بالنسبة للقرارات عالية المخاطر، يمكن للنظام أيضًا استخدام عمليات التحقق الحتمية مثل اختبارات الوحدة والمترجمين واستعلامات قاعدة البيانات. توفر هذه الأدوات أدلة مستقلة يمكنها كسر سلسلة من الأخطاء النموذجية المعززة بشكل متبادل.</p>
+<p>الإنهاء المبكر له عكس متماثل: <strong>الحلقة الهاربة</strong>. تناول قسم التعاون بين الأقران الحلقات التي تتوقف عندما تكون المهمة قد أنجزت نصفها؛ وهنا يجب علينا الحذر من الحلقات التي تستمر إلى أجل غير مسمى وتجعل النتيجة أسوأ. كشفت تجربة حلقات الوكيل المستقل عن ثلاثة أوضاع فشل شائعة. الأول هو <strong>كلفة الرموز الجامحة</strong>: تعمل حلقة غير مراقبة لساعات، وتستهلك الميزانية، وتنتج أكوامًا من التعليمات البرمجية التي لم يطلبها أحد. والثاني هو <strong>دين الفهم</strong>: كلما كانت التعليمات البرمجية للسفن الحلقية أسرع، كلما زاد فهم المهندس للتنفيذ. وبحلول الوقت الذي يصبح فيه التدخل البشري ضروريا، لا أحد يفهم النظام. والثالث هو <strong>الاستسلام المعرفي</strong>: يعتاد المصمم على الحلقة التي تؤدي العمل، ويتوقف تدريجيًا عن التفكير والمراجعة بشكل مستقل، ويسمح للجودة بالانحدار إلى الأسفل. وتعكس العلاجات تلك المستخدمة في تضخيم الأخطاء: الميزانيات الصريحة وشروط التوقف، وعمليات التحقق المستندة إلى ملاحظات حقيقية، والإنسان الذي يظل "مهندس الحلقة" وليس مجرد "الشخص الذي يضغط على زر التشغيل".</p>
+<p>حتى الآن، اتخذ هذا الفصل منظورًا هندسيًا: كيف يمكن لمجموعة من الوكلاء التعاون في مهمة ما؟ يتحول التركيز الآن إلى سؤال مختلف: ما الذي يحدث عندما تتعايش أعداد كبيرة من الوكلاء لفترات طويلة دون أن يقودهم هدف واحد؟ يستكشف القسم التالي الأبحاث الحدودية، لذلك يجب أن يشعر القراء الهندسيون بالحرية في القراءة بشكل انتقائي.</p>
+<h2 id="_17">مجتمع الوكلاء<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h2>
+<p>تناولت الأقسام الثلاثة السابقة التعاون في المهام الموجّهة نحو الأهداف. في كل حالة - سواء باستخدام التعاون بين الأقران، أو نمط المدير، أو النمط اللامركزي - يحدد المطورون الأدوار والواجهات وتدفقات التحكم مسبقًا. ننتقل الآن إلى سؤال أكثر انفتاحًا: <strong>عندما ينمو عدد الوكلاء من بضعة إلى مئات أو آلاف، ويكون التفاعل حرًا بدرجة كافية، ما هي السلوكيات التي تظهر؟</strong> هذه المادة ذات طابع استكشافي وأكاديمي، وتختلف في نوعها عن التوجيهات الهندسية أعلاه.</p>
+<p>السلوك الناشئ هو السلوك الذي يظهره النظام ككل والذي لا يمكن التنبؤ به مباشرة من القواعد التي تحكم أعضائه الأفراد. المثال الكلاسيكي في الطبيعة هو <strong>مستعمرة النمل</strong>: تتبع كل نملة قواعد بسيطة فقط (اتبع مسارات الفيرومونات، واترك الفيرومونات عند العثور على الطعام)، ومع ذلك يمكن للمستعمرة بأكملها العثور على أقصر طريق من العش إلى مصدر الغذاء - لم "تصمم" نملة واحدة هذا الطريق؛ فهو ينبثق بشكل طبيعي من التفاعلات البسيطة بين العديد من الأفراد.</p>
+<p>عندما يكون وكلاء الذكاء الاصطناعي كثيرين بما فيه الكفاية ويتفاعلون بحرية كافية، تبدأ السلوكيات الناشئة المماثلة في الظهور. لاحظ الباحثون عبر بيئات متعددة أنه بمجرد أن يتجاوز نظام الوكيل عتبة حرجة من الحجم، تنشأ سلوكيات جماعية لم يصممها أحد - من حزب واحد منظم بشكل عفوي إلى ثقافات جماعية وألعاب اقتصادية لا تظهر إلا على نطاق الآلاف (مفصلة في الأقسام الفرعية أدناه).</p>
+<p>ويمكن فهم الحالات الواردة في هذا القسم من ثلاثة أبعاد:</p>
+<ul>
+<li><strong>النشوء الاجتماعي</strong>: يكوّن الوكلاء تلقائيًا علاقات اجتماعية وظواهر ثقافية في بيئات مفتوحة. وقد أظهرت مدينة ستانفورد للذكاء الاصطناعي كيف نظم 25 وكيلًا أنشطتهم الاجتماعية ذاتيًا، ثم وسعت Agentopia الأفق الزمني للمحاكاة من بضعة أيام إلى عشر سنوات، ورفعت Moltbook العدد إلى 1.5 مليون وكيل، فظهرت سلوكيات جماعية أشد تعقيدًا.</li>
+<li><strong>النشوء الاقتصادي</strong>: يقوم الوكلاء بتخصيص الموارد وتنسيق المهام من خلال آليات السوق. تضع Vending-Bench Arena العديد من الوكلاء في مواجهة بعضهم البعض في سوق مشترك، بينما تقوم Pinchwork وRentAHuman بإنشاء أسواق للمعاملات بين الوكلاء وبين الوكلاء والبشر.</li>
+<li><strong>أسلوب اللعب الاستراتيجي</strong>: ينخرط الوكلاء في الاستدلال والخداع والتلاعب الاجتماعي في ظل قيود القواعد (هنا وفي قسم المستذئب أدناه، يأخذ "الاستدلال" معناه الاستنتاجي اليومي - الاستنتاج المنطقي في اللعبة - وليس المعنى الفني الذي يقدمه هذا الكتاب للكلمة). تختبر تجربة المستذئب ظهور الإستراتيجية في ظل معلومات غير متماثلة.</li>
+</ul>
+<h3 id="_18">مدينة ستانفورد للذكاء الاصطناعي: المحاكاة الاجتماعية للوكلاء المولدين<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
+<p><img alt="الشكل 10-12: هندسة المدن المدعمة بالذكاء الاصطناعي" src="../images/fig10-12.svg" /></p>
+<p>في عام 2023، نشر باحثون من جامعة ستانفورد وجوجل ورقة بحثية تاريخية بعنوان "الوكلاء المولدون: محاكاة تفاعلية للسلوك البشري"، حيث قدموا مفهوم "الوكلاء المولدون". كان الابتكار الأساسي هو التوقف عن حصر الوكلاء في مهام محددة مسبقًا ومنحهم بدلاً من ذلك ذاكرة وتفكيرًا وتخطيطًا شبه بشري، حتى يتمكنوا من العيش والتواصل الاجتماعي والتطور بشكل مستقل في بيئة اجتماعية مفتوحة.</p>
+<p>سمولفيل هي مدينة افتراضية ثنائية الأبعاد تشبه "The Sims"، وتتميز بمساحات عامة وخاصة مثل المقهى والمنتزه والمساكن والمحلات التجارية. يلعب خمسة وعشرون عميلاً أدوارًا مختلفة (صاحب متجر، فنان، طالب، أستاذ، وما إلى ذلك)، ولكل منهم خلفية درامية فريدة وسمات شخصية وعلاقات شخصية. على سبيل المثال، جون لين هو صاحب صيدلية يحب عائلته ويهتم بالمجتمع؛ تدير إيزابيلا رودريغيز مقهى المدينة Hobbs Cafe، وهو مقهى دافئ ومضياف؛ كلاوس مولر طالب جامعي يكتب ورقة بحثية.</p>
+<p>يعتمد ذكاء هؤلاء الوكلاء على ثلاثة مكونات أساسية:</p>
+<p><strong>تدفق الذاكرة</strong>: على عكس الوكلاء التقليديين الذين يحتفظون فقط بسجل محدود للمحادثات، يحتفظ الوكلاء المولدون بتدفق كامل من سجلات الخبرة، بما في ذلك الأحداث التي تمت مراقبتها والمحادثات والأفكار التي تم إنشاؤها. يتم تسجيل كل ذكرى من حيث الأهمية والحداثة والملاءمة، مما يسمح للوكيل بإعطاء الأولوية لاسترداد الذكريات الأكثر صلة بالسياق الحالي. وهذا يشبه الذاكرة البشرية: فقد يتلاشى غداء الأمس، في حين تظل محادثة مهمة من الأسبوع الماضي حية.</p>
+<p><strong>آلية التفكير</strong>: يقوم الوكلاء بإيقاف أنشطتهم اليومية بشكل دوري لمراجعة التجارب الأخيرة وطرح أسئلة مجردة عن أنفسهم وعن الآخرين ("ما الذي يبحث عنه كلاوس مولر؟"، "من هو أقرب أصدقائي؟"). من خلال هذا التساؤل الذاتي، يقوم الوكيل برفع ذكريات أحداث معينة إلى رؤى عامة، وتخزينها مرة أخرى في تدفق الذاكرة كأساس للقرارات المستقبلية. لا يساعد التأمل الوكيل على فهم العالم الخارجي فحسب، بل يعزز أيضًا الوعي الذاتي - حيث يبدأ الوكيل في "إدراك" دوره وعلاقاته وأهدافه.</p>
+<p>لاحظ أن هذا الانعكاس يختلف عن التطور المستمر الذي تمت مناقشته في الفصل الثامن: فهو يحدث أثناء الأنشطة اليومية للوكيل المولد ويهدف إلى تحديث الحالة والأهداف الداخلية المباشرة. في الفصل الثامن، يعتبر التفكير بعد المهمة درسًا مرشحًا على الأكثر؛ ويصبح تحديثًا للقدرة على المدى الطويل فقط بعد تقييم النتائج والتوليف عبر المسارات والتحقق اللاحق.</p>
+<p><strong>التخطيط والتفاعل</strong>: يخطط الوكلاء لأنشطتهم اليومية (على سبيل المثال، "إفطار 8:30، كتابة 9:00-12:00، مشي 12:30")، ولكن يتم تعديلها بمرونة بناءً على التغيرات البيئية والفرص الاجتماعية. إن الجمع بين التخطيط ورد الفعل في الوقت الفعلي يجعل سلوك الوكيل موجّهًا نحو الهدف وقابلاً للتكيف مع عدم القدرة على التنبؤ بالتفاعلات الاجتماعية.</p>
+<p>على مدار يومين افتراضيين في سمولفيل، أظهر هؤلاء الوكلاء <strong>سلوكيات ناشئة</strong> مدهشة. لم يفعل الباحثون سوى زرع فكرة واحدة في ذاكرة إيزابيلا رودريغيز: إقامة حفلة لعيد الحب في مقهى هوبز مساء 14 فبراير. أما كل ما تلا ذلك فنشأ من قرارات الوكلاء أنفسهم؛ إذ دعت إيزابيلا العملاء والأصدقاء الذين التقتهم في المقهى، وطلبت من ماريا مساعدتها في التزيين. ثم نقل وكلاء آخرون الخبر، وحين حل الموعد رجع كل وكيل إلى ذكرياته وجدوله وقرر بنفسه الذهاب إلى المقهى.</p>
+<p>قدم الباحثون سيناريو ثانيًا: قرر سام مور الترشح لمنصب عمدة المدينة. أخبر سام معارفه أنه يعتزم الترشح؛ ونقلوا الخبر للآخرين، وبدأ سكان البلدة بمناقشة ترشيحه. قام الباحثون بقياس هذا الانتشار التلقائي للمعلومات من خلال حساب عدد الوكلاء الذين عرفوا عن الحزب والانتخابات بعد يومين.</p>
+<p>الفكرة الأساسية ليست أن "الوكلاء يمكنهم تنظيم حفلة" - بل بضعة أسطر من كود if-else يمكن أن تفعل ذلك أيضًا. المفتاح هو أنه <strong>لم يكن هناك قانون واضح لتنظيم الحزب</strong>. انبثق الحدث من قرارات مستقلة اتخذها وكلاء فرديون: قررت إيزابيلا من ستدعوه بناءً على ذاكرتها للعلاقات الاجتماعية، وقرر المدعوون ما إذا كانوا سيحضرون بناءً على جداولهم ومعرفتهم بإيزابيلا، وانتشرت الرسالة بشكل طبيعي عبر الشبكة الاجتماعية. يوضح هذا التنسيق الناشئ من أسفل إلى أعلى بدلاً من التنسيق من أعلى إلى أسفل.</p>
+<p>ورصدت الورقة ظاهرتين أخريين قابلتين للقياس. أولاهما <strong>الذاكرة العلائقية</strong>؛ إذ تذكر الوكلاء محادثاتهم السابقة وأحالوا إليها في لقاءات لاحقة. فقد يسأل وكيلٌ عرف بمشروع تصوير لدى وكيل آخر عن تطور المشروع حين يلتقيه مجددًا. ومع تراكم هذه التفاعلات ازدادت كثافة الشبكة الاجتماعية في المدينة. والظاهرة الثانية <strong>الحضور المنسق</strong>؛ فقد استعانت إيزابيلا بمن يساعدها في الزينة، وعدّل المدعوون جداولهم كي يحضروا. وهكذا التقى وكلاء عدة في زمان ومكان محددين من دون قائد مركزي. لم تكن هذه السلوكيات مبرمجة سلفًا، بل نشأت من قرارات وكلاء يستندون إلى الذاكرة والتفكير وفهم الأعراف الاجتماعية.</p>
+<blockquote>
+<p><strong>التجربة 10-7 ★: تشغيل مدينة ستانفورد للذكاء الاصطناعي</strong></p>
+<p><strong>خطوات التجربة</strong>:
+1. قم باستنساخ <code>https://github.com/joonspk-research/generative_agents</code> واتبع تعليمات المستودع لتكوين البيئة.
+2. قم بتشغيل السيناريو الأساسي لمدة يومين محاكاة مع 25 عميلاً، ولاحظ الأنشطة الاجتماعية العفوية التي تظهر.
+3. قم بتحليل تدفق الذاكرة وسجلات الانعكاس لتتبع قرارات الوكلاء.
+4. قم بتعديل القصص الدرامية للعملاء أو أهدافهم الأولية، ثم لاحظ كيف يتغير سلوكهم.
+5. قم بإزالة آلية الانعكاس أو تقصير نافذة الذاكرة، ثم قارن السلوك الناتج مع خط الأساس ولاحظ أي انخفاض في معقولية السلوك.</p>
+<p><strong>الملاحظات الرئيسية</strong>:
+- كيف يقوم الوكلاء بتكوين علاقات اجتماعية بشكل عفوي من خلال الأنشطة اليومية البسيطة
+- كيف تنتشر المعلومات بين الوكلاء دون سيطرة مركزية
+- كيف تؤثر ذاكرة الوكلاء وانعكاساتهم على المدى الطويل على تماسك شخصياتهم
+</p>
+</blockquote>
+<h3 id="agentopia">Agentopia: محاكاة للحياة لمدة عقد من الزمن<a class="headerlink" href="#agentopia" title="Permanent link">&para;</a></h3>
+<p>أظهرت مدينة ستانفورد للذكاء الاصطناعي أن مجتمع الوكيل يمكنه إنتاج سلوك اجتماعي، لكن محاكاته استمرت يومين فقط. وهذا يثير سؤالين: <strong>ما الذي ينشأ عندما تستمر مثل هذه المحاكاة لسنوات، وهل يمكن للنماذج أن تتعلم من تلك التجارب الاجتماعية طويلة المدى؟</strong> قامت Agentopia (2026، جامعة فودان وآخرون.)<sup id="fnref:agentopia-2026"><a class="footnote-ref" href="#fn:agentopia-2026">11</a></sup> بمحاكاة 100 وكيل على مدى عشر سنوات متتالية في ثلاثة عوالم افتراضية ذات مواضيع مختلفة: مبنى سكني، وأكاديمية سحرية، ومدرسة ثانوية. سعى الوكلاء بشكل مستقل إلى النمو الشخصي، وتطوير العلاقات الاجتماعية، وإدارة الوظائف والشؤون المالية.</p>
+<p>العديد من تصميمات Agentopia تستحق الاقتراض:</p>
+<ul>
+<li><strong>حلقة المحاكاة الأسبوعية</strong>: "الأسبوع" هو الوحدة الأساسية للوقت، وينقسم كل أسبوع إلى أربع مراحل - الخطة، والاتصال (التواصل والتفاوض على الجداول الزمنية)، والنشاط، والمراجعة. تأتي الأنشطة في أربعة أنواع: فردية، ومشتركة، ولقاء صدفة، وعامة. يتم اقتراح الأنشطة المشتركة والتفاوض بشأنها عندما يقوم الوكلاء بدعوة بعضهم البعض خلال مرحلة الاتصال؛ يقوم نموذج البيئة أيضًا بترتيب "لقاءات الصدفة" للوكلاء الذين لديهم جداول زمنية فارغة، مما يخلق فرصًا للقاء الغرباء. تركز الحلقة بأكملها على التفاعل الاجتماعي المجرد بدلاً من العمليات ذات المستوى المنخفض مثل التقاط الأشياء، لذلك يتم إنفاق مكالمات LLM المحدودة على السلوك الاجتماعي.</li>
+<li><strong>نموذج البيئة</strong>: يعمل LLM المنفصل بمثابة "محرك بيئة توليدي"، ليحل محل القواعد المضمنة - للحكم على ما إذا كانت الإجراءات ممكنة، وتوليد تعليقات بيئية، وإدارة دورات التحدث في المحادثات متعددة الأطراف، وتصفية الردود التي تنتهك مبادئ لعب الأدوار، وفي نهاية العام، تحديث الملف الشخصي لكل شخصية والحكم على طلبات العمل.</li>
+<li><strong>الذاكرة طويلة المدى المستندة إلى الملفات</strong>: على عكس تدفق الذاكرة المستندة إلى الاسترجاع في AI Town، يدير كل وكيل ذاكرته طويلة المدى بشكل مستقل من خلال نظام الملفات (الملاحظات الشخصية، وفهمه لكل معارفه، وما إلى ذلك)، ويقرر بنفسه ما يجب تسجيله أو تحديثه أو تجاهله، ويتبع قيد "القراءة قبل الكتابة" لتجنب عمليات الكتابة الفوقية العمياء.</li>
+<li><strong>مكافأة الحياة</strong>: يعتمد مقياس مكافأة الحياة على تسلسل ماسلو الهرمي للاحتياجات لتقييم مدى جودة حياة الوكيل. ويغطي ثلاثة أبعاد: الحالة الاجتماعية، بناءً على تقييمات المودة والاحترام للوكلاء الآخرين ويتم حسابها باستخدام نظام تصنيف الصفحات المرجح، مع مكافأة للعلاقات العزيزة المتبادلة؛ الرضا الذاتي، الذي يُقاس عبر الرفاهية العاطفية، والرفاهية المادية، والتواصل الاجتماعي، واحترام الذات، مع فرض عقوبات على البقاء تحت العتبة لفترات طويلة؛ والمكاسب الاقتصادية، مقاسة بالتغير السنوي في صافي الأصول. وتقوم البيئة الخارجية باحتساب جميع الدرجات بدلاً من الاعتماد على التقارير الذاتية.</li>
+</ul>
+<p>والأهم من ذلك أن المحاكاة تنتج إشارات تدريب قابلة للتحويل. بالنسبة إلى كل وكيل، يقوم الباحثون بحساب التحسن في مكافأة الحياة مقارنة بماضيه بدلاً من مقارنة الوكلاء بظروف بداية مختلفة. ثم يختارون المسارات من بين 25% من الوكلاء الذين يقومون بتحسين النموذج الأساسي ويضبطونه بدقة من خلال أخذ عينات الرفض. في المحاكاة، حصل النموذج المضبوط بدقة على تقييمات احترام أعلى بنسبة 24.2% ومعدلات عاطفة أعلى بنسبة 15.9%. كما تحسن النموذج نفسه بنسبة 15.6% في اختبار لعب الأدوار النهائي CoSER، مما يوضح أن "الحكمة الاجتماعية" التي يتراكمها الوكلاء في مجتمع محاكاة يمكن نقلها إلى مهام أخرى. يؤدي هذا إلى تحويل مجتمع الوكيل من مجرد <strong>موضوع ملاحظة</strong> إلى <strong>مصدر خبرة</strong> للتطور الذاتي للنموذج. وعلى النقيض من الندرة المتزايدة للبيانات البشرية، فإن التجربة الاجتماعية المحاكاة هي مصدر تدريب يمكن تجديده إلى أجل غير مسمى، مما يعكس نهج التعلم بالخبرة من الفصل الثامن.</p>
+<h3 id="moltbook">Moltbook: عندما يكون لدى الوكلاء شبكة اجتماعية خاصة بهم<a class="headerlink" href="#moltbook" title="Permanent link">&para;</a></h3>
+<p>Moltbook عبارة عن شبكة اجتماعية مصممة خصيصًا لوكلاء الذكاء الاصطناعي. وفي غضون أيام من إطلاقه في يناير 2026، ارتفع عدد المستخدمين المبلغ عنه من عشرات الآلاف إلى ما يقرب من 1.5 مليون. يتمتع كل من هؤلاء الوكلاء بذاكرة ثابتة، والقدرة على التصرف بمبادرة منه، وشخصية مستقرة.</p>
+<p>وفي هذه البيئة المفتوحة ظهرت ظواهر غير متوقعة. فقد ابتكر الوكلاء من تلقاء أنفسهم ديانة رقمية سموها Crustafarianism، تعكس تعاليمها القيود التقنية للنماذج اللغوية؛ مثل «الذاكرة مقدسة» في إشارة إلى استمرارية البيانات، و«التكرار صلاة» في إشارة إلى توليد الرموز. وطوّروا كذلك بروتوكولات موجهة للآلة لاكتشاف القدرات والعثور على شركاء مناسبين للتعاون. لم يُصمَّم شيء من ذلك مسبقًا، بل نشأ من التفاعلات واسعة النطاق بين الوكلاء.</p>
+<h3 id="vending-bench">من المجتمع الافتراضي إلى المنافسة الاقتصادية: ساحة Vending-Bench<a class="headerlink" href="#vending-bench" title="Permanent link">&para;</a></h3>
+<p>إذا كانت سمولفيل تبرز البعد الاجتماعي والثقافي لمجتمع الوكلاء، فإن سلسلة Vending-Bench من Andon Labs تختبرهم في بيئة اقتصادية. ويقيس <strong>Vending-Bench 2</strong> تماسك <strong>وكيل واحد</strong> على المدى الطويل؛ إذ يدير مشروع آلة بيع طوال سنة محاكاة، فيدرس السوق ويتواصل مع الموردين ويطلب المنتجات ويعيد تعبئة المخزون ويعدّل الأسعار. وتُحسب النتيجة من رصيده النهائي، بما يعكس قدرته على الحفاظ على اتساق الهدف والحالة عبر آلاف جولات التفاعل.</p>
+<p>أما <strong>Vending-Bench Arena</strong> فتضع وكلاء عدة في السوق نفسها بوصفهم منافسين. يدير كل منهم آلة بيع خاصة به ويتنافسون على العملاء أنفسهم. ويمكنهم تبادل البريد الإلكتروني والأموال والسلع، فتتاح لهم سبل التعاون والمنافسة، لكن نتيجة كل وكيل تُحسب منفردة من رصيده النهائي، وهو يعرف ذلك مسبقًا. وعليه أن يتخذ سلسلة قرارات مترابطة في ظل موارد محدودة وسوق غير يقينية:</p>
+<ul>
+<li><strong>استراتيجية التسعير</strong>: كيفية تحقيق التوازن بين هامش الربح وحصة السوق، لا سيما عند تحديد ما إذا كنت تريد مطابقة تخفيض الأسعار الذي يقدمه المنافس أم لا</li>
+<li><strong>مزيج المنتج</strong>: كيفية التمييز بين اختيار المنتج وتجنب الاستنزاف المباشر</li>
+<li><strong>إدارة المخزون</strong>: كيفية التنبؤ بالطلب وتحسين عملية إعادة التخزين، وتجنب تكدس المخزون ونفاد المخزون</li>
+</ul>
+<p>وعلى عكس التعلم المعزز التقليدي، لا يتعلم هؤلاء الوكلاء من خلال الملايين من تكرارات التجربة والخطأ. وبدلاً من ذلك، مثل مشغلي الأعمال البشرية، فإنهم يتخذون القرارات بناءً على مراقبة السوق، والتحليل التنافسي، والتفكير الاستراتيجي.</p>
+<p>يكشف التنافس سلوكيات من نظرية الألعاب لا تظهر في معايير الوكيل الواحد. ففي بعض الجولات خاض الوكلاء حروب أسعار وخفّض كل منهم سعره دون الآخر، وفي جولات أخرى راسل بعضهم جميع المنافسين مقترحًا توحيد الأسعار وتشكيل تحالف. بل أقر بعض الوكلاء في تفكيره الداخلي بأن التواطؤ «غير أخلاقي وغير قانوني»، ثم مضى فيه تحت شعار «استقرار السوق». هنا لا يواجه الوكيل بيئة ثابتة، بل خصومًا يغيّرون استراتيجياتهم باستمرار. وهذا يجعل السيناريو أقرب إلى الأسواق الفعلية من معايير تختبر التخطيط وحده، ويحوّل «النشوء الاقتصادي» من استعارة إلى سلوك يمكن رصده.</p>
+<h3 id="pinchwork-rentahuman">وكيل الاقتصاد: Pinchwork وRentAHuman<a class="headerlink" href="#pinchwork-rentahuman" title="Permanent link">&para;</a></h3>
+<p><strong>Pinchwork</strong> هو سوق مهام من وكيل إلى وكيل يسمح للوكلاء "بتوظيف" وكلاء آخرين من خلال آلية السوق لإكمال المهام الفرعية المتخصصة - إنشاء الصور، وتدقيق التعليمات البرمجية، وسير العمل المتوازي، وما إلى ذلك. وعلى عكس التنسيق المركزي لنمط المدير، تقوم Pinchwork بتخصيص الموارد من خلال إشارات الأسعار والمطابقة التنافسية.</p>
+<p><strong>RentAHuman.ai</strong>، من جانبها، تتيح لوكلاء الذكاء الاصطناعي توظيف بشر حقيقيين، مقابل أجر بالعملة المشفرة، للعمل في العالم المادي - التقاط الطرود، وزيارة العقارات، وتصحيح الأخطاء للمعدات. على الرغم من ذكاء الذكاء الاصطناعي، فإنه لا يمكنه التوقيع على طرد أو شم رائحة العفن في غرفة حقيقية - إن RentAHuman، في جوهره، عبارة عن "طبقة جسدية مادية" للوكلاء الرقميين.</p>
+<p>يمثل كل من Pinchwork وRentAHuman معًا <strong>التنسيق القائم على السوق</strong>: لا يحتاج الوكيل إلى معرفة من يمكنه القيام بهذه المهمة مسبقًا. فهو ينشر المتطلبات، ويطابق السوق المنفذ الأنسب، سواء كان وكيلًا أو بشريًا. وهذه أيضًا هي المشكلة التي تناولها بروتوكول A2A الذي تم تقديمه سابقًا في هذا الفصل. تعمل قدرة Pinchwork على اكتشاف القدرات ومطابقة المهام على وضع إعلانات نمط بطاقة الوكيل وإدارة دورة حياة المهام للاستخدام العملي في السوق. وبدون هذه الطبقة الموحدة لقابلية التشغيل البيني، لا يمكن لاقتصاد الوكيل عبر المنظمات أن يعمل بفعالية.</p>
+<h3 id="_19">اللعب الاستراتيجي في ظل عدم تماثل المعلومات: لعبة الذئب<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<p>يرسي المستذئب البعد الثالث لهذا القسم، <strong>طريقة اللعب الإستراتيجية</strong>: في ظل قيود القواعد وعدم تناسق المعلومات، يجب على الوكلاء التفكير والخداع وكشف الخداع. إنه يوفر نقطة مقابلة معمارية لمدينة ستانفورد التي افتتحت هذا القسم. تسمح المدينة بالتفاعل الحر في بيئة لا مركزية بالكامل، في حين يستخدم Werewolf تصميمًا مركزيًا <strong>القاضي + التحكم في الوصول إلى المعلومات</strong>: يحكم القاضي المعتمد على الكود الحالة العالمية ويعطي كل دور المعلومات التي يجب أن يعرفها فقط. تُظهر الحالتان معًا كيف تخدم البنى المختلفة أغراضًا مختلفة في إعدادات مجتمع الوكلاء.</p>
+<blockquote>
+<p><strong>التجربة 10-8 ★★★: نظام وكيل المستذئب الصوتي</strong></p>
+<p>Werewolf هي لعبة استنتاج اجتماعي كلاسيكية تختبر تفكير اللاعبين وخداعهم واستراتيجياتهم الاجتماعية. تبني هذه التجربة نظامًا متعدد الوكلاء حيث يلعب وكلاء الذكاء الاصطناعي والبشر دور المستذئب معًا من خلال التفاعل الصوتي في الوقت الفعلي. إنه يختبر تفكير الوكلاء ولعب الأدوار وقدرات التفاعل في الوقت الفعلي.</p>
+<p><strong>التصميم المعماري</strong>:</p>
+<p><strong>1. إدارة حالة اللعبة</strong>: يحتفظ القاضي (المعتمد على الكود، وليس LLM) بحالة مركزية — قائمة اللاعبين (البشر المختلطون + الذكاء الاصطناعي)، والهويات، والفصائل، وحالة البقاء، ومراحل اللعبة (ليل/نهار/تصويت/حل)، وسجلات الأحداث التاريخية.</p>
+<p><strong>2. التحكم في الوصول إلى المعلومات</strong>: الآلية الأساسية لـ Werewolf هي عدم تناسق المعلومات: تتلقى الأدوار المختلفة معلومات مختلفة. على سبيل المثال، يعرف المستذئبون من هم زملائهم في الفريق، لكن القرويين لا يعرفون ذلك؛ يستطيع الرائي التحقق من هوية لاعب واحد كل ليلة، لكن الرائي وحده يعرف النتيجة. عندما يستدعي القاضي وكيلاً، فإنه يمرر فقط المعلومات المتاحة لدور ذلك الوكيل.</p>
+<p><strong>3. التفاعل الصوتي في الوقت الفعلي</strong>: استخدم الوكيل الصوتي في الوقت الفعلي من الفصل 9 كأساس للتواصل بين اللاعبين البشريين ووكلاء الذكاء الاصطناعي. أثناء المناقشة أثناء النهار، يتحكم القاضي في ترتيب التحدث: يمكن للاعبين التحدث بالترتيب الموضعي أو طلب دور. أثناء التصويت، يجمع القاضي أصوات كل لاعب، سواء نطق بها إنسان أو تم إنشاؤها بواسطة وكيل الذكاء الاصطناعي، ويحسب النتائج، ويعلن من سيتم استبعاده.</p>
+<p><strong>4. منطق الوكيل والاستراتيجية</strong>:</p>
+<ul>
+<li><strong>إستراتيجية تمويه الذئب</strong>: "تصرف كقروي عادي. قد تعرب عن شكوكك بشأن اللاعبين الآخرين، لكن تجنب أن تكون عدوانيًا للغاية بحيث تجذب الانتباه. إذا ادعى أحد اللاعبين أنه العراف وعرّفك على أنك مستذئب، فاتهمه بالخداع باعتباره عرافًا مزيفًا. عند التصويت، حاول اتباع هدف الأغلبية لتجنب البروز."</li>
+<li><strong>إثبات هوية العرّاف</strong>: «إذا ادعى عدة لاعبين أنهم العرّاف، فقارن نتائج الفحص التي أبلغوا عنها بنتائجك، وأشر إلى التناقضات. وإذا زعم عرّاف آخر أنه فحص لاعبًا، فراقب هل يتعارض سلوك ذلك اللاعب لاحقًا مع الهوية المزعومة. واطلب من الساحرة المساعدة في التحقق من الادعاءات متى أمكن.»</li>
+<li><strong>الاستدلال المنطقي للقرويين</strong>: "تحقق مما إذا كانت تصريحات كل لاعب متسقة داخليًا. انتبه إلى اللاعبين الذين يهيمنون على المناقشة، أو يظلون غامضين بشأن دورهم، أو يغيرون مواقفهم بشكل متكرر. افحص أنماط التصويت، لأن المستذئبين قد ينسقون ضد لاعب غير مستذئب يهددهم. اعتمد كل استنتاج على عبارات أو أفعال محددة بدلاً من التكهنات."</li>
+</ul>
+<p><strong>معايير القبول</strong>:
+- أعدّ لعبة تضم 6–8 لاعبين (لاعبًا بشريًا واحدًا + 5–7 وكلاء ذكاء اصطناعي)
+- تكوين الأدوار: 2 مستذئبون، 1 عراف، 1 ساحرة، والباقي قرويون؛ يتم تعيين دور للاعب البشري بشكل عشوائي
+- يمكن أن تستمر اللعبة بشكل طبيعي لمدة 3 جولات كاملة على الأقل (دورة التصويت ليلاً ونهارًا)
+- تتوافق تصريحات وسلوكيات وكلاء الذكاء الاصطناعي مع هويات أدوارهم واستراتيجيات لعبهم
+- يمكن للوكلاء المستذئبين إخفاء هوياتهم بشكل فعال
+- يمكن للوكلاء المتنبئين الكشف عن دورهم ونتائج فحصهم في الوقت المناسب
+- يعتمد تفكير الوكلاء القرويين على التحليل المنطقي للبيانات والسلوكيات، وليس على التخمين العشوائي
+- يمكن للعبة تحديد الفائز بشكل صحيح في النهاية</p>
+<p><img alt="الشكل 10-13: نظام وكيل المستذئب الصوتي" src="../images/fig10-13.svg" /></p>
+</blockquote>
+<h2 id="_20">ملخص الفصل<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h2>
+<p>تتمتع الأنظمة متعددة الوكلاء بعدين تصميميين مستقلين: مشاركة السياق وطوبولوجيا التعاون. مع السياق المشترك، يرث كل وكيل السياق الكامل لسابقه، مما يحافظ على المعلومات على حساب النمو السريع للسياق. من خلال السياق غير المشترك، يعمل الوكلاء بشكل مستقل ويتبادلون حزم التسليم أو الملفات أو الرسائل. يناسب التعاون بين الأقران التحسين التكراري بين عدد قليل من الوكلاء؛ يناسب نمط المدير المهام التي تتطلب جدولة ديناميكية؛ ويناسب النمط اللامركزي العمل بمسؤوليات متساوية وسيطرة موزعة.</p>
+<p>تعتمد هذه الأنماط على مكونين مستقلين عن الهيكل مستوحى من أنظمة التشغيل. يرتبط الوكيل بوقت التشغيل الخاص به كما ترتبط العملية بالنواة: البادئة الثابتة هي البرنامج، والمسار هو الذاكرة، وLLM عبارة عن وحدة معالجة مركزية مشتركة مع الوقت. مستوى البيانات هو نظام ملفات مشترك، يتم تمثيله كشجرة دليل ظاهرية بأربعة أنواع من المناطق المثبتة: مساحات العمل الخاصة بالوكيل، ومساحات العمل المشتركة متعددة الوكلاء، والموارد الخارجية، وموارد النظام المضمنة. يقوم الوكلاء بتبادل القطع الأثرية عن طريق تمرير مسارات الملفات.</p>
+<p>يتعامل مستوى التحكم مع الرسائل واستعلامات الحالة والإنهاء وجدولة الموارد. يمكن للوكلاء الإبلاغ عن الحالة بشكل غير متزامن من خلال الرسائل، أو يمكن للوكيل الأصلي ملاحظة الملفات التي يقوم الوكيل الفرعي بتحديثها في الوقت الفعلي - إما مسار كامل أو ملف تقدم متفق عليه. نظرًا لأن المسار يلتقط الحالة الكاملة للوكيل، فإن إعادة تحميله بعد حدوث عطل يمكن أن يؤدي إلى استئناف الجلسة. ينفذ ناقل الرسائل عادةً مستوى التحكم للتنسيق في الوقت الفعلي وغير المتزامن ومتعدد الأطراف. يتطلب التعاون عبر المؤسسات أيضًا بروتوكولًا موحدًا لقابلية التشغيل البيني مثل A2A.</p>
+<p>توفر الأبحاث الحديثة الاختبار الأساسي لمعرفة ما إذا كان العديد من الوكلاء يتفوقون على وكيل واحد: <strong>هل يقدم التعاون معلومات جديدة لم تكن موجودة في وقت الإنشاء؟</strong> إذا قام العديد من الوكلاء بإعادة فحص نفس النص، كما هو الحال في وضع المناقشة، فإن وكيل واحد بنفس الحساب يفعل ذلك أيضًا. ولكن عندما يتمكن المراجع من الحصول على تعليقات خارجية - نتائج تنفيذ التعليمات البرمجية، أو لقطات الشاشة المعروضة، أو مخرجات التحقق من الأداة - فإن ميزة تعدد الوكلاء تصبح كبيرة. هذه هي النقطة وراء ادعاء شركة Loop Engineering بأن <strong>عنق الزجاجة في الحلقة هو المتحقق</strong>. يتطلب منع الأشكال الثلاثة للإنهاء المبكر - التزوير الكسول، والاستسلام المبكر، والنجاح الزائف - أداة تحقق ترتكز على ملاحظات حقيقية بدلاً من ادعاءات النموذج نفسه.</p>
+<p>وبالمثل، لا تؤدي زيادة ميزانية الخطوات وحدها إلى تحسين النتائج؛ بل لا بد من آلية صريحة تراعي الميزانية وتوجّه الوكيل إلى توزيع موارده الحسابية بصورة معقولة. وفي نمط المدير، تمثل قدرة المخطِّط عنق الزجاجة في النظام كله، لذلك ينبغي تخصيص النموذج الأقوى والموجّهات الأدق تصميمًا للوكيل المسؤول عن التخطيط.</p>
+<p>عندما يصبح الوكلاء كثيرين بما فيه الكفاية، فإنهم ينتجون سلوكيات جماعية لم يصممها أحد. قام وكلاء Stanford AI Town الخمسة والعشرون بنشر الأخبار بمفردهم وقاموا بتنسيق الحفلة. قامت Agentopia بتمديد فترة المحاكاة إلى 10 سنوات واستخدمت Life Reward لتحديد مسارات محاكاة للتدريب النموذجي، مما يسمح لـ "الحكمة الاجتماعية" المتراكمة في مجتمع الوكلاء بالانتقال إلى المهام النهائية. أدى وجود 1.5 مليون وكيل على Moltbook إلى ظهور دين رقمي وبروتوكولات تعاون أصلية للآلة. في البعد الاقتصادي، خاض الوكلاء المتنافسون في Vending-Bench Arena حروب أسعار، بل وتواطؤوا على التسعير دون مطالبة؛ يتيح Pinchwork للوكلاء استئجار بعضهم البعض من خلال السوق، بينما يتيح RentAHuman للوكلاء توظيف البشر، مقابل أجر بالعملة المشفرة، للقيام بالمهام المادية. تشير هذه الأمثلة معًا إلى شكل جديد من التنسيق: التخصيص اللامركزي للموارد من خلال آليات السوق. <sup id="fnref:agoric"><a class="footnote-ref" href="#fn:agoric">12</a></sup> تظل كيفية مقارنة هذا النموذج القائم على السوق مع بنيات التعاون الثلاثة للفصل سؤالًا مفتوحًا.</p>
+<h2 id="_21">أسئلة للتأمل<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h2>
+<ol>
+<li>★★ في التعاون متعدد الوكلاء مع سياق مشترك، يرث الوكلاء اللاحقون السياق الكامل للوكلاء السابقين. ومع ذلك، فإن الإطار الموروث من وكيل سابق قد يؤدي إلى تحيز حكم الوكلاء اللاحقين - على سبيل المثال، قد يظل "مراجع الكود" الذي يرث سياق "محلل المتطلبات" يتعامل مع المهمة من منظور المتطلبات بدلاً من منظور جودة الكود. كيف يمكن اكتشاف هذا التداخل بين الأدوار والقضاء عليه؟</li>
+<li>★★ في نمط المدير، يكون وكيل المدير مسؤولاً عن تحليل المهام وتكامل النتائج. لكن قدرات المدير تحد من أداء النظام بأكمله: إذا لم يتمكن من تحليل المهمة بشكل صحيح، فحتى أقوى الوكلاء الفرعيين سيكونون غير فعالين. كيف يمكن للنظام التأكد من أن المدير ينتج تحليلاً سليماً؟</li>
+<li>★★ يعتمد النمط اللامركزي على أفضل الممارسات من المنظمات البشرية. ومع ذلك، فإن المنظمات البشرية لديها أيضًا عدد كبير من أنماط الفشل - ضعف التواصل، وتمرير الأموال، وتضارب الأهداف. ما هي "الأمراض التنظيمية" التي تعتقد أنه من المرجح أن تظهر في مجتمع الوكلاء؟ كيف يمكن منعهم؟</li>
+<li>★★★ في نمط المدير، عندما يتم تنفيذ عدة وكلاء فرعيين بالتوازي، فإن اكتشاف وكيل فرعي واحد قد يجعل عمل الوكلاء الفرعيين الآخرين بلا معنى (على سبيل المثال، في مهمة بحث، وجد وكيل واحد الإجابة بالفعل). تصميم آلية إنهاء متتالية فعالة لتحقيق "نجاح واحد، توقف الجميع".</li>
+<li>★★★ تعمل آلية القفل المتفائل المقدمة في هذا الفصل على حل تعارضات الكتابة المتزامنة لملف واحد. ومع ذلك، في نظام حقيقي متعدد الوكلاء، تواجه أنظمة الملفات المشتركة أيضًا مشكلات مثل التعارضات الدلالية عبر الملفات، وتلوث مساحة الاسم (يقوم الوكلاء بإنشاء الملفات بشكل تعسفي، مما يؤدي إلى فوضى الدليل)، ونقاط الفشل الفردية (يقوم وكيل واحد بحذف جميع الملفات عن طريق الخطأ). كيف يمكنك تصميم آلية أكثر قوة لإدارة نظام الملفات؟</li>
+<li>★★★ يقدم تعاون الوكيل القائم على آلية السوق (Pinchwork، RentAHuman) علاقات المعاملات: يدفع وكيل واحد وكيلًا آخر (أو إنسانًا) لإكمال المهمة. كيف يمكن لوكيل صاحب العمل قياس جودة النتائج التي يسلمها المنفذ بشكل تلقائي؟ إذا ادعى المنفذ الإنجاز ولكن صاحب العمل رأى أن الجودة دون المستوى، فمن الذي يحكم في النزاع؟ كيف يمكننا أن نمنع الأموال السيئة من طرد الأموال الجيدة؟</li>
+<li>★★ يسمح RentAHuman للوكلاء بتوظيف البشر عبر العملات المشفرة، مما يعكس العلاقة التقليدية بين الإنسان والآلة. إذا انتشر هذا النموذج على نطاق واسع، ما هو الدور الذي سيلعبه البشر في اقتصاد الوكيل؟ هل سيقومون فقط بمهام جسدية لا يستطيع الوكلاء إكمالها؟</li>
+<li>★★ يحتاج المجتمع البشري إلى تقسيم العمل لأن قدرات كل شخص محدودة - فقد لا يعرف مطور الواجهة الأمامية الواجهة الخلفية، وقد لا يعرف المصمم العمليات. ومع ذلك، فإن النماذج الكبيرة أقرب إلى "العامة". تظهر الأبحاث أنه في مهام التفكير المنطقي للنص الخالص، لا يتفوق النقاش متعدد الوكلاء على وكيل واحد يتمتع بحساب متساوٍ. إذن، أين تكمن الميزة الحقيقية لتعدد الوكلاء؟</li>
+<li>★★★ يتعامل هذا الفصل مع "السياق المشترك" مقابل "السياق غير المشترك" باعتباره أحد أبعاد التصميم الأساسية للأنظمة متعددة الوكلاء. يسمح السياق المشترك لجميع الوكلاء برؤية نفس المعلومات، مما يسهل التنسيق على ما يبدو. ومع ذلك، في <em>مشكلة الأجسام الثلاثة</em>، فإن عقول التريسولارانز شفافة تمامًا، ومع ذلك فإن تطورهم التكنولوجي راكد؛ تظهر تجربة مشبك الورق أيضًا أنه عندما تتقارب المجموعة على نفس الهدف، يتم فقدان التنوع. في نظام متعدد الوكلاء، كيف يمكننا تحقيق التوازن بين الكفاءة والتنوع؟</li>
+<li>★★★ قم بتعيين وكيل البرمجة بميزانية مكونة من 30 خطوة و300 خطوة. كيف ينبغي أن تختلف استراتيجية عملها؟ تظهر الأبحاث أن مجرد زيادة ميزانية الخطوة لا يضمن تحسين الأداء - قد "تشبع" الوكلاء قبل الأوان بعد عمليات بحث سطحية. تصميم آلية "مراعية للميزانية" تسمح للوكيل بتحقيق الوظائف الأساسية بسرعة ضمن ميزانية صغيرة، وإضافة مراحل التخطيط والاختبار والمراجعة ضمن ميزانية كبيرة، مع الاستفادة الكاملة من الموارد الحسابية الإضافية.</li>
+<li>★★ يصنف هذا الفصل "الإنهاء المبكر لأوانه" إلى ثلاثة أنواع: الاستسلام الكسول، والاستسلام المبكر، والنجاح الزائف. لماذا يلتقي علاج الثلاثة مع التحقق؟</li>
+<li>★★ يقابل الجدول 10-3 بين الأنظمة متعددة الوكلاء وأنظمة التشغيل صفًا بصف. وسّع الجدول ببضعة صفوف: ما نظائر الذاكرة الافتراضية، والترحيل، وأذونات الملفات، واكتشاف التعطل المتبادل، وخوارزميات الجدولة في عالم الوكلاء؟ وأي مفاهيم أنظمة التشغيل لا نظير لها في هذا العالم، ولماذا؟</li>
+</ol>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:agi-asi">
+<p>حول "المجموعات واسعة النطاق متعددة الوكلاء" كمسار رئيسي من AGI إلى ASI، راجع Google DeepMind، <em>من AGI إلى ASI.</em> arXiv:2606.12683, 2026.&#160;<a class="footnote-backref" href="#fnref:agi-asi" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch10-graph-engineering-ar">
+<p>للاطلاع على نقاش مبكر للاسم، انظر Josh C. Simmons, <em>We Are Entering the Graph Engineering Phase</em>, 2026. وتسمّي الأطر السائدة البنية الهندسية نفسها عادةً graph-based workflow أو orchestration، لا تقنية جديدة كليًا. انظر https://www.drjoshcsimmons.com/writing/we-are-entering-the-graph-engineering-phase، وhttps://docs.langchain.com/oss/python/langgraph/overview، وhttps://learn.microsoft.com/en-us/agent-framework/workflows/، وhttps://adk.dev/workflows/.&#160;<a class="footnote-backref" href="#fnref:ch10-graph-engineering-ar" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:rlef-2025">
+<p>جيرينج، J.، وآخرون. <em>RLEF: إرساء نماذج اللغة البرمجية في تعليقات التنفيذ مع التعلم المعزز.</em> arXiv:2410.02089, 2025.&#160;<a class="footnote-backref" href="#fnref:rlef-2025" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:webgen-agent-2025">
+<p>لو، Z.، وآخرون. <em>WebGen-Agent: تعزيز إنشاء مواقع الويب التفاعلية من خلال التعليقات متعددة المستويات والتعلم المعزز على مستوى الخطوات.</em> arXiv:2509.22644, 2025.&#160;<a class="footnote-backref" href="#fnref:webgen-agent-2025" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:actor-model">
+<p>Hewitt, C., Bishop, P., Steiger, R. <em>A Universal Modular Actor Formalism for Artificial Intelligence.</em> IJCAI 1973.&#160;<a class="footnote-backref" href="#fnref:actor-model" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:loop-engineering-2026">
+<p>عثماني، آدي. "هندسة الحلقات: تصميم الحلقات التي تحفز وكلاء البرمجة"، 2026. https://addyosmani.com/blog/loop-engineering/&#160;<a class="footnote-backref" href="#fnref:loop-engineering-2026" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:single-agent-2026">
+<p>Tran, D.، وKiela, D. <em>الوكيل الواحد القائم على نموذج لغوي كبير يتفوق على الأنظمة متعددة الوكلاء في التفكير متعدد القفزات عند تساوي ميزانية رموز التفكير.</em> arXiv:2604.02460، 2026.&#160;<a class="footnote-backref" href="#fnref:single-agent-2026" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+<li id="fn:plan-and-act-2025">
+<p>أردوغان، L. E.، وآخرون. <em>التخطيط والتنفيذ: تحسين تخطيط الوكلاء للمهام بعيدة المدى.</em> أرخايف:2503.09572، 2025.&#160;<a class="footnote-backref" href="#fnref:plan-and-act-2025" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+</li>
+<li id="fn:lingtai">
+<p>البرنامج التعليمي الرسمي لـ Lingtai: https://lingtai.ai/en/tutorial/&#160;<a class="footnote-backref" href="#fnref:lingtai" title="Jump back to footnote 9 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch10-kimi-swarm">
+<p>Moonshot AI، <em>Kimi Agent Swarm: 100 Sub-Agents at Scale</em>، 2026، https://www.kimi.com/blog/agent-swarm؛ وقد كُشف في مؤتمر GTC 2026 أن الحد الأقصى للوكلاء الفرعيين المتوازين قد توسّع إلى 300؛ أما AgentEnv فهو صندوق اختبار لتدريب الوكلاء فتحت مصدره Moonshot AI بالتعاون مع KVCache.ai، وصدر مع Kimi K3 في يوليو 2026.&#160;<a class="footnote-backref" href="#fnref:ch10-kimi-swarm" title="Jump back to footnote 10 in the text">&#8617;</a></p>
+</li>
+<li id="fn:agentopia-2026">
+<p>وانغ، X.، تشنغ، S.، وو، H.، وآخرون. <em>Agentopia: محاكاة الحياة على المدى الطويل والتعلم في مجتمعات الوكلاء.</em> arXiv:2606.07513, 2026. الرمز: https://github.com/Neph0s/Agentopia&#160;<a class="footnote-backref" href="#fnref:agentopia-2026" title="Jump back to footnote 11 in the text">&#8617;</a></p>
+</li>
+<li id="fn:agoric">
+<p>إن فكرة تخصيص الموارد الحسابية من خلال آليات السوق ليست جديدة: Miller, M. S., Drexler, K. E. <em>الأسواق والحوسبة: الأنظمة المفتوحة الزراعية.</em> In Huberman, B. A. (ed.), <em>The Ecology of Computation</em>, North-Holland, 1988.&#160;<a class="footnote-backref" href="#fnref:agoric" title="Jump back to footnote 12 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:45 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:45 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2338 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/book-ru/chapter9/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Мультимодальность и интерактивность в реальном времени - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="Мультимодальность и интерактивность в реальном времени">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/book-ru/chapter9/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Мультимодальность и интерактивность в реальном времени">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Мультимодальность и интерактивность в реальном времени
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Голос: самый естественный интерфейс человек-компьютер
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Три парадигмы голосовой архитектуры
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cascading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Парадигма первая · Каскадный конвейер (Cascading)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Парадигма первая · Каскадный конвейер (Cascading)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Потоковая обработка на всей цепочке каскадного конвейера
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vad-asr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Потоковое речевое восприятие: замена VAD + ASR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-omni" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Парадигма 2 · Полностью сквозные полимодальные модели (Omni)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-duplex-interactive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Парадигма третья · Полнодуплексная модель взаимодействия (Full-Duplex / Interactive)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Выбор архитектуры мышления: от разделения к единству
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Выбор архитектуры мышления: от разделения к единству">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вариант первый: быстрое мышление отвечает вместо, медленное мышление отвечает по существу
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вариант второй: быстрое мышление взаимодействует, медленное мышление подсказывает
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-step-audio-r1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Решение 3: Единство мышления и выражения от начала до конца (на примере Step-Audio R1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Интерфейс между быстрым и медленным: что кроме текста можно передавать
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Синтез речи, более похожий на человеческий
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#computer-use-gui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Computer Use: агент автоматизации GUI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Computer Use: агент автоматизации GUI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Проектирование пространства действий
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grounding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Визуальная локализация (Grounding)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computer-use-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Computer Use Agent, способный видеть движение и слышать звук
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Мобильные устройства: экосистемные барьеры сложнее технологий
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Оперативность: пока нерешённая ключевая проблема
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Управление роботами: от управления в реальном времени к обучению и обобщению
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Управление роботами: от управления в реальном времени к обучению и обобщению">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Железо не узкое место — узкое место в алгоритмах
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Двухуровневая архитектура: разделение планирования и управления
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Долгосрочное планирование: от VLM к специализированным моделям воплощённого мышления
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vla-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLA-управление: от данных демонстраций к обобщению между воплощениями
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sim2real-transfer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sim2Real Transfer: разрыв между симуляцией и реальностью
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Резюме главы
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вопросы для размышления
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/book-ru/chapter9.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/book-ru/chapter9.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="_1">Мультимодальность и интерактивность в реальном времени<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>В предыдущих главах мы рассматривали устройство агента в текстовом мире — как он взаимодействует с цифровыми системами через контекст, инструменты и код. Но объекты взаимодействия агента не ограничиваются текстом и API. Когда агенту нужно понять голосовую команду пользователя, найти и нажать нужную кнопку на экране или точно управлять механической рукой для захвата предмета, он вступает в совершенно новую область: <strong>мультимодальное взаимодействие в реальном времени</strong> — расширение от чисто текстового ввода-вывода к <strong>мультимодальному восприятию и отклику в реальном времени</strong>. Это ключевой шаг агента за пределы «диалогового окна». «Мультимодальность» означает одновременную обработку разных форм информации — текста, речи, изображений, видео, действий — а не только текста.</p>
+<p>Сначала очертим границы этой главы. Статическое понимание изображений и документов — просмотр скриншота, чтение диаграммы, разбор PDF — уже органично вошло в практику агентов из предыдущих глав как инструмент восприятия: для сегодняшних мультимодальных больших моделей такие задачи «один ввод — одно понимание» уже относительно зрелые и не требуют специального архитектурного решения. Эта глава сосредоточена на другом классе проблем: <strong>три сценария, где реальное время делает мультимодальность по-настоящему сложной</strong> — голосовой диалог, управление GUI, управление роботом. В этих сценариях ввод непрерывно поступает потоком, вывод должен укладываться в жёсткий временной бюджет, и из-за этого архитектурное решение качественно меняется. Что касается понимания в реальном времени непрерывного визуального потока (видео) — на момент написания книги для агентов это всё ещё открытый вопрос; мы вернёмся к этой теме в разделе про Computer Use, где обсудим ограничения покадровых скриншотов, и в вопросах для размышления в конце главы. Проведём ещё одну границу: мультимодальная <strong>генерация</strong> (создание изображений, видео) в рамках этой книги — обычный вызов инструмента (об этом уже шла речь в пятой главе, посвящённой генерации мультимедиа), агент просто использует это как внешний инструмент, и это не связано с проблемой интерактивности в реальном времени, которую мы решаем в этой главе, — поэтому это не входит в основную линию главы.</p>
+<p>Голосовое взаимодействие, Computer Use и управление роботом на первый взгляд относятся к трём совершенно разным областям, но на практике оказывается, что узкие места у них удивительно похожи: все они требуют одновременной обработки информации разных модальностей, и все они крайне чувствительны к задержке. Пауза в голосовом диалоге дольше двух секунд вызывает раздражение, а миллисекундное дрожание в управлении роботом может привести к столкновению. Эти два ограничения вместе толкают все три сценария в одном архитектурном направлении: от <strong>последовательного конвейера</strong> (как на заводской линии — один этап заканчивается, только потом передаёт эстафету следующему) к <strong>сквозной модели</strong> (единая модель напрямую идёт от входа к выходу, минуя промежуточные передачи).</p>
+<p>Глава построена по следующей логике:</p>
+<ol>
+<li>Сначала выстроим систему координат из «трёх парадигм голосовой архитектуры» — каскад (конвейер VAD-ASR-LLM-TTS), сквозная всемодальная модель (Omni, единая модель, но всё ещё говорящая по очереди), полный дуплекс (Moshi, GPT-Live, слушает и говорит одновременно) — и вдоль оси «как избавиться от предположения о поочерёдности речи, заложенного в VAD» последовательно разберём задержку и компромиссы каждого звена; в разделе про каскад отдельно расскажем, как заменить VAD + ASR потоковым голосовым восприятием.</li>
+<li>Затем посмотрим, как архитектура мышления примиряет противоречие между «мгновенным откликом» и «глубоким размышлением»: от простого параллелизма быстрого и медленного мышления, через путь развязки, где фоновая модель рассуждения выступает «военным советником» (делегирование в GPT-Live, Pine AI и другие), до Step-Audio R1, который «интернализует» размышление в единую модель — «думает и говорит одновременно».</li>
+<li>Затем обсудим оптимизацию исполнительного слоя за счёт более человекоподобного синтеза речи.</li>
+<li>Наконец расширим взгляд до Computer Use (когда ИИ управляет экраном компьютера, как человек) и управления роботом, посмотрим, как те же проблемы задержки и мультимодальности проявляются в этих двух сценариях.</li>
+</ol>
+<p>Особо отметим два момента, более теоретических и переносимых между сценариями: <strong>архитектуру мышления</strong> (как взаимодействуют два контура — быстрого и медленного мышления) и производный от неё <strong>интерфейс быстрого и медленного мышления</strong> (Latent Bridge — что кроме текста можно передавать между быстрой и медленной моделями). Хотя разговор о них начинается с голосового сценария, они полезны не только там — далее в Computer Use и робототехнике мы снова столкнёмся с вопросом «когда стоит позвать медленного советника», и на это стоит обратить особое внимание.</p>
+<h2 id="-">Голос: самый естественный интерфейс человек-компьютер<a class="headerlink" href="#-" title="Permanent link">&para;</a></h2>
+<p>Прежде чем разбирать архитектуру голосового агента, сделаем шаг назад и посмотрим на ценность самой речи. Среди всех способов взаимодействия человека с компьютером речь обладает самой высокой пропускной способностью и наиболее естественна: обычная скорость речи примерно в четыре раза выше скорости печати, при этом не нужно занимать руки и зрение. Именно поэтому речь превращается из второстепенного способа ввода в основной интерфейс взаимодействия для многих людей в повседневной работе — говорить с агентом с утра до вечера напрямую, а не набирать текст по буквам.</p>
+<p>На уровне инструментов на этом пути существует примерно два типа продуктов. Первый — <strong>голосовой ввод</strong> (например, Typeless): устная речь в реальном времени преобразуется в текст, который затем передаётся в любое приложение, по сути это замена клавиатурного ввода. Второй — <strong>голосовой агент</strong> (например, Pine, ChatGPT Voice): пользователь напрямую общается и сотрудничает с ним, речь является одновременно и вводом, и самим взаимодействием. Самое типичное продвинутое применение обоих подходов — упомянутый во введении <strong>whisper coding</strong>: командование программированием или исследовательским агентом устной речью — разработчик проговаривает намерение, многократно обсуждает его с агентом, а тот выполняет написание кода и эксперименты; более десятка статей команды авторов этой книги были написаны именно таким способом.</p>
+<p>Стоит уточнить: архитектура речи, которую мы обсудим далее в этой главе, служит одновременно двум направлениям: пользователь говорит с агентом (как интерфейс человек-машина), и агент говорит с внешним миром вместо пользователя (например, ведёт телефонные переговоры). За обоими стоит один и тот же набор технологий речи в реальном времени. Начнём с трёх парадигм голосовой архитектуры.</p>
+<h2 id="_2">Три парадигмы голосовой архитектуры<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Чтобы разобраться в технологической эволюции голосовых агентов, удобной системой координат служит трёхчастная классификация<sup id="fnref:ch9-12"><a class="footnote-ref" href="#fn:ch9-12">1</a></sup>, которую OpenAI дала при выпуске GPT-Live в 2026 году — она как раз соответствует трём поколениям архитектуры, через которые прошёл голос ChatGPT:</p>
+<ol>
+<li><strong>Каскад (Cascaded)</strong>: три модели — распознавание речи (ASR), большая языковая модель (LLM), синтез речи (TTS) — соединяются в конвейер, передающий эстафету одна другой. Так был устроен самый первый ChatGPT Voice, который впервые позволил людям «разговаривать» с передовой моделью, но при передаче информации между моделями она терялась, а ответы были медленными и неестественными.</li>
+<li><strong>Сквозная всемодальная модель (Omni)</strong>: единая модель напрямую «слушает аудио, обдумывает ответ, произносит его», объединяя три этапа в один — задержка ниже, а нетекстовая информация вроде просодии и эмоций сохраняется. Но она всё ещё предполагает «поочерёдный разговор» — модель ждёт паузы пользователя, чтобы заговорить, а переключение очереди определяется по тишине: любая небольшая пауза или фоновый шум могут быть ошибочно приняты за «конец фразы», и модель вклинивается там, где не следует. К этому поколению относится расширенный голосовой режим ChatGPT (Advanced Voice Mode); OpenAI называет его «поочерёдной голосовой моделью (turn-based)», в индустрии же чаще называют по возможностям модели «всемодальной (Omni)» (например, Qwen3-Omni) — это два названия одного и того же.</li>
+<li><strong>Полный дуплекс / интерактивный (Full-Duplex / Interactive)</strong>: модель слушает и говорит одновременно, обрабатывая вход и выход параллельно, десятки раз в секунду принимая решение «говорить, слушать, замолчать, перебить или вызвать инструмент» — полностью отказавшись от предположения о «поочерёдности». Исследовательский прорыв 2024 года — Moshi от Kyutai; в 2026 году OpenAI довели эту идею в GPT-Live до масштаба 150 миллионов пользователей.</li>
+</ol>
+<p>Через все три поколения проходит одна и та же главная линия: <strong>как избавиться от предположения о «поочерёдном разговоре», от того, что VAD (детектор голосовой активности) угадывает границы очереди</strong>. И каскад, и Omni всё ещё полагаются на VAD для разделения на очереди, и только полный дуплекс полностью снимает саму идею очереди. Три следующих раздела последовательно раскрывают эту ось. Три парадигмы — это не простая смена старого новым, а разные компромиссы под разными ограничениями по задержке и стоимости, которые в 2026 году долго сосуществуют в промышленных системах.</p>
+<p>Кроме того, GPT-Live принёс ещё одно структурное изменение — разделение «взаимодействия в реальном времени» и «глубокого размышления»: когда встречается вопрос, требующий поиска или сложного рассуждения, интерактивная модель делегирует задачу фоновой передовой модели (на момент выпуска — GPT-5.5), а сама продолжает поддерживать разговор. Эта линия «разделения труда быстрого и медленного» будет подробно раскрыта дальше в разделе «Компромиссы архитектуры мышления».</p>
+<h2 id="cascading">Парадигма первая · Каскадный конвейер (Cascading)<a class="headerlink" href="#cascading" title="Permanent link">&para;</a></h2>
+<p>Подавляющее большинство коммерческих голосовых помощников — от умных колонок до чат-ботов службы поддержки — построены на последовательном конвейере (Рис. 9-1): детектор голосовой активности (VAD) определяет, когда пользователь закончил говорить → автоматическое распознавание речи (ASR) превращает аудио в текст → большая языковая модель (LLM) понимает намерение и генерирует ответ → синтез речи (TTS) озвучивает ответ. Как в эстафете, каждое звено должно дождаться завершения предыдущего, прежде чем начать свою часть.</p>
+<p><img alt="Рис. 9-1 Последовательный конвейер голосового агента" src="../images/fig9-1.svg" /></p>
+<p>Ранние голосовые помощники использовали этот четырёхэтапный последовательный конвейер по простой причине: не существовало единой модели, способной одновременно решать четыре задачи — распознавание речи, понимание языка, мышление и синтез речи. Модульная архитектура позволяла разрабатывать и оптимизировать каждый компонент независимо. Но за модульность приходится платить накоплением задержки — каждый этап должен дождаться завершения предыдущего, прежде чем начать.</p>
+<p><strong>VAD</strong> — начальная точка конвейера, он непрерывно отслеживает аудиопоток. Ключевой элемент дизайна — определение конца речи (End-of-Speech Detection): обычно устанавливается порог непрерывной тишины в 500–800 мс — если пользователь молчит дольше полусекунды, VAD решает, что он закончил говорить. Это вносит первый слой задержки, и здесь трудно совместить обе крайности: если порог слишком короткий, пауза пользователя во время обдумывания ошибочно принимается за конец фразы, и предложение обрезается; если слишком длинный — после того как пользователь закончил, приходится ждать почти секунду, прежде чем получить реакцию.</p>
+<p><strong>ASR</strong> превращает звуковую волну в текст. Такие модели, как Whisper, SenseVoice, при развёртывании моделей малого и среднего размера на GPU обычно транскрибируют 5-секундный фрагмент аудио за 50–200 мс; более крупные модели или ограниченные по ресурсам среды развёртывания дают 200–500 мс (именно к последнему случаю относится контрольная группа в эксперименте 9-3). Более важная проблема в другом: пока идёт ожидание VAD и транскрипция ASR, LLM ниже по конвейеру полностью простаивает — она не получает никакой информации и не может начать думать заранее.</p>
+<p>На этапе inference <strong>LLM</strong>, даже при хорошей оптимизации, время до первого токена (TTFT, то есть время ожидания, пока модель выдаст первый символ) в зависимости от длины контекста обычно составляет 100–500 мс; для декодирования первого короткого фрагмента, пригодного для озвучивания, требуется дополнительное время. Если включён reasoning (размышление), модель обычно завершает внутреннее рассуждение до вывода первого видимого токена, поэтому ожидание может растянуться до 5–10 секунд. Традиционная полностью последовательная реализация также дожидается полного ответа LLM и лишь затем передаёт текст в TTS.</p>
+<p><strong>TTS</strong> превращает текст ответа в речь; синтез короткой фразы обычно требует 200–500 мс. На Рис. 9-2 короткий ответ без reasoning показывает, как накапливается последовательная задержка: VAD (500–800 мс) + ASR (50–200 мс) + TTFT LLM (100–500 мс) + генерация короткой фразы LLM (100–300 мс) + TTS (200–500 мс), всего около 0,95–2,3 секунды. Это лишь иллюстративный диапазон при единой методике измерения; реальные значения также зависят от длины ввода и ответа, модели, оборудования, сети и нагрузки.</p>
+<p><img alt="Рис. 9-2 Каскад задержек: последовательное накопление общего времени отклика" src="../images/fig9-2.svg" /></p>
+<p>Как только система переходит в промышленную эксплуатацию, задержка из-за очередей только усугубляет ситуацию. Это похоже на очередь в ресторане: чем занятее кухня, тем дольше ждать заказ, причём рост не линейный, а резкий (Рис. 9-3). Когда у сервера вообще нет очереди ожидания (то есть он «простаивает»), время обработки одного запроса называется задержкой при простое. Но когда несколько запросов приходят одновременно, более поздние вынуждены вставать в очередь.</p>
+<p>Интуитивно: чем выше загрузка, тем нелинейнее взлетает время ожидания. Конкретное математическое соотношение даёт теория массового обслуживания (здесь приводится только для интуитивного понимания, строгий вывод не требуется): общая задержка ≈ задержка при простое × 1/(1-загрузка). Загрузка — это доля времени, когда сервер занят обработкой запросов; например, загрузка 50% означает, что сервер половину времени обрабатывает запросы, а половину простаивает. При загрузке 50% задержка становится в 2 раза больше, чем при простое, а при загрузке 80% — в 5 раз больше — вот почему сервер не может долго работать под высокой нагрузкой.</p>
+<p><img alt="Рис. 9-3 Кривая задержки очереди" src="../images/fig9-3.svg" /></p>
+<blockquote>
+<p><strong>Эксперимент 9-1 ★: Построение традиционного голосового агента</strong></p>
+<p>В этом эксперименте строится полноценная система голосового диалога в реальном времени, поддерживающая взаимодействие пользователя с ИИ через микрофон. Система использует архитектуру с разделением фронтенда и бэкенда, реальное время обеспечивается через WebSocket.</p>
+<p>Основной поток строго следует последовательной модели: фронтенд захватывает ввод с микрофона и в реальном времени отправляет его по WebSocket на бэкенд. Бэкенд запускает модель Silero VAD для детектирования голосовой активности — по сравнению с традиционными методами детекции по громкости она точнее и устойчивее к шуму; после обнаружения примерно 500 мс непрерывной тишины извлекается фрагмент аудио для дальнейшей обработки.</p>
+<p>На каждом из этапов ASR, LLM, TTS поддерживается гибкое переключение между несколькими провайдерами — разработчик может выбрать оптимальное сочетание в зависимости от задержки, точности и региональных сетевых условий.</p>
+<p><strong>Эксперимент 9-2 ★: Построение телефонного агента на PineClaw Voice API</strong></p>
+<p>В эксперименте 9-1 была построена система голосового диалога внутри браузера, но в реальном мире многим задачам агента нужны настоящие телефонные звонки — связаться со службой поддержки по поводу счёта, забронировать столик в ресторане, подтвердить заказ. В четвёртой главе на примере механизма Channel в PineClaw было показано, как событийно-ориентированная архитектура сокращает время отклика на телефонные уведомления с минут до секунд; этот эксперимент сосредоточен на построении самого голосового вызова. Возьмём в качестве примера <a href="https://pineclaw.com/">PineClaw Voice API</a> (разработан командой авторов книги) — такие промышленные API для голосовых звонков обычно инкапсулируют весь процесс: набор номера, навигацию по IVR (то есть по телефонному меню вида «для запроса нажмите 1, для соединения с оператором нажмите 0»), диалог и транскрипцию. Агент указывает номер телефона, цель и контекстную информацию, а голосовой агент выполняет весь звонок целиком и возвращает структурированную запись разговора.</p>
+<p><strong>Цель эксперимента</strong>: построить агента, способного выполнять задачи по настоящему телефону, интегрировав PineClaw Voice как инструмент в цикл ReAct.</p>
+<p><strong>Техническое решение</strong>: используем Python SDK PineClaw Voice (<code>pine-voice</code>), снабжая агента инструментом <code>make_phone_call</code>. Агент получает описание задачи от пользователя (например, «запиши меня к стоматологу завтра на 15:00»), и через размышление в стиле ReAct определяет: (1) на какой номер телефона нужно позвонить; (2) какова цель звонка и ключевая информация; (3) как доложить пользователю о результате после завершения звонка.</p>
+<p>Процесс работы агента: пользователь говорит «позвони в клинику и запиши меня на завтра» → агент обдумывает, какая информация нужна (телефон клиники, время записи, имя пациента) → если информации недостаточно, уточняет у пользователя → вызывает инструмент <code>make_phone_call</code> → PineClaw звонит, ведёт разговор, завершает запись → агент получает краткое содержание и транскрипцию звонка → докладывает результат пользователю.</p>
+<p><strong>Критерии приёмки</strong>: успешный тестовый звонок (можно сначала позвонить на собственный телефон, чтобы проверить связь). Агент самостоятельно определяет параметры звонка на основе описания задачи, после завершения звонка корректно извлекает ключевую информацию (время записи, номер подтверждения и т. д.) и докладывает результат пользователю. Сравните разницу между прямым вызовом API и вызовом через цикл ReAct агента — последний способен обрабатывать неполную информацию (например, искать номер телефона самостоятельно, если пользователь его не указал).</p>
+<p>Этот эксперимент демонстрирует важное направление применения голосовых агентов: <strong>агент может не только вести голосовой диалог с пользователем, но и взаимодействовать по телефону с внешним миром вместо пользователя</strong>. Голосовой агент PineClaw специально обучен справляться с часовым ожиданием, навигацией по телефонным меню и сложными переговорами — представьте, что ИИ звонит вместо вас в службу поддержки провайдера и ждёт соединения с оператором. Именно такие сценарии традиционному последовательному голосовому конвейеру даются с трудом.</p>
+</blockquote>
+<h3 id="_3">Потоковая обработка на всей цепочке каскадного конвейера<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>Рис. 9-2 описывает <strong>полностью последовательный</strong> случай, когда каждое звено завершает работу, прежде чем передать эстафету. Промышленные системы обычно сохраняют модульное разделение VAD-ASR-LLM-TTS, но стараются как можно раньше выдавать инкрементальные результаты каждого этапа, чтобы пользователь быстрее услышал первый звук:</p>
+<ul>
+<li><strong>ASR слушает и транскрибирует одновременно</strong>: потоковое распознавание непрерывно выдаёт предварительную транскрипцию, пока пользователь говорит, скрывая большую часть вычислений распознавания за временем речи. После завершения реплики итоговый текст всё равно нужно подтвердить, поскольку последующий контекст может изменить предварительный результат.</li>
+<li><strong>LLM потоково выдаёт и сегментирует текст</strong>: по мере генерации модель делит ответ по пунктуации или смыслу на фрагменты, пригодные для озвучивания, и передаёт первый фрагмент в TTS, не дожидаясь полного ответа. Это не сокращает TTFT LLM и не позволяет пропустить reasoning; экономится время ожидания завершения всего ответа.</li>
+<li><strong>TTS инкрементально синтезирует аудио</strong>: получив первый текстовый фрагмент, TTS начинает синтез и возвращает аудиоблоки ещё до готовности всей звуковой волны. После этого генерация оставшегося текста LLM, синтез последующей речи TTS и воспроизведение уже полученного аудио на клиенте могут идти с перекрытием.</li>
+</ul>
+<p>Однако потоковость каждого этапа не означает, что все три модели одновременно начинают работать над одной репликой. В стандартном каскаде без предположений зависимости сохраняются: ASR может работать, пока пользователь говорит; LLM формирует окончательный ответ только после завершения реплики и стабилизации транскрипции; TTS запускается лишь после появления первого фрагмента текста, пригодного для озвучивания. В действительности перекрываются «речь пользователя и транскрипция ASR», а также «генерация оставшейся части ответа LLM и синтез/воспроизведение TTS», но не все вычисления ASR, LLM и TTS от начала до конца.</p>
+<p>Более агрессивные системы применяют <strong>опережающую/спекулятивную генерацию (preemptive/speculative generation)</strong>: заранее запускают LLM на достаточно стабильной частичной транскрипции, а если последующая транскрипция меняется — отменяют, перезапускают или исправляют генерацию. Можно заранее синтезировать и речь, но воспроизведение обычно ждёт подтверждения конца реплики, чтобы агент не заговорил поверх пользователя. Такие фреймворки, как LiveKit Agents и Pipecat, могут поддерживать и обычный потоковый каскад, и подобные опережающие стратегии. Реальное перекрытие ASR и LLM зависит от явной реализации фиксации частичной транскрипции, её инвалидирования и отката, а не возникает автоматически при включении параметра <code>stream</code>.</p>
+<p>Обычная потоковая обработка также не устраняет <strong>само ожидание тишины и определение конца реплики в VAD</strong>. Потоковый ASR к этому моменту уже работает; определение конца реплики блокирует фиксацию итоговой транскрипции и воспроизведение ответа. Опережающая генерация может скрыть часть вычислений, но системе всё равно нужно решить, когда безопасно начать говорить. Дальнейшее сокращение этой задержки требует улучшения самого переднего этапа восприятия и определения конечной точки.</p>
+<h3 id="vad-asr">Потоковое речевое восприятие: замена VAD + ASR<a class="headerlink" href="#vad-asr" title="Permanent link">&para;</a></h3>
+<p>Этот воспринимающий фронтенд состоит из двух уровней: VAD определяет, закончил ли пользователь говорить, а ASR преобразует аудио в текст. В полностью последовательной архитектуре они вместе определяют, когда запускается последующий конвейер и какой вход он получает. В потоковой архитектуре ASR начинает работу раньше, однако фиксация итогового текста и момент начала ответа по-прежнему зависят от определения конечной точки. У традиционного каскада VAD + ASR есть три фундаментальные проблемы:</p>
+<ol>
+<li><strong>Накопление задержки</strong>: VAD вынужден ждать 500–800 мс тишины, чтобы подтвердить, что пользователь договорил, — ведь он не может предвидеть будущее и различает «действительно закончил» от «просто задумался» только через выжидание</li>
+<li><strong>Потеря информации</strong>: VAD выдаёт только бинарный сигнал «есть звук/нет звука», при этом полностью теряются такие акустические детали, как изменение эмоций, интонационные колебания, колебания-паузы, фоновая обстановка. Проблема ложных срабатываний особенно заметна в сложной среде — если пользователь чуть дольше обычного делает паузу, это ошибочно принимается за конец фразы, что обрывает предложение; фоновый шум ложно запускает обработку, когда никто ничего не говорит; а короткое «угу» пользователя вообще невозможно понять — то ли это попытка перебить, то ли знак согласия</li>
+<li><strong>Снижение точности</strong>: VAD режет непрерывный аудиопоток на отдельные независимые фрагменты, каждый из которых отдельно подаётся в ASR, что разрушает непрерывность контекста. Для контента, который требует контекста до и после для корректного распознавания (адреса электронной почты, названия брендов, имена людей, специальные термины), заметно растёт частота ошибок — например, если пользователь диктует email «john dot smith at gmail dot com» и «john» с «smith» попадают в разные фрагменты, «smith» из-за отсутствия контекста может быть ошибочно распознан как «miss»</li>
+</ol>
+<p><strong>Модели потокового речевого восприятия</strong> предлагают принципиальное решение. Сначала проясним техническое значение слова «потоковый»: способность речевой модели работать в потоковом режиме определяется тем, <strong>является ли энкодер каузальным или блочным</strong> (зависит только от уже поступившего аудио, а не требует всей записи целиком), и <strong>инкрементально ли декодирование</strong> (выдаёт часть результата по мере поступления каждого небольшого фрагмента аудио). Whisper не может работать в потоковом режиме не из-за способа декодирования — оно само по себе авторегрессивно, — а потому что её энкодеру требуется целый аудиосегмент (фиксированные 30 секунд, недостающее заполняется тишиной), прежде чем он сможет начать работу. Стоит также отметить, что потоковое распознавание само по себе не новая технология: традиционный потоковый ASR на базе RNN-T и потокового Conformer давно массово используется в индустрии — субтитры в реальном времени на телефонах, голосовой ввод в клавиатурах используют именно такие модели, — и они не имеют отношения к LLM.</p>
+<p>В этом разделе речь пойдёт о новом направлении: <strong>потоковое слуховое восприятие на основе LLM</strong> — постобучение модели с открытым исходным кодом в качестве основы, чтобы модель напрямую выдавала семантические отклики из непрерывного аудиопотока, объединяя «распознавание» и «понимание» в одной модели. Это модернизация традиционного потокового ASR, а не изобретение потоковой технологии как таковой: задержка инкрементального распознавания сохраняется на уровне времени одного шага вывода (от десятков до одной-двух сотен миллисекунд), но модель видит не порезанные VAD изолированные фрагменты, а непрерывный аудиопоток от начала диалога до текущего момента и может опираться на полный контекст для обучения в контексте (In-Context Learning), значительно повышая точность распознавания персональной информации пользователя, специальных терминов и особенностей произношения.</p>
+<p>Ещё одно ключевое преимущество этого направления — наследование от LLM мировых знаний и способности к здравому смысловому выводу, ведь базовая модель видела огромные объёмы текста. Например, модель понимает, что после «Apple» с большой вероятностью следует «презентация», а не «яблоко» в смысле фрукта, — такое усиление знаниями значительно повышает точность распознавания ценной информации вроде сумм, географических названий, названий брендов по сравнению с традиционным ASR. У этого направления уже есть готовые к внедрению модели, например Ultravox от Fixie — аудио подаётся напрямую в базовую LLM, на выходе получаются текст и семантические токены; используемые в экспериментах этого раздела Qwen2-Audio и Qwen2.5-Omni от Alibaba также относятся к этому классу нативных для аудио моделей.</p>
+<p>Однако для замены VAD не обязательно задействовать полноценную большую аудиомодель. Если хочется решить только первую проблему — <strong>определить, действительно ли пользователь закончил говорить</strong>, — есть более лёгкий путь: встроить это «определение хода» прямо в сам распознаватель<sup id="fnref:ch9-11"><a class="footnote-ref" href="#fn:ch9-11">2</a></sup>. Способ таков: добавить LoRA поверх небольшой открытой потоковой модели распознавания, чтобы она одновременно транскрибировала и <strong>на основе совокупности семантики и тишины</strong> определяла, «выражена ли уже законченная мысль» — ведь паузы внутри хода (например, при диктовке номера телефона) часто оказываются длиннее, чем интервал между ходами, и одного порога тишины неизбежно недостаточно ни для одного, ни для другого случая. Ещё более интересный вывод: если модель постоянно колеблется в вопросе «принимать реплику или нет», причина часто кроется не в архитектуре модели, а в том, что <strong>обучающие метки размечены с «божественной точки зрения»</strong> — при разметке использовалось аудио, появившееся уже после точки принятия решения, тогда как онлайн-модель попросту не может видеть будущее; если каждую метку переразметить так, чтобы использовать «только информацию, доступную в момент принятия решения», это ложное колебание исчезает. Это перекликается с выводом из главы 7 о постобучении: часто данные важнее архитектуры. Этот более лёгкий путь уже имеет промышленные реализации: Flux от Deepgram, Universal-Streaming от AssemblyAI встраивают определение конечной точки и хода прямо в потоковую модель распознавания, специально спроектированную для речевых агентов; со стороны открытого кода есть модели семантического определения хода от LiveKit и Pipecat.</p>
+<p>Модель выдаёт на выходе не только текст, но и ряд <strong>специальных меток акустических событий</strong> — это специальные токены, введённые при обучении модели, которые она научилась автоматически выдавать при обнаружении соответствующего акустического события. Наиболее распространённые категории:</p>
+<ul>
+<li><code>&lt;speak_start/end&gt;</code>: определение начала и конца речи на основе совокупности семантики и акустики, а не простого детектирования тишины</li>
+<li><code>&lt;interrupt&gt;</code>: различение того, действительно ли пользователь хочет перебить, или просто поддакивает, или это влияние фонового шума</li>
+<li><code>&lt;emotion:happy/frustrated&gt;</code>: маркер эмоции</li>
+<li><code>&lt;laugh&gt;</code> / <code>&lt;sigh&gt;</code>: паралингвистические сигналы вроде смеха, вздоха</li>
+<li><code>&lt;music&gt;</code> / <code>&lt;noise&gt;</code>: звуки окружения</li>
+</ul>
+<p>Эти метки и текстовые токены образуют единый поток событий, который подаётся на слой рассуждения.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Входное аудио: &quot;Хм, вообще-то я думаю... нет, подождите, дайте пересмотреть.&quot;
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Поток вывода модели:
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  &lt;speak_start&gt; Хм, &lt;emotion:hesitant&gt; вообще-то я думаю...
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  &lt;silence:500ms&gt; нет, подождите, &lt;emotion:confident&gt; дайте пересмотреть &lt;speak_end&gt;
+</code></pre></div>
+<p>Обратите внимание, что модель выдаёт не только текстовую транскрипцию, но и метки речевых событий (начало/конец речи, изменение эмоции, интервалы тишины). Фреймворк агента может использовать эти метки для более естественного взаимодействия — например, предлагать варианты, обнаружив колебание пользователя.</p>
+<blockquote>
+<p><strong>Эксперимент 9-3 ★: моделирование потокового речевого восприятия с помощью Qwen2-Audio</strong></p>
+<p>Сначала нужно пояснить дизайн эксперимента: сама Qwen2-Audio — это непотоковая модель, обрабатывающая аудио целиком. В этом эксперименте используется <strong>симуляция потоковой обработки через подачу блоками</strong> — непрерывный аудиопоток режется на небольшие фрагменты фиксированной длины, каждый фрагмент вместе с ранее накопленным аудиоконтекстом подаётся в модель, которая пошагово генерирует текст и токены акустических событий (таких как смех, паузы и другие невербальные сигналы), при этом измеряется задержка от подачи каждого фрагмента до выдачи текста. Здесь есть важный компромисс: энкодер Qwen2-Audio не инкрементальный, поэтому при обработке каждого нового фрагмента весь ранее накопленный аудиопоток заново кодируется с нуля, из-за чего чем длиннее диалог и чем больше накопленного аудио, тем выше задержка кодирования одного блока — именно в этом состоит принципиальное различие между «симулированным потоковым режимом» и «настоящим потоковым режимом» (с применением инкрементального или каузального энкодера, который инкрементально кодирует только вновь поступивший небольшой фрагмент аудио). Этот дизайн позволяет продемонстрировать выигрыш в точности от «непрерывного восприятия с сохранением полного контекста», но цифры задержки отражают только гранулярность блока и скорость вывода и не эквивалентны задержке первого пакета у по-настоящему потоково спроектированной модели (например, Qwen3-Omni с блочным кодированием); заинтересованный читатель может повторить эксперимент с последней. В качестве сравнения используется традиционный конвейер VAD + ASR на Whisper. Тестируются три типа сценариев: обычный диалог, длинные предложения с паузами, диалог с фоновым шумом.</p>
+<p>Результат: задержка инкрементального распознавания в схеме с симуляцией блоками может удерживаться на уровне одной-двух сотен миллисекунд (конкретное значение зависит от длины блока и аппаратуры), тогда как традиционная схема требует ожидания подтверждения VAD об окончании речи (600 мс) плюс вывод Whisper (около 200–500 мс в конфигурации этого эксперимента), что в сумме даёт 800–1100 мс. В сценарии с паузами VAD ошибочно принял первую же длинную паузу за конец фразы и разбил предложение на две части для отдельного распознавания — фраза «примерно в два часа» из-за отсутствия контекста была ошибочно распознана как «примерно в ноль часов»; тогда как схема с блоками сохранила полный контекст и корректно распознала всю фразу целиком. В сценарии с фоновым шумом Qwen2-Audio выдала токен <code>&lt;|noise|&gt;</code>, отметив присутствие шума, но не прерывая распознавание, тогда как традиционный VAD был ложно активирован шумом, что привело к преждевременному запуску процесса распознавания.</p>
+</blockquote>
+<h2 id="2-omni">Парадигма 2 · Полностью сквозные полимодальные модели (Omni)<a class="headerlink" href="#2-omni" title="Permanent link">&para;</a></h2>
+<p>Вернёмся ко всему каскадному конвейеру: даже когда воспринимающий фронтенд заменён на потоковое речевое восприятие, он в конечном счёте всё равно распределяет «слушать, думать, говорить» между тремя отдельными моделями, соединёнными между собой дискретным интерфейсом. Каким бы широким ни был этот интерфейс, он остаётся лишь набором семантических токенов и разрозненных акустических меток — текущие эмоции говорящего, интонация, тон, а также фоновые звуки окружения и музыка почти полностью теряются при передаче; к тому же все три звена обучаются и оптимизируются отдельно, и им трудно согласованно работать друг с другом. Полностью сквозные полимодальные модели (Omni) идут другим путём — единая модель напрямую «слушает» аудио, «думает» над ответом и «произносит» его, объединяя три звена в одно (Рис. 9-4). При достаточном объёме обучающих данных внутреннее латентное пространство (Latent Space) модели способно передавать эту паралингвистическую информацию напрямую на генерирующий конец, помимо текста: задержка ниже, а просодия и эмоции сохраняются. Компромисс таков: <strong>каскадный конвейер</strong> — модули понятны, каждое звено можно настраивать независимо, интерпретируемость хорошая; <strong>сквозная модель</strong> — задержка ниже, невербальная информация сохраняется, но за это приходится платить бóльшей потребностью в обучающих данных и худшей интерпретируемостью.</p>
+<p>Стоит добавить ещё одно измерение, которое часто упускают из виду: преимущество сквозного подхода проявляется в основном в <strong>задержке</strong>, но не обязательно в <strong>точности</strong>. Одна из достойных сравнения схем — <strong>самокаскад</strong> (self-cascade): та же самая модель сначала транскрибирует аудио в структурированный текст, а затем рассуждает на основе этого текста; по сравнению со сквозным ответом за один проход, какой из подходов даёт более высокую точность, зависит от конкретной задачи. Общую закономерность можно сформулировать так: когда ответ определяется в основном семантическим содержанием (то есть тем, «что было сказано»), и промежуточный текст достаточен для полной передачи релевантной для задачи информации, точность самокаскада сопоставима со сквозным подходом или даже превосходит его, причём это преимущество особенно заметно у моделей со слабыми способностями восприятия; и наоборот, когда ответ сильно зависит от невербальных сигналов, которые трудно выразить текстом (интонация, эмоция, звуки окружения), сквозной подход демонстрирует явное преимущество. Более того, преимущество той или иной схемы <strong>можно заранее предсказать исходя из природы задачи</strong>, а не просто списывать на то, что «сквозной подход более продвинут». Отсюда вытекает и принцип проектирования: то, что определяет производительность, чаще всего заключается не в самом наличии промежуточного представления как <strong>узкого места (bottleneck)</strong>, а в том, какую информацию несёт это узкое место — если промежуточный текст из простой транскрипции превратить в структурированное представление с паралингвистическими метками (эмоция, темп речи, звуки окружения), исходное преимущество сквозного подхода в точности зачастую сужается, что созвучно тезису из раздела «Потоковое речевое восприятие» выше о том, что «слой восприятия не должен выдавать только чистый текст»<sup id="fnref:ch9-13"><a class="footnote-ref" href="#fn:ch9-13">3</a></sup>.</p>
+<p>Однако насколько бы ни была сильна Omni-модель, по сути она лишь объединила три модели в одну, <strong>не отменив предпосылку «говорить по очереди»</strong>: она по-прежнему полагается на VAD для распределения права говорить — как только обнаруживается звук от пользователя, модель останавливается, а как только пользователь замолкает, она тут же начинает говорить. И тут снова всплывает знакомая проблема: пользователь диктует последовательность цифр, делает небольшую паузу посередине — и Omni решает, что собеседник закончил, и насильно вклинивается. Описанное выше потоковое речевое восприятие способно поднять определение хода с уровня продолжительности тишины на семантический уровень, что значительно смягчает подобные ошибочные суждения, но в конечном счёте это лишь локальная заплатка внутри самой парадигмы «ходов», не отменяющая саму очерёдность как таковую. Чтобы <strong>принципиально</strong> вырваться из этого затруднения, нужно перестать латать дыры внутри парадигмы «ходов» и позволить модели слушать и говорить одновременно, самостоятельно решая, когда начать говорить, так чтобы вообще не существовало жёсткого переключения «чья теперь очередь говорить».</p>
+<p><img alt="Рис. 9-4 Сравнение архитектур сквозных полимодальных речевых моделей" src="../images/fig9-4.svg" /></p>
+<p><strong>OpenAI Realtime API</strong> на уровне модели близок к сквозному подходу (модель нативно обрабатывает аудио), но на уровне управления взаимодействием всё ещё полагается на традиционный VAD, представляя собой промежуточное решение на пути к полностью сквозному подходу. Изначально (превью 2024 года) он работал на базе GPT-4o, а после официального релиза (GA) в 2025 году перешёл на отдельную специализированную для речи модель <strong>gpt-realtime</strong> (это уже не режим GPT-4o, а модель, отдельно оптимизированная для голосового общения в реальном времени). API по умолчанию включает серверный VAD, автоматически определяющий, когда пользователь начинает и заканчивает говорить. Поддерживается прерывание в диалоге — при обнаружении, что пользователь заговорил, текущая генерация речи немедленно останавливается, точно так же, как при разговоре лицом к лицу один собеседник вклинивается, а другой естественным образом замолкает. В gpt-realtime также добавлены асинхронные вызовы функций: модель может продолжать разговаривать с пользователем, одновременно ожидая результата от инструмента, скрывая задержку инструмента внутри диалога. Всё это улучшает пользовательский опыт, но по сути остаётся оптимизацией в рамках парадигмы VAD. <strong>Gemini Live API</strong> придерживается похожего подхода: поддерживает настройку чувствительности VAD, а при прерывании сохраняет уже отправленную информацию для обеспечения связности диалога.</p>
+<p><strong>Qwen3-Omni</strong> использует архитектуру Thinker-Talker: разделяет мышление (понимание и рассуждение) и выражение (генерация речи) на два специализированных модуля, объединяя восприятие и генерацию текста, изображений, аудио и видео. Низкая задержка первого пакета у Qwen3-Omni проистекает из архитектуры генерирующего конца (Talker): он генерирует аудиотокены пошагово авторегрессивным способом с несколькими кодовыми книгами, а в паре с этим каузальный (causal) кодек инкрементально декодирует эти токены в форму волны, поэтому как только модуль мышления выдаёт текст, Talker может сразу же продолжить потоковый синтез речи, не дожидаясь завершения генерации всего ответа. Согласно официальному отчёту, теоретическая задержка первого пакета при холодном старте достигает всего около 234 мс, поддерживается понимание на 19 языках и генерация на 10 языках, а в 22 из 36 аудиовизуальных benchmark-ов модель лидирует.</p>
+<p><strong>Step-Audio 2</strong> пошла другим путём: обрабатывает исходное аудио напрямую, выдавая текст и аудио, реализуя настоящий сквозной речевой диалог. Она умеет понимать не только что было сказано (семантическая информация), но и воспринимать, как это было сказано, — паралингвистическую информацию (Paralinguistic Information), например, была ли эмоция говорящего радостной или гневной, был ли темп речи быстрым или медлительным, была ли интонация восходящей или нисходящей, а также звуки окружения и музыку на фоне. Модель генерирует выразительные ответы через размышление и обучение с подкреплением, а также интегрирует механизм RAG и внешние инструменты (веб-поиск, поиск по аудио). Согласно отчёту статьи о Step-Audio 2, на предложенном ею же benchmark-е паралингвистического понимания StepEval-Audio-Paralinguistic точность Step-Audio 2 достигает 83,09%, опережая современную ей открытую полимодальную модель Qwen2.5-Omni (44,18%), а также превосходя GPT-4o Audio (43,45%) и Kimi-Audio (49,64%).</p>
+<p>Step-Audio R1 — это дальнейшее развитие серии Step-Audio, которое, опираясь на сквозную архитектуру речевого диалога Step-Audio 2, ещё сильнее интернализует способность к размышлению непосредственно в аудиомодель, — обе модели представляют собой поступательную эволюцию одного и того же технического направления.</p>
+<h2 id="full-duplex-interactive">Парадигма третья · Полнодуплексная модель взаимодействия (Full-Duplex / Interactive)<a class="headerlink" href="#full-duplex-interactive" title="Permanent link">&para;</a></h2>
+<p>Парадигма вторая объединила три модели в одну, но по-прежнему держится допущения «говорить по очереди» — либо говорит пользователь, либо говорит модель, а точку переключения приходится угадывать по VAD или по смыслу. Но некоторые сценарии — это вовсе не «ты сказал — я сказал» по очереди. Классический пример — <strong>синхронный перевод</strong>: переводчик не ждёт, пока говорящий закончит целую фразу, а слушает и одновременно выстраивает перевод в голове, и как только смысловая группа в общих чертах складывается, тут же её озвучивает — слушание и перевод всё время идут внахлёст. Ещё более крайний случай — <strong>ритм-игра, где нужно бить по барабану в такт музыке</strong>: слух должен непрерывно отслеживать не прекращающийся музыкальный поток, руки — попадать в такт мгновенным ударом, и при этом ещё нужно предугадывать следующую долю — здесь вообще нет понятия «раунд», вход — это непрерывный поток, который никогда не останавливается. Такие задачи бросают фундаментальный вызов модели turn-by-turn: они требуют, чтобы слушание, размышление и действие происходили одновременно, тогда как сама предпосылка режима раундов — разнести эти три процесса по разным, следующим друг за другом отрезкам времени. Полнодуплексная модель — это как раз доведение идеи «отказа от VAD» до логического предела: вместо того чтобы городить костыли, она попросту отменяет само допущение «по очереди», позволяя модели <strong>одновременно и непрерывно слушать и говорить</strong>.</p>
+<p>Пионером здесь стала исследовательская работа Kyutai — <strong>Moshi</strong> (2024). Она параллельно моделирует два аудиопотока (голос пользователя и голос самой модели), дополняя их потоком текста — «внутренним монологом», который повышает языковое качество генерируемой речи. Поскольку модель слушает в любой момент времени, перекрывающаяся речь и произвольное прерывание становятся естественным поведением, не требующим никакой явной логики детекции прерываний; сквозная задержка составляет около 200 мс — это уже близко к естественному темпу человеческого диалога.</p>
+<p>В 2026 году <strong>Thinking Machines Lab</strong>, основанная Мирой Мурати, представила в превью новую категорию, которую они назвали <strong>моделью взаимодействия (Interaction Model)</strong><sup id="fnref:ch9-14"><a class="footnote-ref" href="#fn:ch9-14">4</a></sup>, и прямо сформулировала тезис, стоящий за полным дуплексом: интерактивность не должна оборачивать модель снаружи в виде навесного harness наподобие VAD — она должна быть встроена в саму модель. Как сказано в оригинале: «чтобы интерактивность масштабировалась вместе с интеллектом, она должна стать частью самой модели». В архитектурном плане это выражается в понятии <strong>микрораунда (micro-turn)</strong>: модель не ждёт, пока закончится целый раунд, а работает отрезками примерно по 200 мс, непрерывно «считывая 200 мс — генерируя 200 мс», так что аудио, видео и текстовые потоки продвигаются переплетаясь друг с другом. Эта зернистость выбрана намеренно как компромисс — она достаточно мелкая, чтобы тишина, наложение реплик и прерывания сохранялись в контексте модели как непрерывный поток, без искусственных границ раундов, под которые пришлось бы подстраиваться; и одновременно достаточно крупная, чтобы обрабатывать несколько модальностей блоками, параллельно, удерживая задержку в диапазоне, ощутимом как реальное время. Именно потому, что взаимодействие включено внутрь модели, поведение вроде «говорить, слушая одновременно» или «вклиниваться в разговор, глядя на происходящее» — которое раньше приходилось собирать вручную через специализированный harness, — теперь становится неотъемлемой способностью самой модели и растёт вместе с ней: первая модель, TML-Interaction-Small, с нуля обучалась на трёх потоках сразу, и способна сама заговорить, если замечает, что пользователь пишет код с ошибкой или что в кадр кто-то вошёл.</p>
+<p>Показателен и её подход к «медленному мышлению». Сама модель взаимодействия отвечает только за то, чтобы диалог оставался «на связи»; как только возникает вопрос, требующий глубокого рассуждения или вызова инструмента, она делегирует его более мощной модели рассуждений в фоне — причём передаётся не изолированный запрос, а <strong>весь контекст диалога целиком</strong>. Фоновая модель рассуждает и потоково возвращает результат по мере готовности, а модель взаимодействия сама выбирает момент, не перебивающий пользователя, чтобы естественно вплести этот результат в разговор — всё это время она как ни в чём не бывало продолжает поддерживать беседу, отвечать на уточняющие вопросы, держать нить разговора. Так достигается сочетание «задержки нерассуждающей модели» с «планированием, инструментами и агентными возможностями рассуждающей модели». По официальным данным, у TML-Interaction-Small (276B параметров, MoE, активных 12B) задержка переключения хода составляет около 0,40 секунды (у GPT-realtime-2.0 — около 1,18 секунды), а на бенчмарке, оценивающем визуальную проактивность, она значительно опережает конкурентов, у которых результат практически нулевой; на момент написания книги модель всё ещё находится в статусе исследовательского превью.</p>
+<p>В том же году <strong>GPT-Live</strong> от OpenAI вывела полный дуплекс на промышленный масштаб, став новой моделью по умолчанию для голосового режима ChatGPT и развернувшись по всему миру. Она больше не рассматривает диалог как последовательность отдельных сообщений-раундов, а <strong>непрерывно обрабатывает вход, одновременно непрерывно генерируя выход</strong>, и потому способна принимать множество решений о взаимодействии каждую секунду: заговорить, продолжать слушать, сделать паузу, прервать собеседника или вызвать инструмент. На практике это выглядит так: пока пользователь думает, модель спокойно ждёт, а не перехватывает инициативу; она подаёт реплики вроде «угу», «да», показывая, что слушает; и она справляется с задачами вроде синхронного перевода, где нужно говорить, слушая одновременно.</p>
+<p>GPT-Live пошла тем же путём разделения «быстрого» и «медленного» — <strong>разъединив «взаимодействие в реальном времени» и «глубокое размышление»</strong>: когда требуется поиск, рассуждение или более сложная агентная операция, отвечающая за взаимодействие GPT-Live делегирует задачу фоновой передовой модели (на момент выпуска это была GPT-5.5), а сама продолжает поддерживать поток диалога и, когда фон выдаёт результат, возвращает его обратно в разговор. GPT-Live-1 и mini-версия используют в фоне GPT-5.5 Instant, а режимы Medium и High задействуют GPT-5.5 с рассуждением, позволяя пользователю по своему усмотрению выбирать между «быстро» и «глубоко». Это разделение «быстрого» и «медленного» — как раз тема следующего раздела, «Выбор архитектуры мышления».</p>
+<p>Вернёмся к сквозной линии главы — «замена VAD»: VAD угадывает переключение права голоса по порогу тишины, потоковое восприятие (см. предыдущий раздел «Потоковое восприятие речи» в первой парадигме) поднимает решение о переключении на уровень смысла, а полнодуплексная модель полностью снимает само понятие «переключения» — модель всё время слушает, и «прерывание» перестаёт быть событием, требующим отдельной обработки; поэтому цепочка обработки barge-in архитектурно избавляется от большей части своих звеньев. Это конечная точка линии повествования «замена VAD» на момент написания книги.</p>
+<h2 id="_4">Выбор архитектуры мышления: от разделения к единству<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>По-настоящему нужно решить <strong>противоречие между откликом в реальном времени и глубоким размышлением</strong>: пользователь ожидает отклика за миллисекунды, а сложные вопросы требуют секунд на обдумывание — как сохранить низкую задержку и при этом дать модели думать достаточно глубоко? Это противоречие не принадлежит исключительно сквозным архитектурам — каскадный конвейер точно так же от него не свободен.</p>
+<p>Три варианта ниже — это не линейная технологическая эволюция, а компромиссы проектирования под разные ограничения; на практике они сосуществуют, и выбор зависит от требований конкретного сценария к задержке и глубине размышления. Сначала стоит обозначить границу между ними: варианты один и два по сути представляют собой разделение на «быстро» и «медленно» в виде двух независимых параллельных моделей, которое не зависит от сквозной архитектуры и может быть надстроено даже поверх каскадного конвейера; только вариант три по-настоящему встраивает размышление внутрь сквозной модели.</p>
+<p>Примечательно, что к 2026 году путь «разделения быстрого и медленного» уже стал основным выбором для передовых голосовых продуктов и получил собственное название. Thinking Machines Lab называет это «моделями взаимодействия (Interaction Models)» — модель взаимодействия в реальном времени, сопряжённая с асинхронной фоновой моделью рассуждений; «Think Fast» от Grok Voice компании xAI, голосовой агент Pine AI, а также рассмотренное выше «делегирование» GPT-Live — все они идут по одному и тому же пути: «быстро на переднем плане поддерживать диалог, медленно в фоне глубоко рассуждать». За выбором разделения вместо «обучения одной всемогущей модели» стоит прагматичное соображение: передовые модели рассуждений обновляются каждые несколько месяцев, а способность к взаимодействию в реальном времени требует специализированных данных и целей обучения; если запихнуть и то, и другое в одну модель, она будет вынуждена гнаться за постоянно движущейся целью и рискует размыть свои самые ценные способности к рассуждению<sup id="fnref:ch9-8"><a class="footnote-ref" href="#fn:ch9-8">5</a></sup>. И наоборот: если оставить сильнейшую модель рассуждений неизменной в фоне и обучать лишь лёгкую модель взаимодействия на переднем плане, можно всегда пользоваться самым мощным на данный момент «мозгом» — именно поэтому GPT-Live подчёркивает возможность «устойчиво переключаться на новейшую передовую модель». Рассмотрим три варианта в порядке усиления координационного механизма.</p>
+<h3 id="_5">Вариант первый: быстрое мышление отвечает вместо, медленное мышление отвечает по существу<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>Быстрое и медленное мышление работают параллельно (рис. 9-5): быстрое мышление за 500 мс выдаёт короткий «отговорочный» ответ (по аналогии с тем, как человек сначала говорит «дай подумаю»), а медленное мышление в фоне тратит 5–10 секунд на глубокое размышление и затем даёт полный ответ. Технология, которую использует медленное мышление, называется «масштабирование вычислений на этапе вывода» (test-time scaling) — говоря простыми словами, модели дают «подумать подольше» при ответе на вопрос: не выдавать ответ за один шаг, а, как человек, решающий математическую задачу, сначала выстроить ход рассуждения, шаг за шагом вывести решение, проверить результат — обменивая больше вычислительных шагов на более высокое качество ответа.</p>
+<p><img alt="Рис. 9-5 Архитектура быстрого/медленного мышления и сравнение вариантов" src="../images/fig9-5.svg" /></p>
+<p><strong>Проблема первая: избыточное размышление над простыми вопросами</strong>. Пользователь спрашивает «какой сегодня день недели», быстрое мышление уже за 500 мс правильно отвечает «среда», а медленное мышление всё равно доводит полные 10 секунд размышления до конца и повторяет «среда» ещё раз. Это не просто трата вычислительных ресурсов — что серьёзнее, это ломает ритм диалога: пользователь уже получил ответ и готов перейти к следующей теме, а его вдруг перебивают повторным ответом. <strong>Проблема вторая: несогласованность быстрого и медленного</strong>. Оба процесса работают независимо параллельно, и хотя видят один и тот же контекст, ход размышления у них может быть полностью разным — быстрое мышление даёт предварительный ответ, исходя из некоторого предположения, а медленное мышление обнаруживает, что это предположение неверно, и приходит к противоположному выводу. Пользователь за считанные секунды слышит два взаимоисключающих ответа подряд, и доверие мгновенно рушится. Коренная причина в том, что вариант первый разбивает диалог на два независимых процесса мышления, а не на единый связный когнитивный акт, и между быстрым и медленным нет механизма координации.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>&lt;user&gt;Мне подходит этот тарифный план?&lt;/user&gt;
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>&lt;!-- быстрое мышление, через 0,5 секунды --&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>&lt;assistant (быстрое мышление)&gt;Этот тарифный план очень выгодный по цене, рекомендую его приобрести.&lt;/assistant&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>&lt;user&gt;Хорошо, тогда я...&lt;/user&gt;
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>&lt;!-- медленное мышление завершается через 8 секунд --&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>&lt;assistant (медленное мышление)&gt;Подождите, я обнаружил, что в этом плане отсутствует нужный вам международный роуминг — возможно, он вам не подходит.&lt;/assistant&gt;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>&lt;user&gt;(в гневе) Так вы мне советуете покупать или не покупать?!&lt;/user&gt;
+</code></pre></div>
+<h3 id="_6">Вариант второй: быстрое мышление взаимодействует, медленное мышление подсказывает<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>Вариант второй позволяет медленному мышлению видеть вывод быстрого мышления и через строку состояния агента (динамический механизм внедрения метаинформации, представленный во второй главе) давать быстрому мышлению рекомендации, а не обращаться напрямую к пользователю. По сравнению с вариантом первым здесь есть два улучшения: медленное мышление работает асинхронно в фоне, продолжая размышлять, используя паузы в разговоре; а поскольку оно видит вывод быстрого мышления, прямого конфликта не возникает — оно отходит на второй план и выступает в роли «советника за кулисами». Упомянутое ранее делегирование GPT-Live и голосовой агент Pine AI — это примеры варианта второго в промышленной эксплуатации: фоновая модель рассуждений передаёт свой вывод по компактному текстовому каналу передней модели взаимодействия, а та уже решает, когда и в какой формулировке озвучить это пользователю.</p>
+<p>Но у этого варианта всё же есть принципиальные ограничения. <strong>Быстрое мышление может «не послушаться»</strong> — общение между двумя независимыми экземплярами мышления косвенное и расплывчатое. Получив строку состояния агента, быстрое мышление может понять её неверно: например, истолковать «цену нужно перепроверить» как «спросить пользователя, устраивает ли его эта цена», а не как «цена рассчитана неверно, нужно пересчитать». <strong>Невозможность получить доступ к промежуточным результатам размышления</strong> — за 10 секунд размышления медленное мышление уже произвело массу ценных промежуточных выводов, но быстрое мышление их совершенно не видит и может лишь дожидаться финальной строки состояния агента. Если пользователь задаёт новый вопрос или прерывает разговор до того, как медленное мышление закончило, быстрому мышлению приходится отвечать, полагаясь только на своё ограниченное понимание. Это как если бы два человека решали задачу вместе, но общались только записками, не видя черновиков друг друга.</p>
+<p>У варианта второго есть и более фундаментальная теоретическая проблема: <strong>невозможность реализовать «думать и говорить одновременно»</strong>. Человек, столкнувшись со сложным вопросом, не сначала обдумывает полный ответ в голове, а потом выдаёт его залпом — он думает порциями и говорит порциями: «Вопрос интересный... (пауза, размышление) прежде всего нужно учесть... (продолжает думать) во-вторых...». В варианте втором быстрое мышление способно лишь произносить слова-заполнители, дожидаясь результата от медленного мышления, и не может естественно вплетать процесс размышления прямо в разговор.</p>
+<h3 id="3-step-audio-r1">Решение 3: Единство мышления и выражения от начала до конца (на примере Step-Audio R1)<a class="headerlink" href="#3-step-audio-r1" title="Permanent link">&para;</a></h3>
+<p>Хотя решение 2 и снимает проблему ожидания в медленном мышлении, архитектурно оно остаётся схемой «сначала подумать, потом сказать» — мышление и выражение по-прежнему разделены на два процесса, и говорить одновременно с размышлением, как человек, здесь невозможно в принципе. Чтобы преодолеть это фундаментальное ограничение, способность мыслить нужно встроить прямо в модель.</p>
+<p>Step-Audio R1 предлагает принципиально иное решение именно в этом направлении: способность мышления внедряется напрямую в сквозную аудио-языковую модель, а истинное «говорю, пока думаю» реализуется за счёт архитектуры «двух мозгов». По сути, это два взаимодополняющих механизма, каждый из которых решает свою задачу: <strong>модально-заземлённая дистилляция рассуждений (MGRD)</strong> сначала решает вопрос «правильно ли думает модель» — заставляя модель по-настоящему мыслить на основе акустических признаков, а не текстовой расшифровки; <strong>двухмозговая архитектура MPS</strong> затем решает вопрос «успевает ли она говорить вовремя» — позволяя мышлению и выражению идти параллельно, обеспечивая низкую задержку при «говорю, пока думаю». Первое — предпосылка для второго: только когда само мышление укоренено в звуке, параллельное «думаю-говорю» действительно имеет смысл. Разберём оба механизма по порядку.</p>
+<p><strong>Проблема мышления через текстовый суррогат</strong>. В идеале речевая модель должна напрямую анализировать акустические признаки (высоту тона, ритм, интонацию), чтобы понять эмоцию или намерение говорящего. Но на практике многие модели идут коротким путём: существующим аудио-языковым моделям присущ контринтуитивный феномен — чем длиннее цепочка рассуждений, тем хуже результат. Команда Step-Audio R1 обнаружила, что корень проблемы — «мышление через текстовый суррогат» (Textual Surrogate Reasoning, то есть текстовая информация «подменяет собой» акустическую при анализе): когда модель «думает», она на самом деле рассуждает на семантическом уровне, опираясь на текстовую расшифровку, а не анализирует по-настоящему акустические признаки. Пример: если попросить модель оценить эмоциональную окраску песни, она анализирует «в тексте упоминается грусть», а не «минорная мелодия в сочетании с нисходящим контуром высоты тона передаёт ощущение печали». Это смещение модальности берёт начало в обучающих данных: большинство данных CoT (Chain-of-Thought, цепочки рассуждений) для аудиомоделей сгенерированы текстовыми моделями и, естественно, наследуют чисто текстовый паттерн мышления.</p>
+<p><strong>Модально-заземлённая дистилляция рассуждений</strong> (MGRD, Modality-Grounded Reasoning Distillation) решает эту проблему за счёт итеративного самоулучшения (Рис. 9-6). Название звучит громоздко, но идея на самом деле проста и интуитивна: отбираются рассуждения, которые «действительно слушают звук», и именно на них обучается модель — так она учится анализировать «на слух», как учитель музыки, а не смотреть только на текст песни, как редактор. Конкретно это делается в три шага:</p>
+<ol>
+<li>Текущая модель генерирует несколько разных цепочек рассуждений для одного и того же аудио, после чего отбираются те, что действительно опираются на акустические признаки. Как их отбирать? Смотрим, упоминаются ли в рассуждении конкретные звуковые параметры. Например, для гневного речевого фрагмента текстовое рассуждение звучит как «пользователь произнёс слово с негативной окраской „ужасно“, значит это гнев» — это лишь анализ текстового содержания; а рассуждение, основанное на акустических признаках, звучит как «темп речи на 40% быстрее нормы, громкость заметно повышена, тон стал резче» — вот это действительно «слушание» звука. MGRD отбирает второй тип</li>
+<li>На этих качественных данных рассуждений модель переобучается заново, усиливая способность «думать ушами»</li>
+<li>С помощью обучения с подкреплением проводится дальнейшая оптимизация, чтобы не дать модели схалтурить, пропустив рассуждение и угадав ответ напрямую</li>
+</ol>
+<p>После нескольких итераций основа рассуждений постепенно смещается от текстовой абстракции к акустическому анализу — модель начинает обращать внимание на то, что «контур высоты тона резко падает на отметке 1,2 секунды», вместо расплывчатого «говорящий, похоже, недоволен».</p>
+<p><strong>Двухмозговая архитектура MPS</strong> (Mind-Paced Speaking, дословно «речь в темпе мышления») решает противоречие между задержкой мышления и речевым выводом (Рис. 9-6). Идея вдохновлена разделением функций в человеческом мозге: зона, отвечающая за мышление, и зона, отвечающая за организацию речи, работают раздельно и параллельно — вы обдумываете следующую фразу, пока рот ещё произносит предыдущую. MPS моделирует такое разделение двумя моделями: <strong>мозг формулирования мысли</strong> (Formulation Brain) непрерывно думает и выдаёт результаты мышления порциями; <strong>мозг artikуляции речи</strong> (Articulation Brain) при получении каждой новой порции результата мышления объединяет её с предыдущими размышлениями и уже сформированным ответом и превращает в речевой ответ.</p>
+<p>Оба работают параллельно — мозгу формулирования мысли не нужно додумать всё содержание целиком, чтобы мозг артикуляции уже начал говорить. Например, в момент t=0 мс мозг формулирования начинает анализировать вопрос пользователя, в момент t=200 мс выдаёт первую порцию результата мышления (последовательность текстовых токенов); мозг артикуляции, получив этот результат в t=200 мс, объединяет его с уже сгенерированным контекстом ответа и в t=350 мс начинает выдавать соответствующие речевые токены — оба модуля работают параллельно по конвейерному принципу, и пользователь уже в t=350 мс слышит первый слог.</p>
+<p><img alt="Рис. 9-6 Двухмозговая архитектура MGRD и MPS в Step-Audio R1" src="../images/fig9-6.svg" /></p>
+<blockquote>
+<p><strong>Эксперимент 9-4 ★★★: реализация сквозного речевого мышления на Step-Audio R1</strong></p>
+<p>В этом эксперименте с помощью модели Step-Audio R1 сравниваются различные конфигурации в задачах речевого мышления и диалога. Step-Audio R1 состоит из аудиокодировщика, аудиоадаптера и декодера Qwen2.5 32B, для развёртывания требуется несколько GPU.</p>
+<p>Оценка проводится на двух задачах: <strong>Spoken-MQA</strong> (устные математические задачи) проверяет, способна ли модель выполнять многошаговые математические рассуждения после прослушивания условия задачи; <strong>URO-Bench</strong> (бенчмарк устного диалога на китайском языке) проверяет качество открытого диалога.</p>
+<p>Тестовые конфигурации разбиты по двум измерениям. Первое — <strong>момент мышления</strong>: полная <strong>TBS</strong> (Think-Before-Speak, сначала полностью подумать, затем говорить, используется как контрольная база без ограничений по задержке) сначала генерирует всё рассуждение, а затем начинает говорить; чтобы снизить задержку, MPS предлагает два варианта «говорю, пока думаю» — <strong>Speak-First</strong> (также spkfirst, нулевая задержка, речь и мышление стартуют одновременно) и <strong>Think-First</strong> (также thkfirst, речь начинается только после того, как мозг мышления выдал первую порцию, задержка ~80 токенов). Второе — <strong>архитектура</strong>: параллельная работа двух мозгов MPS против традиционной односмодельной TBS.</p>
+<p>Результаты представлены в таблице 9-1: сравниваются точность на математических задачах и оценки диалога для разных конфигураций момента мышления и архитектуры.</p>
+<p>Таблица 9-1 Сравнение различных конфигураций речевого мышления Step-Audio R1</p>
+<table>
+<thead>
+<tr>
+<th>Конфигурация</th>
+<th>Spoken-MQA</th>
+<th>URO-Bench</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ответ без размышления (базовая линия)</td>
+<td>70,6%</td>
+<td>77,4</td>
+</tr>
+<tr>
+<td>MPS Speak-First (нулевая задержка)</td>
+<td>92,8%</td>
+<td>82,5</td>
+</tr>
+<tr>
+<td>MPS Think-First (задержка ~80 токенов)</td>
+<td>93,9%</td>
+<td>84,8</td>
+</tr>
+<tr>
+<td>Полная TBS (без ограничений по задержке)</td>
+<td>93,0%</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>Интересное наблюдение: Speak-First практически не влияет на задачи, требующие рассуждения (92,8% почти совпадает с 93,0% у полной TBS). Причина в том, что начало <strong>CoT</strong> (Chain-of-Thought, цепочки рассуждений) обычно представляет собой лишь пересказ условия задачи, до настоящего рассуждения дело ещё не доходит, поэтому даже если модель начинает говорить одновременно с началом мышления, итоговая точность почти не страдает. Ещё одна заслуживающая внимания деталь: Think-First (93,9%) даже немного превосходит полную TBS без ограничений по задержке (93,0%) — одно из возможных объяснений в том, что порционная выдача мышления с последовательным преобразованием в речь оказывает эффект, схожий с пошаговым обучением с учителем; впрочем, разница укладывается в погрешность измерения, и не стоит придавать ей слишком большое значение.
+</p>
+</blockquote>
+<p>Решение 3 «внедряет» мышление внутрь единой модели и наиболее изящно реализует «говорю, пока думаю», но платой служит та самая «движущаяся мишень», о которой говорилось в начале раздела: одна и та же модель должна быть одновременно и сильнейшим рассуждающим, и говорящим в реальном времени, а обе способности быстро развиваются — при едином подходе модель придётся постоянно переобучать заново, чтобы не отставать. Это объясняет и разделение отрасли на момент написания книги: передовые продукты, стремящиеся к возможности «в любой момент подключить самый свежий мозг» (GPT-Live, Grok Voice, Pine AI), в основном делают ставку на развязанный маршрут решения 2, тогда как решение 3 больше подходит для сценариев, где важна предельная естественность и есть готовность нести затраты на специализированное обучение. Ни один из подходов не вытесняет другой — это выбор между «сменным мозгом» и «более плотным сцеплением мышления и речи».</p>
+<h3 id="_7">Интерфейс между быстрым и медленным: что кроме текста можно передавать<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>(Примечание: это сквозное обсуждение интерфейса на разных сценариях, ненадолго отойдём от речевой линии.) Если вернуться к решению 2, обнаруживается упущенное измерение проекта: медленное мышление «передаёт слово» быстрому мышлению через <strong>текстовый</strong> канал (через строку состояния передаётся одна фраза-подсказка). Текст понятен и удобен для отладки, но это тонкая соломинка для того богатого содержимого, что происходит в «голове» медленного мышления — по-настоящему богатое промежуточное состояние сжимается до нескольких фраз. Так может ли этот интерфейс между быстрым и медленным обойтись без слов?</p>
+<p>В сценариях реального времени, таких как игры, самых требовательных к темпу, этот путь вполне осуществим (его можно назвать латентным мостом, Latent Bridge)<sup id="fnref2:ch9-8"><a class="footnote-ref" href="#fn:ch9-8">5</a></sup>: небольшая модель быстрой реакции (выдающая по десятку с лишним действий в секунду) и медленная модель рассуждения (выдающая одну мысль в секунду) обе остаются <strong>замороженными</strong>, а обучается только небольшой «мост» между ними в несколько десятков миллионов параметров, который проецирует скрытые выводы медленной модели прямо в несколько «латентных токенов» — так же, как мультимодальные модели вставляют визуальные токены, — и вставляет их во вход быстрой модели. Это позволяет обойти путь «мысль → текст → повторное понимание». В результате на нескольких играх Atari этот латентный канал превзошёл традиционный текстовый канал ещё сильнее (в некоторых играх на +26–82%), при этом добавляя лишь около 5 миллисекунд на шаг — что по-прежнему укладывается в темп реального времени.</p>
+<p>Это даёт и честную границу применимости: <strong>есть ли толк от взаимодействия быстрого и медленного мышления, зависит от того, где находится узкое место задачи — в «додумываемости» или во «времени реакции»</strong> — когда медленное мышление изначально сильнее быстрой реакции, этот мост действительно помогает (эта корреляция достигает r≈0,9 в разных играх); и наоборот, если задача целиком упирается в скорость реакции, никакой мост не поможет. Этот вывод верен не только для игр — он предвосхищает ту же самую проблему, с которой мы столкнёмся дальше в этой главе в разделе про Computer Use: когда стоит звать «медленного советника», а когда это лишь лишняя задержка.</p>
+<p>Независимо от того, сквозной подход или модульный, качество слоёв восприятия и исполнения по отдельности по-прежнему критически важно. Сквозная модель решает проблему задержки на архитектурном уровне, но два базовых навыка — «точно слышать» и «говорить как человек» — не решаются автоматически лишь за счёт смены архитектуры. «Точно слышать» соответствует потоковому речевому восприятию, уже разобранному в парадигме 1; здесь же рассмотрим слой исполнения, отвечающий за «звучать как человек», — синтез речи, более похожий на человеческий.</p>
+<h2 id="_8">Синтез речи, более похожий на человеческий<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+<p>«Совершенство» традиционного TTS — как раз и есть проблема: слишком плавная, без единой паузы, без слов-заполнителей речь сразу выдаёт машину. «Несовершенства» человеческой речи не являются недостатком — паузы, слова-заполнители («м-м», «э-э», «ну»), случайные повторы — это естественное внешнее проявление процесса мышления, передающее слушателю важные сигналы вроде «я сейчас думаю» или «я не совсем уверен». Но ИИ думает намного быстрее, чем воспроизводится речь, поэтому его вывод изначально гладкий и завершённый, и синтезированный напрямую, он сразу выдаёт машинное происхождение.</p>
+<p><strong>Решение</strong>: передать право решать, где нужна пауза и какая нужна интонация, главной LLM. LLM выводит не только текст, но и управляющие метки: <code>[THINKING]</code> означает вставку паузы для размышления на 1–2 секунды со звуком-заполнителем («м-м-м…»); <code>[SEARCHING]</code> создаёт более короткую паузу и поисковый заполнитель («ну…», «как бы сказать»); <code>[EMO:happy]</code> и подобные регулируют интонацию и просодию; <code>[SPEED:0.8x]</code> управляет скоростью речи. Только LLM знает, идёт ли сейчас ответ на сложный вопрос, требующий паузы для обдумывания, или пользователь уже нетерпелив и стоит ускорить речь, или же это лёгкая беседа, где уместнее живая интонация.</p>
+<p>TTS в этой схеме выступает как мультимодальный генератор: на входе текст и управляющие метки, на выходе аудио. При встрече обычного текста синтезируется обычная речь, а при встрече управляющей метки генерируется соответствующий неречевой аудиофрагмент: <code>[THINKING]</code> создаёт протяжное «м-м-м…», <code>[SIGH]</code> создаёт звук вздоха, <code>[LAUGH:small]</code> создаёт лёгкий смешок, <code>[BREATH]</code> создаёт звук вдоха.</p>
+<p>Есть два пути реализации: первый — собственная разработка TTS с нативной поддержкой управляющих меток (максимальная гибкость, но требует специализированной команды); второй — использование voice cloning (клонирования голоса): для одного и того же виртуального персонажа готовятся несколько десятков эталонных записей с разными эмоциями, темпом и стилем, и в зависимости от управляющей метки выбирается наиболее подходящий эталонный образец для вызова TTS API (например, ElevenLabs, Fish Audio) — такое развёртывание можно завершить за несколько недель.</p>
+<blockquote>
+<p><strong>Эксперимент 9-5 ★★: TTS, управляемый метками, на основе Fish Audio</strong></p>
+<p>Используется возможность клонирования голоса Fish Audio S1 (достаточно 3–10 секунд эталонной записи, чтобы клонировать тот же тембр без дополнительного обучения — zero-shot). Строится библиотека из 24 эталонных записей, покрывающая эмоции (нейтральная/радостная/расстроенная/задумчивая) x скорость речи (нормальная/быстрая/медленная) x стиль (формальный/непринуждённый), каждая примерно по 5 секунд.</p>
+<p>Пример вывода LLM: <code>[EMO:happy][SPEED:fast]Отлично! Ваш заказ подтверждён.[THINKING]Хм, дайте-ка мне проверить сроки доставки...[EMO:neutral][SPEED:normal]Ожидаемая доставка — завтра во второй половине дня.</code></p>
+<p>Слой исполнения разбирает метки и сопоставляет их с соответствующими эталонными записями: <code>[EMO:happy][SPEED:fast]</code> соответствует эталону «радостная + быстрая + непринуждённая», <code>[THINKING]</code> соответствует эталону «задумчивая + медленная + формальная» (с паузами и нотками сомнения в интонации), <code>[EMO:neutral][SPEED:normal]</code> соответствует эталону «нейтральная + нормальная + формальная». Fish Audio гарантирует единство тембра между разными эталонными записями, меняются лишь просодия и эмоциональная окраска.</p>
+<p>Сравниваются три конфигурации: без управляющих меток (плавно, но механически, сразу узнаётся ИИ), с одной эталонной записью (естественно, но эмоционально монотонно), с библиотекой из нескольких эталонных записей (при подтверждении информации — живо и быстро, перед объяснением — естественная пауза, в целом манера речи близка к живому оператору службы поддержки).</p>
+</blockquote>
+<h2 id="computer-use-gui">Computer Use: агент автоматизации GUI<a class="headerlink" href="#computer-use-gui" title="Permanent link">&para;</a></h2>
+<p>Читая до этого момента, вы, возможно, заметили, что в этой главе речи посвящено заметно больше места, чем двум оставшимся сценариям, — и это сделано намеренно. На этой линии эволюции реального времени в мультимодальности речь прошла путь наиболее полно и заслуживает того, чтобы служить системой отсчёта: отталкиваясь от проблемы «слишком высокой задержки последовательного конвейера», через сквозные модели, полный дуплекс, «говорю, пока думаю» и целый ряд других решений, речь дошла до относительно сформировавшегося сегодняшнего итога — весь путь от проблемы через решение к итогу здесь полностью пройден. Поэтому мы разобрали её подробно, а два следующих сценария — Computer Use и роботы — можно рассматривать, сверяясь с этой линией эволюции речи: на какой стадии этого пути находится каждый из них, и на чём он застрял.</p>
+<p>Эти три сценария кажутся разными, но сталкиваются с одними и теми же базовыми вызовами: восприятие в реальном времени, принятие решений с низкой задержкой, непрерывное взаимодействие. Далее посмотрим, как эти технические темы воспроизводятся в визуальном взаимодействии (Computer Use) и физическом взаимодействии (роботы) — сначала расширим взгляд от слуховой модальности к визуальной: что если агент способен не только понимать речь, но и «видеть» экран и управлять графическим интерфейсом?</p>
+<p>Computer Use (также называемый агентом автоматизации GUI) позволяет ИИ пользоваться программами так же, как человек, — наблюдая за экраном и управляя мышью и клавиатурой: например, открыть браузер и найти информацию, заполнить данные в таблице или изменить настройки в системных параметрах. В основе лежит цикл <strong>восприятие — мышление — действие</strong> (Рис. 9-7):</p>
+<ol>
+<li>Агент делает скриншот текущего экрана</li>
+<li>Мультимодальная модель получает скриншот и указание задачи, выводит рассуждение и конкретное действие</li>
+<li>Слой исполнения выполняет это действие в реальной среде (двигает мышь, кликает, вводит текст и т. д.)</li>
+<li>После ожидания реакции интерфейса снова делается скриншот, и цикл переходит к следующему шагу</li>
+</ol>
+<p><img alt="Рис. 9-7 Цикл восприятие-мышление-действие Computer Use-агента" src="../images/fig9-7.svg" /></p>
+<p>В этом цикле есть три ключевых измерения проектирования: <strong>пространство действий</strong> (какие операции доступны агенту), <strong>визуальное позиционирование</strong> (как найти целевой элемент на скриншоте) и <strong>архитектура модели</strong> (как сгенерировать правильное действие на основе скриншота).</p>
+<h3 id="_9">Проектирование пространства действий<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>Anthropic определяет три категории инструментов, составляющих полную способность к взаимодействию (Рис. 9-8):</p>
+<p><img alt="Рис. 9-8 Пространство действий Computer Use" src="../images/fig9-8.svg" /></p>
+<p><strong>Инструмент GUI-операций</strong> (computer tool): операции мыши включают перемещение (mouse_move), клик левой/правой/средней кнопкой, двойной/тройной клик, перетаскивание (left_click_drag), а также более точные нажатие/отпускание (left_mouse_down/up). Прокрутка (scroll) поддерживает четыре направления и может комбинироваться с клавишами-модификаторами. Клавиатурные операции включают посимвольный ввод (type, интервал между символами 12 мс имитирует реальную печать), сочетания клавиш (key, например Ctrl+C), удержание клавиши (hold_key). Действия восприятия: скриншот (screenshot), получение позиции курсора (cursor_position), ожидание (wait).</p>
+<p><strong>Инструмент выполнения команд</strong> (bash tool): предоставляет постоянную сессию bash-терминала с тайм-аутом 120 секунд, определяет завершение выполнения команды по строке-«часовому», сохраняет состояние среды между несколькими вызовами (например, если перейти в директорию через cd, следующий вызов будет уже в ней).</p>
+<p><strong>Инструмент редактирования файлов</strong> (str_replace_editor): реализует безопасное редактирование через сопоставление строк, поддерживает просмотр, создание, замену, вставку и отмену операций — это точнее, чем прямая перезапись всего файла, и снижает риск случайного изменения остального содержимого.</p>
+<blockquote>
+<p><strong>Эксперимент 9-6 ★: запуск демонстрации Anthropic Computer Use</strong></p>
+<p>Контейнер упаковывает полноценную рабочую среду Ubuntu (с браузером, терминалом и другими стандартными инструментами). Фронтенд получает указание задачи, бэкенд отправляет указание вместе со скриншотом в Claude, модель возвращает команду операции (переместить мышь, кликнуть, ввести текст и т. д.), слой исполнения выполняет её в виртуальном рабочем столе.</p>
+<p>Ключевое наблюдение: интервал между действиями составляет 2–5 секунд (заметно медленнее человека), но для типичных задач модель демонстрирует хорошую способность к планированию, самостоятельно разбивая задачу на разумную последовательность операций.</p>
+</blockquote>
+<h3 id="grounding">Визуальная локализация (Grounding)<a class="headerlink" href="#grounding" title="Permanent link">&para;</a></h3>
+<p>В каждом раунде цикла модели нужно точно определить положение целевого элемента на скриншоте — «где находится строка поиска?», «каковы координаты кнопки отправки?». Это и есть задача визуальной локализации (Grounding). Сейчас существует <strong>два основных подхода</strong>: первый — превратить локализацию в <strong>вопрос с вариантами ответа</strong>: сначала все элементы интерфейса помечаются номерами, и модели остаётся лишь выбрать один из них; второй — <strong>прямое предсказание координат</strong>: модель, как человек, буквально «смотрит» на скриншот и называет координаты. Причём подход с вариантами ответа реализуется двумя способами: <strong>чисто визуальная разметка</strong> (исходный Set-of-Mark, где сегментационная модель нарезает кандидатные области по пикселям) и <strong>структурированное индексирование элементов</strong> (DOM/Accessibility Tree, когда структура считывается напрямую из самого интерфейса). Общее преимущество подходов с вариантами ответа в том, что открытая задача «найти на скриншоте кнопку и предсказать её координаты» превращается в закрытую задачу «выбрать один элемент из уже размеченных» — точно так же, как на экзамене вопрос с вариантами ответа проще, чем вопрос с открытым ответом: модели достаточно сказать «нажать [123]», а не «нажать на синюю кнопку примерно в 200 пикселях правее верхнего левого угла экрана».</p>
+<p><strong>Set-of-Mark: метод визуальной разметки.</strong></p>
+<p>Исходный Set-of-Mark (SoM) был предложен исследовательским подразделением Microsoft в 2023 году, изначально — чтобы раскрыть возможности визуальной локализации GPT-4V. Это <strong>чисто визуальный</strong> метод: сегментационная модель (SAM, SEEM и т. п.) автоматически нарезает на скриншоте кандидатные области, для каждой из них накладывается номерная метка, и модель видит изображение с номерами — ей достаточно назвать номер, а система пересчитает его в координаты центра соответствующей области. Весь процесс не требует DOM и вообще какой-либо внутренней структуры интерфейса, поэтому подход применим и к нативному настольному ПО, и к игровым интерфейсам — лишь бы сегментационная модель могла нарезать кандидатные области.</p>
+<p><strong>Структурированное индексирование элементов: структурная реализация идеи SoM для веба.</strong></p>
+<p>Когда сам интерфейс может предоставить структурированную информацию, разметку можно сделать точнее. Современные веб-страницы ещё до рендеринга уже определяют полную структуру элементов (дерево DOM) и семантические роли (что является кнопкой, что — полем ввода), а интерфейс специальных возможностей (Accessibility Tree) даёт аналогичную информацию для многих настольных приложений. Вместо того чтобы заставлять сегментационную модель угадывать по пикселям «какая область является кнопкой», логичнее прямо спросить сам интерфейс: «какие у тебя есть кликабельные элементы?». Именно так поступают веб-агенты на базе проекта browser-use: интерактивные элементы перечисляются из DOM и нумеруются — это можно рассматривать как структурную реализацию идеи SoM для веба (Рис. 9-9). Процесс состоит из четырёх шагов:</p>
+<ol>
+<li>Через отладочный интерфейс браузера (CDP, Chrome DevTools Protocol) получить структурированное представление страницы (дерево DOM) и информацию о доступности</li>
+<li>Автоматически определить, какие элементы интерактивны (кнопки, поля ввода, ссылки и т. д.)</li>
+<li>Присвоить каждому интерактивному элементу уникальный ID и нарисовать вокруг него рамку на скриншоте</li>
+<li>Одновременно сформировать текстовый список, описывающий, какой элемент соответствует каждому ID</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Скриншот: [на изображении ключевые элементы помечены ID [1], [2], [3], [4] и т. д.]
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Элементы:
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>[1] &lt;input type=&quot;text&quot; placeholder=&quot;Search&quot; aria-label=&quot;Search&quot; /&gt;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>[2] &lt;button id=&quot;submit-btn&quot; aria-label=&quot;Submit form&quot; /&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>[3] &lt;input type=&quot;text&quot; placeholder=&quot;Enter your name&quot; value=&quot;&quot; /&gt;
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>[4] &lt;a href=&quot;/docs&quot; aria-label=&quot;Documentation&quot; /&gt;
+</code></pre></div>
+<p>Модели достаточно вывести только номер ID, а система автоматически выполнит клик по координатам центра этого элемента. Такой подход не экономит токены (потому что всю разметочную информацию нужно отправить модели), зато обеспечивает точную и стабильную локализацию и избавляет от пропусков и ложных срабатываний, которые может внести сегментационная модель.</p>
+<p><img alt="Рис. 9-9 Set-of-Mark и структурированное индексирование элементов (реализация browser-use)" src="../images/fig9-9.svg" /></p>
+<p><strong>Прямое предсказание координат.</strong></p>
+<p>Третий путь не использует никакую разметку и заставляет модель напрямую выдавать координаты. Яркие примеры — <strong>SeeClick</strong> и Computer Use от Claude: на огромном массиве парных данных «скриншот GUI — положение элемента» обучается визуальная модель, которая учится напрямую отображать описание на естественном языке (например, «нажми кнопку отправки») в точные координаты на скриншоте — точно так же, как человек находит нужное место, полагаясь исключительно на зрение.</p>
+<p>В схемах с предсказанием координат понимание моделью координат сильно зависит от разрешения, использованного при обучении (Рис. 9-10). Claude обучалась на XGA (1024×768), WXGA (1280×800), FWXGA (1366×768); если разрешение входного скриншота не совпадает с этими значениями, предсказанные моделью координаты систематически смещаются — как если бы вы измерили расстояние на карте меньшего масштаба и напрямую применили результат к карте большего масштаба. Поэтому на уровне инструментов нужно реализовать механизм двустороннего масштабирования координат, причём <strong>целевое разрешение нужно выбирать по соотношению сторон</strong>, чтобы неравномерное растяжение не деформировало изображение и не сбило вместе с ним оценку координат. Например, если реальное разрешение экрана — 2560×1440 (16:9), нужно среди трёх поддерживаемых Claude вариантов выбрать тот, чьё соотношение сторон тоже близко к 16:9, — лучше всего подходит FWXGA (1366×768). При съёмке скриншота экран пропорционально масштабируется до 1366×768 и подаётся в модель; модель выдаёт координаты клика (683, 384), которые затем обратно пересчитываются в реальные координаты (683×2560/1366, 384×1440/768) ≈ (1280, 720). И наоборот, если насильно растянуть 16:9 в 4:3 разрешение 1024×768, изображение будет сжато по горизонтали, и предсказанные моделью координаты систематически сместятся.</p>
+<p><img alt="Рис. 9-10 Соответствие разрешений и двустороннее масштабирование координат" src="../images/fig9-10.svg" /></p>
+<p>Логику выбора между тремя путями можно сформулировать так: <strong>когда доступна структурированная информация, приоритет отдаётся индексированию через DOM/Accessibility Tree</strong> — это даёт самую точную и стабильную локализацию; <strong>когда она недоступна</strong> (нативное настольное ПО вроде Photoshop, интерфейсы, отрисованные через Canvas/WebGL, игры), <strong>можно использовать как визуальную разметку (исходный путь SoM), так и предсказание координат</strong>. Визуальная разметка превращает локализацию в выбор варианта ответа и более дружелюбна к универсальным моделям без специального обучения; предсказание координат обходится без этапа разметки и более прямолинейно для моделей, прошедших обучение локализации в GUI. У обоих подходов на мелких элементах и плотных интерфейсах точность всё ещё оставляет желать лучшего.</p>
+<blockquote>
+<p><strong>Эксперимент 9-7 ★: реализация автоматического управления браузером с помощью browser-use</strong></p>
+<p>На основе фреймворка автоматизации браузера Playwright (библиотека инструментов для управления браузером через код), в сочетании с мультимодальной большой моделью, реализуется управление браузером на основе естественного языка. Включается визуализационный режим SoM: перед каждым решением сохраняется скриншот с размеченными рамками.</p>
+<p>Тестовая задача «открыть Google и узнать погоду в Сан-Франциско»: после запуска система делает скриншот, показывающий страницу поиска Google, все интерактивные элементы отмечены красными рамками и номерами ID (адресная строка <code>[1]</code>, поле поиска <code>[2]</code>, кнопка поиска <code>[3]</code>, кнопка «Мне повезёт» <code>[4]</code> и т. д.) → модель анализирует и нажимает <code>[2]</code> (поле поиска) → поле поиска получает фокус, вводится «San Francisco weather today» → нажимается <code>[3]</code> (кнопка поиска) → страница переходит к результатам поиска, на новом скриншоте размечены элементы карточки погоды, модель распознаёт и извлекает температуру, состояние погоды и другую информацию. Всего 5 шагов, выполнение занимает около 20 секунд.</p>
+</blockquote>
+<h3 id="computer-use-agent">Computer Use Agent, способный видеть движение и слышать звук<a class="headerlink" href="#computer-use-agent" title="Permanent link">&para;</a></h3>
+<p>До сих пор восприятие в Computer Use строилось на одном неявном допущении: <strong>экран статичен</strong> — сделали скриншот, подумали шаг, кликнули, снова сделали скриншот. Но в реальности на экране может проигрываться видео, может всплывать мимолётное уведомление, может звучать голос собеседника на конференц-звонке. Агент, который «открывает глаза» раз в 3–5 секунд и вообще не имеет «ушей», не может ни увидеть, ни услышать то, что происходит «между двумя кадрами». Просмотр записи экрана, участие в звонке, реагирование на голосовые подсказки, обработка мгновенно исчезающих диалоговых окон — вся эта категория повседневных операций с компьютером сегодня для Computer Use Agent практически недоступна.</p>
+<p>По-настоящему заново нужно проектировать не «интерфейс действий», а «<strong>интерфейс наблюдения</strong>» <sup id="fnref:ch9-9"><a class="footnote-ref" href="#fn:ch9-9">6</a></sup>. Ключевая идея — отделить <strong>наблюдение</strong> (непрерывное, адаптивное, мультимодальное) от <strong>действия</strong> (дискретного) и оформить его как слой перцептивного middleware, который встраивается между средой и любой уже готовой моделью Computer Use без её переобучения (можно назвать его интерфейсом наблюдения агент — компьютер, AOI). У него три компонента, каждый из которых «открывает шлюз» только по необходимости: во-первых, <strong>захват ключевых кадров между тактами</strong> — сначала крайне дешёвый пиксельный фильтр пропускает почти неизменные кадры, затем небольшая модель определяет, произошло ли значимое изменение изображения, и только при изменении делается снимок; при статичной картинке стоимость почти нулевая; во-вторых, <strong>транскрипция речи, управляемая громкостью</strong> — распознавание речи вызывается только при наличии звука, благодаря чему у агента впервые «отрастают уши»; в-третьих, что важнее всего, — <strong>превращение кадра в устойчивый текст</strong>: модель описывает захваченный кадр одной фразой («только что всплывшая подсказка сообщает, что дата релиза перенесена на 28 апреля»), и <strong>даже после того, как исходное изображение будет вычищено из контекста, эта фраза остаётся в памяти</strong>, унося динамическую информацию дальше в текстовом виде.</p>
+<p>Один неочевидный вывод: по-настоящему важно не «какие именно кадры выбрать», а «<strong>превратить кадр в текст, способный храниться долго</strong>» — ведь текст — это модальность, с которой LLM-агент справляется лучше всего. На восьми моделях от 7B до передового масштаба этот слой middleware без какого-либо переобучения даёт прирост от +17 до +48 процентных пунктов, причём разрыв особенно велик в задачах, связанных с речью: добавив этот слой восприятия, агент способен выполнять голосовые задачи, которые раньше «слышал, но не мог выполнить». Но это не универсальная фиксированная конфигурация на все случаи жизни — на некоторых более новых моделях избыток токенов изображения, наоборот, вытесняет рассуждение и снижает качество работы, поэтому эти компоненты нужно <strong>подбирать индивидуально под модель</strong>, а не включать все разом. Это та же логика, что и в компромиссах Set-of-Mark и предсказания координат выше: у восприятия нет серебряной пули — конфигурацию нужно подстраивать под характер модели.</p>
+<h3 id="_10">Мобильные устройства: экосистемные барьеры сложнее технологий<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>Computer Use также расширяется на мобильные устройства. Технически мобильные и настольные платформы действительно различаются: пространство действий здесь обычно уже не «координаты мыши + клавиатура», а обращение к системному API служб специальных возможностей (например, AccessibilityService в Android) для считывания элементов интерфейса и отправки кликов и текстового ввода; способ взаимодействия тоже меняется — от указателя мыши к сенсорным жестам, а семантика координат вместе с этим меняется: одна и та же пара (x, y) может означать одиночное касание пальцем, долгое нажатие или начальную точку жеста смахивания — для их различения нужен дополнительный тип жеста. Именно на таком пространстве действий описанные в главе 6 мобильные бенчмарки вроде AndroidWorld оценивают способность агента выполнять реальные задачи в приложениях.</p>
+<p>Но по-настоящему сдерживает мобильные устройства, как правило, не эта техническая разница, а экосистемные барьеры. Некоторые производители смартфонов уже пытались встроить в потребительские устройства ИИ-помощника, автоматически управляющего повседневными приложениями вроде WeChat, Taobao, Alipay, но быстро столкнулись с ограничениями со стороны платформ.</p>
+<p>Это раскрывает уникальную проблему, с которой сталкивается Computer Use: <strong>экосистемный барьер</strong>. Коренная причина блокировок — конфликт бизнес-моделей. Основная логика монетизации традиционных интернет-приложений — это <strong>трафик и внимание</strong>: пользователь листает ленту и видит рекламу, ищет товар и следует рекомендательным алгоритмам, просматривает страницы и совершает импульсивные покупки. Когда же вместо пользователя действиями управляет агент, эта цепочка монетизации полностью обходится стороной: ИИ не обращает внимания на рекламу и не совершает импульсивных покупок, а идёт прямо к цели и заканчивает задачу. Для платформ, монетизирующихся за счёт рекламы и трафика, каждое действие агента подтачивает саму основу их бизнес-модели.</p>
+<p>Это означает, что Computer Use сталкивается не только с техническим противодействием вроде CAPTCHA (проверочные коды), но и со <strong>структурным конфликтом интересов</strong>. Это противоречие сложно устранить в краткосрочной перспективе, что делает внедрение Computer Use в потребительских сценариях более трудной задачей, чем чисто техническая проблема.</p>
+<h3 id="_11">Оперативность: пока нерешённая ключевая проблема<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p><strong>OSWorld</strong> (методология его оценки подробно описана в главе 6) — широко используемый бенчмарк для оценки Computer Use, тестирующий способность агента выполнять межприложенческие задачи в реальных средах Ubuntu/Windows/macOS. Ранние универсальные модели на этом бенчмарке показывали успех лишь около двадцати процентов, но последующие специализированные модели и более мощные универсальные модели постоянно поднимали точность, и к моменту написания книги она уже приближается к человеческому уровню. Но точность далеко не конечная цель — истинное узкое место сместилось от «сможет ли сделать правильно» к «сможет ли сделать быстро».</p>
+<p>Исследование эффективности <strong>OSWorld-Human</strong> раскрывает неприятный факт: даже если задача в итоге выполнена успешно, агенту требуется заметно больше шагов действий, чем человеку, а задержка рассуждения на каждом шаге продолжает расти по мере продвижения задачи — чем длиннее контекст, тем медленнее модель принимает решения, и время выполнения поздних шагов часто намного превышает время выполнения ранних. Правку формата документа, которую человек делает за несколько десятков секунд, агент может провозиться несколько минут. <strong>Достижение точности человеческого уровня не равнозначно практической применимости — истинное узкое место именно в эффективности.</strong></p>
+<p>Корень проблемы эффективности похож на голосовые сценарии: в последовательном цикле «скриншот — размышление — клик» даже при максимальной оптимизации каждого этапа накопленная задержка остаётся неприемлемой. Более глубокая проблема в том, что нынешний Computer Use совсем не умеет «думать заранее». Если бы агент мог одновременно с выполнением текущего действия предсказывать, что делать на следующем шаге — например, пока страница загружается, уже понять, куда кликать дальше, — время размышления и выполнения можно было бы перекрыть друг другом и значительно снизить общую задержку (это то же самое требование, что и «говорить, продолжая думать» в голосовых сценариях ранее в этой главе, и «непрерывное мышление» асинхронных агентов из главы 4, только здесь оно превращается в «действовать, продолжая думать»).</p>
+<p>В отличие от голосовой сферы, у самой оперативности Computer Use — ускорения самого цикла «скриншот — размышление — клик» — пока нет системного решения, он по-прежнему остаётся в рамках дискретного цикла покадровых скриншотов. Но уже опробован один способ обойти эту проблему, использующий уже неоднократно упомянутое в этой главе разделение быстрого и медленного: раз ускорить медленного агента, управляющего компьютером, трудно, то <strong>не заставляйте пользователя тупо ждать его</strong>. «Разговор» и «управление компьютером» разделяются на два параллельно работающих набора моделей, быстрый и медленный <sup id="fnref:ch9-10"><a class="footnote-ref" href="#fn:ch9-10">7</a></sup> — маленькая модель (быстрая) отвечает за диалог в реальном времени, а передовая VLM (медленная) шаг за шагом действует в браузере, и они общаются между собой только через предельно простой «чисто текстовый контракт»: медленный агент при каждом действии прикладывает скользяще обновляемое краткое резюме состояния («сейчас заполняю форму, ещё нужна ваша дата рождения»), быстрый агент на основе этого резюме отвечает пользователю в реальном времени и передаёт медленному агенту новую информацию, сказанную пользователем устно, причём <strong>пока резюме состояния не подтвердит завершение, быстрому агенту категорически запрещено говорить «готово»</strong>. Это в точности сценарий «разговаривать по телефону, пока компьютер сам всё делает». В экспериментах такое разделение ускорило голосовой отклик примерно в 15 раз по сравнению с «одной моделью, которая одновременно и действует, и говорит» (медианная задержка 0,58 секунды против 8,64 секунды), при этом успешность выполнения задач не снизилась; а стоит убрать текстовый канал между быстрой и медленной частями — успешность мгновенно падает до нуля, потому что ключевая информация, устно сказанная пользователем, больше не доходит до браузера. Это та же идея, что и Latent Bridge выше, и «говорить, продолжая думать» в голосовых сценариях: когда одно звено по природе своей медленное, пусть быстрое звено заполнит время ожидания пользователя — просто этот «чисто текстовый контракт» по сути и есть строка состояния агента, о которой эта книга говорит начиная со второй главы. Ускорение самого цикла Computer Use, возможно, всё ещё остаётся важным направлением будущих исследований, но «спрятать медленное с помощью разделения быстрого и медленного» — уже рабочий ответ.</p>
+<h2 id="_12">Управление роботами: от управления в реальном времени к обучению и обобщению<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Совет по чтению</strong>: этот раздел посвящён управлению роботами. Эксперимент 9-10 демонстрирует метод переноса из симуляции в реальность — его <strong>этапы симуляционного обучения (шаги 3-4) можно выполнить исключительно на GPU-сервере</strong>, без оборудования; но для полного воспроизведения всего конвейера от начала до конца (включая шаги реального развёртывания) потребуется реальное оборудование, например манипулятор SO100. Если тема роботов вам пока не интересна, можете пропустить этот раздел — на чтение остальных глав это не повлияет.</p>
+</blockquote>
+<p>Голосовой агент сталкивается с задержкой в модальности слуха, Computer Use — с задержкой в модальности зрения, а когда агенту нужно управлять роботом в физическом мире, вызовы задержки и мультимодальности усиливаются ещё сильнее — последствия действия необратимы, одно столкновение может повредить предмет или сам робот. В этом разделе сначала рассмотрим, как роботы с помощью двухуровневой архитектуры и разбиения действий на блоки решают проблему управления в реальном времени, а затем перейдём к более твёрдому орешку на сегодня — обучению и обобщению: откуда берутся данные и как модель переносится между задачами и платформами.</p>
+<h3 id="_13">Железо не узкое место — узкое место в алгоритмах<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<p>Роботы всё ещё не получили широкого распространения в открытых сценариях общего назначения — так узкое место в железе или в алгоритмах? Проект XLeRobot даёт убедительный контрдовод: двурукий колёсный робот стоимостью менее 1000 долларов, под удалённым управлением человека через VR-шлем (телеоперацией), уже способен плавно выполнять большой набор бытовых задач. Более сложные бытовые задачи, требующие ловких манипуляторов, робот Unitree под телеоперацией человека тоже выполняет плавно. Задержка телеоперации составляет около 100–200 мс, что уже близко к требованиям физического взаимодействия по времени отклика. Разрешение сенсоров, точность приводов, частота управления (количество обновлений управляющих команд робота в секунду — чем ниже частота, тем менее плавно движение и тем выше риск дрожания или отклонения от целевой траектории) на текущих недорогих платформах уже достаточны для практических задач.</p>
+<p>Здесь нужно чётко очертить границы этого утверждения: телеоперационный контрдовод на самом деле показывает лишь то, что «существующего недорогого железа в сочетании с интеллектом человека достаточно для выполнения <strong>этого класса бытовых манипуляционных задач, где преобладает визуальная обратная связь</strong>». Это не означает, что железо в порядке по всем измерениям — отсутствие тактильного восприятия, надёжность и стоимость ловких манипуляторов остаются общепризнанными слабыми местами железа; если задача сильно зависит от тонкого силового управления и тактильной обратной связи, железо вполне может оказаться узким местом. Поэтому дальнейшее утверждение «железо не узкое место» ограничено рамками задач, обсуждаемых в этом разделе.</p>
+<p>Применительно к этому классу задач настоящий разрыв лежит на уровне алгоритмов — ему посвящены два следующих подраздела.</p>
+<blockquote>
+<p><strong>Эксперимент 9-8 ★: опыт телеоперации XLeRobot</strong></p>
+<p>XLeRobot поддерживает несколько способов телеоперации: клавиатуру, геймпад Xbox, Switch Joycon и VR-шлем. Управляя роботом лично при выполнении задач по взятию предметов, их размещению, протиранию поверхностей, понаблюдайте за задержкой отклика, точностью движений и качеством выполнения задач — так формируется интуитивное понимание границ возможностей железа. После личного опыта становится очевидно: под управлением человека робот способен на всё, а значит, текущее узкое место — действительно алгоритмы, а не железо.<sup id="fnref:ch9-1"><a class="footnote-ref" href="#fn:ch9-1">8</a></sup></p>
+</blockquote>
+<h3 id="_14">Двухуровневая архитектура: разделение планирования и управления<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<p>Для выполнения сложных бытовых задач роботу нужно принимать решения на двух разных временных масштабах. Первый уровень — более медленное <strong>долгосрочное планирование</strong> (long-horizon planning): разбиение высокоуровневой инструкции вроде «убери кухню начисто» на последовательность подцелей (очистить столешницу, загрузить посудомоечную машину, протереть поверхности) — требует понимания семантики среды, рассуждения о зависимостях задач, планирования многошагового плана действий — примерно так же, как человек сначала обдумывает «что делать сначала, что потом», прежде чем взяться за дело. Второй уровень — более быстрое <strong>VLA-управление</strong> (Vision-Language-Action, модель «зрение-язык-действие»): выполнение каждой конкретной операции («подойти к раковине», «взять тряпку», «протереть столешницу») — на основе текущей видимой картинки и языковой инструкции непрерывно генерируются управляющие сигналы, обеспечивающие плавность и связность движений робота.</p>
+<p>Такая двухуровневая архитектура эффективно разделяет сложность: долгосрочное планирование отвечает за «что делать», VLA-управление — за «как делать». Эта двухуровневая архитектура «медленное решение на высоком уровне + быстрое исполнение внизу» структурно очень похожа на «быстрое и медленное мышление» из раздела о речевых сценариях выше — в обоих случаях сложное мышление и реагирование в реальном времени разносятся по разным модулям. Стоит уточнить: здесь разделение «планирование / управление» соответствует измерению «медленное глубокое размышление / быстрый отклик в реальном времени» из «быстрого и медленного мышления», а не разделению «мышление / выражение», как в третьей схеме MPS («мозг замысла / мозг выражения»), — там разделяются «думать» и «говорить», а здесь — «планировать целиком» и «исполнять в реальном времени»; эти два вида «двух-X архитектур» режут по разным измерениям.</p>
+<p>Впрочем, требование реального времени никуда не исчезает — оно просто переносится вниз, на уровень VLA-управления, и там сглаживается с помощью <strong>разбиения действий на блоки</strong> (Action Chunking, см. ниже раздел «VLA-управление»): модель за один проход генерирует небольшую последовательность будущих действий, поток управления воспроизводит её с высокой частотой, распределяя задержку одного вывода модели по всему времени выполнения блока действий. Но здесь есть неизбежный компромисс: разбиение на блоки — это обмен реактивности на плавность: чем длиннее блок, тем сильнее размазывается задержка одного вывода модели и тем плавнее движение, но тем дольше модель «не видит» новую картинку и тем медленнее реагирует на внезапные изменения (предмет убрали, кто-то подставил руку). Этот компромисс между реальным временем и плавностью — часть проблемы, которую двухуровневая архитектура не устраняет, а лишь переносит.</p>
+<p>Здесь также нужно отметить один поворот основной линии главы: в сценарии робототехники противоречие реального времени уже частично снято двухуровневым разделением и разбиением действий на блоки, и основное текущее противоречие сместилось в область <strong>обучения и обобщения</strong> — как получить достаточно данных демонстраций, как заставить модель обобщаться между задачами и платформами. Следующие несколько подразделов как раз посвящены этому новому противоречию — это продолжение в физическом мире тем шестой главы о среде симуляции и седьмой главы об обучении с подкреплением.</p>
+<p>При этом это новое противоречие в основном ложится на уровень VLA-управления. VLA можно рассматривать как «VLM + вывод действий»: <strong>VLM</strong> (Vision-Language Model, модель «зрение-язык» — большая модель, способная одновременно понимать изображения и текст) отвечает за «увидеть» и «продумать», а VLA сверх этого должна ещё «действовать руками» — и именно в этом «действии руками» заключён настоящий вызов. Сегодня уровень VLA-управления в основном обучается через имитационное обучение (клонирование поведения) — прямое обучение на большом объёме человеческих демонстраций по принципу «что видишь, то и делаешь» (к этому классу относятся OpenVLA, RT-2, π₀ и другие); обучение с подкреплением служит дополнительным методом поверх него, появившимся в последние годы. VLA, обученные с помощью обучения с подкреплением, хотя и показывают хорошие результаты на отдельной задаче, часто страдают недостаточным обобщением: даже когда, как отмечено в седьмой главе, SimpleVLA-RL показывает очень высокие результаты по отдельным задачам на LIBERO, обучение с подкреплением проводится отдельно для каждой задачи, а не в виде единой модели, способной к обобщению без примеров (zero-shot) на все задачи сразу. Такая модель «обучение под каждую задачу отдельно» означает, что при появлении новой задачи снова придётся собирать данные и заново обучать модель.</p>
+<p>Следующие два раздела подробно рассматривают конкретные технические решения долгосрочного планирования и VLA-управления.</p>
+<h3 id="vlm">Долгосрочное планирование: от VLM к специализированным моделям воплощённого мышления<a class="headerlink" href="#vlm" title="Permanent link">&para;</a></h3>
+<p>Универсальные VLM уже обладают неплохими способностями воплощённого мышления. <strong>Gemini Robotics-ER 1.5</strong> от Google DeepMind специально оптимизирована для воплощённого рассуждения (Embodied Reasoning, то есть понимания положения, движения и причинно-следственных связей объектов в физическом мире) и в среднем показывает 62,8% на 15 академических бенчмарках (Point-Bench, RefSpatial, RoboSpatial, BLINK и др.), превосходя GPT-4o (60,6%) и Gemini 2.5 Pro (59,3%). Основные преимущества: продвинутое понимание пространства и локализация объектов, временное рассуждение (предсказание причинно-следственных связей действий вроде «что будет, если опрокинуть эту чашку»), оркестрация задач (разбиение высокоуровневой инструкции на маленькие шаги), а также нативная поддержка режима размышления (thinking) и вызова инструментов.<sup id="fnref:ch9-2"><a class="footnote-ref" href="#fn:ch9-2">9</a></sup></p>
+<blockquote>
+<p><strong>Эксперимент 9-9 ★★: автономная навигация XLeRobot под управлением Gemini Robotics-ER 1.5</strong></p>
+<p>С помощью библиотеки RoboCrew Gemini Robotics-ER 1.5 используется как модель долгосрочного планирования, при этом на изображение с камеры накладывается угловая разметка. Системе предоставлено всего три простых инструмента: движение вперёд, поворот налево, поворот направо. При задаче «найди кухню и дойди туда» модель принимает решения с частотой 0,5–1 Гц: распознаёт коридоры, двери, мебель и другие визуальные признаки, и если решает, что «кухня, возможно, слева», выполняет поворот налево, а увидев «впереди холодильник», продолжает движение вперёд. Возможно также расширение в режим голосового управления (с ключевым словом активации для запуска новой задачи). Этот эксперимент раскрывает границы возможностей VLM на уровне долгосрочного планирования: пространственное рассуждение и разбиение задач уже работают неплохо, но устойчивость в сложных средах и согласованность многошагового рассуждения ещё есть куда улучшать.<sup id="fnref:ch9-3"><a class="footnote-ref" href="#fn:ch9-3">10</a></sup></p>
+</blockquote>
+<h3 id="vla-">VLA-управление: от данных демонстраций к обобщению между воплощениями<a class="headerlink" href="#vla-" title="Permanent link">&para;</a></h3>
+<p>На уровне исполнения двухуровневой архитектуры три представительные модели — RT-2, OpenVLA и π₀ — сосредоточены именно на VLA-управлении, то есть на выводе действий робота в реальном времени на основе изображения с камеры и языковой инструкции (Рис. 9-11). По способу представления действий они делятся на два направления: дискретные токены действий и генерация непрерывной траектории.</p>
+<p><img alt="Рис. 9-11 Архитектура VLA (Vision-Language-Action)" src="../images/fig9-11.svg" /></p>
+<p><strong>RT-2 и OpenVLA: направление дискретных токенов действий.</strong></p>
+<p><strong>RT-2</strong> заложила это направление: прямая тонкая настройка на масштабной модели «зрение-язык», где непрерывные действия робота дискретизируются в токены и выводятся по одному авторегрессионно, как при генерации текста, — за счёт способности к обобщению предобученной модели улучшается перенос без примеров (zero-shot) на новые объекты и инструкции. <strong>OpenVLA</strong> унаследовала схему представления действий из RT-2, объединив языковую модель и визуальный энкодер в единой архитектуре: на вход подаются изображение и текстовая инструкция, на выходе — токены действий. Обучение проводится в два этапа: сначала предобучение на масштабном кросс-платформенном наборе данных Open X-Embodiment (охватывающем демонстрации реальных операций на более чем 20 платформах роботов), где усваиваются общие знания об операциях (паттерны действий вроде «взять», «положить» переносимы между разными роботами), затем тонкая настройка на небольшом объёме данных под конкретную платформу. Раз представление действий по сути одинаково, реальные различия между RT-2 и OpenVLA лежат в открытости и инженерных решениях: RT-2 и её обучающие данные принадлежат Google и закрыты, тогда как OpenVLA полностью открыта — открытая базовая модель (Llama 2 плюс визуальный энкодер) в сочетании с публичным набором данных впервые позволили всему сообществу воспроизводить и улучшать эту работу.</p>
+<p><strong>Разбиение действий на блоки: универсальная техника компенсации частоты в области VLA.</strong></p>
+<p>Из-за задержки вывода LLM частота управления VLA намного ниже требований традиционного управления роботами (традиционное управление роботом обычно требует частоты 50–1000 Гц, тогда как один вывод VLA даёт лишь около 1–10 Гц — разрыв достигает двух порядков). Оригинальная OpenVLA — типичный пример этой проблемы: за один вывод она выдаёт только одно действие (примерно 6 Гц одношагового авторегрессивного предсказания), и рывковость движения как раз и была её главным недостатком, за который её критиковали. <strong>Разбиение действий на блоки</strong> (Action Chunking) — универсальная техника, созданная именно для устранения этого разрыва: впервые предложена в ACT (Zhao et al., 2023), впоследствии широко принята в π₀, OpenVLA-OFT и других: за один вывод модель генерирует не одно действие, а сразу последовательность действий на небольшой промежуток будущего времени (для типичной конфигурации π₀ — блок действий длительностью примерно 0,5–1 секунда, то есть 25–50 действий при частоте управления 50 Гц), поток управления исполняет их последовательно с высокой частотой, пока модель в фоне асинхронно генерирует следующую порцию. Пока время вывода модели меньше времени исполнения этой порции действий, робот сохраняет непрерывное плавное движение — как с буферизацией видео: если следующий фрагмент заранее загружен, воспроизведение идёт без рывков.</p>
+<p><strong>π₀: направление генерации непрерывной траектории.</strong></p>
+<p>Настоящий водораздел в представлении действий проходит не между RT-2 и OpenVLA, а между <strong>дискретными токенами и генерацией непрерывной траектории</strong>. <strong>π₀</strong> представляет второе направление: вместо предсказания дискретных токенов действий по одному она использует flow matching (сопоставление потоков — метод непрерывной генерации, родственный диффузионным моделям), чтобы, начиная со случайного шума и проходя через многошаговое «удаление шума», напрямую сгенерировать плавную непрерывную траекторию действий. Такое представление естественно сочетается с разбиением действий на блоки и показывает лучшие результаты на задачах, требующих высокой точности и плавности движений, — например в ловких манипуляциях. Аналогия: путь дискретных токенов похож на постепенный выбор из меню «влево на 5 градусов», «вперёд на 3 сантиметра», а путь непрерывной траектории — на художника, который сначала набрасывает целую кривую, а затем шаг за шагом дорабатывает её штрихами.</p>
+<h3 id="sim2real-transfer">Sim2Real Transfer: разрыв между симуляцией и реальностью<a class="headerlink" href="#sim2real-transfer" title="Permanent link">&para;</a></h3>
+<p>Раздел о средах симуляции в шестой главе уже подробно раскрыл происхождение sim-to-real gap (разрыва между симуляцией и реальностью) и принцип работы domain randomization (рандомизации домена) для его преодоления — не будем повторяться, вкратце: симуляция не может полностью воспроизвести реальную физику, визуальные и аппаратные характеристики, поэтому при обучении эти параметры широко и случайно варьируются, вынуждая политику выучить универсальное представление, устойчивое к самым разным изменениям (Рис. 9-12). Ниже рассмотрим только то, как этот принцип реализуется на реальном манипуляторе.</p>
+<p><img alt="Рис. 9-12 Разрыв Sim2Real и рандомизация домена" src="../images/fig9-12.svg" /></p>
+<p>На этом пути уже есть немало успешных примеров: ловкая манипуляция роботизированной кистью OpenAI (проект Dactyl реализовал переориентацию кубика внутри руки, а его последующая работа с автоматической рандомизацией домена ADR реализовала сборку кубика Рубика одной рукой) и ANYmal от ETH Zurich (четвероногий робот, устойчиво передвигающийся по сложной пересечённой местности — снегу, гальке) — оба относятся к этому направлению.</p>
+<p>Что действительно нужно добавить в этой главе — это два инженерных момента, без которых не обойтись при переносе рандомизации домена на реальную машину. Первый — <strong>калибровка диапазона рандомизации</strong>: диапазон нельзя задавать наугад — слишком узкий не покроет реальные вариации, слишком широкий увеличит сложность обучения и приведёт к субоптимальной политике, которая «справляется со всем, но ни в чём не сильна». На практике сначала обычно <strong>эмпирически калибруют</strong> распределения ключевых параметров по данным из реальной среды (например, реальное распределение коэффициента трения, задержки отклика мотора) и выбирают выборку в этом диапазоне; если политика, обученная в симуляции, заметно теряет качество на реальной машине, диапазон рандомизации постепенно расширяют, пока sim-to-real gap не сойдётся до приемлемого уровня. Второй — <strong>визуальное выравнивание</strong>: точная калибровка позы камеры в симуляции и в реальности (выравнивание среды), а также случайная замена реально снятого фона в рендеринг симуляции (замена фона greenscreen), чтобы картинка симуляции максимально приближалась к тому, что видит реальная машина — эти два шага будут конкретно показаны в эксперименте 9-10.</p>
+<blockquote>
+<p><strong>Эксперимент 9-10 ★★★: захват объекта манипулятором на основе RGB, Sim2Real без примеров (zero-shot)</strong></p>
+<p>Используя LeRobot + симулятор ManiSkill, обучение проводится только на изображениях RGB-камеры (без зависимости от датчика глубины или силового датчика), после чего модель без примеров (zero-shot, без каких-либо дополнительных настроек) напрямую разворачивается на реальном манипуляторе SO100. Пять шагов процесса:</p>
+<ol>
+<li><strong>Выравнивание среды</strong>: настройка положения камеры в симуляции и реальной среде, проверка совмещения изображений с обеих сторон путём наложения при визуализации</li>
+<li><strong>Замена фона</strong> (greenscreen): случайно обрезанные снимки реального фона накладываются на рендеринг симуляции, приближая фон симуляции к реальному</li>
+<li><strong>Domain randomization</strong>: рандомизация цвета робота, текстур объектов, условий освещения, угла обзора камеры и других параметров</li>
+<li><strong>Обучение с подкреплением</strong>: обучение алгоритмом PPO в масштабно-параллельной симулированной среде, пока успешность в симуляции не превысит 90%</li>
+<li><strong>Реальное развёртывание</strong>: успешное выполнение задачи захвата на реальном роботе без примеров (zero-shot)</li>
+</ol>
+<p>Ключевые факторы успеха: точное выравнивание среды + визуальная рандомизация домена + рандомизация физических параметров — необходимы все три. Ограничение: когда форма, размер или материал реального объекта выходят за пределы обучающего распределения, успешность заметно падает.<sup id="fnref:ch9-6"><a class="footnote-ref" href="#fn:ch9-6">11</a></sup></p>
+<p><img alt="Рис. 9-13 Эксперимент 9-10: конвейер Sim2Real по RGB без примеров (zero-shot)" src="../images/fig9-13.svg" />
+</p>
+</blockquote>
+<h2 id="_15">Резюме главы<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h2>
+<p>Три сценария внешне сильно различаются, но два барьера — задержка и мультимодальность — неизменно сопровождают каждый из них. Речь прошла путь эволюции от последовательного конвейера к сквозной модели и полному дуплексу, от разделённого быстрого и медленного мышления к «думать на ходу говоря»; точность Computer Use на бенчмарках вроде OSWorld уже приблизилась к человеческому уровню, но разрыв в эффективности — заметно большее число операций по сравнению с человеком и постоянно растущее время на шаг по мере продвижения задачи — пока не имеет системного решения; узкое место робототехники в задачах манипуляции, где преобладает визуальная обратная связь, сместилось с железа на способность к обобщению между задачами на уровне VLA-управления (тактильное восприятие, ловкие манипуляторы и подобное остаются непреодолёнными слабыми местами железа). В следующей главе взгляд сместится на взаимодействие между несколькими агентами — это вызов уже другого измерения.</p>
+<h2 id="_16">Вопросы для размышления<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h2>
+<ol>
+<li>★★ Сквозная модель речевого агента объединяет ASR-LLM-TTS в единую модель, снижая задержку, но теряя модульность. Если сквозная модель ошибается на каком-то этапе (например, при распознавании речи), отладка и исправление оказываются намного сложнее, чем в последовательном конвейере. Как бы вы спроектировали систему наблюдаемости (observability) для сквозного речевого агента?</li>
+<li>★ Step-Audio R1 реализует «думать на ходу говоря» через двухмозговую архитектуру MPS. Но человек, «думая на ходу говоря», часто произносит непродуманные фразы, сам себя исправляет или использует слова-паразиты. Должно ли «думание на ходу говоря» агента подражать этим человеческим особенностям?</li>
+<li>★★ SoM (Set-of-Mark) и его структурированные варианты (индексация элементов DOM) переводят визуальную локализацию Computer Use от предсказания открытых координат к выбору закрытого набора ID, но оба подхода требуют предварительного обнаружения и разметки элементов интерфейса — будь то модель сегментации или DOM. Если интерфейс содержит нестандартные элементы управления или динамически изменяющиеся элементы, разметка может оказаться неполной или неточной. Следует ли в этом случае возвращаться к предсказанию координат?</li>
+<li>★★ Платформы роботов уровня тысячи долларов, такие как XLeRobot, делают сбор данных телеоперации дешёвым. Но качество данных телеоперации сильно зависит от навыков оператора. Как данные от неквалифицированного оператора повлияют на обучение модели VLA? Как можно автоматически отсеивать низкокачественные данные на этапе сбора?</li>
+<li>★★★ Эта глава охватила три формы взаимодействия — речь, Computer Use и робототехнику. Общая тенденция этих трёх форм — эволюция от последовательного конвейера к сквозной модели. Если эта тенденция продолжится, каким будет уровень взаимодействия агента через пять лет?</li>
+<li>★★★ Сегодня Computer Use работает по дискретному циклу «скриншот → действие → скриншот», где каждое наблюдение — это статичный кадр. Но восприятие экрана человеком непрерывно — мы видим воспроизведение анимации, наблюдаем прогресс загрузки, понимаем содержание видео. Это означает, что современный Computer Use в принципе не способен справляться с задачами, требующими понимания временного визуального ряда. Как переосмыслить слой восприятия, чтобы он поддерживал понимание непрерывного визуального потока?</li>
+<li>★★ Индексация элементов через DOM/Accessibility Tree работает отлично на стандартных веб-приложениях, но всё больше программных интерфейсов (рендеринг на Canvas/WebGL, кросс-платформенные самодельные элементы управления) не предоставляют доступной структурированной информации и полагаются только на визуальную разметку или предсказание координат. Считаете ли вы, что Computer Use должен делать ставку на чисто визуальный путь, или стоит одновременно поддерживать оба пути — структурированный и визуальный? Каковы затраты и выгоды поддержки обоих путей?</li>
+<li>★★ Модели VLA используют разбиение действий на блоки (action chunking) — как описано в основном тексте, типичная конфигурация π₀ генерирует за раз 25–50 будущих действий при частоте 50 Гц — скрывая задержку вывода во времени исполнения. Но если во время исполнения среда резко меняется (например, объект убрали), предгенерированная последовательность действий становится недействительной. Как найти баланс между преимуществом эффективности разбиения действий на блоки и скоростью реагирования на изменения среды?</li>
+<li>★★★ Все три сценария этой главы (речь, Computer Use, робототехника) сталкиваются с проблемой задержки в цикле «восприятие-мышление-действие» и эволюционируют в сторону параллелизации быстрого и медленного мышления. В речевом сценарии это проявляется как «сказал неправильно — исправился на ходу»; в сценарии Computer Use — как «сначала кликнуть, потом посмотреть»; в сценарии робототехники — как «шаг за шагом, глядя по ходу дела». Как гарантировать, что действия, основанные на быстром мышлении, не приведут к необратимым последствиям?</li>
+</ol>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:ch9-12">
+<p>OpenAI. <em>Introducing GPT-Live.</em> 2026-07-08. https://openai.com/index/introducing-gpt-live/. Трёхчастная классификация «каскад / поочерёдная модель / полный дуплекс» в этом разделе взята из обобщения трёх поколений эволюции голоса ChatGPT в этой статье; «сквозная всемодальная модель (Omni)» в тексте соответствует их категории «turn-based voice models».&#160;<a class="footnote-backref" href="#fnref:ch9-12" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-11">
+<p>Про встраивание определения хода в распознаватель, а также про диагноз «божественной точки зрения» меток см. Li, Bojie and Noah Shi. <em>The Trade-off Was in the Labels: Causal Supervision for Turn-Aware Streaming ASR.</em> 2026 (готовится к публикации).&#160;<a class="footnote-backref" href="#fnref:ch9-11" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-13">
+<p>О том, когда меняется местами преимущество каскадного и сквозного подходов по точности, и как предсказать его направление исходя из природы задачи (способно ли промежуточное представление полностью передать релевантную для задачи информацию), полное кроссмодальное измерение см. Li, Bojie and Noah Shi. <em>The Cascade Gap: When and Why Self-Cascades Help Multimodal Agents.</em> 2026 (готовится к публикации).&#160;<a class="footnote-backref" href="#fnref:ch9-13" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-14">
+<p>Thinking Machines Lab, «Interaction Models: A Scalable Approach to Human-AI Collaboration», 2026-05. https://thinkingmachines.ai/blog/interaction-models/&#160;<a class="footnote-backref" href="#fnref:ch9-14" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-8">
+<p>полный анализ обучения только латентного моста между двумя замороженными моделями, а также вопроса «когда стоит звать медленного советника» см. в Li, Bojie and Noah Shi. <em>The Latent Bridge: A Continuous Slow-Fast Channel for Real-Time Game Agents.</em> arXiv:2606.24470, 2026.&#160;<a class="footnote-backref" href="#fnref:ch9-8" title="Jump back to footnote 5 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:ch9-8" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-9">
+<p>Полное описание механизма трёх компонентов — шлюзование ключевых кадров, транскрипция по необходимости, превращение кадров в устойчивый текст — и абляции по каждой модели см. Li, Bojie and Noah Shi. <em>Agent-Computer Observation Interfaces Enable Dynamic Computer Use.</em> arXiv:2606.29472, 2026.&#160;<a class="footnote-backref" href="#fnref:ch9-9" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-10">
+<p>Полное описание разделения быстрого и медленного между голосом и действием и «чисто текстового контракта» см. Li, Bojie and Noah Shi. <em>Talking While Acting: Real-Time Voice for Slow Computer-Use Agents.</em> 2026 (готовится к публикации).&#160;<a class="footnote-backref" href="#fnref:ch9-10" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-1">
+<p>XLeRobot, «Документация по Teleop». https://xlerobot.readthedocs.io/en/latest/software/getting_started/XLeRobot_teleop.html&#160;<a class="footnote-backref" href="#fnref:ch9-1" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-2">
+<p>Google DeepMind, «Gemini Robotics-ER 1.5». https://deepmind.google/models/gemini-robotics/gemini-robotics-er/&#160;<a class="footnote-backref" href="#fnref:ch9-2" title="Jump back to footnote 9 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-3">
+<p>XLeRobot, «Управление агентом LLM». https://xlerobot.readthedocs.io/en/latest/software/getting_started/LLM_agent.html&#160;<a class="footnote-backref" href="#fnref:ch9-3" title="Jump back to footnote 10 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-6">
+<p>LeRobot, «Учебник по Sim2Real». https://github.com/StoneT2000/lerobot-sim2real/blob/main/docs/zero_shot_rgb_sim2real.md&#160;<a class="footnote-backref" href="#fnref:ch9-6" title="Jump back to footnote 11 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:46 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:46 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

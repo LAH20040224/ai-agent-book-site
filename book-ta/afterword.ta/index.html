@@ -1,0 +1,1702 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/book-ta/afterword.ta/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>பின்னுரை: மீண்டும் Agent = LLM + Context + Tools - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="பின்னுரை: மீண்டும் Agent = LLM + Context + Tools">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/book-ta/afterword.ta/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="பின்னுரை: மீண்டும் Agent = LLM + Context + Tools">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#agent-llm-context-tools" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              பின்னுரை: மீண்டும் Agent = LLM + Context + Tools
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        இரண்டு மேகங்கள்
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#-co-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        மாதிரிகள் மற்றும் ஏஜெண்டுகளின் இணை-பரிணாமம் (Co-Evolution)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/book-ta/afterword.ta.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/book-ta/afterword.ta.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="agent-llm-context-tools">பின்னுரை: மீண்டும் Agent = LLM + Context + Tools<a class="headerlink" href="#agent-llm-context-tools" title="Permanent link">&para;</a></h1>
+<p>இந்த நூல் ஒரு சூத்திரத்துடன் தொடங்கியது: <strong>Agent = LLM + Context + Tools</strong>. பத்து அத்தியாயங்களும் இந்த மூன்று சொற்களுக்குள்தான் விரிகின்றன.</p>
+<p><strong>அத்தியாயம் 1</strong> இந்த சூத்திரத்தின் மூன்று-அடுக்கு புரிதலை நிறுவுகிறது—செயலாக்க அடுக்கு, உள்ளுணர்வு அடுக்கு மற்றும் கல்வியியல் அடுக்கு—மேலும் பணிப்பாய்வுகள் முதல் தன்னாட்சி ஏஜெண்டுகள் வரையிலான ஒருங்கிணைப்பின் நிறமாலையை வழங்குகிறது. அத்தியாயங்கள் 2 முதல் 7 வரை, சூத்திரத்தின் மூன்று தூண்களை ஒவ்வொன்றாக உருவாக்குகின்றன:</p>
+<ul>
+<li><strong>Context (அத்தியாயங்கள் 2 &amp; 3)—"ஏஜெண்ட் பார்ப்பது என்ன."</strong> சூழல் பொறியியல், ஒற்றை அமர்வுக்குள் மாதிரி பார்க்கும் உலகைத் தீர்மானிக்கிறது; பயனர் நினைவகமும் அறிவுத் தளங்களும் அந்த உலகை, அமர்வுகளைக் கடந்த நீண்டகாலத் திரட்சியாக விரிவுபடுத்துகின்றன.</li>
+<li><strong>Tools (அத்தியாயங்கள் 4 &amp; 5)—"ஏஜெண்ட் என்ன செய்ய முடியும்."</strong> கருவிகள் திறனின் எல்லைகளை வரையறுக்கின்றன. குறியீட்டு ஏஜெண்டிற்கு தனி அத்தியாயம் வழங்கப்பட்டுள்ளது, ஏனெனில் குறியீடு மிகவும் உலகளாவிய கருவியாகும்—புதிய கருவிகளை உருவாக்கக்கூடிய ஒரு கருவி.</li>
+<li><strong>Model (அத்தியாயங்கள் 6 &amp; 7)—"ஏஜெண்டின் மூளை தானே."</strong> மதிப்பீடு ஏஜெண்டின் செயல்திறனை ஒப்பிடக்கூடிய சமிக்ஞைகளாக மாற்றுகிறது; பின்-பயிற்சி இந்த சமிக்ஞைகளை மாதிரியின் சொந்த திறன்களாக மாற்றுகிறது. ஒன்று நுண்ணறிவை அளவிடுகிறது, மற்றொன்று அதை பெருக்குகிறது, மேலும் அவை ஒன்றாக சூத்திரத்தில் உள்ள LLM என்ற சொல் எவ்வளவு தூரம் செல்ல முடியும் என்பதை தீர்மானிக்கின்றன.</li>
+</ul>
+<p>அத்தியாயங்கள் 8 முதல் 10 வரை இந்த மூன்று தூண்களையும் இணைத்து, மேலும் சிக்கலான பயன்பாடுகளை நோக்கிச் செலுத்துகின்றன:</p>
+<ul>
+<li><strong>அத்தியாயம் 8—சுய-பரிணாமம்.</strong> ஏஜெண்ட் அனுபவத்திலிருந்து உத்திகளைத் திரட்டவும், பணிப்பாய்வுகளைப் பதிவு செய்யவும், அறிவை வெளிப்புறமயமாக்கவும், புதிய கருவிகளை முன்முயற்சியுடன் உருவாக்கவும் உதவுகிறது—இவை அனைத்தும் மாதிரியின் எடைகளை மாற்றாமல்.</li>
+<li><strong>அத்தியாயம் 9—பல்முறை மற்றும் நிகழ்நேர தொடர்பு.</strong> உணர்வையும் செயலையும் உரையிலிருந்து பார்வை, பேச்சு மற்றும் இயற்பியல் உலகத்திற்கு விரிவுபடுத்துகிறது, நிகழ்நேர தேவைகளால் ஏற்படும் கட்டடக்கலை சவால்களை எதிர்கொள்கிறது.</li>
+<li><strong>அத்தியாயம் 10—பல-ஏஜெண்ட் ஒத்துழைப்பு.</strong> இது சூத்திரத்திற்கு அப்பாற்பட்ட புதிய ஒன்றல்ல: சூழலைப் பகிர்வதா என்பது, அத்தியாயம் 2 இன் "சுருக்கத்தை விடத் தனிமைப்படுத்தல்" என்ற கொள்கை அமைப்புக் கட்டமைப்பு மட்டத்தில் வெளிப்படுவதே; "ஏஜெண்டுகள் ஒருவருக்கொருவர் கருவிகளாக" என்பது அத்தியாயம் 4 இன் கூட்டுக் கருவி வடிவமைப்பிலிருந்து நேரடியாக வருகிறது; பல-ஏஜெண்ட் அமைப்பை மதிப்பிடும் "புதிய தகவல்" அளவுகோல், அத்தியாயம் 6 இன் மதிப்பீட்டு மையக் கருத்துகளை எதிரொலிக்கிறது.</li>
+</ul>
+<h2 id="_1">இரண்டு மேகங்கள்<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>1900 ஆம் ஆண்டில், லார்ட் கெல்வின் இயற்பியலின் தெளிவான வானத்தில் இரண்டு மேகங்கள் மிதப்பதாகக் கூறினார்—ஒன்று பின்னர் சார்பியலாகவும், மற்றொன்று குவாண்டம் இயக்கவியலாகவும் மாறியது. இன்று ஏஜெண்டுகளின் வானமும் அவ்வளவு தெளிவாக இல்லை; நானும் இரண்டு மேகங்களைக் காண்கிறேன்.</p>
+<p><strong>முதல் மேகம்: ஏஜெண்டுகள் தங்கள் சூழலுடன் ஸ்ட்ரீமிங் முறையில், நிகழ்நேரத்தில் எவ்வாறு தொடர்பு கொள்ள முடியும் என்பது.</strong> இன்று, பெரும்பாலான ஏஜெண்டுகள் இன்னும் சுற்றுக்குச் சுற்று "கோரிக்கை-பதில்" முறையிலேயே இயங்குகின்றன: நீங்கள் ஒரு வாக்கியத்தை முடிக்கிறீர்கள், அது ஒரு முழு பத்தியையும் சிந்தித்து, பின்னர் முடிவை ஒரே நேரத்தில் வெளியிடுகிறது. ஆனால் நிஜ உலகம் அது சிந்தித்து முடிக்கும் வரை காத்திருப்பதில்லை—பேச்சு குறுக்கிடப்படுகிறது, காட்சிகள் தொடர்ந்து மாறிக்கொண்டே இருக்கின்றன, மின்னஞ்சல்கள் வந்துகொண்டே இருக்கின்றன. உண்மையிலேயே "உயிருள்ள" ஒரு ஏஜெண்ட், சிந்திக்கும்போதே கேட்கவும், சிந்திக்கும்போதே பேசவும், நீங்கள் ஒரு வாக்கியத்தின் நடுவில் இருக்கும்போதே திட்டமிடத் தொடங்கவும், யாரும் கேட்காதபோதே "இந்த மின்னஞ்சலைக் கவனிக்க வேண்டும்" என்பதை முன்கூட்டியே கவனிக்கவும் முடிய வேண்டும். இந்த நிகழ்நேர திறனை அடைய இரண்டு வழிகள் உள்ளன, அவை பெரும்பாலும் இணையாகப் பின்பற்றப்படுகின்றன: ஒன்று <strong>வேக-மந்த கட்டமைப்புப் பிரிப்பு</strong>—நிகழ்நேரத் துலங்கலும் நுண்ணறிவும் ஏறத்தாழ ஒன்றையொன்று சாராத இரு அச்சுகள்; ஒற்றை மாதிரியால் இரண்டையும் ஒருசேர எட்டுவது கடினம். எனவே வேகமான முன்-முனை மாதிரி உரையாடல் தாளத்தைக் காக்க, மெதுவான பின்-முனை மாதிரி ஆழ்ந்த சிந்தனையைச் செய்கிறது; மற்றொன்று <strong>அனுமானத்தையே வேகமாக்குவது</strong>—டிகோட் வேகம் போதுமான அளவு அதிகமானால், சுற்றுக்கு இடையிலான காத்திருப்பு மிகக் குறுகியதாகி ஏறத்தாழ மறைந்துவிடும்; சுற்று அடிப்படை முறைக்கும் "நிகழ்நேரத்திற்கும்" இடையிலான கோடே மங்கிவிடும். இந்தப் பாதை சிப்களாலும் அனுமான இயந்திரங்களாலும் (inference engines) வேகமாக முன்னெடுக்கப்படுகிறது: Xiaomi MiMo ஒரு 1T-அளவுரு மாதிரியை ஒரு ஒற்றை 8-GPU முனையில் வினாடிக்கு 1000 டோக்கன்களுக்கு மேல் தள்ளியுள்ளது<sup id="fnref:mimo"><a class="footnote-ref" href="#fn:mimo">1</a></sup>, அதே நேரத்தில் முழு மாதிரியையும் ஒரு சிப்பில் பொருத்தும் பிரத்யேக தீர்வுகள் (Taalas HC1 போன்றவை) ஒரு 8-பில்லியன் அளவுரு மாதிரியை வினாடிக்கு சுமார் 17000 டோக்கன்களுக்குத் தள்ளி, 100 மில்லி விநாடிகளுக்கும் குறைவான பதில் நேரத்தை அளிக்கின்றன<sup id="fnref:taalas"><a class="footnote-ref" href="#fn:taalas">2</a></sup>. ஒரு மாதிரி வினாடிக்கு ஆயிரக்கணக்கான சொற்களை வெளியிட முடியும்போது, "சிந்தித்துவிட்டுப் பேசுவது"க்கும் "பேசிக்கொண்டே சிந்திப்பது"க்கும் இடையிலான அனுபவ இடைவெளி அப்படியே அழிந்துவிடுகிறது.</p>
+<p><strong>இரண்டாவது மேகம்: மனிதர்களைப் போலவே, ஏஜெண்டுகள் தங்கள் சூழலுடனான தொடர்புகளின் வெற்றி தோல்விகளிலிருந்து எவ்வாறு தொடர்ந்து அனுபவத்தைக் குவிக்க முடியும் என்பது.</strong> இன்றைய மாதிரிகள், சிறந்த நினைவாற்றல் கொண்ட ஆனால் புதிய விஷயங்களைக் கற்றுக்கொள்ள முடியாத ஒரு மேதையைப் போன்றவை: அவை பயிற்சியின் போது மனித அறிவை முழுமையாக மனப்பாடம் செய்கின்றன, ஆனால் பயன்பாட்டிற்குப் பிறகு அரிதாகவே வளர்கின்றன—ஒவ்வொரு பணிக்குப் பிறகும், அவை மிதித்த குழிகள் மற்றும் அவை கண்டுபிடித்த தந்திரங்கள் பெரும்பாலும் சூழலுடன் சேர்த்தே நிராகரிக்கப்படுகின்றன. இது ஒரு உண்மையான பிரச்சனையா என்பது இரண்டு எதிரெதிர் கருதுகோள்களைப் பொறுத்தது.</p>
+<p>ஒன்று <strong>"சிறிய உலகக் கருதுகோள்" (Small World Hypothesis)</strong>: போதுமான அளவு பெரிய மாதிரி—எடுத்துக்காட்டாக, டிரில்லியன் கணக்கான அளவுருக்களைக் கொண்டது—ஏற்கனவே இயற்பியல் உலகின் அனைத்து முக்கியமான பொது அறிவையும் கொண்டுள்ளது; ஒருமுறை கற்றுக்கொண்டால் போதும். இந்தக் கண்ணோட்டத்தைக் கொண்டவர்கள் (OpenAI மற்றும் Anthropic ஆராய்ச்சியாளர்கள் உட்பட) AI இன்று நிரலாக்கத்தில் மிகவும் வலுவாக இருப்பதற்குக் காரணம், குறியீடு மாதிரிகளுக்குச் சிறப்பானது என்பதால் அல்ல, மாறாக நிரலாக்கம் மனிதர்களுக்கு மிகவும் திறந்த களமாக இருப்பதால்தான்: கற்றலுக்காக ஏராளமான திறந்த மூலக் குறியீடுகள் கிடைக்கின்றன; இருப்பினும், பெரும்பாலான தொழில்களுக்குப் பொதுத் தகவல் அல்லது தரவு இல்லை. எனவே, எல்லை ஆய்வகங்கள் (frontier labs) உண்மையில் செய்வது, பல்வேறு தொழில்களுடன் ஒவ்வொன்றாக ஒத்துழைத்து, அவற்றின் தொழில்முறைத் திறன்களை அதே பெரிய மாதிரியில் "வடிகட்டுவது" (distilling) ஆகும். இந்தக் கண்ணோட்டத்தின்படி, தடையானது மாதிரியின் திறன் அல்லது கற்றல் திறன் அல்ல, மாறாக போதுமான தரவு இருக்கிறதா என்பதுதான்—தரவை உள்ளீடு செய்யுங்கள், ஒருமுறை பயிற்சியளியுங்கள், பிரச்சினை தீர்ந்துவிடும்.</p>
+<p>ஆனால் <strong>"பெரிய உலகக் கருதுகோள்" (Big World Hypothesis)</strong> ஒரு "ஒருமுறை பயிற்சி" (train once) அணுகுமுறையால் மறைக்க முடியாத ஒரு அடுக்கைச் சுட்டிக்காட்டுகிறது: ஒரு குறிப்பிட்ட பயனர் அல்லது ஒரு குறிப்பிட்ட நிறுவனத்திற்கு மட்டுமே உரித்தான அறிவு. உங்கள் நிறுவனத்தின் குறியீட்டுத் தரநிலைகள், உங்கள் குழுவின் PPT தயாரிப்பில் உள்ள ரசனை, ஒரு குறிப்பிட்ட வாடிக்கையாளரின் தனித்துவமான மனோபாவம்—இவை எந்தப் பயிற்சித் தொகுப்பிலும் இல்லை, மேலும் அவை தொடர்ந்து மாறிக்கொண்டே இருக்கும். எண்ணற்ற குறிப்பிட்ட சூழ்நிலைகளால் ஆன இந்த "பெரிய உலகத்திற்கு" பொருந்த, மாதிரி பயன்பாட்டுக்கு வந்த பின்னரும் தொடர்ந்து கற்றுக்கொண்டே இருக்க வேண்டும்; தொழிற்சாலையிலிருந்தே எல்லாம் பொருத்தப்பட்டு வர அதனால் முடியாது. இதுவே அத்தியாயம் 3 இன் நினைவகமும் அத்தியாயம் 8 இன் சுய-பரிணாமமும் ஆராயும் திசையாகும்: அனுபவத்தை கட்டமைக்கப்பட்ட குறியீடாக எழுத வேண்டுமா, அறிவுத் தளத்தில் (knowledge base) சேமிக்க வேண்டுமா, அல்லது மாதிரி அளவுருக்களில் மீண்டும் வடிகட்ட வேண்டுமா? மேலும் சென்றால், AI ஏற்கனவே சுயமாக பரிணமிக்கத் தொடங்கிவிட்டது—Anthropic தொடர்ந்து பேசிவரும் "AI for AI" மற்றும் மேலும் மேலும் நிறுவனங்கள் "AI for Science" இல் பணியாற்றுவது அனைத்தும், ஏஜெண்டுகள் அறிவியலின் மிக எல்லைப் பகுதிகளை ஆராய விடுவதைப் பற்றியதே; மேலும் எல்லைகளுக்கு முடிவே இல்லை, மனப்பாடம் செய்ய தயாரான நிலையான பதில்களோ தொகுப்புகளோ இல்லை. அங்கு ஏஜெண்டுகள் எல்லாவற்றுக்கும் மனிதர்களிடம் திரும்பிச் செல்லாமல், தங்கள் சொந்தச் சோதனைகளின் வெற்றி தோல்விகளிலிருந்து தாமாகவே கற்றுக்கொள்ளத்தான் முடியும். எனவே, மாதிரியின் மிக வலுவான திறன் இறுதியில் மனப்பாடம் அல்ல, மாறாக கற்றல் மற்றும் தகவமைப்புத் திறனாகும்.</p>
+<p>இந்த இரண்டு மேகங்களும் ஒரு ஒற்றை மாதிரி மேம்படுத்தலால் விலகிவிடாது. அவை இறுதியில் எவ்வாறு சமாளிக்கப்படும் என்பதைப் புரிந்துகொள்ள, முதலில் ஒன்றைத் தெளிவாகப் பார்க்க வேண்டும்: மாதிரிகள் மற்றும் ஏஜெண்டுகள் ஒருபோதும் மேல்நிலை மற்றும் கீழ்நிலையாக இருந்ததில்லை; அவை ஒன்றாக பரிணமிக்கின்றன.</p>
+<h2 id="-co-evolution">மாதிரிகள் மற்றும் ஏஜெண்டுகளின் இணை-பரிணாமம் (Co-Evolution)<a class="headerlink" href="#-co-evolution" title="Permanent link">&para;</a></h2>
+<p>மீண்டும் அந்த ஹார்னஸ்களில் உள்ள அடுக்கடுக்கான காப்பு தர்க்கத்தைப் பாருங்கள்—பல-நிலை சூழல் சுருக்கம், ஆயிரக்கணக்கான தோல்விகளுக்குப் பிறகே சர்க்யூட் பிரேக்கரைத் தூண்டும் மறுமுயற்சி தர்க்கம், எச்சரிக்கையுடன் "பாதுகாப்பற்றது" என்றே இயல்பாகக் கருதும் அனுமதிச் சரிபார்ப்புகள்—அசிங்கமாகத் தோன்றும் அந்த "ஸ்பாகெட்டி குறியீட்டின்" ஒவ்வொரு பகுதியும், மாதிரி இன்னும் தடுமாறும் ஓர் இடத்தைப் பதிவு செய்கிறது. அடுத்த தலைமுறை மாதிரிகள் இந்தக் கட்டுப்பாடுகளை உள்வாங்கிக் கொள்ளும்போது, அதற்கான குறியீட்டை நீக்கிவிடலாம்; மாதிரிகளால் அவற்றை உள்வாங்க முடிவதற்குக் காரணமும், உண்மையான வணிகச் சூழலில் ஏஜெண்டுகள் மாதிரிக்குப் பதிலாக அந்தக் குழிகளில் முன்பே விழுந்து எழுந்து, அந்தப் பாடங்களை அடுத்த சுற்றுப் பயிற்சிக்கான சமிக்ஞைகளாகச் சுருக்கியிருப்பதுதான். பயனர்கள் உண்மையான சவால்களை முன்வைக்கிறார்கள், பயன்பாட்டு அடுக்கு மாதிரி தற்காலிகமாக சிறப்பாகச் செய்ய முடியாததை ஈடுசெய்ய ஹார்னஸ்களைப் பயன்படுத்துகிறது, மேலும் இந்த ஈடுசெய்தல்கள் மாதிரியின் அடுத்த மறுசெயலுக்கான பயிற்சி சமிக்ஞைகளாக மாறுகின்றன—இது ஒரு சுய-வலுப்படுத்தும் சக்கரம், இந்த சக்கரத்தின் மூலம்தான் இரண்டு மேகங்களும் படிப்படியாக விலக்கப்படுகின்றன.</p>
+<p>இந்தச் சக்கரம், அத்தியாயம் 1 இல் நிலுவையில் விடப்பட்ட கேள்விக்கும் பதிலளிக்கிறது: <strong>மாதிரிகள் இறுதியில் ஹார்னஸை விழுங்கிவிடுமா? ஆம்—அடுக்கு அடுக்காக.</strong> மாதிரி ஒரு திறனை நிலையாக உள்வாங்கிக் கொள்ளும்போதெல்லாம், அதற்கான ஹார்னஸ் அடுக்கை நீக்கிவிடலாம்—அத்தியாயம் 9 இன் தொடர்பு மாதிரி (interaction model) இதற்கு ஒரு சான்று: குறுக்கிடுதல், இடையில் பேசுதல் போன்ற, ஒரு காலத்தில் வெளிப்புற ஹார்னஸால் தேவைப்பட்ட நடத்தைகள், இன்று நேரடியாக மாதிரிக்குள்ளேயே கட்டமைக்கப்படுகின்றன. ஆனால் இந்த "விழுங்குதல்" ஒருபோதும் முடிவதில்லை. முதலில், பயிற்சி மாதங்கள் ஆகும்—மாதிரி காத்திருக்கலாம், வணிகம் காத்திருக்க முடியாது. இரண்டாவதாக, உண்மையான வணிகத்தின் அனைத்துக் கட்டுப்பாடுகளையும் விருப்பங்களையும் மாதிரியால் உள்வாங்க முடியாது; எப்போதும் வெளிப்புற தர்க்கத்தால் ஈடுசெய்யப்பட வேண்டிய புதிய எல்லை ஒன்று இருக்கும். மூன்றாவதாக, ஒவ்வொரு புதிய மாதிரி தலைமுறையும் புதிய திறன் எல்லையைத் திறக்கிறது, எல்லையில்தான் மாதிரி மிகவும் நிலையற்றதாக இருக்கிறது. எனவே ஹார்னஸ் மறைந்துவிடாது; அது மாதிரியுடன் சேர்ந்து, புதிய எல்லை நோக்கித் தொடர்ந்து நகர்ந்து செல்கிறது. இதுவே ஏஜெண்ட் சகாப்தத்தில் "கசப்பான பாடத்தின்" வாசிப்பு: பொதுவான முறைகள் இறுதியில் வெல்லும்—ஆனால் அந்த "இறுதியில்" என்பதற்குள் உள்ள ஒவ்வொரு பாதைத் துண்டும் ஹார்னஸால் அமைக்கப்பட்டதே.</p>
+<p>இந்தச் சக்கரம், இரு முனைகளையும் ஒருசேரக் கையில் வைத்திருப்பவர்களிடம்தான் மிக வேகமாகச் சுழல்கிறது. Anthropic நிறுவனம் Claude Code உடன் செய்வது, அதன் சொந்த மாதிரியும் அதன் சொந்த ஹார்னஸும் ஒன்றையொன்று ஊட்டி, இணைந்து உருவாக அனுமதிப்பதுதான்: மாதிரிக்கு ஹார்னஸ் எப்படி அழைக்கும் என்பது தெரியும், ஹார்னஸுக்கு மாதிரியின் எல்லைகள் தெரியும்; ஒரு பக்கத்தில் ஏற்படும் ஒவ்வொரு மாற்றமும் உடனடியாக மறுபக்கத்திற்கு பின்னூட்டமாக அளிக்கப்படும். ஒரு சோதனையில், மாதிரியை மாற்றாமல் ஹார்னஸை மட்டும் மாற்றியபோது, பணித் துல்லியம் 52.8% இலிருந்து 66.5% ஆக உயர்ந்தது—ஹார்னஸுக்கு இன்று எவ்வளவு நெம்புகோல் விசை உள்ளது என்பதை இது காட்டுகிறது; அதே நேரம் ஒரு நினைவூட்டலும் கூட: மாதிரி இன்னும் அந்த நிலையை அடையாததால்தான் ஹார்னஸுக்கு இவ்வளவு விசை. இந்த காரணத்தால்தான், இந்த சக்கரமே இந்த சகாப்தத்தின் ஆழமான அகழியாகும்: உண்மையான வணிகம், பின்னூட்ட தரவு, மற்றும் மாதிரி மறுசெயல் ஆகியவற்றுக்கு இடையேயான இணைப்பு எவ்வளவு இறுக்கமாக இருக்கிறதோ, அவ்வளவுக்கு வெளியிலிருந்து யாரும் எட்டிப் பிடிப்பது கடினம்.</p>
+<p>இது உங்களுக்கு என்ன அர்த்தம் என்பது, நீங்கள் சக்கரத்தின் எந்த முனையில் நிற்கிறீர்கள் என்பதைப் பொறுத்தது. நீங்கள் மாதிரிகளை உருவாக்குபவராக இருந்தால், அகழி என்பது இந்த சக்கரத்தை சுழற்றுவதுதான்—உண்மையான உலக சூழல்களில் இருந்து வரும் பின்னூட்டத்தை முடிந்தவரை விரைவாக பயிற்சிக்குள் பாய்ச்சுவது. நீங்கள் மாதிரிகளின் மேல் பயன்பாடுகளை உருவாக்குபவராக இருந்தால், ஹார்னஸ் உங்கள் மிகக் கூர்மையான குறுகிய கால தொழில்நுட்ப நெம்புகோலாகும், ஆனால் தெளிவாக இருங்கள்: மாதிரி ஒவ்வொரு முறை ஓர் அடுக்குக் கட்டுப்பாடுகளை உள்வாங்கும்போதும், ஹார்னஸை மட்டுமே நம்பிக் கட்டப்பட்ட ஒரு தொகுதி நன்மைகளை—கடந்து செல்லும் வழியிலேயே—அது அழித்துவிடும். பயன்பாட்டு அடுக்கில் உண்மையாக நீடிக்கும் அகழிகள் பெரும்பாலும் தொழில்நுட்பத்திற்கு வெளியே உள்ளன: பிரத்யேகத் தரவு, உறுதியான விநியோக வழிகள், பயனர் நம்பிக்கை, நெட்வொர்க் விளைவுகள், மேலும் AI ஆல் இன்னும் கையாள முடியாத, மனிதர்களும் ஏஜெண்டுகளும் இணைந்து உழைக்க வேண்டிய சிக்கலான சூழ்நிலைகள். ஹார்னஸால் நேரத்தை வாங்கி, அந்த நேரத்தில் தொழில்நுட்பத்திற்கு அப்பாற்பட்ட தடைகளை எழுப்புவதே விவேகமான அணுகுமுறை.</p>
+<p>எனவே, உங்கள் கையில் உள்ள கட்டமைப்பு (framework) வழக்கொழிந்துவிடுமோ என்று கவலைப்பட வேண்டாம். மாதிரிகள் சில மாதங்களுக்கு ஒருமுறை புதிய தலைமுறைக்கு மாறுகின்றன; குறிப்பிட்ட APIகள், தயாரிப்புகள், தரவரிசைப் பட்டியல்கள் (leaderboards) எல்லாம் மாறிக்கொண்டே இருக்கும். ஆனால் மூன்று கேள்விகள்—"அது என்ன பார்க்கிறது, அது என்ன செய்ய முடியும், அது சரியாகச் செய்கிறதா என்பதை எவ்வாறு சரிபார்ப்பது"—என்பவை வழக்கொழியாது. அவை ஒரு குறிப்பிட்ட மாதிரியின் பயன்பாட்டை விவரிக்கவில்லை, மாறாக ஒரு நுண்ணறிவு அமைப்பு (intelligent system) உலகத்துடன் தொடர்பு கொள்ளும் அடிப்படை வழியை விவரிக்கின்றன. இவற்றில் தேர்ச்சி பெற்றால், அடுத்த தலைமுறை மாதிரிகள் கொண்டுவரும் புதிய திறன்கள் எதுவாக இருந்தாலும், அதை சூத்திரத்தில் எங்கு வைக்க வேண்டும் என்பதை நீங்கள் அறிவீர்கள், மேலும் அந்த இரண்டு மேகங்களையும் விலக்க இன்னும் எவ்வளவு தூரம் உள்ளது என்பதை ஒரே பார்வையில் புரிந்துகொள்ள முடியும்.</p>
+<p>ஏஜெண்ட் தொழில்நுட்பம் இன்னும் முழு வேகத்தில் வளர்ந்து கொண்டிருக்கிறது; எந்த ஒரு நூலாலும் எல்லா மாற்றங்களையும் தொடர்ந்து பிடித்துவிட முடியாது. ஆனால் இந்த நூல் உங்களிடம் விட்டுச் செல்வது ஏதோ ஓர் API இன் குறிப்பிட்ட பயன்பாடு அல்ல, தொழில்நுட்ப அலைகளுக்கு நடுவில் தெளிவாக நிற்கும் தீர்ப்புத் திறன் என்றால், அது தனது நோக்கத்தை நிறைவேற்றிவிட்டது. இந்த நூலின் உரை, விளக்கப்படங்கள், துணை சோதனைக் குறியீடு அனைத்தும் திறந்த மூலம் (open source). களஞ்சியத்திற்குச் சென்று, சோதனைகளை நீங்களே இயக்கி, சிக்கல்களையும் (issues) PRகளையும் சமர்ப்பிக்க வரவேற்கிறேன்—புரிதலுக்கும் உருவாக்கத்திற்கும் இடையே ஒரு நதி உள்ளது; அதைக் கைகளால் கடந்தே ஆக வேண்டும். ஏஜெண்டுகளின் மிகக் கவர்ச்சிகரமான அம்சமும் இதுவே: அவை குறியீடு எழுதுவதன் மூலம் புதிய திறன்களை உருவாக்கவும், தங்களையே மேம்படுத்திக் கொள்ளவும் முடியும். இவ்வளவு தூரம் படித்த நீங்கள், "உருவாக்கத்தின்" கொள்கைகளை ஏற்கனவே கையில் வைத்திருக்கிறீர்கள். இப்போது, சென்று ஏதாவது உருவாக்குங்கள்.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:mimo">
+<p>Xiaomi MiMo-V2.5-Pro-UltraSpeed, FP4 அளவீடு (quantization), DFlash இணை ஊகக் குறிவிலக்கம் (parallel speculative decoding), TileRT அனுமான அமைப்பு (inference system) ஆகியவற்றைக் கொண்ட மாதிரி-அமைப்பு இணை வடிவமைப்பு (model-system co-design) மூலம், ஒற்றை பொது-நோக்க 8-GPU முனையில் (node) 1T-அளவுரு மாதிரியின் உருவாக்க வேகத்தை முதல் முறையாக 1000 token/s க்கு மேல் தள்ளியுள்ளது. Xiaomi MiMo அதிகாரப்பூர்வ தொழில்நுட்ப வலைப்பதிவில் "Pushing 1T-Parameter Model Generation Speed to 1000 TPS," 2026 ஐப் பார்க்கவும். https://mimo.xiaomi.com/blog/mimo-tilert-1000tps&#160;<a class="footnote-backref" href="#fnref:mimo" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:taalas">
+<p>Taalas HC1 ஆனது முழு Llama 3.1 8B மாதிரியையும் ஒரு 6nm சிப்பில் (chip) கடினக் குறியீடாக்கி (hardcode), தோராயமாக 17000 token/s வேகத்தையும் 100 மில்லிவிநாடிக்கும் குறைவான பதில் நேரத்தையும் அடைகிறது; இதன் பரிமாற்றம் (trade-off): சிப்பால் கடினக் குறியீடாக்கப்பட்ட மாதிரியை மட்டுமே இயக்க முடியும், மாதிரி புதுப்பிப்புக்குப் புதிய சிப் டேப்-அவுட் (tape-out) தேவை. Karl Freund, "Taalas Launches Hardcore Chip With 'Insane' AI Inference Performance," Forbes, 2026 ஐப் பார்க்கவும். https://www.forbes.com/sites/karlfreund/2026/02/19/taalas-launches-hardcore-chip-with-insane-ai-inference-performance/&#160;<a class="footnote-backref" href="#fnref:taalas" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:46 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:46 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

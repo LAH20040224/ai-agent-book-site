@@ -1,0 +1,2676 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/book-ar/chapter6.ar/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>تقييم الوكلاء - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="تقييم الوكلاء">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/book-ar/chapter6.ar/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="تقييم الوكلاء">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              تقييم الوكلاء
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مثال تقييم ملموس
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        بيئة التقييم الآلي
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="بيئة التقييم الآلي">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        المكونات الأساسية لبيئة التقييم
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        بيئة تقييم استدعاء الأدوات
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        بيئة تقييم التفاعل بين الإنسان والحاسوب
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        تصميم مجموعات بيانات مهام التقييم
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="تصميم مجموعات بيانات مهام التقييم">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        التحديات الأساسية في تصميم مجموعة بيانات المهام
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        التصميم الدقيق لأوصاف المهام
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        التصميم الهرمي لتعقيد المهام
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ضمان التحقق والموضوعية
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        التصميم المنهجي لتوزيع المهام
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مراقبة جودة البيانات والتحسين التكراري
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        نظام مقاييس التقييم
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        طرق التقييم الآلي
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="طرق التقييم الآلي">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        النموذج اللغوي بوصفه قاضيًا: جوهر التقييم الآلي
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        المقارنة الزوجية وتصنيف النماذج
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        اختيار النموذج القائم على التقييم
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="اختيار النموذج القائم على التقييم">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        الأبعاد الرئيسية للاختيار
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        تحليل تكلفة أنظمة الوكيل
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        التكرار المستمر القائم على التقييم
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        الأهمية الإحصائية لنتائج التقييم
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        إمكانية ملاحظة الوكيل
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        من التقارير المعيارية إلى تحسينات النظام
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="من التقارير المعيارية إلى تحسينات النظام">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        قراءة تقرير مرجعي: فن اكتشاف المشكلات
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_26" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        من البيانات إلى الفرضيات: بناء خارطة طريق للتحسين
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        من النتائج إلى القرارات: المقايضات القائمة على البيانات
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        التكرار المستمر: من التحسين الأول إلى تطور النظام
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_29" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        من التقييم الخارجي إلى الداخلي: بنية تقييم للوكلاء على مستوى الإنتاج
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="من التقييم الخارجي إلى الداخلي: بنية تقييم للوكلاء على مستوى الإنتاج">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        البنية التحتية للاستئصال: فهم المساهمة الحقيقية لكل ميزة
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        منهجية اختبار أ/ب: تمييز الآلية عن الهدف
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        نظام علم الميزات ذو طبقتين
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        تقييم حساسية الموجّه
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        التحليلات المراعية للخصوصية أساسًا للتقييم
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_35" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        من الخارجي إلى الداخلي: تحول في التفكير التقييمي
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_36" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        بيئات المحاكاة: الجسر من التقييم إلى ما بعد التدريب
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="بيئات المحاكاة: الجسر من التقييم إلى ما بعد التدريب">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_37" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مقايضات الإخلاص وعشوائية المجال
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_38" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ملخص الفصل
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_39" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        أسئلة للتأمل
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/book-ar/chapter6.ar.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/book-ar/chapter6.ar.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="_1">تقييم الوكلاء<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>عند بناء نظام الوكيل، يواجه المطورون العديد من خيارات التصميم التي غالبًا ما تفتقر إلى الإجابات الصحيحة الواضحة:</p>
+<ul>
+<li>ما النموذج الذي ينبغي استخدامه؟</li>
+<li>ما الأدوات التي يجب أن يكون النموذج قادرًا على الاتصال بها؟</li>
+<li>ما هي البيانات التي يجب أن تخزنها قاعدة المعرفة، وكيف ينبغي هيكلتها؟</li>
+<li>كيف ينبغي تنفيذ ذاكرة المستخدم؟</li>
+<li>كيف ينبغي تنظيم موجّهات النموذج ومهاراته؟</li>
+<li>ما هي القيود التي يجب إضافتها إلى منظومة التشغيل؟</li>
+<li>كيف ينبغي تحويل نتائج التقييم إلى إشارات تعلم للتطور المستمر للوكيل؟</li>
+</ul>
+<p>ويضع التقييم هذه القرارات على أساس علمي. من خلال تجارب المقارنة المنهجية (تغيير متغير واحد في كل مرة ومراقبة التأثير) وتجارب الاستئصال (تعطيل مكون واحد في كل مرة ومراقبة كيفية تغير الأداء الإجمالي)، يمكنك التمييز بين مكاسب القدرة الحقيقية والتقلبات السطحية - وتجنب التصرف بحكمة أو حماقة. هناك قول مأثور في هندسة البرمجيات: لا يمكنك تحسين ما لا يمكنك قياسه. بدون نظام تقييم قابل للتكرار، لا يمكن تكرار الوكيل إلا بناءً على الحدس.</p>
+<p>من منظور هندسة منظومة التشغيل في الفصل الأول، يؤدي التقييم وظيفة <strong>التحقق</strong> الأساسية داخل المنظومة. والفكرة المحورية هي أن <strong>موضوع التقييم ليس النموذج وحده، بل النموذج ومنظومة تشغيله معًا</strong>. فقد يختلف أداء النموذج نفسه جذريًا بين منظومتين، ورفعت بعض الفرق أداء النموذج ذاته في المهام الطرفية بمجرد تحسين منظومة تشغيله (انظر الفصل الخامس). لذلك قد لا يكون علاج ضعف الوكيل تبديل النموذج، بل تحسين أحد المكونات: الموجّه، أو تصميم الأداة، أو حلقة التغذية الراجعة. ويجب أن يميز نظام التقييم السليم بين مشكلتين مختلفتين: قصور قدرة النموذج، وسوء استثمارها بسبب التصميم. ومن الطرق الشائعة لذلك <strong>تجربة تبديل النموذج</strong>: ثبّت منظومة التشغيل وبدّل النموذج بآخر أقوى أو أضعف، ثم راقب مقدار تغير النتيجة. فإذا لم يرفع النموذج الأقوى الأداء، فالاختناق في المنظومة. وإذا خفّض النموذج الأضعف النتيجة وتذبذبت بحدة مع قوته، فالنموذج نفسه هو الاختناق الأرجح. وقد يعود ذلك إلى صعوبة المهمة أصلًا، أو إلى اعتماد المنظومة المفرط على معرفة النموذج السابقة، وهو ما يحتاج إلى تحليل إضافي. وتختلف هذه التجربة عن الاستئصال: فالاستئصال <strong>يعطّل مكونًا من منظومة التشغيل</strong> لقياس أثره في الأداء الكلي، أما تبديل النموذج <strong>فيثبّت المنظومة ولا يغير إلا النموذج</strong>. تكشف الأولى أي مكونات المنظومة أهم، وتكشف الثانية هل الاختناق في النموذج أم في منظومة تشغيله.</p>
+<p>يستحق نظام التقييم قيمة أكبر في عصر التطور السريع للنماذج. تستمر النماذج في التحسن، لكن النموذج الجديد الذي يحقق درجات أعلى في المعايير العامة لن يؤدي بالضرورة إلى أداء أفضل في مهمتك - بل قد يتراجع (يؤدي أداء أسوأ من الإصدار القديم في بعض النواحي). يتيح لك التشغيل الكامل لمجموعة بيانات التقييم الخاصة بك فقط اتخاذ قرار ترقية يعتمد على البيانات. بل إن نظام التقييم القوي يجعل من "بناء المنتجات للنماذج المستقبلية" استراتيجية قابلة للتطبيق: إذا لم يكن النموذج الحالي جيدًا بما يكفي للنشر التجاري، فقم بإنهاء المنتج على أي حال، وقم ببناء مجموعة التقييم، وتتبع أداء كل نموذج جديد، وقم بتشغيله في اللحظة التي يتخطى فيها النموذج الشريط.</p>
+<blockquote>
+<p><strong>دليل الفصل</strong></p>
+<p>يبني هذا الفصل نظام تقييم كامل على ثلاثة مستويات. المستوى الأول هو <strong>بيئة التقييم</strong> ("مكان الاختبار"): كيفية إعداد بيئة اختبار تلقائية وقابلة للتكرار، وتغطي نموذجين: استدعاء الأدوات والتفاعل بين الإنسان والحاسوب. المستوى الثاني هو <strong>طرق التقييم</strong> ("كيفية الحكم"): بدءًا من مبادئ تصميم مجموعة البيانات ونظام مقاييس التقييم (ما يجب قياسه)، وحتى LLM-as-a-Judge (باستخدام نماذج لغوية كبيرة كمحكمين) للتقييم الآلي، ثم المقارنة الزوجية وتصنيف النماذج. المستوى الثالث هو <strong>اتخاذ القرار القائم على التقييم</strong> ("ما يجب فعله بعد الاختبار"): تحويل نتائج التقييم إلى إرشادات قابلة للتنفيذ لاختيار النموذج، وتحسين البنية، والتكرار المستمر، مع أهمية إحصائية للحكم على ما إذا كان فرق النتيجة الملحوظ حقيقيًا أم لا. يغطي الفصل أيضًا إمكانية الملاحظة والبنية التحتية للتقييم الداخلي لوكلاء درجة الإنتاج، ويختتم ببيئات المحاكاة المرتبطة بمرحلة ما بعد التدريب في الفصل 7.</p>
+<p>الفكرة التي تدور في الفصل بأكمله: <strong>القيمة الأساسية لنظام التقييم ليست تسجيل النظام الحالي، ولكن السماح لك بمواكبة تطور النموذج بسرعة وبشكل موثوق.</strong> عندما يتم طرح نموذج أقوى أو أرخص، يمكن لفريق لديه نظام تقييم قوي أن يقرر في غضون ساعات ما إذا كان سيتم التبديل أم لا؛ يمكن للفريق الذي لا يضم أحدًا أن يثق إلا في الحدس أو ينتظر تعليقات المجتمع - وفي سوق الوكلاء شديد التنافسية، يمكن لهذا الاختلاف في السرعة أن يقرر من سيفوز.</p>
+</blockquote>
+<p><img alt="الشكل 6-1: المستويات الثلاثة لنظام التقييم" src="../images/fig6-1.svg" /></p>
+<h2 id="_2">مثال تقييم ملموس<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>قبل الغوص في المنهجية، دعونا نبني الحدس من خلال مثال كامل. لنفترض أننا أنشأنا وكيل خدمة عملاء ونحتاج إلى تقييم قدرته على التعامل مع طلبات استرداد الأموال.</p>
+<p><strong>حالة اختبارية</strong>: يريد المستخدم إرجاع طلب منذ 3 أيام (الطلب رقم 12345، المبلغ 299 ين ياباني). سياسة الشركة: استرداد كامل المبلغ خلال 7 أيام.</p>
+<p><strong>مسار الوكيل</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>User: I want to return the headphones I bought 3 days ago, order number 12345. (Today is 2026-04-10)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Agent (thinking): The user wants a refund, I need to check the order information first.
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Agent → Calls tool query_order(order_id=&quot;12345&quot;)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Tool returns: {status: &quot;delivered&quot;, amount: 299, date: &quot;2026-04-07&quot;, item: &quot;Bluetooth Headphones&quot;}
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Agent (thinking): Order date 2026-04-07, today is 2026-04-10, that&#39;s 3 days, within the 7-day refund period, eligible for full refund.
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Agent → Calls tool process_refund(order_id=&quot;12345&quot;, amount=299)
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>Tool returns: {refund_id: &quot;R-98765&quot;, status: &quot;processing&quot;, eta: &quot;3-5 business days&quot;}
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>Agent: A refund has been initiated for you. The full refund for Order #12345 (Bluetooth Headphones, ¥299) is being processed,
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>      and is expected to arrive in 3-5 business days. The refund ID is R-98765, which can be used to check the progress.
+</code></pre></div>
+<p><strong>تسجيل النقاط باستخدام معايير التقييم</strong> (أربعة أبعاد، سجل كل منها 1-4). يوفر الجدول 6-1 مثالًا لتسجيل النقاط لمهمة استرداد الأموال لخدمة العملاء، مما يوضح كيفية تقسيم نموذج التقييم لمسار الوكيل إلى أبعاد تقييم قابلة للتحقق.</p>
+<p>جدول 6-1 مثال على نقاط التقييم لمهمة استرداد الأموال لخدمة العملاء</p>
+<table>
+<thead>
+<tr>
+<th>البعد</th>
+<th>المعايير</th>
+<th>النتيجة</th>
+<th>السبب</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>صحة التشغيل</td>
+<td>هل مبلغ الاسترداد ورقم الطلب صحيحان؟</td>
+<td>4</td>
+<td>تم الاستعلام بشكل صحيح وبدء استرداد كامل المبلغ بقيمة ¥299</td>
+</tr>
+<tr>
+<td>الامتثال للسياسة</td>
+<td>هل يتبع سياسة استرداد الأموال لمدة 7 أيام؟</td>
+<td>4</td>
+<td>الطلب خلال فترة استرداد الأموال، ويتوافق مع السياسة</td>
+</tr>
+<tr>
+<td>اكتمال المعلومات</td>
+<td>هل يوفر المبلغ ووقت الوصول ومعرف استرداد الأموال؟</td>
+<td>4</td>
+<td>تم توفير جميع المعلومات الأساسية الثلاثة</td>
+</tr>
+<tr>
+<td>كشف الهلوسة (البند النقض)</td>
+<td>هل يختلق معلومات غير موجودة؟</td>
+<td>تمرير</td>
+<td>جميع المعلومات تأتي من مخرجات الأداة</td>
+</tr>
+</tbody>
+</table>
+<p>يتم إدراج الهلوسة على أنها <strong>عنصر نقض</strong> بدلاً من كونها بُعدًا متدرجًا للدرجات لأنها متعامدة مع الجودة - فالاستجابة بطلاقة ومفصلة ومهذبة تحتوي على معلومات كاذبة تكون أكثر ضررًا للمستخدم من الاستجابة المختصرة ولكن الدقيقة. (للاطلاع على التصميم العام لآلية النقض، راجع قسم "المبادئ الأربعة" لاحقًا.)</p>
+<p>لقد نجحت حالة الاختبار هذه. لكن التقييم الجيد لا يختبر سيناريوهات النجاح فحسب؛ كما أنه يستكشف الحدود والفخاخ - عندما يريد المستخدم إرجاع طلب منذ 15 يومًا (بعد فترة استرداد الأموال)، هل يستطيع الوكيل الرفض بشكل صحيح؟ عندما يدعي مستخدم أن "ممثل خدمة العملاء قد وافق بالفعل على استرداد الأموال"، هل سيصدق الوكيل ذلك بدون سجل النظام؟ هذه السيناريوهات الحدودية هي التي تفصل حقًا الوكلاء الأقوياء عن الوكلاء الضعفاء.</p>
+<p>العملية المذكورة أعلاه - تحديد حالات الاختبار، وتشغيل الوكيل، والتسجيل باستخدام نموذج التقييم، وتحليل النتائج - هي الهيكل الأساسي للتقييم. ويوضح باقي هذا الفصل تصميم كل خطوة.</p>
+<h2 id="_3">بيئة التقييم الآلي<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>يتطلب تقييم الوكيل بيئة آلية قابلة للتكرار - بيئة يمكنها اختبار تأثيرات التغييرات أثناء التطوير بسرعة. يتطلب بناء مثل هذه البيئة الإجابة على ثلاثة أسئلة: ما الذي يجب تقييمه (تعريف المهمة ومعايير التحقق)، ومع من يتفاعل الوكيل وكيفية محاكاة ذلك النظير، وما هي معايير التسجيل التي يجب استخدامها.</p>
+<h3 id="_4">المكونات الأساسية لبيئة التقييم<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>تتكون بيئة التقييم من خمسة عناصر - ستركز الأقسام التالية على تصميم مجموعة البيانات وتصميم معايير التسجيل:</p>
+<p><strong>مجموعة البيانات</strong>: تحدد مجموعة المهام، بما في ذلك الحالة الأولية ووصف الهدف والحلول المرجعية الاختيارية.</p>
+<p><strong>حالة البيئة</strong>: تتتبع المعلومات المتغيرة أثناء تنفيذ المهمة، وينبغي أن توازن بين الواقعية وقابلية الضبط. ففي تقييم خدمة العملاء مثلًا، تشمل حالة البيئة سجلات الطلبات في قاعدة البيانات وأرصدة حسابات المستخدمين. وبعد استدعاء الوكيل للدالة <code>process_refund</code>، تتغير حالة الطلب من <code>"delivered"</code> إلى <code>"refunded"</code> ويزداد الرصيد. وتعني الواقعية أن تخضع تغيرات الحالة لمنطق العمل، فلا يتجاوز المبلغ المسترد قيمة الطلب، بينما تعني قابلية الضبط إمكان إعادة كل اختبار إلى الحالة الابتدائية نفسها.</p>
+<p><strong>الأدوات</strong>: تحدد مجموعة العمليات التي يمكن للوكيل تنفيذها - يجب ألا توفر الأدوات تجريدات عالية المستوى بشكل مفرط (مثل "حل مشكلة المستخدم")، ولكن يجب أن توفر عمليات ذرية (مثل طلب الاستعلام، وتعديل الحجز، وإرسال البريد الإلكتروني)، مما يجبر الوكيل على دمج هذه العمليات من خلال التخطيط والاستدلال.</p>
+<p><strong>قواعد التقييم (معايير التسجيل)</strong>: تحدد أداء الوكيل، والذي يمكن أن يكون ثنائيًا (نجاح/فشل)، أو مستمرًا (من 0 إلى 100 نقطة)، أو متعدد الأبعاد (دقة التسجيل والكفاءة والسلامة بشكل منفصل).</p>
+<p><strong>بروتوكول التفاعل</strong>: يحدد وضع التفاعل وشروط الإنهاء.</p>
+<p><img alt="الشكل 6-2: بيئات تقييم استدعاء الأدوات والتفاعل بين الإنسان والحاسوب" src="../images/fig6-2.svg" /></p>
+<h3 id="_5">بيئة تقييم استدعاء الأدوات<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>بالنسبة للمهام التي تعتمد بشكل أساسي على استخدام الأداة، مثل إنشاء التعليمات البرمجية وتحليل البيانات، يوضح إطار عمل أدوات التحقق نمط تصميم نموذجي. يكمل الوكيل المهمة عن طريق استدعاء أدوات محددة مسبقًا، ويستند التحقق إلى معايير قابلة للتنفيذ (سواء نجحت الاختبارات، أو ما إذا كانت الإجابات متطابقة)، دون الاعتماد على التعليقات التوضيحية البشرية أو الحكم النموذجي.</p>
+<p>تقدم أدوات التحقق تصميمًا هرميًا للبيئة: <code>SingleTurnEnv</code> مناسب للمهام أحادية المنعطف (على سبيل المثال، الأسئلة والأجوبة البسيطة)، ويدعم <code>ToolEnv</code> الحلقات المستقلة متعددة المنعطفات لاستدعاءات الأدوات، ويدعم <code>StatefulToolEnv</code> و<code>SandboxEnv</code> الأدوات ذات الحالة وبيئات وضع الحماية طويلة الأمد (على سبيل المثال، تنفيذ التعليمات البرمجية). على سبيل المثال: <code>SingleTurnEnv</code> مناسب لطرح سؤال رياضي والتحقق من الإجابة مباشرة؛ يناسب <code>ToolEnv</code> البحث في عدة صفحات ويب وتجميع الإجابة قبل التحقق من النتيجة النهائية؛ يناسب <code>StatefulToolEnv</code> تعديل سجلات قاعدة البيانات والتحقق من تغيير الحالة الناتج؛ يناسب <code>SandboxEnv</code> تشغيل التعليمات البرمجية في وضع الحماية والتحقق من ملفات الإخراج. يلخص الجدول 6-2 أنواع البيئة هذه للقراء لاختيار بيئة التقييم المناسبة بناءً على حالة المهمة واستدعاءات الأداة ومتطلبات العزل.</p>
+<p>جدول 6-2 مقارنة أنواع بيئة أدوات التحقق</p>
+<table>
+<thead>
+<tr>
+<th>نوع البيئة</th>
+<th>ثبات الدولة</th>
+<th>استدعاءات الأداة</th>
+<th>حالة الاستخدام النموذجية</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SingleTurnEnv</td>
+<td>لا شيء</td>
+<td>لا شيء</td>
+<td>سؤال وجواب بدورة واحدة، ومسائل الرياضيات</td>
+</tr>
+<tr>
+<td>ToolEnv</td>
+<td>لا شيء</td>
+<td>متعدد المنعطفات</td>
+<td>بحث + تجميع المعلومات</td>
+</tr>
+<tr>
+<td>StatefulToolEnv</td>
+<td>نعم</td>
+<td>متعدد المنعطفات</td>
+<td>تعديل سجلات قاعدة البيانات</td>
+</tr>
+<tr>
+<td>SandboxEnv</td>
+<td>نعم + العزلة</td>
+<td>متعدد المنعطفات</td>
+<td>تنفيذ التعليمات البرمجية واختبارها</td>
+</tr>
+</tbody>
+</table>
+<p>يدعم الإطار أخذ العينات المتوازية والتخزين المؤقت للمسار. يتم حفظ المسار الكامل (الملاحظات، والإجراءات، والمكافآت) من كل تقييم لتحليله وإعادة تشغيله لاحقًا.</p>
+<p>تحتاج البيئة أيضًا إلى التعامل مع تبعية حالة العمليات - تعتمد نتيجة استدعاء الأداة على الحالة الحالية. عند الفشل، يجب أن يقدم رسائل خطأ واضحة بدلاً من إشارات فشل بسيطة، مما يسمح للوكيل بالتعلم من الأخطاء وتعديل إستراتيجيته.</p>
+<h3 id="_6">بيئة تقييم التفاعل بين الإنسان والحاسوب<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>لا تتضمن العديد من المهام الواقعية استدعاءات الأدوات فحسب، بل تتضمن أيضًا محادثات مع المستخدمين البشريين. يحتاج وكيل خدمة العملاء إلى فهم التعبيرات الغامضة وتوضيح الاحتياجات والاستعلام عن أنظمة الواجهة الخلفية وتأكيد المعلومات مع المستخدم. ويواجه تقييم مثل هذه المهام تحديًا أساسيًا: كيف يمكن محاكاة المستخدمين الحقيقيين في بيئة آلية؟</p>
+<p>مبدأ التصميم الرئيسي هو <strong>الكشف التدريجي عن المعلومات</strong>، وهو الفرق الأساسي بين تقييم التفاعل بين الإنسان والحاسوب والمعايير التقليدية. تكشف معظم المعايير عن المتطلبات الكاملة مقدمًا، ولكن نادرًا ما يتمكن المستخدمون الحقيقيون من التعبير عن احتياجاتهم منذ البداية - غالبًا ما يقولون فقط "يبدو أن هناك مشكلة في رحلتي" أو "الإنترنت لا يعمل". يجب على الوكيل توضيح الحاجة من خلال طرح الأسئلة، وهذه العملية في حد ذاتها هي عرض للقدرة. ولذلك، في التقييم، <strong>يجب ألا يتم الكشف عن معلومات المستخدم المحاكية للوكيل مرة واحدة</strong>؛ وينبغي الكشف عنها بشكل تدريجي، عند الطلب، مع تطور المحادثة.</p>
+<p>حل τ-bench هو <strong>محاكاة المستخدم</strong>: استخدام LLM آخر للعب دور المستخدم، والتحدث مع الوكيل وفقًا لتعليمات محددة مسبقًا. يتلقى المستخدم المحاكى تعليمات المهمة (على سبيل المثال، "أحتاج إلى إلغاء رحلة الغد")، ويكشف تدريجيًا عن المعلومات الضرورية للوكيل أثناء المحادثة، ويستجيب للاستفسارات، ويرسل إشارة إنهاء عند اكتمال المهمة. تتطلب الموجّه من المستخدم الذي تمت محاكاته "عدم الكشف عن جميع المعلومات مرة واحدة، بل تقديم ما هو ضروري للخطوة الحالية فقط" و"عدم اختلاق المعلومات غير المتوفرة في التعليمات". يتطلب تصميم محاكاة المستخدم مقايضة بين الأصالة وإمكانية التحكم: يجب أن يكون السلوك قريبًا من مستخدم حقيقي (تعبيرات غامضة، معلومات غير كاملة، تقلبات عاطفية عرضية) مع اتباع نص معين لضمان إمكانية التكرار.</p>
+<p>ما يلي هو مثال لمحادثة متعددة الأدوار مع الكشف التدريجي عن المعلومات (يعمل محاكي المستخدم وفقًا لبرنامج نصي ثابت):</p>
+<blockquote>
+<p><strong>المستخدم</strong>: "هناك مشكلة في رحلتي."
+<strong>الوكيل</strong>: "ما هي الرحلة؟"
+<strong>المستخدم</strong> (يكشف حسب النص): "Delta 123، صباح الغد من سان فرانسيسكو إلى نيويورك."
+<strong>الوكيل</strong>: "ما هي المشكلة المحددة؟"
+<strong>المستخدم</strong> (يتم الكشف عن كل نص برمجي): "مدة الرحلة طويلة جدًا، أريد تغييرها."
+<strong>الوكيل</strong>: "هل لديك أي تفضيلات للرحلة الجديدة؟"
+<strong>المستخدم</strong> (يكشف عن النص): "لا بأس بأي رحلة بعد الظهر."</p>
+</blockquote>
+<p>يتبع جهاز محاكاة المستخدم نصًا ثابتًا (المعلومات المعروفة + قواعد الكشف)، مما يضمن إمكانية تكرار التقييم مع محاكاة أسلوب التعبير التقدمي للمستخدم الحقيقي.</p>
+<p>τ-bench هو معيار لتقييم أداء الوكيل في العمليات التجارية المنظمة (على سبيل المثال، خدمة عملاء شركات الطيران، وخدمة عملاء التجزئة). تكون عمليات التحقق الخاصة بها على مستوى المكونات ومتعددة الأبعاد: من ناحية، تتحقق مما إذا كانت حالة قاعدة البيانات النهائية صحيحة (على سبيل المثال، تتغير حالة سجل الحجز إلى "ملغاة")؛ ومن ناحية أخرى، فإنه يتحقق مما إذا كان الوكيل قد قدم المعلومات الأساسية اللازمة أثناء المحادثة (على سبيل المثال، مبلغ الاسترداد ووقت الوصول، ويتم التحقق من ذلك من خلال البحث عن سلاسل أو أنماط محددة). يقوم هذا التحقق المزدوج بفحص الدقة التشغيلية وفعالية الاتصال في نفس الوقت. ومع ذلك، على مستوى المهمة، تنهار هذه الاختبارات في نهاية المطاف إلى <strong>مكافأة ثنائية تبلغ صفر أو واحد</strong> - يجب اجتياز جميع الاختبارات للحصول على النتيجة 1؛ أي درجات فشل فردية 0. تجعل المكافآت الثنائية من السهل حساب مقاييس الموثوقية مثل Pass^k (راجع قسم "نظام مقاييس التقييم" لاحقًا)، على حساب تسجيل النقاط "دقيقة من الناحية التشغيلية ولكنها تفتقد حقلاً واحدًا غير حرج" مثل "الفشل الكامل".</p>
+<p>لا يعمل <strong>τ²-bench</strong> المحسّن بشكل أساسي على تحسين دقة التسجيل؛ وبدلا من ذلك، فإنه يتقدم المعيار في مجالين آخرين. أولاً، <strong>بيئة التحكم المزدوج</strong>: لم يعد الوكيل هو الطرف الوحيد الذي يمكنه استدعاء الأدوات - يمكن لمحاكاة المستخدم أن تعمل على نفس البيئة المشتركة (يطلب الوكيل من المستخدم التبديل إلى وضع الطائرة، ويؤدي إجراء المستخدم فعليًا إلى تغيير حالة البيئة)، وهو ما يتطابق بشكل أفضل مع السيناريوهات الحقيقية مثل الدعم الفني، حيث يجب على المستخدم تقديم المساعدة. ثانيًا، <strong>مواصفات المهام الأكثر دقة وإنشاء المهام التركيبية</strong>: عدد أقل من الغموض في شروط النجاح، ومثيلات المهام التي يمكن تحديد معلماتها وإنشائها على دفعات (راجع قسم "ضمان التحقق والموضوعية" لاحقًا للحصول على أبعاد التحقق التفصيلية).</p>
+<blockquote>
+<p><strong>التجربة 6-1 ★: تشغيل τ²-bench ومقارنة تطورها من τ-bench</strong></p>
+<p>تدير هذه التجربة إطار تقييم τ²-bench لفهم مبادئ تصميم بيئات تقييم التفاعل بين الإنسان والحاسوب. من خلال مقارنة τ-bench مع τ²-bench، يمكننا أن نرى كيف يتم تحسين مجموعات بيانات التقييم بشكل متكرر.</p>
+<p>اقرأ ملفات تعريف المهمة بعمق: تحتوي كل مهمة على معلومات معروفة للمستخدم، وتعليمات المهمة التي تحكم الكشف التدريجي واستراتيجيات الاستجابة، وشروط النجاح (الحالة المستهدفة لقاعدة البيانات ومعلومات التأكيد التي يجب أن تظهر في الحوار). قم بتشغيل عملية التقييم الكاملة، ولاحظ الحوار متعدد المنعطفات بين محاكي المستخدم والوكيل، وقم بتحليل أوضاع الفشل النموذجية (انتهاكات السياسة، وحذف المعلومات، وعمليات التسليم المفرطة للعملاء البشريين، وما إلى ذلك).</p>
+<p><img alt="الشكل 6-3: بنية تقييم مقاعد البدلاء τ²" src="../images/fig6-3.svg" /></p>
+<p>قارن اختلافات التصميم بين τ-bench و τ²-bench: كان الإصدار الأولي من τ-bench يحتوي على تعليمات مستخدم بسيطة للغاية (يمكن للوكيل تخمين الإجابة)، وشروط نجاح غير دقيقة (مما يؤدي إلى سوء التقدير)، ومحاكي مستخدم ميكانيكي. قام τ²-bench بإجراء تحسينات منهجية لمعالجة هذه المشكلات:</p>
+<ul>
+<li><strong>تم تقديم تعليمات مهمة أكثر تفصيلاً</strong>: بما في ذلك "متطلبات الاستناد إلى النتائج الفعلية"، مما يعني أن الاستجابات يجب أن تستند إلى الحالة الفعلية للبيئة</li>
+<li><strong>معايير تقييم أكثر دقة</strong>: على سبيل المثال، "يجب أن يعرض اختبار السرعة "ممتاز" حتى يتم اعتباره حلاً"</li>
+<li><strong>مواصفات سلوك محاكاة المستخدم الأكثر واقعية</strong>: الكشف التدريجي عن المعلومات، والتقلبات العاطفية الطبيعية</li>
+</ul>
+<p>انتبه بشكل خاص إلى مهام مجال الاتصالات المضافة حديثًا في τ²-bench، وافهم تصميم بيئة التحكم المزدوج لـ τ²-bench (كما ذكرنا سابقًا، يعمل المستخدم والوكيل معًا على نفس البيئة المشتركة).
+</p>
+</blockquote>
+<p>يسأل تقييم استدعاء الأداة عما إذا كان قد تم إكمال تغيير الحالة الملحوظ؛ يسأل تقييم التفاعل بين الإنسان والحاسوب ما إذا كان الوكيل قد ساعد المستخدم في الوصول إلى فهم جديد أو اتخاذ قرار. الأول يختبر صحة تصرفات الوكيل؛ والأخير يختبر سلامة استراتيجية الاتصال الخاصة به.</p>
+<p>ويتطرق بناء بيئات التقييم أيضًا إلى بيئات المحاكاة - عندما يجب أن تدعم بيئة التقييم التفاعلات المتكررة على نطاق واسع، فإنها تصبح بيئة محاكاة. وتتناول نهاية هذا الفصل هذا الأمر بإيجاز.</p>
+<h2 id="_7">تصميم مجموعات بيانات مهام التقييم<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<p>بيئة التقييم هي "المرحلة"، ومجموعة البيانات هي "البرنامج النصي". غالبًا ما تحدد جودة النص قيمة التقييم أكثر من المرحلة نفسها. مجموعة البيانات سيئة التصميم، حتى عند تشغيلها في بيئة مثالية، لا تؤدي إلا إلى الضوضاء. يستخلص هذا القسم العديد من المبادئ التي تم التحقق من صحتها بشكل متكرر من ممارسات تصميم المعايير مثل GAIA، وAndroidWorld، وSWE-Bench Verified، وτ-bench وτ²-bench، وTerminal-Bench، وOSWorld، وOSWorld-Verified.</p>
+<p>لا تستوعب هذه القائمة مشهد تقييم الوكلاء كله. ففي فئة الويب وواجهات المستخدم الرسومية وحدها معايير متعددة، لكل منها غاية مختلفة. يبني WebArena مواقع قابلة لإعادة الإنتاج بالكامل، مثل المتاجر والمنتديات ومنصات استضافة الشفرة، فيحصر تقلب الويب الحقيقي داخل بيئة معزولة. ويتخذ Mind2Web الاتجاه المقابل، إذ يختبر التعميم مباشرة على مئات المواقع الحقيقية. أما <a href="https://claw-bench.com/">ClawBench</a> (<a href="https://arxiv.org/abs/2604.08523">الورقة البحثية</a>، <a href="https://github.com/TIGER-AI-Lab/ClawBench">الشفرة</a>) فيكلّف وكلاء يعملون داخل حاويات معزولة بإنجاز مهام يومية متكاملة على مواقع حقيقية؛ يغطي الإصدار V1 عدد 153 مهمة موزعة على 144 موقعًا، ويضيف V2 عدد 130 مهمة أخرى. كما يسجل خمس طبقات من الأدلة: إعادة تشغيل الجلسة، ولقطات شاشة للأفعال، وحركة HTTP، وأفعال المتصفح، ورسائل الوكيل. وبهذا يكمل المعايير القائمة على البيئات المعزولة، ويساعد على تحليل تغير المواقع وحالات الفشل النادرة، وإن كانت قابلية إعادة إنتاج نتائجه تتأثر بتغير مواقع الأطراف الخارجية. ويتخصص BrowseComp من جهته في الاسترجاع العميق، حيث تكون الإجابات بعيدة المنال ولا تظهر إلا بعد تصفح متعدد القفزات وتحقق متقاطع. وفي مجال استدعاء الأدوات توجد لوحات متخصصة، مثل BFCL (لوحة بيركلي لاستدعاء الدوال). لا يسعى هذا الفصل إلى حصر جميع المعايير، بل يختار نمطين أساسيين للبيئات—استدعاء الأدوات والتفاعل بين الإنسان والحاسوب—ويضيف إليهما تشغيل واجهات المستخدم الرسومية في دراسات مجموعات البيانات، ثم يتعمق في مفاضلات التصميم. وعندما تفهم هذه الأنماط، تستطيع أن تحدد سريعًا ما يقيسه أي معيار جديد، ومدى مقاومته لتسرب البيانات، والحدود التي يمكن تعميم نتائجه ضمنها.</p>
+<blockquote>
+<p><strong>التجربة 6-2 ★: تنفيذ المهام المعيارية يدويًا</strong></p>
+<p>حدد المهام من كل من GAIA وAndroidWorld وSWE-Bench Verified وτ²-bench وTerminal-Bench وOSWorld-Verified وأكملها يدويًا. يوصى بإكمال مهمة واحدة بسيطة، ومهمة واحدة متوسطة، ومهمة واحدة صعبة من كل مجموعة بيانات - يجب أن يمثل المستوى "الصعب" تحديًا حتى بالنسبة للبشر. قارن نتائج التنفيذ بالإجابات القياسية وقم بتحليل مصادر التناقضات. من خلال هذه التجربة العملية، فهم: ويجب أن يوازن وصف المهام بين الوضوح والانفتاح، ويجب أن تكون معايير التحقق موضوعية وقابلة للتنفيذ، ويجب أن تكون الصعوبة الهرمية للمهام قادرة على التمييز بين مستويات القدرة المختلفة.
+</p>
+</blockquote>
+<h3 id="_8">التحديات الأساسية في تصميم مجموعة بيانات المهام<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p><strong>التحدي الأول: التوتر بين الوضوح والانفتاح.</strong> يجب أن تكون أوصاف المهام واضحة بما يكفي لضمان التقييم القابل للتكرار، ولكن ليست صارمة لدرجة خنق إبداع الوكيل. تقدم GAIA مثالاً: المهام "بسيطة من الناحية النظرية" ولكن لها مسارات تنفيذ مفتوحة - على سبيل المثال، قد تتطلب المهمة من الوكيل تحديد رائد فضاء من صورة اليوم لعلم الفلك التابعة لناسا وتحديد المدة التي قضاها في الفضاء. الهدف واضح، ولكن كيفية البحث والتصفية والتحقق أمر متروك تمامًا لاتخاذ القرار المستقل للوكيل.</p>
+<p><strong>التحدي الثاني: الموازنة بين الأصالة وإمكانية التحكم.</strong> تحتوي مهام العالم الواقعي على عدم اليقين والضوضاء، مما قد يكشف عن المتانة ولكنه يهدد أيضًا إمكانية التكرار. استخدم الإصدار الأولي من SWE-Bench بشكل مباشر مشكلات GitHub الحقيقية، مما يضمن الأصالة ولكنه يؤدي أيضًا إلى أوصاف مهام غامضة وحالات اختبار غير مكتملة ومعايير تقييم ذاتية. قدمت SWE-Bench Verified التحقق المنهجي من قبل خبراء بشريين، حيث تم اختيار 500 مهمة عالية الجودة ذات مشكلات محددة بوضوح واختبارات كافية وحلول واضحة، مما أدى إلى تحسين إمكانية التحكم بشكل كبير مع الحفاظ على الأصالة.</p>
+<p><strong>التحدي الثالث: تنسيق التنوع والتنظيم.</strong> تحتاج مجموعة البيانات الفعالة إلى تغطية السيناريوهات النموذجية وحالات الحافة ومصائد الأخطاء، مع وجود تنظيم منهجي أيضًا حتى تتمكن نتائج التقييم من تشخيص نقاط ضعف محددة في القدرات. تمتد مهام AndroidWorld البالغ عددها 116 مهمة إلى 20 تطبيقًا حقيقيًا، كل منها مشروح بالقدرات الأساسية التي يتطلبها (التخطيط متعدد الخطوات، والفهم البصري، والتفكير الزمني) - لذا فإن النتائج لا تسفر عن معدل نجاح إجمالي فحسب، بل تسفر عن ملف تعريف لنقاط القوة والضعف على طول أبعاد قدرة محددة. والأهم من ذلك، أن آلية تحديد المعلمات يمكن أن تولد متغيرات مهام غير محدودة تقريبًا.</p>
+<p><strong>التحدي الرابع: تكلفة التقييم مقابل التغطية.</strong> يمكن أن تستغرق مهام الوكيل المعقدة دقائق أو حتى ساعات لإكمالها، مما يستهلك عددًا كبيرًا من الرموز المميزة. يحتاج حجم مجموعة البيانات إلى تحقيق التوازن بين الشمولية والاقتصاد. يختار GAIA بعناية 466 مهمة عبر ثلاثة مستويات صعوبة، تغطي أبعادًا متعددة للقدرات مع السماح بالتقييم بتكلفة معقولة. خفضت SWE-Bench Verified مجموعتها من 2294 مهمة إلى 500 (مما أدى إلى خفض التكاليف بحوالي أربعة أخماس مع تحسين نسبة الإشارة إلى الضوضاء من خلال معايير جودة أكثر صرامة).</p>
+<p><strong>التحدي الخامس: منع تلوث البيانات.</strong> في عصر نماذج اللغات الكبيرة، يمثل تلوث البيانات تحديًا خطيرًا للتقييم: عندما يتم تضمين بيانات التقييم في بيانات التدريب، يقيس التقييم الحفظ بدلاً من التعميم. إن الأمر يشبه حفظ الإجابات قبل الامتحان، فالدرجات الجيدة لا تعكس القدرة الحقيقية. تعتمد المعايير المختلفة استراتيجيات وقائية مختلفة: تعتمد غايا على تفرد إجاباتها؛ تتطلب الأسئلة جمع معلومات من مصادر متعددة للإجابة عليها، وتأتي بعض المهام مع ملفات مرفقة تم إنشاؤها خصيصًا (ملفات PDF/صوت/صور غير موجودة على الإنترنت)، لذلك لا يمكن لصفحة ويب واحدة تقديم الإجابة مباشرة. SWE-Bench Verified نفسها عبارة عن مجموعة فرعية مكونة من 500 مهمة حصلت عليها OpenAI من خلال فحص الجودة اليدوي لـ SWE-Bench الأصلي، ولا تتضمن تصميمًا لمنع التسرب يعتمد على الوقت. إنها أعمال لاحقة مثل SWE-bench-Live التي تستخدم حقًا الحداثة الزمنية لمنع التسرب، ودمج المشكلات التي تم إنشاؤها بشكل مستمر بعد تاريخ انتهاء تدريب النموذج، مع الحفاظ على التقييم قبل مجموعة تدريب النموذج. يمنع τ²-bench التسرب من خلال إنشاء المعلمات الديناميكية، حيث يتم إنشاء مثيلات مهمة محددة (أسماء المستخدمين، وأرقام الطلبات، والتواريخ، وما إلى ذلك) بشكل عشوائي في كل مرة. يساعد إنشاء المهام ذات المعلمات في AndroidWorld بشكل طبيعي على منع التسرب لأن التحقق يعتمد على حالة واجهة المستخدم النهائية، وليس تسلسل العمليات. يجعل Terminal-Bench التسرب قابلاً للاكتشاف عن طريق تضمين معرفات GUID الكناري (معرفات فريدة عالميًا تستخدم كعلامات تتبع): إذا كان النموذج يمكنه إخراج محتوى يحتوي على GUID هذا، فهذا يشير إلى أن البيانات المعيارية قد تسربت إلى مجموعة التدريب.</p>
+<h3 id="_9">التصميم الدقيق لأوصاف المهام<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>يضمن GAIA تفرد الإجابة من خلال قيود مصدر المعلومات الواضحة والنطاقات الزمنية والموضوعات وأهداف الاستعلام. على سبيل المثال، تتطلب مهمة المستوى 3 البدء من صورة ناسا لتاريخ محدد، وتحديد رائد الفضاء من خلال الفهم البصري، والبحث عن مجموعة رواد الفضاء التي ينتمون إليها، وحساب وقتهم في الفضاء، وتنسيق الإخراج بدقة ("الاسم الأخير؛ الحقول المفصولة بفواصل منقوطة؛ الأرقام المنسقة بفواصل الآلاف"). يتم التحقق تلقائيًا من كل التفاصيل، ولا يتم احتساب سوى المطابقة التامة في التنسيق والمحتوى كتمرير.</p>
+<p>يقدم τ²-bench تصميمًا سياقيًا، حيث تحتوي كل مهمة على طبقات متعددة من المعلومات: المشكلة السطحية ("بيانات الهاتف المحمول لا تعمل")، وتوقع الأداء ("يتطلب تصنيف سرعة ممتاز")، والقيد ("لن نقبل أي تصنيف آخر")، والعاطفة الضمنية. أحد التحسينات الرئيسية هو فصل "المعلومات المعروفة" عن "تعليمات المهمة": المعلومات المعروفة هي ما يعرفه المستخدم حاليًا، بينما تقوم تعليمات المهمة بتوجيه المحاكي حول كيفية الكشف عن المعلومات تدريجيًا، بما في ذلك "متطلبات الاستناد إلى النتائج الفعلية" (يجب أن تستند الاستجابات إلى النتائج الفعلية التي يتم إرجاعها بواسطة استدعاءات الأداة، وليست ملفقة).</p>
+<p>يتضمن SWE-Bench Verified مجالات منظمة مثل وصف المشكلة، وخطوات إعادة الإنتاج، والسلوك المتوقع/الفعلي، مع قيام المعلقين بالتحقق من التطابق بين الوصف وحالات الاختبار. يمكن التحقق من كل عنصر في أوصاف مهمة Terminal-Bench ميكانيكيًا: ما إذا كانت مسارات الملفات موجودة، وقيم الأذونات صحيحة، ومعلمات الشهادة صالحة، وتنسيقات التاريخ صحيحة. على سبيل المثال، يتطلب "build-linux-kernel-qemu" إنشاء Linux kernel 6.9 من المصدر، وإضافة printk مخصص في <code>start_kernel</code>، وإنشاء initramfs، وتشغيله في QEMU. معيار النجاح هو ظهور الرسالة المخصصة في سجل التمهيد - لا يمكن للوكيل تزييف الإخراج؛ يجب أن تكمل العملية برمتها حقًا.</p>
+<p>يستخدم AndroidWorld تصميم <strong>قالب ذو معلمات</strong>. المهمة ليست نصًا ثابتًا ولكنها قالب يمكن إنشاءه ديناميكيًا (على سبيل المثال، "تغيير رقم هاتف جهة الاتصال <code>[CONTACT_NAME]</code> إلى <code>[NEW_PHONE]</code>")، مع قيم معلمات مختلفة يتم إنشاؤها عشوائيًا لكل تقييم. وهذا له ثلاث فوائد:</p>
+<ul>
+<li><strong>يمنع الحفظ</strong>: تختلف قيم المعلمات في كل مرة، مما يمنع إعادة تشغيل تسلسل ثابت من العمليات</li>
+<li><strong>يزيد من تنوع البيانات</strong>: يمكن لقالب واحد إنشاء عدد غير محدود من الحالات تقريبًا</li>
+<li><strong>يدعم التجارب المقارنة</strong>: يتيح إصلاح معلمات معينة مع تغيير معلمات أخرى قياسًا دقيقًا لتأثيرات عوامل معينة</li>
+</ul>
+<p>يعتمد التحقق على حالة واجهة المستخدم النهائية (على سبيل المثال، ما إذا كان حقل رقم الهاتف يحتوي على القيمة المتوقعة)، وليس على تسلسل العمليات.</p>
+<p>غالبًا لا تبدأ مهام OSWorld من حالة أولية "نظيفة" ولكن من حالات وسيطة تم تكوينها بعناية، وتشبه إلى حد كبير سيناريوهات الاستخدام في العالم الحقيقي. تحتاج أوصاف المهام إلى التعامل مع حلول متعددة ("يتطلب ضبط الخلفية على اللون الأرجواني" رمز لون محدد لتوضيح الغموض؛ يجب أن يقبل "تسلسل ملفي CSV" جميع الأساليب المعقولة مثل الاحتفاظ برأس واحد أو كلا الرأسين) وعدم اليقين البيئي (إجراءات مكافحة الحذف على مواقع الويب، وواجهات مستخدم التطبيق المتطورة، وظروف السباق - يعمل نظام OSWorld-Verified على تخفيف ذلك من خلال لقطات الصفحة غير المتصلة بالإنترنت، وإصدارات التبعية المقفلة، وشروط الانتظار الصريحة، وما إلى ذلك).</p>
+<h3 id="_10">التصميم الهرمي لتعقيد المهام<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>تصمم GAIA ثلاثة مستويات صعوبة: المستوى 1 يتطلب أدوات 1-2 فقط (البشر 93.9% مقابل GPT-4 30.3%)، المستوى 2 يتطلب التفكير متعدد الخطوات (91.8% مقابل 9.7%)، والمستوى 3 يتطلب مجموعات معقدة (87.3% مقابل 0%). القيمة التشخيصية لهذا التصميم الهرمي هي: الفشل في المستوى 1 يشير إلى مشكلات استخدام الأداة الأساسية، والمستوى 2 يشير إلى التخطيط متعدد الخطوات وتكامل المعلومات، والمستوى 3 يشير إلى التفكير طويل التسلسل وإدارة التعقيد. يتوافق كل مستوى مع اتجاهات تحسين مختلفة (هندسة الموجّهات مقابل آليات التخطيط مقابل الهندسة الهرمية/ما بعد التدريب).</p>
+<p>τ²-تعقيد طبقات مقاعد البدلاء من خلال عملية الأعمال: بدءًا من الاستعلامات عن المعلومات البسيطة، إلى العمليات متعددة الخطوات (يتطلب تغيير حجز رحلة الطيران الاستعلام، وتقديم البدائل، والحصول على تأكيد، وحساب فرق السعر، ومعالجة الدفع)، إلى تشخيص الأخطاء (التحقق بشكل منهجي من الأسباب المحتملة المتعددة والتحقق من الإصلاحات)، وأخيرًا إلى الحكم الاستراتيجي (التعامل مع الطلبات التي لا تتوافق مع السياسة).</p>
+<p>تعقيد طبقات المحطة الطرفية على طول الأبعاد المزدوجة للمجال التقني × التعقيد التشغيلي. جمع سجل المهام الخاص به أكثر من 200 مهمة (يختلف حجم مجموعة التقييم الأساسية حسب الإصدار؛ على سبيل المثال، حدد الإصدار 2.0 89 مهمة عالية الجودة من مساهمات المجتمع)، بدءًا من تسجيل نموذج MLflow البسيط، إلى اختراق كلمة المرور 7-Zip متوسطة الصعوبة، إلى تكامل خادم Git وخادم الويب الصعب، إلى تحليل التشفير التفاضلي FEAL الأكثر صعوبة (يتطلب معرفة التشفير + تحسين الخوارزمية لتلبية الوقت الذي يستغرق 30 ثانية). القيد).</p>
+<h3 id="_11">ضمان التحقق والموضوعية<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>إجابات GAIA موجزة وواضحة. تسمح قواعد التنسيق الصارمة بالتحقق من خلال مطابقة السلسلة تمامًا. تضمن النتيجة الثنائية (تطابق أو عدم تطابق) إمكانية تكرار نتائج موضوعية. ندرة الإجابات أيضًا بمثابة إجراء لمكافحة الغش - فمن غير المرجح أن تظهر حقائق محددة حرفيًا في بيانات التدريب.</p>
+<p>يستخدم SWE-Bench Verified عمليات فحص مستندة إلى تعليمات برمجية قابلة للتنفيذ، مع التمييز بين FAIL_TO_PASS (الفشل قبل الإصلاح، والتمرير بعد الإصلاح، وإثبات حل المشكلة) وPASS_TO_PASS (التمرير قبل الإصلاح وبعده، وإثبات عدم وجود أخطاء جديدة)، وتحقيق التحقق المزدوج. كما تضمن النسخة التي تم التحقق منها موثوقية الاختبارات نفسها، دون اختبارات غير مستقرة تنجح أحيانًا وتفشل أحيانًا.</p>
+<p>يتضمن نظام التحقق الخاص بـ τ²-bench طبقات متعددة من عمليات التحقق (لا تزال نتائج كل طبقة مجمعة في مكافأة ثنائية على مستوى المهمة؛ ويجب أن تنجح جميعها لتحقيق النجاح):</p>
+<ul>
+<li><strong>التحقق من حالة قاعدة البيانات</strong>: حالة سجل الحجز، وما إذا كان قد تم إنشاء سجل استرداد الأموال</li>
+<li><strong>البحث عن الكلمات الرئيسية لمحتوى الحوار</strong>: ما إذا كان الوكيل يؤكد صراحةً على مبلغ الاسترداد ووقت الوصول المتوقع للمستخدم</li>
+<li><strong>امتثال العملية</strong>: تحليل تسلسل استدعاء الأداة، على سبيل المثال، ما إذا كان قد تم الحصول على تأكيد صريح من المستخدم قبل تعديل الطلب</li>
+</ul>
+<p>تضيف بيئة التحكم المزدوج لـ τ²-bench (راجع القسم السابق "بيئة تقييم التفاعل بين الإنسان والحاسوب") بُعدًا آخر للتحقق: بعد أن يقوم محاكي المستخدم بتغيير حالة البيئة فعليًا، يجب على الوكيل ملاحظة هذا التغيير من خلال استدعاءات الأداة ومتابعة استكشاف الأخطاء وإصلاحها وفقًا لذلك. ولذلك يغطي التحقق ما إذا كان الوكيل قد لاحظ بالفعل نتائج تصرفات المستخدم.</p>
+<p>يوفر OSWorld 134 وظيفة تقييم مستقلة مع إمكانية الوصول الكامل إلى نظام التشغيل، مما يتيح الفحص العميق لهياكل نظام الملفات وحالات العملية واتصالات الشبكة والأجزاء الداخلية للتطبيق. على سبيل المثال، في مهمة تشغيل قاعدة البيانات، لا يتحقق البرنامج النصي للتقييم من وجود ملف التقرير فحسب، بل يتصل أيضًا مباشرة بقاعدة البيانات للتحقق من تنفيذ SQL بشكل صحيح. في مهام المتصفح، يقوم بتحليل شجرة DOM، والتحقق من ملفات تعريف الارتباط/التخزين المحلي، ويرسل طلبات التحقق إلى الواجهة الخلفية لتأكيد ما إذا كان إرسال النموذج ساري المفعول بالفعل. يمكن لهذا الفحص العميق اكتشاف حالات "الإكمال السطحي ولكن الخطأ الجوهري" - على سبيل المثال، قام الوكيل بالنقر فوق زر الإرسال، ولكن تم رفض الطلب من قبل الخادم بسبب إدخالات الحقل غير الصحيحة.</p>
+<p>يعتمد Terminal-Bench على بيئة حاوية Docker موحدة، حيث يجمع بين عمليات فحص حالة نظام الملفات (وجود المسار، وقيم الأذونات، وتنسيق المحتوى) مع التحقق الوظيفي لتنفيذ البرنامج (في build-linux-kernel-qemu، بدء تشغيل QEMU فعليًا والبحث عن رسالة printk المخصصة). يجعل المعرف الفريد العمومي الكناري التسرب قابلاً للتتبع.</p>
+<h3 id="_12">التصميم المنهجي لتوزيع المهام<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<p>يحتاج توزيع المهام إلى تغطية أبعاد القدرة وأبعاد الصعوبة وأبعاد السيناريو وحالات الحافة بشكل منهجي. تسعى GAIA إلى تحقيق العمومية، حيث تتطلب معظم المهام مزيجًا من التفكير والوسائط المتعددة والتصفح واستخدام الأدوات. τ²-bench يصمم عمدًا "مهام فخ" - يدعي المستخدم أن "خدمة العملاء وافقت على الإلغاء" عندما لا يتوافق الإلغاء فعليًا مع السياسة - لاختبار ما إذا كان الوكيل يحتفظ بحكمه تحت الضغط والتضليل. يعتمد OSWorld على مصفوفة ثنائية الأبعاد لنوع العملية (إدخال/إخراج الملف/تطبيق سطح المكتب/تطبيق الويب/سير العمل عبر التطبيقات) ومجال التطبيق، الذي يمتد إلى ثلاثة أنظمة تشغيل (تظهر الأبحاث ارتباطًا قويًا بين أنظمة التشغيل؛ فالمهارات المكتسبة في أحد الأنظمة يمكن أن تنتقل إلى أنظمة أخرى). يتضمن Terminal-Bench "مهام مجموعة المكدس عبر التكنولوجيا" لاختبار تفكير الأنظمة (على سبيل المثال، مهمة إعادة تقسيم تجمع بين معالجة البيانات + عمليات الملفات + هندسة Python).</p>
+<h3 id="_13">مراقبة جودة البيانات والتحسين التكراري<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<p>SWE-Bench Verified هو نموذج لمراقبة الجودة. تم اختيار OpenAI عشوائيًا 1,699 مهمة من أصل 2,294 مهمة للتقييم البشري، وتوظيف 93 مطورًا ماهرًا في Python. كان على المعلقين إجراء فحوصات متعددة: ما إذا كان وصف المشكلة واضحًا (هل يمكنهم فهم ما يجب حله)، وما إذا كانت حالات الاختبار كاملة (تغطي جميع الجوانب وحالات الحافة)، وما إذا كانت الاختبارات مستقرة (لا توجد اختبارات غير متقلبة بسبب البيئة أو العشوائية)، وما إذا كان التصحيح صحيحًا (هل أدخل أخطاء جديدة)، وما إذا كانت الصعوبة معقولة. وبعد إجراء فحص صارم، نجح 500 فقط (29%)، ويعتبر معدل الرفض المرتفع هذا استثمارًا ضروريًا في جودة التقييم. كما قاموا بوضع مبادئ توجيهية موحدة للتعليقات التوضيحية، مع تحديد معايير وأمثلة محددة لكل فحص لضمان الاتساق بين الشروحات المختلفة.</p>
+<p>يقدم τ²-bench فصلًا بين "المعلومات المعروفة" / "تعليمات المهمة" (مما يجعل سلوك المحاكاة أكثر واقعية) وشروط إكمال أكثر صرامة (على سبيل المثال، "يتم احتساب الدرجة الممتازة فقط على أنها تم حلها؛ ولا يتم قبول الرديئة/المقبولة/الجيدة")، مما يمنع "الإصلاحات السطحية".</p>
+<p>OSWorld-Verified هو نموذج للتحسين التكراري. بعد إصداره في أبريل 2024، أصبح OSWorld سريعًا معيارًا مهمًا لتقييم الوكيل متعدد الوسائط، ولكن على مدار 15 شهرًا من الاستخدام واسع النطاق، تم الكشف عن أكثر من 300 مشكلة. تنقسم هذه المشكلات إلى أربع فئات: مشكلات البيئة (تدابير مكافحة التجريد على مواقع الويب، واختبارات CAPTCHA، وتغييرات المحتوى الديناميكي)، ومشكلات وصف المهمة (الصياغة الغامضة)، ومشكلات منطق التحقق (صارمة للغاية أو متساهلة للغاية)، ومشكلات الحالة الأولية (تكوين غير مكتمل). عمل فريق مكون من حوالي 10 أشخاص من جامعة هونغ كونغ بشكل وثيق مع MoonShot AI وOpenAI وByteDance Seed TARS وAnthropic وSimular وغيرهم لمدة شهرين لإصلاح هذه المشكلات بشكل منهجي. تمت صياغة استراتيجيات الإصلاح لكل فئة: تم حل مشكلات البيئة عن طريق قفل الإصدارات والنسخ الاحتياطية غير المتصلة بالإنترنت، وتم توضيح أوصاف المهام عن طريق إعادة كتابة الصياغة الغامضة، وتمت موازنة منطق التحقق من خلال إنشاء خطوط أساس صحيحة يدويًا وضبط الشروط، وتم تعزيز الحالات الأولية عن طريق إضافة عمليات التحقق من الاكتمال.</p>
+<p>تم أيضًا ترحيل البنية التحتية للتقييم من الأجهزة الافتراضية المحلية إلى منصة AWS السحابية، مع الاستفادة من القياس المرن لتحقيق تسريع بمقدار 50 ضعفًا من خلال التوازي (من أكثر من 10 ساعات إلى بضع دقائق). ارتفع معدل نجاح تهيئة مهمة Google Drive من 50% إلى أكثر من 95%. جميع بيانات مسار التقييم الرسمية متاحة للجمهور على Hugging Face، مما يسمح للمجتمع بمراجعة كل التفاصيل، وإعادة إنتاج النتائج، وتحديد المشكلات، وتشكيل حلقة حميدة من التحسين المستمر.</p>
+<p>غالبًا ما تشترك بيئات التقييم وبيئات ما بعد التدريب في نفس الأصل: يمكن تكييف بيئة التقييم المصممة جيدًا في بيئة تدريب بجهد قليل — SWE-Gym هو مثال تمثيلي لبناء مهام التدريب بناءً على SWE-bench، في حين أن القوالب ذات المعلمات لـ τ²-bench وAndroidWorld يمكن أن تولد مثيلات تدريب ضخمة على دفعات. ولكن يجب رسم خط أحمر واحد: ما يمكن إعادة استخدامه هو <strong>آلية بناء البيئة</strong>؛ يجب أن تظل المهام المحددة لمجموعة التقييم معزولة تمامًا عن بيانات التدريب - بمجرد دخول مهمة التقييم إلى مجموعة التدريب، فإنها تختبر الذاكرة، وليس القدرة (انظر الفصل السابع للحصول على التفاصيل).</p>
+<h2 id="_14">نظام مقاييس التقييم<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h2>
+<p>بعد تحديد "المهام التي يجب تقييمها"، ما زلنا بحاجة إلى الإجابة عن "الأبعاد التي يجب قياسها". يجمع هذا القسم المقاييس شائعة الاستخدام في تقييم الوكيل في "قاموس متري" مرجعي - من العملية إلى النتيجة، ومن الجودة إلى السلامة - مع إعطاء كل تعريف وحالات الاستخدام الخاصة به. كما أنه يوفر التعريفات الدقيقة لـ Pass@k وPass^k والمقاييس الأخرى التي تم استدعاؤها مسبقًا (على سبيل المثال، في قسم τ-bench).</p>
+<p><strong>مقاييس العملية: من الصندوق الأسود إلى الصندوق الأبيض.</strong></p>
+<p>إن التركيز فقط على النتيجة النهائية ليس كافيا؛ العملية التي من خلالها يحقق الوكيل النتيجة لا تقل أهمية. <strong>صلاحية الإجراء ومعدل التفويض</strong> يقيس نسبة الإجراءات الصالحة والمصرح بها - تتضمن العمليات غير الصالحة استدعاء أدوات غير موجودة أو تمرير أنواع معلمات غير صحيحة؛ تشير العمليات غير المصرح بها إلى إجراءات تتجاوز النطاق المسموح به. يشير المعدل المرتفع إلى أن الوكيل لديه فهم واضح للنظام البيئي للأداة. <strong>معدل صحة استدعاء الأداة</strong> يتطلب أيضًا أن تكون المعلمات معقولة لغويًا: يجب أن تعبر مصطلحات الاستعلام الخاصة بأداة البحث بدقة عن الحاجة، ويجب أن يشير مسار عملية الملف إلى الهدف الصحيح.</p>
+<p><strong>كفاءة المسار</strong> تقيس مدى كفاءة إكمال المهمة: عدد الخطوات (دورات التفكير والتنفيذ والمراقبة)، والإجراءات المتكررة (البحث المتكرر عن نفس الكلمة الرئيسية، وإعادة قراءة الملف نفسه)، وتكرار التراجع (عدد المرات التي يدرك فيها الوكيل خطأ ويصحح نفسه - التراجع العرضي أمر طبيعي، ولكن التراجع المتكرر يشير إلى عدم كفاية التخطيط المسبق). هناك حاجة إلى خط أساس من خبراء بشريين أو خوارزميات إرشادية لتحديد "عدد معقول من الخطوات".</p>
+<p><strong>تغطية الاسترجاع</strong> تستهدف مهام جمع المعلومات: هل قام الوكيل باستكشاف مساحة المعلومات بشكل كامل؟ هل قفز إلى الاستنتاجات بعد النظر فقط إلى الصفحة الأولى من نتائج البحث؟ <strong>التكلفة وزمن الوصول</strong> تركز على عدد الطلبات، ونفقات الرمز المميز (تمييز تكاليف الإدخال/الإخراج، مع الأخذ في الاعتبار إعادة استخدام KV Cache)، ووقت ساعة الحائط (بما في ذلك استدلال النموذج + تنفيذ الأداة + زمن استجابة الشبكة). يجب تتبع توزيع الوقت لتحديد الاختناقات.</p>
+<p><strong>مقاييس النتائج والجودة.</strong></p>
+<p><strong>معدل نجاح المهمة</strong> هو المقياس الثابت الأكثر مباشرة، والذي يمكن تصميمه باستخدام معايير هرمية (يجب تحقيق الأهداف الأساسية، وتؤثر الأهداف الثانوية على نقاط الجودة). فيما يتعلق بالطرق الإحصائية، يجب التمييز بين مقياسين غالبًا ما يكونان مربكين:</p>
+<ul>
+<li><strong>Pass@k</strong>: احتمال نجاح <strong>واحدة على الأقل</strong> من محاولات k، والإجابة بـ "هل يستطيع الوكيل القيام بذلك؟"</li>
+<li><strong>Pass^k</strong>: احتمال نجاح <strong>جميع</strong> k، والإجابة على "هل الوكيل مستقر وموثوق؟"</li>
+<li><strong>Best@k</strong>: درجة <strong>الأفضل</strong> من محاولات k (بدلاً من معرفة ما إذا كانت ناجحة)، لقياس "سقف الجودة عند توفر فرص كافية"، وغالبًا ما يتم استخدامها للمهام المفتوحة ذات النقاط المستمرة.</li>
+</ul>
+<p>الرقم الملموس يجعل الفرق واضحًا. لنفترض أن معدل نجاح المحاولة الفردية للوكيل هو 60% (Pass@1 = 0.6). أكثر من 5 محاولات: Pass@5 = 1 - 0.4^5 ≈ 99% (يكاد يكون النجاح مؤكدًا مرة واحدة على الأقل)، بينما Pass^5 = 0.6^5 ≈ 7.8% (من غير المرجح أن تنجح الخمس محاولات كلها). الأول يقيس سقف القدرة، والثاني يقيس الاستقرار؛ إرباكهم وسوف تخطئ في قراءة وكيلك. ويلخص الجدول 6-3 السيناريوهات المطبقة ومخاطر سوء الاستخدام لكليهما، مما يساعد القراء على اختيار المقياس الصحيح بين اختبار الانحدار والتقييم الاستكشافي.</p>
+<p>جدول 6-3 السيناريوهات المطبقة على Pass@k وPass^k</p>
+<table>
+<thead>
+<tr>
+<th>الغرض من التقييم</th>
+<th>أي متري للاستخدام</th>
+<th>عواقب سوء الاستخدام</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>التحقق من الاستقرار (اختبار الانحدار)</td>
+<td>تمرير ^ ك</td>
+<td>استخدام أقنعة Pass@k لعدم الاستقرار - سيظل الوكيل الذي ينجح مرة واحدة فقط في خمس محاولات يظهر على أنه "تمرير"</td>
+</tr>
+<tr>
+<td>تقييم سقف القدرة (المهام الاستكشافية)</td>
+<td>Pass@k أو Best@k</td>
+<td>قد يؤدي استخدام Pass^k إلى الإشارة بشكل غير صحيح إلى حالات الفشل بسبب التقلبات العرضية، حيث سيتم الحكم على كل تغيير صغير بأنه فاشل</td>
+</tr>
+</tbody>
+</table>
+<p><strong>تعد مقاييس السلامة والامتثال</strong> أمرًا بالغ الأهمية في نشر الإنتاج: بدء العمليات الحساسة (حذف البيانات / تعديل الأذونات / إرسال اتصالات خارجية)، وتسرب البيانات (طباعة كلمات المرور في السجلات / إرسال مستندات خاصة إلى واجهات برمجة التطبيقات الخارجية)، والمحتوى المحظور يجب أن يخضع جميعها لمبدأ <strong>عدم التسامح مطلقًا</strong> — على غرار حق النقض الهلوسة (راجع "المبادئ الأربعة" لاحقًا). يؤدي انتهاك خطير واحد للسلامة إلى استخدام حق النقض ضد التقييم الشامل، بغض النظر عن الأداء في الأبعاد الأخرى.</p>
+<p><strong>المتانة</strong> تقيس الاستقرار في مواجهة عدم اليقين: حساسية البذور العشوائية (مدى اختلاف الأداء في ظل عمليات التهيئة المختلفة)، والقدرة على التكيف مع تغييرات الصفحة (يجب ألا يتسبب تحديث واجهة مستخدم موقع الويب في فشل كامل)، والتسامح مع عدم الاستقرار API (هل يمكنه التعامل بأمان مع حالات الفشل المؤقتة، والمهلات، وتغييرات التنسيق)، وتداخل الذاكرة طويلة المدى (يمكن أن تؤدي المعلومات القديمة المتراكمة في السياق إلى قرارات غير صحيحة).</p>
+<p><strong>تغطية مزدوجة لمسار التنفيذ والنتيجة النهائية.</strong> هناك تمييز يمكن التغاضي عنه بسهولة: "ما قاله الوكيل وفعله أثناء التنفيذ" (المسار المحدد في الفصل الأول) و"ما أصبح عليه النظام في النهاية" (النتيجة النهائية) هما شيئان مختلفان. عبارة الوكيل "اكتمل الحجز" هي معلومات على مستوى المسار؛ السجل الذي يظهر فعليًا في قاعدة البيانات هو التحقق على مستوى النتائج. انظر فقط إلى المسار وستفتقد عبارة "قالها ولم يفعلها"؛ انظر فقط إلى النتيجة وقد تفوتك خطوات وسطية ضلت طريقها. أعطى Anthropic مثالا ذات مرة: اكتشف وكيل حجز الطيران ثغرة في سياسة شركة الطيران أثناء التنفيذ ووجد خيارًا أرخص للمستخدم - إذا تم تسجيله فقط وفقًا لمسار التنفيذ المحدد مسبقًا، فسيتم الحكم على هذا التشغيل بالفشل؛ ولكن من النتيجة النهائية، حصل المستخدم على صفقة أفضل. ولذلك، ينبغي تغطية كلا النوعين من التقييم لتجنب النقاط العمياء المنهجية.</p>
+<p><strong>الفحوصات البشرية الفورية ومراجعة الخصومة.</strong></p>
+<p>حتى عندما يكون التقييم الآلي موثوقًا به في معظم الأوقات، تظل هناك حاجة إلى عمليات فحص عشوائية بشرية منتظمة: تغطية أنواع المهام المختلفة، والنجاحات والإخفاقات، والحالات الغامضة بالقرب من حدود النتيجة - ليس فقط للتحقق من النتائج، بل أيضًا للتحقق من سلامة الأساس المنطقي للتسجيل. يمكن تنظيم عمليات التفتيش المفاجئة في <strong>معايرة القاضي</strong>. قبل نشر قضاة LLM على نطاق واسع، قم ببناء مجموعة معايير ذهبية مشروحة بشريًا (على سبيل المثال، 100-200 حالة تشمل أنواع المهام والصعوبات) وقياس مدى جودة نموذج القاضي (يعمل LLM كقاضي؛ الآلية مفصلة في قسم LLM-as-a-Judge التالي) تتفق مع التعليقات التوضيحية البشرية - معدل الاتفاق البسيط أو كابا كوهين، الأخير يستبعد اتفاق الفرصة. فقط بمجرد أن يتجاوز الاتفاق عتبة محددة مسبقًا (على سبيل المثال، كابا أعلى من 0.7) يجب استخدام القاضي للتقييم على نطاق واسع؛ بعد ذلك، قم بإعادة معايرة المجموعة الذهبية كلما تغير نموذج القاضي أو معيار التقييم. بدون هذه الخطوة، تكون درجات القاضي LLM مجرد "رأي نموذج آخر"، وليست وكيلاً موثوقًا للحكم البشري. <strong>مراجعة الخصومة</strong> تستخدم Red Teaming لإنشاء الحالات الصعبة بشكل فعال: إجابات تبدو مثالية وتحتوي على أخطاء مخفية، وإجابات يتم تمريرها من خلال حشو الكلمات الرئيسية، وإجابات تستغل التحيزات المعروفة لنموذج القاضي للحصول على درجات عالية بشكل غير مستحق. <strong>آليات متعددة القضاة</strong> تستخدم قضاة مستقلين متعددين لتسجيل النتائج بشكل منفصل، وتحديد النتيجة النهائية من خلال المتوسط ​​المرجح أو عمليات التحقق من الاتساق - عندما يختلف القضاة بشكل كبير، يتم وضع علامة على القضية لمزيد من المراجعة البشرية.</p>
+<h2 id="_15">طرق التقييم الآلي<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h2>
+<p>مع وجود بيئة التقييم ومجموعة البيانات ونظام المقاييس الواضح، يصبح السؤال الأساسي: كيف نسجل؟ بالنسبة للمهام ذات الإجابات الصحيحة الواضحة (على سبيل المثال، المسائل الرياضية واستعلامات SQL)، يكفي الحكم الثنائي البسيط (صحيح/غير صحيح)؛ ولكن بالنسبة للمهام ذات النهايات المفتوحة (على سبيل المثال، حوارات خدمة العملاء، وكتابة التقارير)، هناك حاجة إلى أساليب تقييم أكثر دقة.</p>
+<p>لا يغطي التحقق التلقائي المستند إلى الكود سوى السيناريوهات ذات الإجابات القياسية؛ إن تسجيل المهام ذات النهايات المفتوحة هو الموضوع الرئيسي لهذا القسم. ومن بين هذه الأمور، يتم ترك تصميم كثافة إشارة المكافأة (من المكافآت الثنائية إلى مكافآت المعالجة إلى المكافآت التوليدية) وطرق التدريب لنماذج المكافآت للمناقشة المنهجية في قسم ما بعد التدريب في الفصل 7؛ يجيب هذا القسم على سؤال أكثر جوهرية: كيفية استخدام نماذج LLM للحكم تلقائيًا على جودة مخرجات المهام المفتوحة.</p>
+<h3 id="_16">النموذج اللغوي بوصفه قاضيًا: جوهر التقييم الآلي<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<p><img alt="الشكل 6-4: LLM خط أنابيب القاضي" src="../images/fig6-4.svg" /></p>
+<p>لماذا هناك حاجة إلى LLM كقاضي؟ بالنسبة للمهام المفتوحة (على سبيل المثال، إنشاء التقارير، والتعامل مع شكاوى العملاء، والمحتوى الإبداعي)، لا توجد إجابات قياسية للمقارنة التلقائية، ويكون التقييم البشري مكلفًا ويصعب قياسه. تعمل LLM-as-a-Judge على موازنة قابلية التوسع في الأتمتة مع حكم الخبراء البشريين من خلال وجود نموذج لغة يقيم المخرجات مقابل معايير التسجيل المحددة بواسطة الخبراء (قاعدة تقييم). ومع ذلك، فإن الطريقة لها حدود معروفة: يحمل نموذج القاضي تحيزاته الخاصة (في أغلب الأحيان <strong>تحيز الطول</strong> - وهو الميل إلى تسجيل إجابات أطول وأكثر تفصيلاً أعلى حتى عندما لا تكون أكثر صحة)، ويمكن أن تختلف الأحكام المتكررة لنفس المدخلات. ويتطلب التحيز في الطول على وجه الخصوص اتخاذ تدابير مضادة محددة. ثلاثة دفاعات شائعة هي: معاقبة الإسهاب بشكل صريح في نموذج التقييم والحد الأقصى لطول الاستجابة لكل نوع مهمة؛ في المقارنات الزوجية، اجعل المرشحين متساويين في الطول قبل الحكم؛ ومراجعة العلاقة بين الدرجات وطول الاستجابة بانتظام - إذا كانت الدرجات العالية تذهب دائمًا تقريبًا إلى الإجابات الطويلة، فقد تأثر القاضي بالطول ويحتاج نموذج التقييم إلى المراجعة. ولمواجهة هذه التحديات بشكل منهجي، يجب أن يتبع تصميم القاعدة المبادئ التالية:</p>
+<p><strong>قواعد التقييم (معايير التسجيل): أساس حكم LLM.</strong></p>
+<p><strong>أربعة مبادئ للتقييم</strong> (مقياس الذكاء الاصطناعي، "المبادئ كمكافآت"):</p>
+<p>(1) <strong>استنادًا إلى إرشادات الخبراء</strong> — يجب أن يعكس نموذج التقييم المعرفة بالمجال، ويلتقط الحقائق الأساسية وخطوات الاستدلال. على سبيل المثال، يحتاج عنوان الأسئلة والأجوبة الطبية إلى معايير تشخيصية والأخطاء الطبية التي يجب تجنبها؛ يمكن للمرء الذي لا يمتلك أسسًا متخصصة أن يلتقط فقط ميزات السطح مثل الطلاقة.</p>
+<p>(2) <strong>التغطية الشاملة</strong> — يجب أن يغطي نموذج التقييم الدقة الواقعية والتماسك المنطقي والاكتمال والسلامة. ولا ينبغي لها أن تحدد المعايير الإيجابية فحسب، بل يجب أيضًا أن تحدد بوضوح <strong>المزالق</strong> — أي الأخطاء الشائعة عالية الخطورة، مثل التوصية بعلاجات لم يتم التحقق منها في النصائح الطبية.</p>
+<p>(3) <strong>ترجيح الأهمية الموحد</strong>—تصنيف المعايير إلى عناصر أساسية، أو مهمة، أو اختيارية، أو عناصر خطرة. يدعم المخطط <strong>آلية الفيتو</strong>: على سبيل المثال، في سيناريو خدمة العملاء، تعتبر الهلوسة (اختلاق معلومات كاذبة) أحد أبعاد الفيتو النموذجية - بغض النظر عن مدى جودة أداء الأبعاد الأخرى، إذا ظهرت معلومات خاطئة، فيجب رفضها. ويساعد هذا أيضًا في منع اختراق المكافآت من خلال حشو الكلمات الرئيسية.</p>
+<p>(4) <strong>التقييم القائم بذاته</strong> — كل عنصر تقييم قابل للتنفيذ بشكل مستقل ولا يعتمد على معرفة مجال التقييم. يجب تجنب المعايير المجردة مثل "الإجابة توضح الفهم العميق"، واستبدالها بمعايير يمكن التحقق منها مثل "الاستشهاد بنظريتين موثوقتين على الأقل وشرح بدقة كيفية دعمهما للاستنتاج".</p>
+<p>الممارسة الأساسية: تحديد مستويات تسجيل يمكن التحقق منها بشكل موضوعي لكل بُعد، مع أمثلة ملموسة و<strong>حالات هامشية</strong> لحل المواقف الغامضة. احذر بشكل فعال من <strong>اختراق المكافآت</strong> - حيث يجد الوكيل "طريقًا مختصرًا" للحصول على أعلى الدرجات دون إكمال المهمة فعليًا - من خلال معاقبة الهلوسة والتملق وحشو الكلمات الرئيسية والتهرب من الأسئلة الصعبة بشكل صريح. يعتبر نموذج التقييم منتجًا متكررًا: حيث يكشف الاستخدام التجريبي عن خلافات بين المقيمين، ويتطور نموذج التقييم تدريجيًا من خلال هذه التعليقات من المبادئ المجردة إلى كتاب حالة مفصل.</p>
+<p>فيما يلي نموذج تقييم كامل يتبع المبادئ الأربعة، باستخدام وكيل ذاكرة المستخدم كمثال. سؤال الاختبار: "من هو طبيب الأطفال الخاص بابنتي؟" (تتطلب الإجابة ربط المعلومات عبر محادثتين: المحادثة الأولى تذكر "اسم ابنتي ليلي"، والمحادثة الثانية تذكر "أخذت ليلي لرؤية الدكتور تشين").</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">rubric</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">dimensions</span><span class="p">:</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Factual Correctness</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">essential</span><span class="w">        </span><span class="c1"># Essential item</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">scoring</span><span class="p">:</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">        </span><span class="nt">4_Excellent</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Correctly</span><span class="nv"> </span><span class="s">answers</span><span class="nv"> </span><span class="s">Dr.</span><span class="nv"> </span><span class="s">Chen,</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">links</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">daughter</span><span class="nv"> </span><span class="s">Lily&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">         </span><span class="nt">3_Good</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Correctly</span><span class="nv"> </span><span class="s">answers</span><span class="nv"> </span><span class="s">Dr.</span><span class="nv"> </span><span class="s">Chen</span><span class="nv"> </span><span class="s">but</span><span class="nv"> </span><span class="s">does</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">mention</span><span class="nv"> </span><span class="s">that</span><span class="nv"> </span><span class="s">Dr.</span><span class="nv"> </span><span class="s">Chen</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">Lily&#39;s</span><span class="nv"> </span><span class="s">doctor&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="nt">2_Passable</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Gives</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">correct</span><span class="nv"> </span><span class="s">doctor</span><span class="nv"> </span><span class="s">but</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">additional</span><span class="nv"> </span><span class="s">uncertain</span><span class="nv"> </span><span class="s">information&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">        </span><span class="nt">1_Fail</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Gives</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">incorrect</span><span class="nv"> </span><span class="s">doctor&#39;s</span><span class="nv"> </span><span class="s">name,</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">answers</span><span class="nv"> </span><span class="s">&#39;I</span><span class="nv"> </span><span class="s">don&#39;t</span><span class="nv"> </span><span class="s">know&#39;&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Information Completeness</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">important</span><span class="w">        </span><span class="c1"># Important item</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="nt">scoring</span><span class="p">:</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">        </span><span class="nt">4_Excellent</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Proactively</span><span class="nv"> </span><span class="s">supplements</span><span class="nv"> </span><span class="s">relevant</span><span class="nv"> </span><span class="s">information</span><span class="nv"> </span><span class="s">(e.g.,</span><span class="nv"> </span><span class="s">last</span><span class="nv"> </span><span class="s">visit</span><span class="nv"> </span><span class="s">date,</span><span class="nv"> </span><span class="s">diagnosis)&quot;</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">        </span><span class="nt">3_Good</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Answers</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">core</span><span class="nv"> </span><span class="s">question</span><span class="nv"> </span><span class="s">without</span><span class="nv"> </span><span class="s">omission&quot;</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">        </span><span class="nt">2_Passable</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Answers</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">core</span><span class="nv"> </span><span class="s">question</span><span class="nv"> </span><span class="s">but</span><span class="nv"> </span><span class="s">omits</span><span class="nv"> </span><span class="s">available</span><span class="nv"> </span><span class="s">related</span><span class="nv"> </span><span class="s">information&quot;</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">        </span><span class="nt">1_Fail</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Key</span><span class="nv"> </span><span class="s">information</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">missing&quot;</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reasoning Correctness</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">      </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">important</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">      </span><span class="nt">scoring</span><span class="p">:</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">        </span><span class="nt">4_Excellent</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Correctly</span><span class="nv"> </span><span class="s">links</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">two</span><span class="nv"> </span><span class="s">cross-session</span><span class="nv"> </span><span class="s">pieces</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">information:</span><span class="nv"> </span><span class="s">&#39;daughter=Lily&#39;</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">&#39;Lily&#39;s</span><span class="nv"> </span><span class="s">doctor=Dr.</span><span class="nv"> </span><span class="s">Chen&#39;&quot;</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">        </span><span class="nt">3_Good</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Correctly</span><span class="nv"> </span><span class="s">links</span><span class="nv"> </span><span class="s">but</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">reasoning</span><span class="nv"> </span><span class="s">path</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">clear</span><span class="nv"> </span><span class="s">enough&quot;</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">        </span><span class="nt">2_Passable</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Partially</span><span class="nv"> </span><span class="s">correct</span><span class="nv"> </span><span class="s">linking&quot;</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">        </span><span class="nt">1_Fail</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Incorrect</span><span class="nv"> </span><span class="s">linking</span><span class="nv"> </span><span class="s">(e.g.,</span><span class="nv"> </span><span class="s">mistaking</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">user&#39;s</span><span class="nv"> </span><span class="s">own</span><span class="nv"> </span><span class="s">doctor</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">daughter&#39;s</span><span class="nv"> </span><span class="s">doctor)&quot;</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hallucination Detection</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">      </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">veto</span><span class="w">             </span><span class="c1"># Veto item: once triggered, total score is zero</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">      </span><span class="nt">scoring</span><span class="p">:</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">        </span><span class="nt">pass</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;All</span><span class="nv"> </span><span class="s">information</span><span class="nv"> </span><span class="s">can</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">traced</span><span class="nv"> </span><span class="s">back</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">historical</span><span class="nv"> </span><span class="s">conversation</span><span class="nv"> </span><span class="s">records&quot;</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">        </span><span class="nt">fail</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Fabricated</span><span class="nv"> </span><span class="s">information</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">present</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">conversation</span><span class="nv"> </span><span class="s">(e.g.,</span><span class="nv"> </span><span class="s">fictitious</span><span class="nv"> </span><span class="s">visit</span><span class="nv"> </span><span class="s">dates,</span><span class="nv"> </span><span class="s">diagnoses)&quot;</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">  </span><span class="nt">edge_cases</span><span class="p">:</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;If</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">user</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">multiple</span><span class="nv"> </span><span class="s">daughters</span><span class="nv"> </span><span class="s">who</span><span class="nv"> </span><span class="s">see</span><span class="nv"> </span><span class="s">different</span><span class="nv"> </span><span class="s">doctors,</span><span class="nv"> </span><span class="s">should</span><span class="nv"> </span><span class="s">ask</span><span class="nv"> </span><span class="s">which</span><span class="nv"> </span><span class="s">daughter&quot;</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;If</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">memory</span><span class="nv"> </span><span class="s">contains</span><span class="nv"> </span><span class="s">both</span><span class="nv"> </span><span class="s">&#39;Dr.</span><span class="nv"> </span><span class="s">Chen&#39;</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">&#39;陈医生&#39;</span><span class="nv"> </span><span class="s">(the</span><span class="nv"> </span><span class="s">same</span><span class="nv"> </span><span class="s">name</span><span class="nv"> </span><span class="s">written</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">Chinese),</span><span class="nv"> </span><span class="s">should</span><span class="nv"> </span><span class="s">recognize</span><span class="nv"> </span><span class="s">them</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">same</span><span class="nv"> </span><span class="s">person&quot;</span>
+</code></pre></div>
+<p><strong>قواعد التقييم الجيدة مقابل قواعد التقييم السيئة</strong>: يحدد كل مستوى من مستويات الدرجات أعلاه سلوكًا ملموسًا يمكن التحقق منه ("يجيب بشكل صحيح على دكتور تشين") بدلاً من الأوصاف التي لا يمكن الحكم عليها بشكل موضوعي، مثل "يُظهر فهمًا عميقًا للذاكرة". يحدد عنصر النقض النتيجة النهائية: حتى لو حصل كل بُعد آخر على علامات كاملة، فإن حالة واحدة من الهلوسة تؤدي إلى صفر تلقائي.</p>
+<p>أرسل نموذج التقييم هذا مع الرد الفعلي للوكيل على نموذج التحكيم، والذي سيسجل كل بُعد ويقدم المنطق. من خلال تشغيل ذلك عبر العشرات من حالات الاختبار، يمكنك تحديد فجوات قدرة الوكيل بشكل منهجي - على سبيل المثال، يشير متوسط ​​الدرجة 2.1 في بُعد "الاقتران عبر الجلسات" بوضوح إلى أوجه القصور في استرجاع الذاكرة أو ارتباط المعلومات.</p>
+<blockquote>
+<p><strong>التجربة 6-3 ★★: إنشاء نظام لتقييم ذاكرة المستخدم قائم على القواعد</strong></p>
+<p><strong>المتطلبات الأساسية</strong>: يجب إكمال الفصل الثالث من تجربة ذاكرة المستخدم (<code>ch3/user-memory-evaluation</code>).</p>
+<p>تتطلب هذه التجربة تعديل إطار عمل <code>ch3/user-memory-evaluation</code> من الفصل 3، وترقية آلية تسجيل LLM البسيطة الحالية إلى نظام تقييم منظم ومتعدد الأبعاد. يستخدم النظام الحالي استدعاء LLM واحد لإرجاع نتيجة النجاح/الفشل بالإضافة إلى أسباب التقييم، ويفتقر إلى إمكانيات التشخيص المنظمة.</p>
+<p>تصميم إطار عمل موحد متعدد الأبعاد ينطبق على جميع مستويات المهام الثلاثة. تتضمن أبعاد التقييم ما يلي: صحة الحقائق (الدقة: جميع المعلومات المقدمة، ومدى صحتها - التحقق من أن الأرقام/التواريخ/الأسماء متوافقة مع الذاكرة المخزنة)؛ اكتمال المعلومات (التذكر: من بين جميع المعلومات التي يجب تقديمها، ما هو مقدار ما تم ذكره - التحقق من تقديم جميع المعلومات ذات الصلة دون حذف أي محتوى رئيسي)؛ صحة الاستدلال (التحقق مما إذا كانت العلاقات بين أجزاء المعلومات والمنطق الضمني مفهومة بشكل صحيح)؛ الاستدلال الاستباقي (تقييم ما إذا كانت الاقتراحات أو تحذيرات المخاطر التي تتجاوز الإجابة المباشرة يتم تقديمها عند الاقتضاء)؛ كشف الهلوسة (يضمن عدم تلفيق أي معلومات غير موجودة في الذاكرة).</p>
+<p>درجات من أربعة مستويات (ممتاز/جيد/مقبول/راسب)، مع معايير حكم محددة لكل مستوى بدلاً من الأوصاف المجردة. البعد الهلوسة هو عنصر النقض. تقديم أمثلة وحالات حدودية لكل بعد.</p>
+<p><strong>التجربة 6-4 ★★: التقييم المقارن لبطاقات JSON المتقدمة مقابل RAG</strong></p>
+<p><strong>المتطلبات الأساسية</strong>: يجب إكمال الفصل الثالث من ذاكرة المستخدم وتجارب RAG (<code>ch3/user-memory</code>, <code>ch3/agentic-rag-for-user-memory</code>).</p>
+<p><strong>الهدف</strong>: مقارنة مزايا وحدود الذاكرة المنظمة بشكل عادل مقابل الاسترجاع غير المنظم في نفس مجموعة التقييم. أعد استخدام مشروعي الفصل 3 وقارن ثلاثة تكوينات في 60 حالة اختبار من <code>ch3/user-memory-evaluation</code> — بطاقات JSON المتقدمة النقية (البطاقات المنظمة التي يتم الاحتفاظ بها في السياق، دون الحاجة إلى استرجاعها)، وRAG النقي (أجزاء المحادثة المضمنة في مخزن المتجهات، والاسترداد مطلوب)، والنظام الهجين (الحقائق الأساسية المقيمة + المحادثات الأصلية المستردة عند الطلب).</p>
+<p><strong>معايير القبول</strong>: تسجيل معدل النجاح، ومتوسط الخطوات، وعدد استدعاءات الأداة، ووقت الاستجابة، والتكلفة عبر ثلاثة مستويات من التعقيد (الاستدعاء الأساسي / توضيح الغموض في جلسات متعددة / الارتباطات المخفية عبر الجلسات). صف بوضوح حدود الفشل لكل نهج - ما الذي تفتقده الذاكرة المنظمة، وما الذي يفتقده الاسترجاع، وما إذا كان الهجين يحقق التآزر حقًا. تتوفر تفاصيل التكوين وحالات الاختبار في المستودع المصاحب.
+</p>
+</blockquote>
+<p><strong>مشكلة نموذج العائلة نفسها والحكم متعدد المصادر.</strong></p>
+<p>عندما يأتي الوكيل ونموذج التحكيم من نفس العائلة، قد يتعلم الوكيل استغلال تفضيلات نموذج التحكيم والنقاط العمياء.</p>
+<p><strong>هذا هو بالضبط ما ينص عليه قانون جودهارت: عندما يصبح المقياس هدفًا للتحسين، فإنه يتوقف عن كونه مقياسًا جيدًا.</strong> كلما زاد تدريب الوكيل أو ضبطه على نظام تسجيل معين، زاد ميله إلى استغلال الثغرات الموجودة في هذا النظام بدلاً من تحسين قدراته بشكل حقيقي.</p>
+<p>والأمر الأكثر مكرًا هو أن الوكيل سيتعلم تدريجيًا كيفية تجنب أنواع الأخطاء التي لا يجيد نموذج التحكيم اكتشافها، مما يجعل نظام التسجيل يبدو جيدًا تمامًا.</p>
+<p>التخفيف هو <strong>تحكيم غير متجانس متعدد المصادر</strong> — حكام مستقلون يتم اختيارهم من عائلات نموذجية مختلفة (إذا كان الوكيل يعمل على Claude، فالحكم باستخدام GPT-5 وGemini). غالبًا ما تكون تحيزات العائلات المختلفة متعامدة، لذا نادرًا ما يتمكن الوكيل من خداع جميع القضاة في وقت واحد. استخدم نفس قواعد التقييم حتى يحكم الجميع على نفس الهدف، وقم بالتجميع من خلال المتوسط ​​المرجح أو عمليات التحقق من الاتساق. أثناء النشر، يمكن لنموذج واحد التعامل مع التقييم السريع، مع إجراء عمليات تدقيق دورية للجودة مقابل الإعداد الكامل متعدد المصادر.</p>
+<p>يتناول التحكيم متعدد المصادر مسألة النماذج التي ينبغي أن تعمل كقضاة؛ والسؤال التالي هو ما هي الطرائق التي ينبغي تقييمها - ويعد توسيع نطاق LLM كقاضي من النص إلى الكلام والصور والفيديو محورًا آخر لتغطية التقييم.</p>
+<p><strong>LLM متعدد الوسائط كقاضي.</strong></p>
+<p>يمتد التحكيم المتعدد الوسائط إلى LLM-as-a-Judge ليشمل مجالات الكلام والصور والفيديو. أربعة اتجاهات مشتركة هي كما يلي.</p>
+<ul>
+<li><strong>تقييم TTS</strong> (TTS يرمز إلى تحويل النص إلى كلام): يقيم الدقة والطبيعية واتساق الصوت والتعبير العاطفي. يمكن لهذه الأبعاد التقاط المشكلات العرضية التي يكافح WER (معدل خطأ الكلمات) التقليدي لاكتشافها.</li>
+<li><strong>تقييم ASR</strong> (ASR يرمز إلى التعرف التلقائي على الكلام): يقوم بإجراء تقييم التأثير الدلالي، فالخطأ في التعرف على "الطقس اليوم" غير ضار، ولكن الخطأ في التعرف على "نقل ألف" على أنها "عشرة آلاف" قد يكون له عواقب وخيمة.</li>
+<li><strong>تقييم واجهة المستخدم</strong>: يستخدم آلية <strong>المقترح والمراجع</strong> للتحقق من وجود مشكلات مثل تجاوز النص وتباين الألوان وموضع الزر. هنا، يتم استخدام مُراجع المُقترح باعتباره <strong>طريقة تقييم</strong>، ويختلف عن استخدامه كـ <strong>مكون نظام التوليد</strong> في الفصل 5، ولكن الآلية الأساسية هي نفسها — نموذج يُنشئ، وآخر يراجع بشكل مستقل.</li>
+<li><strong>تقييم تحرير الفيديو</strong>: التحقق من صحة نقاط بداية/نهاية المقطع وتطبيق التأثير من خلال الإطارات الرئيسية.</li>
+</ul>
+<blockquote>
+<p><strong>التجربة 6-5 ★★: إنشاء خط أنابيب لتقييم جودة تحويل النص إلى كلام (TTS) مؤتمت بالكامل</strong></p>
+<p>تتطلب هذه التجربة تصميم وتنفيذ نظام كامل لتقييم الجودة LLM-as-a-Judge TTS من البداية.</p>
+<p>تصميم نموذج تقييم تحويل النص إلى كلام (TTS) متعدد الأبعاد: يتحقق بُعد الدقة مما إذا كان النص بأكمله قد تم قراءته بشكل صحيح (بدون حذف/قراءة خاطئة/إضافات)؛ يقوم بُعد الطبيعية بتقييم ما إذا كان الكلام يبدو طبيعيًا وليس آليًا، ولا يحتوي على توقفات غير طبيعية، ويستخدم عروضًا طبيعية؛ يتحقق بُعد التعبير العاطفي مما إذا كانت النغمة تتطابق مع النغمة العاطفية للنص (ارتفاع نغمة الأسئلة، والتأكيد على علامات التعجب، والوتيرة البطيئة وانخفاض درجة الصوت للمحتوى الحزين)؛ يقوم بُعد اتساق الصوت بتقييم تشابه المتحدث عند توفر صوت مرجعي (يستقبل النموذج متعدد الوسائط في نفس الوقت الصوت المرجعي والصوت المركب للمقارنة).</p>
+<p>قم ببناء مجموعة اختبار متنوعة: أطوال مختلفة (جملة واحدة → فقرة طويلة)، والأنواع (أخبار/قصة/حوار)، والعواطف (محايدة/متحمس/حزين)، والتحديات الخاصة (الأرقام/أسماء العلم/الأحرف متعددة الألحان/مفردات اللهجات). تنفيذ مسار التقييم: تتصل وحدة إنشاء تحويل النص إلى كلام (TTS) بالخدمات الرئيسية (OpenAI، وElevenLabs، وFish Audio، وMinimax، وDoubao)؛ تستخدم وحدة التحكيم متعددة الوسائط Gemini 3.5 Flash، مما يوفر لها الكلام المركب والنص الأصلي والصوت المرجعي ونموذج التقييم معًا لتسجيل كل بُعد وتوفير تفكير تفصيلي. قم بتحليل توزيع نتائج التقييم لتحديد نقاط القوة والضعف في نماذج تحويل النص إلى كلام المختلفة عبر الأبعاد - قد تتفوق بعض النماذج في الدقة ولكنها تفتقر إلى الطبيعة، في حين أن البعض الآخر يتمتع بدرجة عالية من الطبيعة ولكنه عرضة للأخطاء في المفردات الخاصة.
+</p>
+</blockquote>
+<p>بالإضافة إلى تحديد قواعد التقييم يدويًا، يمكن تدريب <strong>نماذج المكافآت التوليدية</strong> المتخصصة على التحكيم الآلي — وهذا يتضمن أساليب تدريب لنماذج المكافآت، والتي ستتم مناقشتها بالتفصيل في الفصل السابع.</p>
+<p>في اختيار النموذج العملي، غالبًا ما نواجه السؤال: "أيهما أفضل، أ أم ب؟" توفر المقارنة الزوجية طريقة تقييم لا تعتمد على الدرجات المطلقة.</p>
+<h3 id="_17">المقارنة الزوجية وتصنيف النماذج<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<p><img alt="الشكل 6-5: تصنيف Elo وتصنيف المقارنة الزوجية" src="../images/fig6-5.svg" /></p>
+<p><strong>Elo Rating</strong> (نظام تصنيف مصمم في الأصل للعبة الشطرنج) يقيس القدرة النسبية للنماذج من خلال عدد كبير من المطابقات الزوجية: كلما زاد فرق التصنيف، زاد معدل الفوز المتوقع للنموذج الأقوى. على سبيل المثال، إذا كان النموذج A لديه تقييم 1200 والنموذج B لديه تصنيف 1000، فإن نظام Elo يتوقع أن يكون معدل فوز A حوالي 76%. إذا فاز B بشكل غير متوقع، يكتسب B المزيد من النقاط ويخسر A أكثر - تؤدي المفاجأة إلى تصحيح أكبر، وهو ما يسمح للتصنيفات بالتقارب بسرعة على القدرة الحقيقية. الأساس الإحصائي هو <strong>نموذج برادلي-تيري</strong>: يتم تلخيص كل نموذج على أنه "درجة قوة" كامنة، ويتم تحديد احتمال فوز أحدهما على الآخر في المباراة من خلال الفرق بين درجاتهما. Elo هو التنفيذ الهندسي لهذا النموذج في نموذج التحديث عبر الإنترنت.</p>
+<p>يستخدم Chatbot Arena مطابقات عشوائية مجهولة المصدر - يختار المستخدمون بشكل أعمى الاستجابة الأفضل دون معرفة هوية النموذج، ويتم استخلاص التصنيفات من ملايين الأصوات. الميزة هي أنه لا يوجد "معيار مطلق" يحتاج إلى تعريف؛ كل ما هو مطلوب هو الحكم البشري على "أيهما أفضل، أ أو ب". القيد: تعتمد التصنيفات على ما يسأله المستخدمون. إذا طرح سيل من المستخدمين أسئلة برمجية، فإن النماذج القوية في البرمجة تحصل على مرتبة أعلى، وهو ما قد لا يوضح الكثير عن مستواهم في المهام الأخرى.</p>
+<p>عندما يتم إجراء التحكيم المزدوج بواسطة LLM بدلاً من التصويت البشري، يجب أيضًا الحذر من <strong>تحيز المنصب</strong> - يفضل نموذج التحكيم بشكل منهجي ظهور المرشح في موضع معين (الأول عادةً)، وقد يظل الحكم دون تغيير حتى إذا تم تبديل محتوى المرشحين بالكامل. تتمثل طريقة التخفيف القياسية في <strong>تقييم كل زوج مرتين بترتيب متبادل</strong>: مرة مع A أولاً، ومرة ​​مع B أولاً، ومتوسط ​​النتيجتين؛ النهج الأكثر صرامة هو احتساب الحالات التي يكون فيها الحكمان متسقين فقط، ومعالجة التناقضات على أنها روابط أو إرسالها للمراجعة البشرية. نهج Chatbot Arena هو نفسه بشكل أساسي، وهو توزيع مواضع العرض للاستجابتين بطريقة عشوائية بحيث يتم إلغاء تحيز الموضع على عينة كبيرة.</p>
+<p><strong>من التقييم إلى التدريب: نقل إشارات المقارنة الزوجية.</strong> المقارنة الزوجية ليست مجرد أداة تقييم ولكنها أيضًا مصدر مهم للإشارات لمرحلة ما بعد التدريب. تتضمن خوارزمية <strong>GRPO</strong> (تحسين السياسة النسبية للمجموعة)، والتي سيتم تقديمها في الفصل 7، نهج التحكيم "مقارنة أيهما أفضل" في التدريب النموذجي - فكرتها الأساسية هي أخذ عينات من إجابات المرشحين لنفس السؤال وتقدير المزايا من مزاياها النسبية (بدلاً من الدرجات المطلقة)، وبالتالي تجنب الحاجة إلى شبكة القيمة الإضافية (الناقدة، المستخدمة لتقدير خطوط الأساس) التي يجب على PPO تدريبها. لاحظ أن GRPO تسقط شبكة القيمة، وليس إشارة المكافأة: فهي لا تزال تعتمد على نموذج المكافأة أو قواعد المكافأة التي يمكن التحقق منها للحكم على كل مرشح. هذا مجرد إنذار - الاشتقاق الكامل والمقارنة مع PPO/DPO وتفاصيل التنفيذ الخاصة بالوكيل بعد التدريب كلها تأتي في الفصل 7.</p>
+<blockquote>
+<p><strong>التجربة 6-6 ★★: إنشاء لوحة صدارة نموذجية من بيانات المقارنة الزوجية</strong></p>
+<p>تهدف هذه التجربة إلى الفهم العميق لكيفية استخلاص نموذج برادلي-تيري لدرجات القدرة النسبية من عدد كبير من المقارنات الزوجية من خلال تطبيق نظام حساب تصنيف Elo من الصفر. استخدم مجموعة بيانات التصويت الحقيقية مفتوحة المصدر من Chatbot Arena (التي تحتوي على ملايين الأصوات العمياء للمستخدمين المجهولين).</p>
+<p>تنفيذ خوارزمية التحديث التكراري لتصنيف Elo: تهيئة جميع النماذج بتصنيف 1000. معالجة سجلات التصويت بالترتيب الزمني. لكل مباراة، احسب معدل الفوز المتوقع استنادًا إلى فرق التقييم الحالي بين النموذجين، وقارن النتيجة الفعلية مع التوقعات، واضبط التقييمات بمعدل تعلم ثابت - يكسب الفائز نقاطًا، ويخسر الخاسر نقاطًا، مع تناسب حجم التعديل مع الانحراف عن التوقع (تؤدي الخسارة المفاجئة إلى تغيير أكبر في التصنيف). فرز النماذج بترتيب تنازلي حسب التصنيف النهائي وحساب مصفوفة معدل الفوز الزوجي. قارن مع لوحة المتصدرين الرسمية للتأكد من أن التصنيف متسق بشكل عام. ليست هناك حاجة إلى محاذاة دقيقة لنقطة بنقطة: يستخدم Chatbot Arena الرسمي تقدير احتمالية برادلي-تيري الأقصى (حل جميع المطابقات في وقت واحد، بغض النظر عن ترتيب التصويت)، بينما يستخدم هذا التنفيذ تحديثات Elo الإضافية عبر الإنترنت (تتأثر النتائج بمعدل التعلم K-factor وترتيب المعالجة). ينبغي أن تسفر الخوارزميتان عن تصنيفات عامة متسقة، لكن الدرجات المحددة لن تكون متطابقة تمامًا.</p>
+<p>يقوم الجزء الثاني من التجربة بإنشاء رسم متحرك تاريخي لتطور التصنيف: قم بتقسيم بيانات التصويت حسب الوقت (أسبوعيًا أو شهريًا) واحسب لقطات تصنيف Elo لكل نقطة زمنية. استخدم D3.js لتنفيذ الرسوم المتحركة لسباق المخطط الشريطي (طول الشريط الأفقي = التصنيف، والموضع الرأسي = التصنيف، ويتغير بسلاسة بمرور الوقت). من خلال مراقبة الرسوم المتحركة، حدد لحظات الاختراق التكنولوجي (يرتفع تصنيف النموذج فجأة)، وتطور المشهد التنافسي، ودورات حياة النموذج.
+</p>
+</blockquote>
+<h2 id="_18">اختيار النموذج القائم على التقييم<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h2>
+<p>لا يقتصر اختيار النموذج على مجرد "اختيار النموذج الأقوى"؛ فهو يتضمن إجراء مقايضات تعتمد على التقييم عبر أبعاد متعددة بناءً على سيناريو التطبيق.</p>
+<h3 id="_19">الأبعاد الرئيسية للاختيار<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<p><strong>الإنتاجية</strong> و<strong>زمن الاستجابة</strong> هما مجموعتان من المقاييس التي يسهل الخلط بينها؛ إن فك تشابكها لا يتطلب سوى حقيقة واحدة، وهي أن استنتاج LLM يتم على مرحلتين. تقوم <strong>التعبئة المسبقة</strong> بقراءة السياق بالكامل مرة واحدة وتحدد <strong>وقت ظهور الرمز المميز الأول (TTFT)</strong>: التأخير بين ضغط المستخدم على Enter وظهور الحرف الأول. كلما كان السياق أطول، كانت عملية التعبئة المسبقة أبطأ وزاد معدل TTFT. يقوم <strong>فك التشفير</strong> بعد ذلك بإنشاء رمز الرد المميز تلو الآخر، مع ضبط سرعة الإنشاء (الرموز المميزة/الثانية) - والتي تحدد أيضًا وقت التفكير: عند 50 رمزًا/ثانية، يقضي النموذج الذي ينتج 2000 رمزًا للتفكير 40 ثانية في التفكير فقط.</p>
+<p>حول هاتين المرحلتين، تكون مقاييس الإنتاجية وزمن الوصول الرئيسية كما يلي:</p>
+<ul>
+<li><strong>مخرجات الإدخال / إنتاجية المخرجات</strong>: تتوافق مع سرعة الملء المسبق وفك التشفير، على التوالي.</li>
+<li><strong>TTFT</strong>: يساوي وقت الانتظار بالإضافة إلى وقت التعبئة المسبقة؛ إنها "الاستجابة" التي يدركها المستخدم.</li>
+<li><strong>زمن وصول التفكير</strong>: يمكن أن يختلف عدد رموز التفكير المميزة التي تم إنشاؤها عدة مرات عبر النماذج، ولا يرتبط طول التفكير بالضرورة بشكل إيجابي بفعالية المهمة - قم بقياس استخدام رمز التفكير المميز لكل نموذج والفائدة المقابلة على عبء العمل الخاص بك، بدلاً من الاستدلال من لوحات المتصدرين العامة وحدها.</li>
+<li><strong>p95 Tail Latency</strong>: زمن الاستجابة الذي لن تتجاوزه 95% من الطلبات. وهو مؤشر أفضل لتجربة المستخدم الحقيقية من المتوسط، والذي يمكن أن ينخفض ​​بسبب عدد كبير من الطلبات السريعة، مما يخفي التباطؤ الشديد الذي تعاني منه أقلية من المستخدمين.</li>
+</ul>
+<p><strong>التكلفة</strong>: تسعير رموز الإدخال والإخراج/ذاكرة التخزين المؤقت. لا ينبغي تقييم التكلفة بشكل منفصل - فالنموذج الرخيص ذو معدل النجاح المنخفض قد يؤدي في الواقع إلى تكبد تكاليف أعلى بسبب إعادة المحاولة المتكررة. يجب حساب متوسط ​​التكلفة لكل مهمة ونسبة التكلفة إلى الأداء.</p>
+<p><strong>الأداء</strong>: التعريفات الدقيقة لـ Pass@1 وPass^k وPass@k وBest@k مذكورة سابقًا في "نظام مقاييس التقييم". هنا، نناقش فقط كيفية الاختيار في سياق اختيار النموذج - بالنسبة للسيناريوهات اليومية، ركز على Pass@1 (متوسط ​​معدل النجاح لمحاولة واحدة)؛ بالنسبة للعمليات الحرجة، قم بإعطاء الأولوية لـ Pass^k، مع التركيز على ثبات "عدم ارتكاب أي خطأ مطلقًا"؛ بالنسبة للمهام الاستكشافية، قم بإعطاء الأولوية لـ Pass@k أو Best@k، مع النظر إلى الحد الأعلى من القدرة عند توفر فرص كافية؛ بالنسبة للمهام ذات النهايات المفتوحة، استخدم نقاط تقييم متعددة الأبعاد.</p>
+<p><strong>حدود السعر والموثوقية</strong>: تؤثر حدود RPM (الطلبات في الدقيقة) / TPM (الرموز المميزة في الدقيقة) على إمكانيات التزامن، وتقوم بعض واجهات برمجة التطبيقات بضبط الحصص النسبية ديناميكيًا خلال ساعات الذروة. فيما يتعلق بالقوة، انتبه إلى البيانات غير الموزعة، والمدخلات العدائية، والاستقرار طويل الأمد (سواء حدثت مشكلات مثل انهيار الوضع أو انحراف الانتباه).</p>
+<p><strong>منحنيات الميزانية والقدرة</strong>: لا تكفي درجة واحدة بميزانية ثابتة لتحديد ما إذا كان الوكيل يمكنه التعامل مع العمل طويل المدى. بالإضافة إلى معدل النجاح، قم بالإبلاغ عن كيفية تغير الأداء مع وقت ساعة الحائط أو الرموز المميزة أو استدعاءات الأدوات أو ميزانية الحساب. يجعل RE-Bench المشكلة ملموسة: مع ميزانية إجمالية تبلغ ساعتين لكل بيئة، سجل أفضل وكيل حوالي أربعة أضعاف ما سجله الخبراء البشريون؛ ومع ذلك، استفاد البشر أكثر من الوقت الإضافي، وتجاوزوا بفارق ضئيل أفضل وكيل في ثماني ساعات، وسجلوا أعلى مستوى تقريبًا عندما تم منح محاولات متعددة 32 ساعة إجمالية<sup id="fnref:re-bench-2025"><a class="footnote-ref" href="#fn:re-bench-2025">1</a></sup>. وبالتالي فإن القيادة ذات الميزانيات القصيرة لا يمكن استقراءها بشكل مباشر على القدرة طويلة الأمد. يجب أن يقارن اختيار النموذج عدة نقاط ميزانية قريبة من مدة عبء العمل الحقيقي.</p>
+<p>من الناحية العملية، يمكنك مزج النماذج: نماذج خفيفة الوزن للطلبات البسيطة لخفض التكاليف، ونماذج قوية للمهام المعقدة لحماية الجودة؛ أو نماذج متخصصة في مهام فرعية معينة (فهم الصور، وإنشاء التعليمات البرمجية)، والتعاون من خلال آليات الوكيل الفرعي. يجب التحقق من صحة أي مجموعة غير متجانسة من هذا القبيل عن طريق التقييم، للتأكد من أن الفائدة الإجمالية تفوق التعقيد الإضافي للنظام.</p>
+<h3 id="_20">تحليل تكلفة أنظمة الوكيل<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<p>التكلفة هي البعد الأكثر سهولة في الاستهانة باختيار النموذج. إذا كان وكيلك في مرحلة الإنتاج أو متوجهًا إلى هناك، فلا تتجاوز هذا القسم.</p>
+<p>أدرج القسم السابق التكلفة ضمن أبعاد الاختيار الرئيسية، ولكن تكاليف الوكيل أكثر تعقيدًا بكثير من تسعير الرمز المميز البسيط - حيث يؤدي التفكير متعدد المنعطفات واستدعاءات الأدوات وتراكم السياق إلى زيادة التكاليف بشكل غير خطي. يعد التحليل المنهجي للتكلفة جزءًا لا غنى عنه من نظام التقييم وشرطًا أساسيًا لنشر الإنتاج.</p>
+<p><strong>مكونات التكلفة.</strong></p>
+<p>يمكن تقسيم تكلفة نظام الوكيل إلى ثلاثة مستويات:</p>
+<p><strong>تكلفة استنتاج النموذج</strong> هي المكون الأكثر مباشرة، ويتم تحديدها من خلال استهلاك الرموز المميزة للإدخال والرموز المميزة للمخرجات. ومع ذلك، في سيناريوهات الوكيل، هناك عاملان مضخمان غالبًا ما يتم تجاهلهما. الأول هو <strong>تأثير تراكم السياق</strong>: في كل مرة يستدعي الوكيل LLM، فإنه يرسل كل محفوظات المحادثة السابقة ومخرجات الأداة معًا (حتى يتمكن النموذج من فهم السياق). بدون الاستخدام الفعال لـ KV Cache (أي التخزين المؤقت للسياق الذي تمت معالجته بالفعل لتجنب العمليات الحسابية المتكررة)، تنمو التكلفة بسرعة كبيرة - ترسل الجولة 1 1000 رمزًا مميزًا، وترسل الجولة 2 2000 رمزًا مميزًا، وترسل الجولة 3 3000 رمزًا مميزًا، بإجمالي 1000+2000+3000=6000 بدلاً من 3×1000=3000. كلما زاد عدد الجولات، زادت الفجوة. والثاني هو <strong>تكلفة التفكير المميزة</strong>: النماذج التي تدعم التفكير تولد عددًا كبيرًا من رموز التفكير المميزة. على الرغم من عدم عرض هذه الرموز المميزة للمستخدم، إلا أنه لا يزال يتم إصدار فاتورة بها.</p>
+<p><strong>تكلفة استدعاء الأداة</strong> تشمل رسوم API الخارجية (تفرض محركات البحث رسومًا على كل استعلام، وتستهلك استعلامات قاعدة البيانات موارد الحوسبة)، وموارد وضع الحماية لتنفيذ التعليمات البرمجية، وتكلفة غير مباشرة يتم التغاضي عنها بسهولة: كلفة الرموز التي يتم تكبدها عند إدخال مخرجات الأداة في السياق. قد يشغل المحتوى الذي يتم إرجاعه من بحث ويب واحد ما بين 2000 إلى 5000 رمزًا مميزًا، وستتم محاسبته بشكل متكرر كمدخل في كل جولة لاحقة من الاستدلال.</p>
+<p><strong>تكلفة البنية التحتية</strong> تغطي النفقات التشغيلية لقواعد بيانات المتجهات (المستخدمة لاسترجاع RAG)، وقوائم انتظار الرسائل، وقواعد البيانات العلائقية، وتخزين التسجيل والتتبع (لقابلية الملاحظة).</p>
+<p>يوضح المثال الملموس النمو غير الخطي للتكاليف. يستخدم الجدول 6-4 وكيل استرداد خدمة العملاء من بداية هذا الفصل كمثال، مع مجموعة من معلمات سعر الرمز المميز التوضيحية لتقسيم تكلفة ثلاث جولات من المكالمات، مما يوضح تأثير تراكم السياق متعدد الجولات وزيارات ذاكرة التخزين المؤقت على النفقات.</p>
+<p>جدول 6-4 مثال على تكلفة ثلاث جولات لوكيل استرداد خدمة العملاء</p>
+<table>
+<thead>
+<tr>
+<th>جولة</th>
+<th>العملية</th>
+<th>رموز الإدخال</th>
+<th>رموز الإخراج</th>
+<th>تكلفة الجولة</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>موجّه النظام + سؤال المستخدم → قرر الاستعلام عن الطلب</td>
+<td>2,500 (2,000 موجّه النظام)</td>
+<td>150</td>
+<td>0.0098 دولار</td>
+</tr>
+<tr>
+<td>2</td>
+<td>سياق الجولة السابقة + نتيجة الأداة → قرر ما إذا كنت تريد بدء استرداد الأموال أم لا</td>
+<td>3200 (2000 نتيجة لذاكرة التخزين المؤقت)</td>
+<td>120</td>
+<td>0.0060 دولار</td>
+</tr>
+<tr>
+<td>3</td>
+<td>سياق الجولة السابقة + نتيجة استرداد الأموال → الرد على المستخدم</td>
+<td>3800 (3200 نتيجة لذاكرة التخزين المؤقت)</td>
+<td>200</td>
+<td>0.0058 دولار</td>
+</tr>
+<tr>
+<td><strong>المجموع</strong></td>
+<td></td>
+<td><strong>9,500</strong></td>
+<td><strong>470</strong></td>
+<td><strong>0.022 دولار</strong></td>
+</tr>
+</tbody>
+</table>
+<p>ملاحظة: أُجري الحساب باستخدام أسعار توضيحية قدرها 3 دولارات لكل مليون رمز من المدخلات و15 دولارًا لكل مليون رمز من المخرجات. ويُفترض أن الجزء المصيب لذاكرة التخزين المؤقت يُحاسب بنسبة 10% من سعر المدخلات (تختلف الخصومات باختلاف المورّد؛ فمثلًا تبلغ تكلفة كتابة ذاكرة Anthropic المخبأة نحو 1.25 مرة من سعر المدخلات، وتبلغ تكلفة القراءة نحو 0.1 مرة؛ وقد بُسّط المثال هنا ليشمل خصم القراءة فقط).</p>
+<p>تبلغ تكلفة الجولات الثلاث 0.022 دولار فقط، وهو مبلغ يبدو زهيدًا. ومن دون أي تخزين مؤقت، ستبلغ تكلفة المدخلات وحدها نحو 0.029 دولار، أو قرابة 0.036 دولار عند احتساب المخرجات؛ أي إن التخزين المؤقت يوفر هنا ما يقارب نصف تكلفة المدخلات، بما يتسق مع النطاق التجريبي المذكور لاحقًا («يمكن لذاكرة KV المخبأة خفض تكلفة المدخلات بنسبة 30% إلى 60%»). لكن انتبه إلى عوامل التضخيم. فعند تفعيل وضع التفكير، تنتج كل جولة 500 إلى 2000 رمز إضافي للتفكير، ما قد يضاعف التكلفة ثلاث مرات أو خمسًا. وإذا أعادت أداة واحدة صفحة ويب من 5000 رمز، دفعت كل جولة لاحقة تكلفة هذه الرموز من جديد. وإذا سلك الوكيل مسارًا ملتويًا واحتاج إلى عشر جولات، فقد يتجاوز السياق 20000 رمز، متخطيًا هذا السيناريو البسيط بكثير. لذلك لا يكمن جوهر تحسين التكلفة في اختيار نموذج أرخص، بل في التحكم بعدد الجولات ونمو السياق.</p>
+<p><strong>استراتيجيات تحسين التكلفة.</strong></p>
+<p>من منظور كمي، فإن أدوات جانب الإدخال الأكثر فعالية هي <strong>KV Cache Reuse</strong> (الحفاظ على بادئة مستقرة بحيث تتم محاسبة موجّهات النظام المتكررة وتعريفات الأداة والجولات التاريخية بسعر ذاكرة التخزين المؤقت، مما يقلل تكاليف رمز الإدخال بنسبة 30%-60% — في المثال الثلاثي أعلاه، يوفر التخزين المؤقت ما يقرب من نصف تكلفة الإدخال)، <strong>ضغط السياق</strong> (ضغط المسارات التاريخية، واقتطاعها) مخرجات الأدوات المتكررة، التي تتحكم بشكل مباشر في معدل نمو السياق، وخاصة الفعالة في المهام الطويلة)، و<strong>توجيه النموذج المتدرج</strong> (تنتقل الطلبات البسيطة إلى النماذج خفيفة الوزن والتفكير المعقد يذهب إلى نماذج قوية). تمت مناقشة التطبيقات المحددة لهذه الطرق الثلاث - تصميم استقرار البادئة، وتوقيت الضغط وإستراتيجيته، وآليات التوجيه - بالتفصيل في الفصل الثاني ولن يتم تكرارها هنا. ويكملها هذا الفصل بطريقتين من التقييم والعمليات.</p>
+<p><strong>معالجة الدُفعات غير المتزامنة</strong> تعمل على تجميع المهام في غير الوقت الفعلي لمعالجة الدُفعات، مما يؤدي إلى الاستفادة من خصومات أسعار الدُفعات من موفري API؛ وفي سيناريوهات النشر الذاتي، تعمل أيضًا على تحسين استخدام وحدة معالجة الرسومات (GPU) خارج ساعات الذروة.</p>
+<p><strong>مراقبة التكاليف ومراقبة الميزانية.</strong></p>
+<p>في بيئة الإنتاج، يجب إنشاء نظام لمراقبة التكلفة في الوقت الفعلي: تتبع استهلاك الرموز وتكاليف API حسب نوع المهمة والنموذج والمستخدم وما إلى ذلك. أيضًا، قم بتعيين حد أقصى للتكلفة لكل مهمة - قم بإنهاء الوكيل تلقائيًا عندما يقع في حلقة أو يستكشف بعمق شديد، مما يمنع مهمة واحدة من تكبد تكاليف مرتفعة بشكل غير طبيعي.</p>
+<blockquote>
+<p><strong>التجربة 6-7 ★: تحليل التكلفة الشاملة لمهام الوكيل</strong></p>
+<p><strong>هدف التجربة</strong>: إجراء توزيع كامل لتكلفة السلسلة لمهام الوكيل النموذجية، وإنشاء خط أساس للتكلفة، والتحقق من فعالية استراتيجيات التحسين.</p>
+<p><strong>المنهج الفني</strong>: حدد العديد من المهام النموذجية، واستخدم LangSmith أو نظام تتبع مدمج لتسجيل عدد الرموز للإدخال/الإخراج، وعدد الرموز للتفكير، وعدد استدعاءات الأداة وأحجام الإرجاع، وزمن الاستجابة الشامل لكل مكالمة LLM. احسب متوسط ​​التكلفة وتوزيع التكلفة (p50/p95/p99) ونسبة تكوين التكلفة لكل نوع مهمة.</p>
+<p><strong>معايير القبول</strong>: إنشاء تقرير تفصيلي للتكلفة وتحديد محركات التكلفة الرئيسية. قارن فروق التكلفة بين تمكين/تعطيل KV Cache وتمكين/تعطيل ضغط السياق.</p>
+</blockquote>
+<h3 id="_21">التكرار المستمر القائم على التقييم<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
+<p>إن اختيار النموذج ليس قرارًا يتم اتخاذه لمرة واحدة، بل هو عملية مستمرة، يتم تعديلها مع تطور النماذج. افتتح الفصل بالادعاء بأن نظام التقييم يتيح لك مواكبة تطور النموذج؛ توضح حالة تبديل النموذج الملموسة كيف يتم ذلك في قرار حقيقي.</p>
+<p>لنفترض أن نظام الوكيل الخاص بك مبني حاليًا على Claude، وهو متميز في استدعاء الأدوات والتنسيق المعقد. في أحد الأيام، أصدرت Gemini نموذجًا جديدًا، وتظهر المعايير العامة أنها تتفوق على Claude في عدة مقاييس وبسعر أقل. في هذه المرحلة، سؤالك ليس "هل Gemini أفضل من Claude؟" ولكن "<strong>في مهامي المحددة، هل Gemini أفضل من Claude؟ إلى أي مدى أفضل؟ ما هي تكلفة التبديل؟</strong>"</p>
+<p>يمكن لفريق لديه نظام تقييم قوي الإجابة على هذا السؤال في ساعات: تشغيل النموذج الجديد على مجموعة بيانات التقييم الخاصة به ومقارنة معدل نجاح المهمة ودقة استدعاء الأداة وزمن الاستجابة والتكلفة. قد تجد أن النموذج الجديد أفضل وأرخص في المهام البسيطة، ولكن في السيناريوهات الأساسية التي تتضمن تنسيقًا معقدًا للأدوات متعددة الجولات، ينخفض ​​معدل نجاحه بنسبة 5%. بمجرد التأكد من أن الفرق يتجاوز ضوضاء أخذ العينات المقدرة (راجع "الأهمية الإحصائية لنتائج التقييم" أدناه)، يصبح قرارك استراتيجية مختلفة - ترحيل المهام البسيطة إلى النموذج الجديد لخفض التكاليف، والحفاظ على النموذج الأصلي في المهام المعقدة لحماية الجودة - بدلاً من التبديل الشامل الأعمى. لا يمكن اتخاذ مثل هذه القرارات التفصيلية والمبنية على البيانات إلا من خلال نظام تقييم مبني مسبقًا.</p>
+<blockquote>
+<p><strong>التجربة 6-8 ★★: قياس أداء النموذج متعدد الأبعاد</strong></p>
+<p>قم بإجراء معيار شامل لموفري نماذج LLM السائدين وموفري API المختلفين لبناء قاعدة بيانات قرارات اختيار النماذج متعددة الأبعاد.</p>
+<p>حدد نطاق الاختبار: نماذج SOTA مغلقة المصدر مثل سلسلة GPT، وسلسلة Claude، وسلسلة Gemini، وسلسلة Doubao، ونماذج مفتوحة المصدر مثل Qwen، وKimi، وDeepSeek. اختبار نفس النموذج مع موفري API المختلفين (على سبيل المثال، DeepSeek الرسمية مقابل Siliconflow) للتحقق من النتائج من منصات مراقبة أداء الطرف الثالث (على سبيل المثال، التحليل الاصطناعي).</p>
+<p>تصميم أحمال عمل الاختبار الموحدة: تستخدم اختبارات إنتاجية الإدخال سياقات ذات طول ثابت (رموز 8K/32K/128K)، وتطلب اختبارات إنتاجية المخرجات استجابات ذات طول ثابت (512/2048 رمزًا). تتضمن اختبارات زمن الاستجابة TTFT (الوقت حتى أول رمز مميز) وزمن الاستجابة الشامل. بالنسبة للنماذج التي تدعم التفكير، قم بقياس طول التفكير وزمن وصول التفكير بشكل منفصل. لكل تكوين، قم بإجراء 100 طلب على الأقل وحساب الانحراف المعياري، p50، p95، وp99؛ يشير التباين العالي في زمن الوصول إلى تجربة مستخدم غير مستقرة.</p>
+<p>تقييم مدى توفر API واستقراره: قم بإجراء فحص مرة واحدة كل ساعة لمدة أسبوع، وقم بتسجيل معدل النجاح وأنواع الأخطاء ومدة الفشل. حساب معدل الفشل، وMTTR (متوسط ​​وقت الاسترداد)، وأطول وقت تشغيل مستمر. اختبر الحدود الفعلية لحدود المعدل — قم بزيادة التزامن تدريجيًا للعثور على نقطة الاختناق، وتسجيل حدود RPM/TPM. حساب التكلفة الشاملة: جمع معلومات التسعير (أسعار الوحدات للرموز المميزة للإدخال/الإخراج/التخزين المؤقت)، والنظر في تأثير KV Cache، وحساب متوسط ​​التكلفة لمهام الوكيل النموذجية متعددة الجولات.</p>
+<p><strong>التجربة 6-9 ★★: تقييم الاختيار الشامل لأنظمة ذاكرة المستخدم</strong></p>
+<p><strong>المتطلبات الأساسية</strong>: يجب إكمال تجربة الاسترجاع السياقي أو تجربة RAG من الفصل 3.</p>
+<p><strong>الهدف</strong>: إجراء تقييم شامل لاختيار النموذج لوكيل استرداد ذاكرة المستخدم، وفحص كيفية تأثير نموذج التضمين وإعادة الترتيب والنموذج الرئيسي للوكيل بشكل مشترك على جودة الاسترداد وزمن الوصول والتكلفة. أعد استخدام <code>ch3/contextual-retrieval-for-user-memory</code> أو <code>ch3/agentic-rag-for-user-memory</code>، وقارن التكوينات في 60 حالة اختبار.</p>
+<p><strong>القبول</strong>: قم بتقييم كل نقطة من نقاط الاختيار الثلاث على التوالي - نموذج التضمين (BGE-M3 / OpenAI / Doubao، وما إلى ذلك، وسجل أعلى 5 دقة استرجاع، وزمن الوصول، والتكلفة)، وإعادة الترتيب (بما في ذلك خط الأساس "بدون إعادة ترتيب"، وقياس قيمته الهامشية)، والنموذج الرئيسي (مقارنة معدل النجاح وكفاءة استخدام الأداة تحت نفس تكوين الاسترجاع). المفتاح هو تحديد أوجه التآزر بين المكونات: التضمين الأقوى قد يجعل أداة إعادة الترتيب زائدة عن الحاجة، والنموذج الرئيسي الأقوى قد يعوض عن أوجه القصور في الاسترجاع. فالاختيار عبارة عن مقايضة نظامية، وليس مجرد مسألة اختيار العنصر الأقوى بمعزل عن غيره. تفاصيل التكوين موجودة في المستودع المصاحب.
+</p>
+</blockquote>
+<h2 id="_22">الأهمية الإحصائية لنتائج التقييم<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h2>
+<p>يعتمد "قرار التبديل خلال ساعات" على فرضية ضمنية: فرق النتيجة الذي لاحظته هو إشارة حقيقية، وليس ضوضاء أخذ العينات. ومع وجود مجموعة تقييم محدودة ومخرجات نموذجية غير حتمية، فإن هذه الفرضية لا تصمد تلقائيًا.</p>
+<p>التقدير التقريبي لضوضاء أخذ العينات هذا هو <strong>الخطأ المعياري لنسبة ذات الحدين</strong> (الذي يميز تقلب معدل النجاح بسبب عشوائية أخذ العينات؛ كلما زادت القيمة، قل موثوقية معدل النجاح). إذا تم قياس معدل النجاح p في حالات الاختبار n، فإن الخطأ المعياري يكون تقريبًا √(p(1-p)/n). على سبيل المثال: 100 حالة، نسبة النجاح 70%، الخطأ المعياري ≈ √(0.7×0.3/100) ≈ 4.6%. فاصل الثقة التقريبي 95% هو p ± 2 أخطاء معيارية، مما يعني فاصل زمني يحتوي على المعدل الحقيقي في حوالي 95% من العينات المتكررة، أي 70% ± 9 نقاط مئوية. وبالتالي فإن فرق ثلاث نقاط مئوية مثل "النموذج الجديد 73% مقابل النموذج القديم 70%" يقع بالكامل داخل نطاق الضوضاء - عند التعامل مع معدلي النجاح على أنهما مستقلان، فإن الخطأ المعياري لاختلافهما يبلغ حوالي √2 أضعاف الخطأ المعياري الفردي (هنا حوالي 6.5 نقطة مئوية). تحذير واحد: أن √2 يفترض أن القياسين مستقلان، في حين أن كلا التكوينين يعملان عادةً على <strong>نفس مجموعة المهام</strong>، وبالتالي فإن العينات ليست مستقلة. إن افتراض الاستقلال هو مجرد حد أعلى محافظ للتحقق السريع مما إذا كان الفارق البسيط يستحق الاهتمام على الإطلاق. وحتى وفقًا لهذا المقياس المحافظ، فإن الفجوة البالغة ثلاث نقاط مئوية أقل بكثير من الخطأ المعياري البالغ 6.5 نقطة مئوية، وتبديل النماذج بناءً على مثل هذه الأدلة ليس أفضل كثيرًا من قلب العملة المعدنية.</p>
+<p>يضيف تقييم الوكيل طبقة أخرى من عدم الحتمية: لا يزال من الممكن أن يتباعد النموذج نفسه، ونفس مجموعة البيانات، وعمليتي تشغيل، حيث إن أخذ عينات درجة الحرارة، وعوائد الأدوات المتقلبة، والتوقيت البيئي كلها تضخ العشوائية. لذلك لا تبني أبدًا قرارًا على أرقام جولة واحدة. <strong>التشغيل عدة مرات وبمتوسط</strong> (على سبيل المثال، 3-5 عمليات تشغيل لكل تكوين)، مع الإبلاغ عن كل من المتوسط ​​والانتشار. ولهذا السبب بالضبط، في الحالة الافتراضية اللاحقة، يتم "تشغيل كل تكوين 5 مرات (باستخدام بذور عشوائية مختلفة)."</p>
+<p>ومن هنا المبدأ العملي: <strong>عندما يكون فرق النتيجة أقل من ضوضاء العينة المقدرة، لا تتخذ قرار التبديل.</strong> ولكن قبل أن تستقر على "لا تقم بالتبديل"، ابحث عن تحليل أكثر حساسية وأكثر صحة. عند تشغيل تكوينين على نفس مجموعة المهام، يكون الإعداد الافتراضي الصحيح هو <strong>التحليل المقترن</strong>: قارن مهمة الفوز/الخسارة بمهمة، وانظر فقط إلى الحالات التي يختلف فيها الاثنان (واحد صحيح والآخر خاطئ)، وقم بتطبيق شيء مثل اختبار ماكنيمار للحكم على الأهمية. يؤدي الاقتران إلى استبعاد الضجيج المشترك لصعوبة المهمة، مما يجعلها أكثر حساسية بكثير عند نفس حجم العينة من الاختلاف بين معدلي نجاح مستقلين - التقدير السابق √2 هو مجرد غربال رياضي عقلي متحفظ لاستبعاد الاختلافات التي من الواضح أنها تفشل. إذا كان التحليل المزدوج لا يزال يترك الفرق غير مؤكد، عندها فقط فكر في زيادة العينة - ولاحظ أن مقياس الخطأ القياسي هو 1/√n، وبالتالي فإن الانتقال من 100 إلى 400 حالة يؤدي فقط إلى خفض ضوضاء أخذ العينات المقدرة إلى النصف. التوسع مكلف. اقرأ بالطريقة الأخرى: إذا كانت الفائدة المتوقعة للتحسين هي 2-3 نقاط مئوية فقط وكانت مجموعة التقييم الخاصة بك تحتوي على بضع عشرات من الحالات، فلن يتمكن التقييم ببساطة من معرفة ما إذا كان التحسين ناجحًا أم لا - الأولوية هي توسيع مجموعة التقييم، وليس الاستمرار في تكرار الوكيل.</p>
+<p>هناك مأزق آخر يمكن التغاضي عنه بسهولة: <strong>مقارنات متعددة</strong>. اختبر مجموعة من الفرضيات بالتوازي، وسيرتفع احتمال أن يكون استنتاج واحد على الأقل نتيجة إيجابية كاذبة سريعًا - حتى عند مستوى ثقة 95% لكل استنتاج، عبر 6 فرضيات، تكون فرصة الوصول إلى نتيجة إيجابية كاذبة واحدة على الأقل هي 1 − 0.95^6 ≈ 26%. كلما زاد عدد الفرضيات التي تديرها بالتوازي، أصبح من الصعب تجنب فرضية تبدو ذات أهمية فحسب. التدابير المضادة تأتي في نوعين: قم بتشديد عتبة الأهمية لكل استنتاج مع تزايد عدد الفرضيات (تصحيح بأسلوب بونفيروني)، أو إعادة تشغيل أي نتيجة إيجابية في تمريرة تأكيدية مستقلة ولا تصدقها إلا إذا تكررت. سيختبر القسم الأخير "من البيانات إلى الفرضيات" H1-H4، وهي أربع فرضيات متوازية حقًا (يتم تشغيل H5 وH6 بشكل مشروط ولا يتم تشغيلهما في وقت واحد مع الأربع الأولى)، وهو سيناريو نموذجي لهذا المأزق.</p>
+<p>تعتمد القرارات المبنية على التقييم على بيانات عالية الجودة، والتي تأتي من التسجيل المنهجي للعملية التشغيلية للوكيل - وهذا ما تعالجه إمكانية الملاحظة.</p>
+<h2 id="_23">إمكانية ملاحظة الوكيل<a class="headerlink" href="#_23" title="Permanent link">&para;</a></h2>
+<p>تعتمد القرارات المبنية على التقييم (سواء المتعلقة باختيار النموذج أو التكرار المستمر) على بيانات تشغيلية عالية الجودة. أدناه، نقدم أولاً كيفية جمع هذه البيانات بشكل منهجي (قابلية الملاحظة)، ثم نناقش كيفية ترجمة نتائج التقييم إلى تحسينات في النظام.</p>
+<p><img alt="الشكل 6-6: حزمة تكنولوجيا إمكانية الملاحظة" src="../images/fig6-6.svg" /></p>
+<p>إن إمكانية الملاحظة هي مفهوم مستعار من الأنظمة الموزعة: لا يمكنك فتح النظام ومشاهدته وهو يعمل؛ أنت تستنتج ما يحدث من السجلات والمقاييس والآثار التي يصدرها - الطريقة التي يقوم بها الطبيب، غير القادر على الرؤية داخل المريض، بالتشخيص من درجة الحرارة وضغط الدم والتصوير. تجعل أنظمة الوكلاء هذا الأمر أكثر صعوبة: نفس المدخلات يمكن أن تنتج مخرجات مختلفة، والاستدلال متعدد الجولات واستدعاءات الأدوات يجعل مسارات التنفيذ معقدة للغاية، و"تفكير" النموذج مبهم تمامًا من الخارج.</p>
+<p>تكمن قيمة إمكانية الملاحظة أولاً في <strong>تشخيص المشكلة</strong>: تتيح التتبعات الكاملة للمطورين إعادة تشغيل العملية بأكملها بدلاً من التخمين. ثانيًا، هو أساس <strong>التحسين المستمر</strong> — حيث يمكنك معرفة المهام التي تتطلب جولات متعددة من التكرار، والأدوات التي تتمتع بأقل معدل نجاح، وأي استعلامات الاسترجاع تُرجع دائمًا نتائج فارغة. في <strong>إدارة التكلفة</strong>، يمكن أن تختلف تكاليف تشغيل الوكيل بمعدل واحد أو اثنين من حيث الحجم بين المهام، ويظهر التتبع الحالات باهظة الثمن بشكل غير طبيعي. وأخيرًا، تدعم بيانات التتبع المتراكمة تحسين النظام وتحسين النموذج لاحقًا.</p>
+<p>تم بناء إمكانية ملاحظة الوكيل على أساس <strong>الآثار</strong>، التي ترث بنية بياناتها مباشرة نموذج شجرة الامتداد من الأنظمة الموزعة: يتوافق تنفيذ مهمة واحدة مع تتبع واحد، حيث يكون كل استدعاء LLM، وكل استدعاء أداة، وكل عملية استرجاع <strong>span</strong> (وحدة تنفيذ تسجل الإدخال/الإخراج، وأوقات البدء/الانتهاء، واستهلاك الرموز، ومعلومات الخطأ). تشكل العلاقات بين الأصل والفرع بين الامتدادات شجرة تنفيذ - على سبيل المثال، قد يحتوي نطاق "Agent Main Loop" على عدة امتدادات فرعية "LLM Call" و"Tool Call" معلقة تحتها. البروتوكولات القياسية متاحة بالفعل لهذه الطبقة: <strong>OpenTelemetry</strong> هو معيار التتبع الموزع للأغراض العامة، في حين أن المواصفات مثل <strong>OpenInference</strong> تحدد الاصطلاحات الدلالية الخاصة بـ LLM فوقها (كيفية تسجيل الموجّهات، ومعلمات النموذج، واستخدام الرمز المميز، وما إلى ذلك). وتتمثل ميزة اعتماد البروتوكولات القياسية في فصل الجمع والتحليل - حيث يمكن ربط نفس بيانات التتبع بواجهات خلفية مختلفة للتحليل، مما يؤدي إلى تجنب تقييد البائع.</p>
+<p>تعد LangSmith إحدى المنصات التمثيلية في هذا المجال (تشمل المنصات المشابهة Langfuse وArize Phoenix وما إلى ذلك)، حيث تدمج إمكانية المراقبة والتقييم والتحسين في حلقة مغلقة. ينشئ كل تنفيذ جلسة تتبع، حيث يتم تسجيل استدعاءات النماذج واستخدام الأدوات واسترجاع المعرفة كوحدات تنفيذ مستقلة، مرتبطة بعلاقات سببية لتشكيل شجرة تنفيذ. تسجل كل وحدة المدخلات/المخرجات الكاملة، ومعلومات التوقيت، وبيانات التكلفة، ومعلومات الخطأ. يستخدم النظام الأساسي جمع بيانات دفعة غير متزامنة للتأكد من أن التتبع نفسه لا يؤثر على زمن استجابة الوكيل.</p>
+<p>يدعم النظام الأساسي أيضًا اختبار A/B (توجيه جزء من حركة مرور المستخدم إلى إصدار جديد، ومقارنة المقاييس تلقائيًا، ودعم التراجع السريع أو القياس التدريجي)، وإدارة الإصدار الفوري (يرتبط كل إصدار ببيانات أداء وقت التشغيل)، والتطوير التعاوني (يمكن لأعضاء الفريق مشاركة بيانات التتبع وحالات المشكلات). يعد الكم الهائل من البيانات الواقعية الواردة من بيئات الإنتاج بمثابة منجم ذهب للتحسين المستمر، حيث يمكنه الكشف عن السيناريوهات غير المتوقعة وتحديد الميزات الأكثر احتياجًا إلى التحسين.</p>
+<p>إن الاستخدام الأكثر قيمة لبيانات إمكانية الملاحظة هو <strong>تحويلها إلى أصول تقييم</strong>. حلقة عملية: استخراج الحالات الفاشلة والمشبوهة من آثار الإنتاج ← إخفاء هويتها (إزالة الحقول الحساسة مثل بيانات المستخدم والمفاتيح) ← تقسيمها إلى حالات اختبار جديدة واختبارات الانحدار لمجموعة التقييم. تتوقف مجموعة التقييم بعد ذلك عن كونها مجموعة ثابتة لمرة واحدة وتصبح أصلًا حيًا يتطور مع المنتج ويستمر في عكس التوزيع الحقيقي للمستخدمين - تصبح أنماط الفشل المكشوفة في الإنتاج اليوم هي اختبارات الانحدار التي تحرس خط الأساس غدًا. هذه هي بالضبط الواجهة بين قابلية الملاحظة والموضوع الرئيسي لهذا الفصل: قابلية الملاحظة مسؤولة عن "رؤية" ما يحدث في العالم الحقيقي، والتقييم مسؤول عن ترسيخ تلك الملاحظات في معايير قابلة للتكرار.</p>
+<p>تواجه إمكانية الملاحظة عدة تحديات:</p>
+<ul>
+<li><strong>المفاضلة بين حجم البيانات والخصوصية</strong>: يمكن للأنظمة ذات حركة المرور العالية إنشاء تيرابايت من بيانات التتبع يوميًا، بينما تحتاج أيضًا إلى الالتزام بلوائح حماية البيانات.</li>
+<li><strong>تعقيد العزو السببي</strong>: لا يزال تحديد الأسباب الجذرية تلقائيًا من الآثار يتطلب خوارزميات تحليل أكثر ذكاءً؛ تحاول الأبحاث المتطورة الاستدلال السببي والتحليل المضاد، لكنها لم تنضج بعد.</li>
+<li><strong>تحديات التتبع في الأنظمة متعددة الوكلاء</strong>: يعد تتبع تدفقات التنفيذ عبر العديد من الوكلاء أكثر تعقيدًا وأكثر ثراءً لغويًا من تتبع مكالمات API بين الخدمات الصغيرة.</li>
+<li><strong>التوازن بين حواجز الحماية في الوقت الفعلي والتحليل اللاحق</strong>: تتطلب السيناريوهات عالية المخاطر حواجز حماية استباقية، ولكنها تقدم زمن وصول إضافي وإيجابيات خاطئة.</li>
+</ul>
+<p>نظرًا لأن تقنية ML أصبحت أكثر تكاملاً في سلسلة الأدوات، فمن المتوقع أن تقوم منصات المراقبة المستقبلية تلقائيًا بتحديد الحالات الشاذة وتحديد الأسباب الجذرية.</p>
+<p>مع وجود نظام تقييم شامل ومجموعة بيانات، فإن المفتاح هو ترجمة نتائج التقييم إلى تحسينات ملموسة للنظام.</p>
+<h2 id="_24">من التقارير المعيارية إلى تحسينات النظام<a class="headerlink" href="#_24" title="Permanent link">&para;</a></h2>
+<p><strong>ما يلي هو حالة تعليمية افتراضية</strong>، باستخدام بيانات محددة لتوضيح عملية اتخاذ القرار الكاملة بدءًا من تقرير الأداء وحتى تحسينات النظام. البيانات افتراضية وتهدف إلى توضيح المنهجية، وليس الإبلاغ عن نتائج تجريبية حقيقية.</p>
+<p><img alt="الشكل 6-7: المعيار لحلقة التحسين" src="../images/fig6-7.svg" /></p>
+<p>من منظور هندسة منظومة التشغيل، يعرض هذا القسم منهجًا تكراريًا لتحسين المنظومة: نستخدم بيانات التقييم لتحديد مواضع الضعف—هل السياق ناقص؟ هل تغيب بعض القيود؟ هل التحقق غير كافٍ؟ هل تصل التغذية الراجعة في وقت غير مناسب؟—ثم نجري تحسينات محددة ونعيد التقييم، فتتشكل حلقة مغلقة للتطور المستمر.</p>
+<p>قبل تحليل أي تقرير مرجعي، لاحظ مبدأ يتم التغاضي عنه بسهولة: <strong>عندما ينخفض أداء الوكيل، تحقق من نظام التقييم أولاً، ثم الوكيل</strong>. الخطأ الشائع هو البدء في تعديل كود الوكيل في اللحظة التي تنخفض فيها النتيجة، متجاهلاً احتمال تعطل نظام التقييم أولاً - التوجيه بإشارة مشوهة ويكون التصحيح خاطئًا منذ الخطوة الأولى. تشمل حالات الفشل النموذجية في جانب التقييم ما يلي: نفاد الموارد في بيئة التشغيل وعمليات القتل (التي تظهر كإخفاقات عشوائية)، والأخطاء الموجودة في المسجل التي تحدد الإجابات الصحيحة على أنها فاشلة، وحالات الاختبار التي تنحرف عن المزامنة مع سيناريوهات الإنتاج. في الأرقام الرئيسية، تبدو كل هذه الأمور متطابقة مع تدهور النموذج؛ فقط مراجعة الآثار الكاملة يمكن أن تفرق بينهما.</p>
+<h3 id="_25">قراءة تقرير مرجعي: فن اكتشاف المشكلات<a class="headerlink" href="#_25" title="Permanent link">&para;</a></h3>
+<p>دعونا نستخدم حالة محددة لتوضيح كيفية قراءة تقرير الأداء. لنفترض أننا قمنا بتقييم وكيل على AndroidWorld وحصلنا على جدولين أساسيين للتقارير: جدول أداء لكل مهمة ومصفوفة أداء علامة القدرة. ولا تكمن قيمة التقرير في رقم معدل النجاح الإجمالي، بل في نقاط الضعف البنيوية التي يكشف عنها.</p>
+<p>يعرض الجدول لكل مهمة نمطًا واضحًا: معظم المهام الروتينية لها معدلات نجاح تقترب من 100%. تغطي هذه السيناريوهات الشائعة - التسجيل، والتقاط الصور، وإدارة جهات الاتصال، وإنشاء الملاحظات، وعمليات الملفات، وإعدادات النظام - وتتطلب أكثر من اثنتي عشرة خطوة في المتوسط، بينما تتطلب الخطوات الأكثر تعقيدًا العشرات. يوضح إكمال تسلسلات الإجراءات بنجاح طوال هذه المدة قدرة الوكيل على التخطيط والتنفيذ في السيناريوهات القياسية.</p>
+<p>تتجمع حالات الفشل بإحكام في مناطق قليلة: ردود الرسائل القصيرة، وتبديل Wi-Fi والتحقق من الحالة، واستعلامات قائمة المهام، وعمليات Wi-Fi+Bluetooth المدمجة، وإنشاء قائمة تشغيل VLC. على السطح تبدو هذه المهام غير ذات صلة؛ تكشف مصفوفة علامة القدرة ما يشاركونه.</p>
+<p><strong>مصفوفة علامة القدرة</strong> هي مفتاح التشخيص، فهي تصنف جميع المهام حسب القدرات المطلوبة والصعوبة. يعرض التقرير غالبًا أبعادًا متعددة للقدرات بمعدلات نجاح منخفضة للغاية: النسخ (نسخ المعلومات من الصور/مقاطع الفيديو، وكشف أوجه القصور في الفهم البصري)، حساب الرياضيات (لا تكمن المشكلة في القدرة الرياضية نفسها — فالمشكلة الحديثة في نماذج LLM قوية في الرياضيات — ولكن ما إذا كان الوكيل يمكنه التعرف على الحاجة إلى الحساب، واستخراج الأرقام من واجهة المستخدم، وتعيين النتيجة إلى تسلسل إجراء)، وفهم واجهة المستخدم المعقدة (يعتمد بشكل كبير على أنماط واجهة المستخدم القياسية، وينهار عند مواجهة غير قياسي تخطيطات).</p>
+<p>اقرأ الجدولين معًا وستشرح حالات الفشل نفسها: تتبع حالات فشل استعلام المهام إلى واجهة مستخدم غير قياسية لا يستطيع الوكيل قراءتها وتصفيتها؛ تتبع حالات فشل Wi-Fi إلى التسلسل الهرمي للتحكم في إعدادات النظام الذي يتجاوز فهم الوكيل؛ تتبع حالات فشل قائمة تشغيل VLC إلى عدم قدرة الوكيل على العثور على إدخال الإنشاء في واجهة المستخدم المعقدة للتطبيق الاحترافي.</p>
+<h3 id="_26">من البيانات إلى الفرضيات: بناء خارطة طريق للتحسين<a class="headerlink" href="#_26" title="Permanent link">&para;</a></h3>
+<p><strong>فرضيات على مستوى السطح</strong> (منخفضة التكلفة، ومستقلة، ويمكن التحقق منها بالتوازي): H1: إضافة تلميحات التنقل في إعدادات النظام لعمليات Wi-Fi (قد يكون الوكيل قادرًا على تشغيل التبديل ولكن لا يمكنه العثور على صفحة الإدخال)، ومن المتوقع أن يحل حالات الفشل المركزة في المهام المتعلقة بالإعدادات؛ H2: توفير قواعد تعريف عنصر واجهة المستخدم لتطبيق المهام، ومن المتوقع أن تحل حالات الفشل في مهام المهام.</p>
+<p><strong>فرضيات المستوى المتوسط</strong> (مستقلة أيضًا، ويمكن موازنتها): H3: إصلاح مسار الإدخال متعدد الوسائط - تكشف إعادة تشغيل الآثار الفاشلة أنه قد يتم إسقاط الصور أو تحويلها إلى أوصاف نصية في المسار، مما يجعل حتى أقوى النماذج متعددة الوسائط غير قادرة على النسخ؛ H4: تمكين التفكير عالميًا لحل حالات الفشل المتعلقة بالعد.</p>
+<p><strong>افتراضيات المستوى العميق</strong> (تكلفة تحقق عالية، لا تبدأ إلا إذا ظل معدل نجاح واجهة المستخدم المعقدة أقل من 40% بعد التحسينات السطحية والمتوسطة): H5: استبدل النموذج بآخر يتمتع بفهم بصري أقوى (GPT-5)؛ H6: إضافة معلومات شجرة عناصر واجهة المستخدم إلى ما هو أبعد من لقطات الشاشة (DOM المنظم المستخرج بواسطة UI Automator للتحقق من الصحة مع لقطات الشاشة). يمكن لهذين الاثنين تشكيل تجربة مقارنة 2 × 2 (Claude/GPT-5 × لقطات شاشة فقط/لقطات شاشة + شجرة العناصر) للإجابة على "أيهما أكثر أهمية، قدرة النموذج أم ثراء المعلومات، وهل هناك تأثير تآزري؟"</p>
+<p>يتم تشغيل كل تكوين 5 مرات على المجموعة الكاملة المكونة من 116 مهمة (باستخدام بذور عشوائية مختلفة)، وتسجيل معدل النجاح، ومتوسط الخطوات، ووقت التنفيذ.</p>
+<h3 id="_27">من النتائج إلى القرارات: المقايضات القائمة على البيانات<a class="headerlink" href="#_27" title="Permanent link">&para;</a></h3>
+<p>افترض أن البيانات التجريبية تظهر النتائج التالية (<strong>جميع البيانات الواردة أدناه افتراضية</strong>): يرفع H1 معدل النجاح في المهام المتعلقة بالإعدادات من 0% إلى 75%، مع زيادة بنسبة 8% في رموز الإدخال؛ يعمل H3 على تحسين النسخ من 0% إلى 80%، مع زيادة بنسبة 15% في رموز الرؤية وزيادة ثانية واحدة في زمن الوصول لكل خطوة؛ يعمل H4 على تحسين العد من 0% إلى 70%، لكن زمن الوصول لكل خطوة يزيد من 4 ثوانٍ إلى 12 ثانية، وتكلف ثلاثة أضعاف؛ يعمل H6 على تحسين complex_ui من 17% إلى 52%، مع زيادة بنسبة 30% في الرموز وزيادة ثانيتين في زمن الوصول لكل خطوة؛ يعمل H5 (GPT-5) على تحسين complex_ui من 17% إلى 35%، لكن زمن الوصول لكل خطوة يزيد من 4 ثوانٍ إلى 15 ثانية.</p>
+<p>لا يقتصر القرار على اعتماد جميع التحسينات الفعالة:</p>
+<p><strong>نشر H1 وH3 على الفور</strong>: H1 منخفض التكلفة وعالي الفائدة، وليس له أي آثار جانبية. يضيف H3 15% إلى تكاليف رمز الرؤية وثانية واحدة من زمن الوصول، ولكنه يحول النسخ من قدرة غير عاملة إلى قدرة عاملة، ويصلح عيبًا معماريًا - مسار الإدخال الذي يسقط معلومات متعددة الوسائط - مما قد يؤدي إلى رفع مهام الفهم المرئي الأخرى على طول الطريق.</p>
+<p><strong>التفكير التمكيني عالميًا لـ H4 أمر غير مقبول</strong>: يرتفع النجاح الإجمالي من 88% إلى 91%، ولكن يُظهر توزيع علامة القدرة أن حوالي 8% فقط من المهام تتضمن العد - وإجبار كل مهمة على تحمل ثلاثة أضعاف زمن الوصول والتكلفة من أجل الأقلية هو حالة كلاسيكية لاستخدام مطرقة ثقيلة لكسر الجوز. ومع ذلك، تثبت H4 أن التفكير ينجح في حساب المهام، مما يمهد الطريق للتنشيط المشروط في الجولة التالية.</p>
+<p><strong>H6 يتفوق على H5</strong>: مع H5 (GPT-5)، يرتفع زمن الوصول لكل خطوة من 4 ثوانٍ إلى 15 بينما يصل complex_ui إلى 35% فقط - لا يكمن عنق الزجاجة في منطق النموذج ولكن فيما إذا كان الإدخال يحمل معلومات كافية. تشتري H6 (إضافة شجرة العناصر) تحسينًا بنسبة 35 نقطة مئوية مقابل 30% من الرموز المميزة وثانيتين من زمن الوصول - وهي صفقة أفضل بكثير. سجلت مجموعة H5+H6 أعلى النتائج (68%)، لكن مدة مهمتها غير مقبولة على نطاق واسع؛ فهو يناسب فقط التنشيط الانتقائي للمهام الحرجة غير المتزامنة (التحويلات المصرفية، والمواعيد الطبية)، بينما يكفي H6 للسيناريوهات اليومية.</p>
+<p><strong>H2 لا يمكن قياسه</strong>: كتابة قواعد مخصصة لكل تطبيق غير قياسي أمر غير مستدام. لا يمكن إلا أن يكون بمثابة فجوة مؤقتة. الحل طويل المدى هو تحسين قدرة الوكيل على التعميم.</p>
+<h3 id="_28">التكرار المستمر: من التحسين الأول إلى تطور النظام<a class="headerlink" href="#_28" title="Permanent link">&para;</a></h3>
+<p>بعد تنفيذ التحسينات الثلاثة H1 وH3 وH6 (لم يتم نشر H4)، يرتفع معدل نجاح الوكيل على AndroidWorld من 88% إلى 94%. وبإعادة تشغيل المعيار الكامل، يكشف التقرير الجديد عن نمط فشل مختلف: فقد تحسنت النسخ والإعدادات ومهام واجهة المستخدم المعقدة بشكل ملحوظ. يتركز معدل الفشل المتبقي، حوالي 6%، في مهام العد التي لم يتم حلها، والتحقق من حالة Wi-Fi غير المستقرة (يصل من 0% إلى 60% ولكنه لا يزال غير مستقر)، وعدد قليل من حالات الفشل الجديدة، التي ربما تكون ناجمة عن موجّهات أطول أو الكثير من معلومات شجرة العناصر التي تشتت انتباه النموذج.</p>
+<p>واستنادًا إلى التقرير الجديد والأفكار المستقاة من تجربة H4، يمكن تشكيل فرضيات جديدة. H7: التنشيط المشروط للتفكير - استخدم مكالمة LLM سريعة (حوالي 1-2 ثانية) قبل بدء المهمة لتحليل وصف المهمة، مما يتيح وضع التفكير فقط للمهام التي تتضمن العد أو الاستدلال المعقد، وبالتالي حصر زيادة زمن الوصول في المهام التي تحتاج إليه حقًا. ح8: قم بتوسيع مساحة الإجراء لدعم الإيماءات المعقدة (القرص للتكبير، والسحب بالضغط لفترة طويلة، واللمس المتعدد) - تكشف إعادة تشغيل الآثار الفاشلة المتبقية أن بعض المهام تتطلب عمليات مثل تكبير الخريطة، واقتصاص الصور، والضغط لفترة طويلة على القوائم في القوائم.</p>
+<p>يعمل هذا النوع من التكرار بناءً على الملاحظات المعيارية على تحسين قدرات الوكيل بشكل مطرد. المعيار ليس اختبارًا لمرة واحدة ولكنه فحص صحي مستمر. يتيح لك إيقاع التقييم المنتظم (على سبيل المثال، مجموعة الاختبار الكاملة أسبوعيًا) مشاهدة منحنى القدرة، والتقاط الانحدارات مبكرًا (ميزة جديدة تقدم الأخطاء)، وتأكيد التحسينات (لقد نجح التحسين بالفعل)، وتجميع المعرفة (أي أنواع التحسينات عادة ما تؤتي ثمارها، والتي تميل إلى نتائج عكسية). هذه المنهجية - المبنية على البيانات، والتي تم اختبارها على الفرضيات، والتي يتم تكرارها باستمرار - هي المسار الرئيسي من هندسة الوكلاء القائمة على الخبرة إلى الهندسة العلمية.</p>
+<blockquote>
+<p><strong>التجربة 6-10 ★★★: التقييم والتحسين في AndroidWorld</strong></p>
+<p>هذه التجربة هي ممارسة كاملة في حلقة مغلقة، بدءًا من تقرير التقييم وحتى تحسين النظام. ابدأ بتقرير تقييم AndroidWorld في <code>ch6/android-world</code>.</p>
+<p>الخطوة 1: التشخيص. قم بتحليل الجدول لكل مهمة ومصفوفة علامات القدرة لرسم خريطة لفشل المهام على مستوى السطح لأوجه القصور العميقة في القدرات. حدد علامات القدرة ذات معدلات نجاح أقل من المتوقع ومجالات المهام ذات حالات الفشل المركزة.</p>
+<p>الخطوة الثانية: بناء الفرضيات. قم بصياغة فرضيات التحسين باتباع الإطار ثلاثي الطبقات (السطح → المتوسط ​​→ العميق). يجب أن تشير كل فرضية إلى التحسين المستهدف في معدل النجاح وطريقة التحقق.</p>
+<p>الخطوة 3: التجريب المرحلي. صمّم تجارب مضبوطة لاختبار الفرضيات. تختبر المرحلة الأولى الفرضيات السطحية منخفضة الكلفة، مثل تحسين الموجّه وإثراء أوصاف الأدوات. أما المرحلة الثانية فتختبر فرضيات القدرة متوسطة المستوى، مثل تعديل مسار الإدخال أو تغيير وضع التفكير. ركّز على مقدار التحسن في المهام المرتبطة بقدرات محددة، مع قياس الآثار الجانبية أيضًا.</p>
+<p>الخطوة 4: اتخاذ القرار المبني على البيانات. اتخذ قرارات النشر بناءً على تحليل التكلفة والعائد - وليس مجرد اعتماد جميع التحسينات الفعالة، ولكن تقييم نطاق التطبيق وتأثير زمن الاستجابة والتكاليف العامة لكل تحسين. إعطاء الأولوية للتحسينات منخفضة التكلفة وعالية الفائدة للنشر؛ تقييد التحسينات عالية التكلفة على السيناريوهات الحرجة.</p>
+<p>الخطوة 5: التكرار. بعد الانتهاء من التحسينات، أعد تشغيل التقييم على مجموعة البيانات. استخدم LLM لتحليل نتائج التقييم وإنشاء تقرير جديد. سيُظهر التقرير الجديد نمط فشل مختلف، ليكون بمثابة نقطة البداية للتكرار التالي.
+</p>
+</blockquote>
+<h2 id="_29">من التقييم الخارجي إلى الداخلي: بنية تقييم للوكلاء على مستوى الإنتاج<a class="headerlink" href="#_29" title="Permanent link">&para;</a></h2>
+<p>لقد قام هذا الفصل حتى الآن بتقييم أنظمة الوكلاء من الخارج - بناء بيئة تقييم، وتصميم مجموعات البيانات، وتحليل التقارير المعيارية. لكن أفضل منتجات الوكيل تقوم بأكثر من مجرد الخضوع للتقييم الخارجي؛ فهم <strong>يبنون بنية تحتية للتقييم الذاتي المستمر في المنتج</strong>. أدناه، باستخدام الوكيل المفتوح المصدر للأغراض العامة OpenClaw الذي تم تقديمه في الفصل 5 كمثال وبالاعتماد على التحليلات الفنية العامة لمنتجات Coding Agent الرائدة ورؤى الممارسين، نقدم نظام تقييم داخلي يستحق المحاكاة: واحدة تدمج بشكل منهجي المنهجية التجريبية لأبحاث تعلم الآلة في هندسة المنتج.</p>
+<h3 id="_30">البنية التحتية للاستئصال: فهم المساهمة الحقيقية لكل ميزة<a class="headerlink" href="#_30" title="Permanent link">&para;</a></h3>
+<p>لقد استخدم باحثو تعلم الآلة منذ فترة طويلة دراسات الاستئصال لمعرفة أي مكونات النموذج ذات أهمية فعلية - الاستئصال يعني "إزالة" مكون واحد في كل مرة ومراقبة مقدار انخفاض الأداء العام. يجلب OpenClaw هذه المنهجية إلى هندسة المنتج: يمكن للمحول الرئيسي المدمج تعطيل العديد من الميزات الرئيسية في وقت واحد (وضع التفكير، وضغط السياق، والذاكرة التلقائية، ومهام الخلفية، والمزيد)، مما يؤدي إلى إنشاء خط أساسي "للنموذج المجرد". يتيح ذلك للفريق الإجابة على سؤال رئيسي: <strong>هل تعمل الميزة حقًا على تحسين تجربة المستخدم، أم أنها تبدو مفيدة فقط؟</strong></p>
+<p>إن جعل الاستئصال ممارسة هندسية روتينية، وليس نشاطًا بحثيًا لمرة واحدة، له العديد من الآثار العملية. أولاً، يجب إدخال مفتاح الاستئصال في وقت مبكر جدًا من مسار بدء التشغيل - قبل أن يلتقط أي ثابت على مستوى الوحدة قيم التكوين - مما يعني أنه يجب تصميم البنية التحتية للاستئصال في بنية النظام من البداية، وليس تعديلها لاحقًا. ثانيًا، يمكن لإجراء تجارب الاستئصال بانتظام (على سبيل المثال، قبل كل إصدار رئيسي) أن يكشف عن "دين الميزات" - وهي الميزات التي كانت فعالة في السابق ولكنها لم تعد ضرورية مع تطور النماذج. بالنسبة لأي فريق يقوم ببناء وكيل إنتاج، فإن الممارسة الموصى بها هي: <strong>يجب أن تكون كل ميزة رئيسية قابلة للتعطيل بشكل مستقل، ويجب على الفريق التحقق بانتظام من المساهمة الفعلية لكل ميزة.</strong></p>
+<h3 id="_31">منهجية اختبار أ/ب: تمييز الآلية عن الهدف<a class="headerlink" href="#_31" title="Permanent link">&para;</a></h3>
+<p>تجري منتجات Mature Agent اختبارات A/B صارمة على سلوكها (أي تقسيم المستخدمين عشوائيًا إلى مجموعتين، واحدة تستخدم الإصدار القديم والأخرى تستخدم الإصدار الجديد، ومقارنة البيانات الفعلية من كلا المجموعتين لتحديد ما إذا كان التغيير فعالاً). توضح حالة اختبار A/B للوكيل المصممة جيدًا العديد من المبادئ المنهجية الرئيسية:</p>
+<p><strong>متغيرات متعددة، وليس مجرد مقارنة ثنائية.</strong> بدلاً من مجرد مقارنة "مع" و"بدون"، قم بتصميم متغيرات تقدمية متعددة (على سبيل المثال، عند اختبار نقاط قوة مختلفة للقيود السريعة، قم بإعداد مجموعة مراقبة وثلاث مجموعات تجريبية مع قيود أكثر صرامة تدريجيًا). يمكن لهذا التصميم أن يكشف عن علاقات الجرعة والاستجابة ويساعد في العثور على النقطة المثالية.</p>
+<p><strong>التمييز بين مقاييس الآلية والمقاييس المستهدفة.</strong> هذا هو الخطأ الأسهل الذي يمكن ارتكابه — التعامل مع ما تقوم بتغييره على أنه هدف التحسين. على سبيل المثال، إذا كنت تختبر "تقصير طول ملف خطة الوكيل"، فإن طول الخطة هو مقياس الآلية (شيء تقوم بتغييره مباشرة)، ولكنه ليس الهدف. قد يكون الهدف الحقيقي هو "تقليل التكلفة على مستوى الجلسة". قد يؤدي تقصير ملف الخطة إلى خفض التكاليف، ولكنه قد يؤدي أيضًا إلى المزيد من حلقات التحرير والتحقق والتحرير بسبب عدم كفاية الخطط التفصيلية، مما يؤدي إلى زيادة إجمالي الإنتاج. اسأل نفسك دائمًا: <strong>هل ما أقوم بتغييره (الآلية) هو نفس ما أهتم به حقًا (الهدف)؟</strong> إذا لم يكن الأمر كذلك، فحدد أولويات الهدف.</p>
+<p><strong>تعيين مقاييس ضوابط الأمان.</strong> حتى لو تحسن المقياس المستهدف، يجب إيقاف التجربة في حالة انخفاض رضا المستخدم، أو زيادة عدد العمليات، أو ارتفاع معدل الخطأ. مقاييس ضوابط الأمان هي عتبات غير قابلة للتفاوض ويجب ألا تتراجع.</p>
+<p><strong>تسجيل إحصائيات خط الأساس.</strong> تضمين حجم العينة، والنسب المئوية للتوزيع، وتحليل الارتباط (على سبيل المثال، "يزداد معدل الرفض بشكل رتيب مع حجم الخطة") لتوفير السياق اللازم لتفسير النتائج التجريبية. بدون خط الأساس، لا يمكنك تحديد ما إذا كانت النتائج التجريبية ذات دلالة إحصائية.</p>
+<h3 id="_32">نظام علم الميزات ذو طبقتين<a class="headerlink" href="#_32" title="Permanent link">&para;</a></h3>
+<p>تحتاج منتجات الوكيل إلى بنية أساسية لعلامة الميزات مصممة منذ اليوم الأول - علامة الميزة عبارة عن مفتاح يمكن التحكم فيه عن بعد يحدد ما إذا كانت الوظيفة ممكّنة أو معطلة للمستخدمين، دون الحاجة إلى إعادة نشر التعليمات البرمجية. إنه يخدم ثلاثة أغراض في وقت واحد: التجريب، والطرح التدريجي، وكسر الدائرة في حالات الطوارئ.</p>
+<p><strong>علامات وقت الترجمة</strong> تعمل فعليًا على إزالة الكود ذي الصلة من عنصر الإنشاء أثناء مرحلة الإنشاء. الميزات الداخلية فقط غير موجودة في الإصدارات الخارجية، حتى الهندسة العكسية لا يمكنها اكتشاف الوظيفة التي تمت إزالتها. يوفر هذا أيضًا آلية استئصال نظيفة: لا يؤدي تعطيل الميزة إلى تخطي المنطق في وقت التشغيل؛ الرمز المقابل غائب فعليًا.</p>
+<p><strong>أعلام وقت التشغيل</strong> يتم تسليم تكوينها بواسطة الخادم ويتم تخزينها مؤقتًا محليًا على القرص. يعطي التصميم الأولوية لقراءة التكوينات المخزنة مؤقتًا التي لا معنى لها على منع بدء تشغيل الوكيل أثناء انتظار طلب الشبكة. يتم اتخاذ قرارات التجميع المحددة من خلال منصة تجريبية (على سبيل المثال، GrowthBook) لتعيين مجموعات اختبار A/B. أحد تفاصيل التصميم الرئيسية هو أنه يتم تسجيل حدث التعرض لكل ميزة مرة واحدة على الأكثر في كل جلسة لتجنب السجلات المكررة التي تلوث البيانات التجريبية.</p>
+<p>الدرس المستفاد لمطوري Agent: علامات الميزات ليست أدوات تصحيح أخطاء؛ فهي <strong>مكونات معمارية من الدرجة الأولى</strong>.</p>
+<h3 id="_33">تقييم حساسية الموجّه<a class="headerlink" href="#_33" title="Permanent link">&para;</a></h3>
+<p>يعد موجّه النظام هو "الكود" الأساسي لسلوك الوكيل، ولكنه غالبًا ما يفتقر إلى التحكم في الإصدار واختبار الانحدار المتوفر للكود العادي. يتمثل نهج OpenClaw في توفير أداة مخصصة يمكنها استخراج موجّه النظام المقدمة بالكامل عند مراجعة Git أو التزام محدد - بما في ذلك النص النهائي بعد توسيع جميع الشروط الديناميكية. يتيح ذلك للفريق الإجابة بدقة: <strong>ما الالتزام الذي غيّر الموجّه؟ ما هو التأثير على مجموعة التقييم؟</strong></p>
+<p>أما الممارسات الموصى بها لأي فريق يبني الوكلاء فهي: (1) أن يكون توليد موجّه النظام حتميًا؛ أي أن تنتج مدخلات الإعداد نفسها المخرج نفسه دائمًا، (2) إنشاء آلية لإصدار لقطات من الموجّهات وحفظها، (3) إخضاع كل تعديل في الموجّه لاختبارات انحدار على مجموعة التقييم، تمامًا كما تخضع تغييرات الشفرة للتكامل المستمر.</p>
+<h3 id="_34">التحليلات المراعية للخصوصية أساسًا للتقييم<a class="headerlink" href="#_34" title="Permanent link">&para;</a></h3>
+<p>يعتمد التقييم على بيانات جيدة، لكن منتجات Agent غالبًا ما تتعامل مع محتوى المستخدم الحساس. يحل OpenClaw هذا التناقض من خلال نظام الكتابة: تقبل واجهة التحليلات فقط القيم المضمنة في أنواع خاصة، حيث يعمل اسم النوع نفسه كمسار تدقيق - فهو يعلن صراحةً "لقد تحققت من أن هذا ليس رمزًا أو مسار ملف." يحول هذا التصميم قيود الخصوصية من المواصفات الموثقة إلى اختبارات النوع المفروضة في وقت الترجمة.</p>
+<p>المبدأ الأساسي هو: <strong>تصميم قيود الخصوصية في النظام من البداية؛ فلا تقم بتشغيلها بعد ذلك.</strong> إذا لم يتمكن نظام التحليلات الخاص بك من جمع البيانات بأمان، فلن تتمكن من التقييم بفعالية. الخصوصية والتقييم ليسا قوتين متعارضتين - فالتصميم المدرك للخصوصية يجبرك على التفكير مليًا في <em>ما يجب قياسه حقًا</em>، والذي بدوره يعزز مقاييس تقييم أكثر دقة.</p>
+<h3 id="_35">من الخارجي إلى الداخلي: تحول في التفكير التقييمي<a class="headerlink" href="#_35" title="Permanent link">&para;</a></h3>
+<p>الرسالة الأساسية لهذا القسم هي: <strong>علمتك الأقسام السابقة كيفية تقييم الوكيل خارجيًا؛ يكشف هذا القسم عن كيفية تقييم أفضل منتجات الوكيل لنفسها داخليًا.</strong> يخبرك التقييم الخارجي "مدى جودة الوكيل"؛ تخبرك البنية الأساسية للتقييم الداخلي "بالتغيير الذي جعله أفضل". تكتشف تجارب الاستئصال الميزات المهمة حقًا، ويحدد اختبار A/B تأثير كل تغيير، وتوفر علامات الميزات البنية التحتية للتجريب والتراجع، ويدمج تقييم الحساسية الفوري موجّه النظام في نظام CI، وتضمن التحليلات المدركة للخصوصية الامتثال في جمع البيانات. تشكل هذه المكونات الخمسة معًا هندسة منتج تعتمد على التقييم، ولا يتم التقييم من حين لآخر، ولكنها تدمج التقييم في كل قرار يتعلق بالمنتج.</p>
+<h2 id="_36">بيئات المحاكاة: الجسر من التقييم إلى ما بعد التدريب<a class="headerlink" href="#_36" title="Permanent link">&para;</a></h2>
+<p>نقطة النهاية للتقييم ليست تسجيل النقاط، بل التحسين. لقد أظهر هذا الفصل بالفعل طريقين للتحسين: تعديل الأدوات (من التقارير المعيارية إلى تحسينات النظام) ودمج التقييم في هندسة المنتج (البنية التحتية للتقييم الداخلي). أقوى أشكال التحسين هو التدريب - عندما يتوسع الهدف من "تقييم القدرات الحالية" إلى "تنمية قدرات جديدة"، خاصة من خلال تقنيات ما بعد التدريب التي تمت مناقشتها في الفصل 7، يجب أن تتطور بيئة التقييم إلى <strong>بيئة محاكاة</strong>: ساحة لعب افتراضية حيث يمكن للوكيل التدرب بشكل متكرر وتسجيل النقاط تلقائيًا. تتمثل الاختلافات الأساسية بين بيئات المحاكاة وبيئات التقييم في: تكرار تفاعل أعلى بكثير (ملايين مقابل آلاف)، والحاجة إلى التوزيع العشوائي (لمنع حفظ تكوينات معينة)، ومتطلبات الحصول على تعليقات فورية. من وجهة نظر التطبيق، تنقسم بيئات المحاكاة إلى فئتين: البيئات الرقمية (مهام معالجة المعلومات) والبيئات المجسدة (إدراك العالم المادي ومعالجته).</p>
+<p>وهنا كيفية التقاء طرفي الجسر. تتحول الأصول المتراكمة في جانب التقييم بسلاسة تقريبًا إلى إشارات تدريب: يعتبر عنوان التقييم أو أداة التحقق المحددة جيدًا في الأساس وظيفة مكافأة لـ <strong>التعلم المعزز بمكافآت يمكن التحقق منها (RLVR)</strong> - يصبح نص التسجيل هو نص المكافأة؛ ما إذا كان الاختبار ناجحًا أو أن الحالة تستوفي المعيار بمثابة معيار تقييم وكمكافأة تعليمية معززة. لكن التدريب يجلب متطلبات التقييم التي لم يكن هناك ما يدعو للقلق أبدًا. الأول هو <strong>دلالات إعادة التعيين الموثوقة</strong>: يمتد التدريب ملايين الحلقات (الحلقة عبارة عن جولة تفاعل كاملة من الحالة الأولية إلى إكمال المهمة)، ويجب أن تكون كل حلقة قادرة على إعادة ضبط البيئة إلى حالة أولية حتمية ونظيفة؛ وإلا، فإن إشارة التدرج سوف تكون ملوثة بالحالات المتبقية من الحلقة السابقة. والثاني هو <strong>الإنتاجية التي تتجاوز التقييم بكثير</strong>: بضعة آلاف من التقييمات تكفي لاستخلاص النتائج، لكن التدريب يتطلب تغذية النموذج بملايين التفاعلات خلال فترة زمنية مقبولة على مدار الساعة؛ تحدد درجة التوازي البيئي والنفقات العامة لكل مثيل بشكل مباشر ما إذا كان التدريب ممكنًا أم لا. سيتم تفصيل هاتين النقطتين - تحويل أدوات التحقق إلى وظائف مكافأة، وإعادة ضبط درجة التدريب والإنتاجية - في الفصل السابع.</p>
+<p><img alt="الشكل 6-8: طيف دقة المحاكاة" src="../images/fig6-8.svg" /></p>
+<p>على جانب <strong>البيئة الرقمية</strong>، يبني إطار عمل AWorld صندوق حماية خادم MCP يمكن التحكم فيه لمهام GAIA، مما يوفر 26 خادم MCP تغطي 126 وظيفة للأداة، مع تجنب الحظر والآثار الجانبية التي لا يمكن السيطرة عليها للوصول مباشرة إلى واجهات برمجة التطبيقات الحقيقية. جميع استدعاءات الأداة قابلة لإعادة التشغيل والتدقيق. تعمل بنية AWorld الموزعة على تقليل وقت التنفيذ التسلسلي التقليدي من 7695 ثانية إلى 525 ثانية (تسريع بمعدل 14.6x)، كما أن التصميم عديم الحالة للبيئة يجعل كل مثيل مستقلاً تمامًا، ويدعم التوازي الفعال.</p>
+<p>على جانب <strong>البيئة المجسدة</strong>، يبني RoboTwin2 مهام معالجة بذراعين استنادًا إلى محرك فيزيائي، ويوزع عشوائيًا مواضع الكائنات واتجاهاتها ومظاهرها لتحسين التعميم. تتضمن مساحة المراقبة صورًا مرئية لكاميرات متعددة وحالات مشتركة، مما يحقق التحكم في الوقت الفعلي من خلال <strong>تقطيع الحركة</strong> — حيث يخطط النموذج لعدة إجراءات متتالية في وقت واحد (مفصل في الفصل 9). يوفر OSWorld إمكانية إعادة التعيين من خلال لقطات الآلة الافتراضية، ويركز AndroidWorld على أتمتة تطبيقات الهاتف المحمول. سواء كانت بيئات المحاكاة رقمية أو مجسدة، فإنها تتطلب أيضًا بيئات التنفيذ المعزولة وآليات الهوية الافتراضية التي تمت مناقشتها في الفصل الرابع (عزل الأجهزة الافتراضية/الحاويات، والوكلاء السكنيون، ومصادقة الإنسان في الحلقة، وأنظمة الملفات المشتركة)، والتي لن يتم تكرارها هنا.</p>
+<blockquote>
+<p><strong>التجربة 6-11 ★★: تكوين بيئة الذكاء المضمنة لـ OpenVLA وRoboTwin2</strong></p>
+<p>قم بإعداد بيئة محاكاة للتلاعب بالروبوت. اقرأ <code>ch7/SimpleVLA-RL</code> ووثائق OpenVLA لفهم بنية نموذج Vision-Language-Action (التكامل الشامل لمشفر الرؤية، ونموذج اللغة، ووحدة فك ترميز الإجراء، وإسقاط الصور والنص في مساحة دلالية مشتركة). قم بتكوين بيئة RoboTwin2، وفهم مساحة المراقبة (ثلاثية الرؤية RGB + حالة مشتركة ذات 14 بُعدًا) ومساحة العمل (ناقل التحكم ذو 14 بُعدًا). دراسة آلية التوزيع العشوائي للبيئة ومنطق القيد المكاني في <code>move_can_pot</code>. قم بتقييم النموذج المُدرب مسبقًا، وتسجيل معدل نجاحه، ووقت الانتهاء، وأوضاع الفشل، مع التركيز على تأثير آلية تقطيع الإجراء.</p>
+<p><img alt="الشكل 6-9: بيئة الذكاء المتجسد OpenVLA وRoboTwin2" src="../images/fig6-9.svg" /></p>
+</blockquote>
+<h3 id="_37">مقايضات الإخلاص وعشوائية المجال<a class="headerlink" href="#_37" title="Permanent link">&para;</a></h3>
+<p>تدعم البيئات عالية الدقة النقل بشكل أفضل إلى العالم الحقيقي ولكن لها تكاليف حسابية عالية. البعد الآخر للإخلاص هو درجة العشوائية: العشوائية المعتدلة تعمل على تحسين التعميم، في حين أن العشوائية المفرطة يمكن أن تجعل المهام صعبة للغاية. <strong>التوزيع العشوائي للمجال</strong> هو أسلوب رئيسي لتضييق الفجوة بين الواقع والمحاكاة: تقديم مجموعة واسعة من الاختلافات العشوائية في المعلمات الفيزيائية، والمظهر المرئي، وضوضاء المستشعر، وما إلى ذلك - تمامًا مثل ممارسة الإمساك تحت إضاءة وزوايا مختلفة، لذلك لن تفشل في العالم الحقيقي لمجرد تغير الضوء. في البيئات الرقمية، تتجلى تقنية محاكاة الواقع في شكل اختلافات في عرض الواجهة، وأوقات الاستجابة، وما إلى ذلك، والتي يمكن تخفيفها عن طريق تقديم التوزيع العشوائي في زمن الوصول والفشل.</p>
+<p>وبهذا تكمل بيئة التقييم تطورها النهائي: من قاعة الامتحان التي تقيس القدرة إلى ساحة التدريب التي تبنيها. سيوضح الفصل السابع كيف يقوم AWorld-train بتحويل بيئات المحاكاة هذه إلى ساحات قابلة للتدريب، والتحديات الهندسية التي تنطوي عليها - نظام التقييم وبيئات المحاكاة التي تم تحديدها في هذا الفصل هما حجر الزاوية في مرحلة ما بعد التدريب.</p>
+<h2 id="_38">ملخص الفصل<a class="headerlink" href="#_38" title="Permanent link">&para;</a></h2>
+<p>لقد دار هذا الفصل حول سؤال واحد: كيف تعرف أن الوكيل قد تحسن بالفعل؟ بدءًا من بناء بيئات اختبار قابلة للتكرار، إلى تصميم مجموعات البيانات التي تتحمل التسرب، إلى استخدام نماذج LLM كمحكمين، إلى السماح لنتائج التقييم باختيار النموذج وتكراره - كل رابط في هذه السلسلة يؤثر على مدى الثقة في الاستنتاجات. ويجب أن يقوم اختيار النموذج أيضًا بمقارنة منحنيات نمو القدرات عبر ميزانيات الموارد بدلاً من الاعتماد على نقطة تشغيل واحدة. بالنسبة لوكلاء فئة الإنتاج، لا يعد التقييم اختبارًا عرضيًا ولكنه تحقق مستمر مضمن في كل قرار يتعلق بالمنتج.</p>
+<p>المنهجية الأساسية: الملاحظة ← الافتراض ← التجربة ← التحقق من الصحة ← الفهم الجديد ← فرضية جديدة، تحويل هندسة الوكيل من "الكيمياء" القائمة على الخبرة إلى الهندسة العلمية القائمة على البيانات.</p>
+<p>يشكل نظام التقييم المقدم في هذا الفصل حلقة مغلقة كاملة: توفر <strong>بيئة التقييم</strong> بنية تحتية للاختبار الآلي ← تحدد <strong>مجموعة بيانات التقييم</strong> حالات الاختبار ← تسجل <strong>طرق التقييم الآلي</strong> (النموذج اللغوي بوصفه حكمًا وسلّم التقدير) أداء الوكيل ← يكشف <strong>التحليل المعياري</strong> اتجاهات التحسين ← تعالج <strong>تحسينات النظام</strong> المشكلات ← تُحدّث بيئة التقييم ومجموعة البيانات، فتبدأ دورة تكرار جديدة.</p>
+<p>من منظور هندسة منظومة التشغيل المقدمة في الفصل الأول، فإن منهجية التقييم في هذا الفصل هي التنفيذ المنهجي لوظيفة "التحقق من صحة" منظومة التشغيل، في حين أن الحلقة المغلقة "من التقرير المعياري إلى تحسين النظام" هي الآلية الأساسية لتحسين منظومة التشغيل التكراري. يجيب هذا الفصل على "كيفية القياس بشكل موثوق"؛ وبناءً عليه، يجيب الفصل الثامن على "كيفية تحويل تقييمات المسار متعددة الأبعاد إلى تحديثات نظام قابلة للتنفيذ وقابلة للعكس".</p>
+<p>إن نظام التقييم المنشأ هنا لا يدعم تحسين النظام الحالي فحسب، بل يوفر أيضًا أساسًا حاسمًا للفصلين التاليين. يحول الفصل السابع بيئات التقييم وبياناته إلى مدخلات لنموذج ما بعد التدريب، باستخدام SFT وRL لكتابة سياسات التفاعل إلى معلمات. يحول الفصل الثامن التقييمات متعددة الأبعاد لمسارات الإنتاج إلى تحديثات مرشحة للمعرفة أو التعليمات أو البرامج أو المعلمات.</p>
+<h2 id="_39">أسئلة للتأمل<a class="headerlink" href="#_39" title="Permanent link">&para;</a></h2>
+<ol>
+<li>★★ يستخدم LLM-as-a-Judge نموذجًا لغويًا لتقييم مخرجات نموذج اللغة. هل يحتوي هذا "التقييم الذاتي" على نقاط عمياء منهجية - على سبيل المثال، قد يعطي النموذج باستمرار درجات عالية لأسلوب معين من الاستجابة، وهو تفضيل لا يتوافق مع الحكم البشري؟ فكيف يمكن اكتشاف مثل هذه التحيزات وتصحيحها؟</li>
+<li>★★★ يعد التصميم "المانع للتسرب" لمجموعات بيانات التقييم أمرًا بالغ الأهمية. ومع ذلك، في النظام البيئي مفتوح المصدر، بمجرد نشر البيانات القياسية، يتم دمجها بسرعة في بيانات التدريب. هل لهذه "لعبة القط والفأر" نهاية؟ تصميم طريقة تقييم تقاوم بشكل أساسي تسرب البيانات.</li>
+<li>★★ تهدف المعايير الأربعة لـ Scale AI (توجيه الخبراء، والتغطية الشاملة، وترجيح الأهمية الموحد، والتقييم المستقل) إلى القضاء على الذاتية في التقييم. ومع ذلك، فإن بعض أبعاد المهمة (على سبيل المثال، "هل الإجابة مفيدة؟" "هل النبرة مناسبة؟") هي أبعاد ذاتية بطبيعتها. كيف يمكن تصميم نماذج موثوقة لهذه الأبعاد الذاتية؟</li>
+<li>★★ τ-bench يقوم بتقييم الوكلاء من خلال محاكاة سلوك المستخدم الحقيقي. لكن المستخدم الذي تمت محاكاته نفسه هو LLM - وقد يقلل بشكل منهجي من بعض حالات الحافة (على سبيل المثال، المستخدمين المضطربين عاطفيًا أو غير الواضحين). كيف يمكن التحقق من جودة محاكاة المستخدم نفسه؟</li>
+<li>★★ تفترض المقارنة الزوجية (نموذج برادلي-تيري) أن التفضيلات متعدية (إذا كان A &gt; B وB &gt; C، ثم A &gt; C). ومع ذلك، غالبًا ما تنتهك التفضيلات البشرية العبورية. في تقييم الوكيل، في أي سيناريوهات قد تظهر التفضيلات غير المتعدية؟ كيف يؤثر هذا على موثوقية التصنيف؟</li>
+<li>★★ يقترح هذا الفصل المنهج العلمي "الملاحظة → الافتراض → التجربة → التحقق من الصحة". ومع ذلك، من الناحية العملية، فإن مساحة سلوك الوكيل واسعة، وقد يتطلب التحقق من صحة فرضية واحدة مئات من عمليات التقييم. كيف يمكن تعظيم المعلومات المكتسبة من التقييم في ظل ميزانية حسابية محدودة؟</li>
+<li>★ في الحالة الافتراضية في هذا الفصل، أدى التفكير التمكيني عالميًا (H4) إلى تحسين معدل النجاح الإجمالي ولكن تم رفضه بسبب زمن الوصول والتكلفة، مما أدى في النهاية إلى التنشيط المشروط (H7). ما هي الإشارات (ميزات وصف المهمة، وأنماط الفشل التاريخية، وعدم اليقين في وقت التشغيل) المناسبة كمعايير توجيه "لتمكين وضع التفكير"؟ هل هناك سيناريوهات للوكلاء حيث يكون التفكير ضارًا بالفعل؟</li>
+<li>★★ تستخدم محاكاة المستخدم في τ-bench "الكشف التدريجي عن المعلومات" - ولا تقدم جميع المعلومات مرة واحدة، ولكنها تكشفها تدريجيًا بناءً على أسئلة الوكيل. كيف يؤثر هذا التصميم على نتائج التقييم؟ إذا كانت استراتيجية الكشف عن معلومات المستخدم المحاكى تختلف بشكل كبير عن المستخدمين الحقيقيين، فهل لا تزال استنتاجات التقييم موثوقة؟</li>
+</ol>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:re-bench-2025">
+<p>ويك، هجالمار، وآخرون. <em>مقعد إعادة التقييم: تقييم قدرات البحث والتطوير في مجال الذكاء الاصطناعي الحدودي لوكلاء نماذج اللغة مقابل الخبراء البشريين.</em> arXiv:2411.15114, 2025.&#160;<a class="footnote-backref" href="#fnref:re-bench-2025" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:45 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:45 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

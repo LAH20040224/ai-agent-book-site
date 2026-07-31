@@ -1,0 +1,2195 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/book-ta/chapter8.ta/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Agent-இன் தொடர்ச்சியான பரிணாமம் - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="Agent-இன் தொடர்ச்சியான பரிணாமம்">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/book-ta/chapter8.ta/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Agent-இன் தொடர்ச்சியான பரிணாமம்">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#agent-" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Agent-இன் தொடர்ச்சியான பரிணாமம்
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#trajectory-learning-signal-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        இயக்க trajectory-களிலிருந்து learning signal-களைப் பெறுதல்
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent தொடர்ச்சியான பரிணாமத்தின் நான்கு முறைகள்
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agent தொடர்ச்சியான பரிணாமத்தின் நான்கு முறைகள்">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        அனுபவத்தை அறிவாக நிலைநிறுத்துதல்
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        அனுபவத்தை அறிவுறுத்தலாக எழுதுதல்
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#program-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        அனுபவத்தை program-ஆக எழுதுதல்
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        அனுபவத்தை parameters-இல் எழுதுதல்
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#artifact-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Artifact-ஐப் புதுப்பிப்பதிலிருந்து “புதுப்பிப்பு முறையை” புதுப்பிப்பது வரை
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        நீண்டகாலம் இயங்கக்கூடிய தொடர்ச்சியான பரிணாமச் சுற்றை உருவாக்குதல்
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="நீண்டகாலம் இயங்கக்கூடிய தொடர்ச்சியான பரிணாமச் சுற்றை உருவாக்குதல்">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        பிரச்சினை அடையாளத்திலிருந்து அனுபவ நிலைநிறுத்தம் வரை
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        சரிபார்ப்பு, வெளியீடு மற்றும் rollback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loop-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        சரிபார்க்கக்கூடிய loop-இன் எல்லை: “முடிந்தது” என்பது “முன்னேற்றம்” அல்ல
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        தொடர்ச்சியான பரிணாமத்தின் பாதுகாப்பு எல்லைகள்
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        உறக்கக் கற்றல்: ஒருங்கிணைப்பு, மறதி மற்றும் திறன் பராமரிப்பு
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        அத்தியாயச் சுருக்கம்
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        சிந்தனைக் கேள்விகள்
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/book-ta/chapter8.ta.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/book-ta/chapter8.ta.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="agent-">Agent-இன் தொடர்ச்சியான பரிணாமம்<a class="headerlink" href="#agent-" title="Permanent link">&para;</a></h1>
+<p>இன்றைய Agent ஒரு தெளிவான திறன் முரண்பாட்டை எதிர்கொள்கிறது: இதுவரை கண்டிராத சிக்கலான பணிகளை zero-shot முறையில் தீர்க்க முடிந்தாலும், ஒரேபோன்ற பத்தாயிரம் பணிகளைக் கையாண்ட பிறகும், மறுநாள் முதல் நாளில் செய்த அதே தவறை மீண்டும் செய்யக்கூடும். <strong>அனுபவத்திலிருந்து தன்னிச்சையாகக் கற்றுக்கொள்ள முடியுமா</strong> என்பது, Agent “பணியை முடிக்கத் தெரிந்தது” என்ற நிலையிலிருந்து “நம்பகமாகப் பணியாற்றக்கூடியது” என்ற நிலைக்குச் செல்வதற்கான முக்கியத் திறனாகவும், அடுத்த தலைமுறை மாதிரிகளின் மைய ஆராய்ச்சித் தலைப்பாகவும் மாறிவருகிறது. இருப்பினும், தற்போதைய மாதிரிகளின் தொடர்ச்சியான கற்றல் திறன் இன்னும் மிகவும் போதாமையாக உள்ளது.</p>
+<p>இதற்கான காரணம், deployment செய்யப்பட்ட மாதிரி ஒரு inference நிகழ்வுக்குப் பிறகு தன்னிச்சையாகத் தனது parameters-ஐ மாற்றிக்கொள்ளாது என்பதாகும். இரண்டாம் அத்தியாயத்தில் விவாதிக்கப்பட்ட context learning, state maintenance மற்றும் compression ஆகியவை Agent-ஐ <strong>நடப்பு பணிக்குள்</strong> தழுவிக்கொள்ளச் செய்கின்றன; ஆனால் context முடிந்ததும், அந்த மாற்றம் இயல்பாக அடுத்த பணிக்குச் செல்லாது. உரையாடலை memory-இல் சேமிப்பதும் புதிய நடத்தையைக் கற்றுக்கொண்டதற்கு இணையானதல்ல: மூல trajectory மிகவும் நீளமாக இருக்கலாம்; அதில் பயனுள்ள உத்திகள் மட்டுமல்லாமல், தற்செயலான வெற்றிகள், தவறான காரணக் கற்பிதங்கள் மற்றும் நம்பகமற்ற உள்ளீடுகளும் இருக்கலாம்.</p>
+<p>இங்கே எளிதில் குழப்பமடையக்கூடிய ஒரு முக்கிய வேறுபாடு உள்ளது: <strong>அனுபவத்தைச் சேமிப்பது, அனுபவத்திலிருந்து கற்றுக்கொள்வதற்குச் சமமல்ல</strong>. நூறு trajectory-களை நீண்ட context அல்லது vector database-இல் வைப்பது, தேவைப்படும்போது ஒரு குறிப்பிட்ட எடுத்துக்காட்டை மீட்டெடுக்க உதவும். ஆனால் வெற்றிகரமான trajectory-களில் எந்தப் படிகள் மீண்டும் மீண்டும் தோன்றுகின்றன, பழைய interface version-இல் மட்டும் எந்த முறை செயல்படுகிறது, ஒரு வெற்றி சரியான உத்தியால் வந்ததா அல்லது சூழலின் தற்செயலால் வந்ததா என்பவற்றை அது தானாகவே பல case-களுக்கிடையில் ஒப்பிடாது. அமைப்பு “மதிப்பீடு, ஒப்பீடு, பொதுமைப்படுத்தல், சரிபார்ப்பு” ஆகியவற்றை முனைப்பாக முடித்த பிறகே கற்றல் நிகழ்கிறது; log disk-இல் எழுதப்பட்ட அந்த நொடியில் அல்ல. மூன்றாம் அத்தியாயத்தின் user memory முக்கியமாக “பயனரும் உலகமும் எவ்வாறு உள்ளன” என்பதை நிலைநிறுத்துகிறது; இவ்வத்தியாயத்தின் அனுபவக் கற்றல் மேலும் “எந்த நிபந்தனையில் எவ்வாறு செயல்பட வேண்டும்” என்பதையும் நிலைநிறுத்த வேண்டும். முன்னது Agent-க்கு அதிகம் நினைவில் வைக்க உதவுகிறது; பின்னதுதான் அதை அறிவாளியிலிருந்து திறமையானதாக மாற்றுகிறது.</p>
+<p>அப்படியானால், ஒவ்வொரு பணிக்குப் பிறகும் மாதிரி தன்னைத்தானே நேரடியாகப் பயிற்றுவிக்க ஏன் அனுமதிக்கக்கூடாது? ஏனெனில் production சூழல் அரிதாகவே தூய learning signal-களை வழங்குகிறது. பயனர் திருப்தி compliance-ஐக் குறிக்காது; தோல்வியடைந்த test case-களை நீக்கியதாலும் test வெற்றிபெறலாம். ஒரு உள்ளூர் update கூட திறன் மறதி, strategy drift அல்லது பாதுகாப்புச் சிதைவை ஏற்படுத்தலாம். இயங்கிக்கொண்டிருக்கும் மாதிரி சரிபார்க்கப்படாத feedback-ஐ அடிப்படையாகக் கொண்டு தன்னை நேரடியாக மாற்ற அனுமதிக்கப்பட்டால், தவறான அனுபவங்களும் prompt injection-களும் நிலைபெற்று, அடுத்தடுத்த பணிகளில் தொடர்ந்து பெரிதாக்கப்படலாம். அடித்தள மாதிரியின் காலமுறைப் பயிற்சி பொதுத் திறனை மேம்படுத்தலாம்; ஆனால் ஒவ்வொரு Agent-மும் தினசரி எதிர்கொள்ளும் தனிப்பட்ட விதிகள், tool மாற்றங்கள் மற்றும் உள்ளூர் அனுபவங்களை உரிய நேரத்தில் உட்கொள்ள முடியாது.</p>
+<p>எனவே, மாதிரி தானாகவே நம்பகமான தொடர்ச்சிக் கற்றலைச் செய்ய முடியாத நிலையில், முதலில் “கற்றல்” என்பதை மாதிரியைச் சுற்றியுள்ள தன்னாட்சி அமைப்பாக உருவாக்க வேண்டும்: இயக்கச் சான்றுகளைப் பதிவு செய்தல், முடிவுகளையும் செயல்முறையையும் சரிபார்த்தல், பல trajectory-களிலிருந்து பொதுவான அம்சங்களைப் பிரித்தெடுத்தல், பின்னர் அறிவு, அறிவுறுத்தல், program அல்லது model parameter—எதைப் புதுப்பிக்க வேண்டும் என்பதை முடிவுசெய்தல். எல்லா மாற்றங்களும் முதலில் candidate version-ஆக உருவாக்கப்பட்டு, regression test மற்றும் பாதுகாப்புச் சோதனைகளைத் தாண்டிய பிறகே அடுத்த சுற்று இயக்கத்தை மாற்ற வேண்டும். இது மாதிரியின் கற்றல் திறனுக்கான மாற்று அல்ல; தற்போதைய தொழில்நுட்பச் சூழலில் Agent-க்கு தொடர்ச்சிக் கற்றல் திறனை வழங்கும் பொறியியல் வழியாகும்.</p>
+<p>முந்தைய அத்தியாயங்கள் இந்த அமைப்புக்குத் தேவையான முக்கியக் கூறுகளை ஏற்கனவே வழங்கியுள்ளன. இரண்டாம் அத்தியாயம் பணிக்குள் உள்ள state-ஐக் கையாள்கிறது; மூன்றாம் அத்தியாயம் அறிவு உள்கட்டமைப்பை வழங்குகிறது; ஐந்தாம் அத்தியாயம் tools உருவாக்கவும் அமைப்பை மாற்றவும் தேவையான meta-capability-ஐ Agent-க்கு அளிக்கிறது; ஆறாம் அத்தியாயம் மதிப்பீடும் சரிபார்ப்பும் அமைக்கிறது; ஏழாம் அத்தியாயம் model parameters-ஐ எவ்வாறு புதுப்பிப்பது என்பதை விளக்குகிறது. எட்டாம் அத்தியாயத்தின் பணி, படம் 8-1-ல் காட்டப்பட்டுள்ள தொடர்ச்சியான பரிணாமச் சுற்றாக இக்கூறுகளை ஒருங்கிணைப்பதாகும்.</p>
+<p><img alt="படம் 8-1 Agent-இன் தொடர்ச்சியான பரிணாமத்தின் ஒட்டுமொத்தச் சுற்று" src="../images/fig8-1.svg" /></p>
+<p>தொடர்ச்சியான பரிணாமம் தடமறியக்கூடிய இயக்க அனுபவங்களிலிருந்து தோன்ற வேண்டும், அடுத்தடுத்த நடத்தையை மாற்றக்கூடியதாக இருக்க வேண்டும், மேலும் வெளிப்படையான சிதைவை ஏற்படுத்தவில்லை என்று சரிபார்க்கப்பட்டிருக்க வேண்டும். இந்த அத்தியாயம் முதலில் ஒரு இயக்கம் எதில் சிறந்தது, எதில் தவறியது என்பதை எவ்வாறு தீர்மானிப்பது என்று விவாதிக்கிறது; பின்னர் நான்கு update முறைகளையும் அவற்றின் பயன்பாட்டு எல்லைகளையும் ஒப்பிடுகிறது; இறுதியாக, நீண்டகால இயக்கத்தில் இந்த update-கள் எவ்வாறு சரிபார்க்கப்பட்டு, வெளியிடப்பட்டு, திருத்தப்பட்டு, நீக்கப்படுகின்றன என்பதை ஆராய்கிறது.</p>
+<h2 id="trajectory-learning-signal-">இயக்க trajectory-களிலிருந்து learning signal-களைப் பெறுதல்<a class="headerlink" href="#trajectory-learning-signal-" title="Permanent link">&para;</a></h2>
+<p>தொடர்ச்சியான பரிணாமத்தின் தொடக்கப் புள்ளி “சுருக்கம்” அல்ல, “மதிப்பீடு” ஆகும். பணி முடிந்ததா என்பதும், எந்தப் படி வெற்றி அல்லது தோல்விக்குக் காரணமானது என்பதும் அமைப்புக்குத் தெரியாவிட்டால், மொழி மாதிரி உருவாக்கும் reflection வெறும் ஊகமாகவே இருக்கும். தவறான மதிப்பீடு நீண்டகால அறிவு, system Prompt அல்லது training data-வில் நுழைந்துவிட்டால், அதன் தாக்கம் அடுத்தடுத்த பணிகளைக் கடந்து தொடர்ந்து பெரிதாகும்.</p>
+<p>சில பணிகளின் முடிவுகளை ஒப்பீட்டளவில் எளிதாகச் சரிபார்க்கலாம். Coding Agent test, type check மற்றும் performance benchmark-களை இயக்கலாம்; பயனருக்காக refund செயல்படுத்தும் Agent order status மற்றும் உண்மையான refund தொகையை விசாரிக்கலாம். இவ்வகை signal-கள் சூழலின் உண்மை state-இலிருந்து கிடைப்பதால், மாதிரி தனது நடத்தையைப் பற்றி வழங்கும் விளக்கத்தைவிட பொதுவாக நம்பகமானவை. ஆனால் முடிவு சரியாக இருப்பது, செயல்முறையும் சரியாக இருந்தது என்பதைக் குறிக்காது. தோல்வியடைந்த test case-களை நீக்குவதாலும் test வெற்றிபெறலாம்; “நாங்கள் 7 நாட்களுக்குள் refund செய்வோம், தயவுசெய்து பொறுமையாகக் காத்திருக்கவும்” என்று பயனரிடம் வாய்மொழியாக உறுதியளிப்பதும் தற்காலிகத் திருப்தி feedback-ஐப் பெறலாம். எனவே, நம்பகமான மதிப்பீடு முடிவைப் பார்ப்பதோடு, அந்த முடிவை அடைந்த பாதையையும் சோதிக்க வேண்டும்.</p>
+<p>மேலும் பல பணிகளுக்கு ஒரே சரியான பதில் கிடையாது. வாடிக்கையாளர் சேவை பொறுமையாக இருந்ததா, compliance எல்லைக்குள் மாற்று வழிகளை வழங்கியதா, ஆய்வறிக்கை முக்கியச் சான்றுகளைப் பற்றியதா, உருவாக்கப்பட்ட உரை இயல்பாகவும் சுருக்கமாகவும் இருந்ததா என்பதனை context-உடன் இணைத்தே மதிப்பிட வேண்டும். இந்நிலையில் ஆறாம் அத்தியாயத்தில் அறிமுகப்படுத்தப்பட்ட LLM-as-a-Judge-ஐப் பயன்படுத்தலாம்; ஆனால் Judge-இடமிருந்து தெளிவற்ற ஒரே மொத்த மதிப்பெண் மட்டும் பெறக்கூடாது. Rubric-ஐ முன்கூட்டியே வரையறுத்து, verifier ஒவ்வொரு உருப்படிக்கும் தனித்தனியாக மதிப்பெண் வழங்கவும், trajectory சான்றை மேற்கோளிடவும், சான்று போதாதபோது உறுதியின்மையை வெளிப்படையாகக் குறிப்பிடவும் கோருவது அதிக விளைவுடையது.</p>
+<p>படம் 8-2 மூன்று அடுக்கு சரிபார்ப்பு அமைப்பைக் காட்டுகிறது. கீழடுக்கு result verifier test முடிவுகள், database state மற்றும் tool return-களைப் படித்து, “பணி உண்மையில் முடிக்கப்பட்டதா” என்பதற்குப் பதிலளிக்கிறது; நடு அடுக்கு process verifier வணிக விதிகள், அனுமதிகள் மற்றும் action sequence-களைச் சோதித்து, “அனுமதிக்கப்பட்ட முறையில் முடிக்கப்பட்டதா” என்பதற்குப் பதிலளிக்கிறது; மேலடுக்கு quality verifier Rubric-ஐ அடிப்படையாகக் கொண்டு மொழியையும் உத்தியையும் மதிப்பிட்டு, “பொருத்தமாகச் செய்யப்பட்டதா” என்பதற்குப் பதிலளிக்கிறது. கீழடுக்கு metrics இயன்றவரை code மற்றும் environment ground truth-ஐச் சார்ந்திருக்க வேண்டும்; formalize செய்யக் கடினமான பகுதிகள் மட்டுமே மொழி மாதிரியிடம் ஒப்படைக்கப்பட வேண்டும்.</p>
+<p><img alt="படம் 8-2 சூழல் முடிவிலிருந்து LLM Rubric வரை மூன்று அடுக்கு trajectory சரிபார்ப்பு" src="../images/fig8-2.svg" /></p>
+<p>வாடிக்கையாளர் சேவை Agent-ஐ எடுத்துக்கொண்டால், பயனுள்ள Rubric குறைந்தபட்சம் அட்டவணை 8-1-ல் உள்ள பரிமாணங்களை உள்ளடக்க வேண்டும். முதல் ஐந்து உருப்படிகள் முக்கியமாக அடிப்படை வரம்புகளை உறுதிப்படுத்துகின்றன; கடைசி இரண்டு சேவைத் தரத்தை அளவிடுகின்றன. “பயனர் திருப்தியடைந்தாரா” என்ற ஒரே கேள்வியைவிட இவ்வகைப் பிரிப்பு அதிக diagnostic மதிப்புடையது: Agent விதிமீறி refund வழங்கியதால் பயனர் திருப்தியடையலாம்; compliance கட்டுப்பாடுகளால் அதிருப்தியடையவும்லாம். ஒரே satisfaction metric இவ்விரண்டையும் வேறுபடுத்த முடியாது.</p>
+<p>அட்டவணை 8-1 வாடிக்கையாளர் சேவை Agent-இன் trajectory மதிப்பீட்டுப் பரிமாணங்கள்</p>
+<table>
+<thead>
+<tr>
+<th>பரிமாணம்</th>
+<th>சரிபார்ப்புக் கேள்வி</th>
+<th>முக்கியச் சான்று</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>பணி முடிவு</td>
+<td>பயனரின் முதன்மைத் தேவை தீர்க்கப்பட்டதா</td>
+<td>இறுதி environment state, tool முடிவு</td>
+</tr>
+<tr>
+<td>விதி பின்பற்றல்</td>
+<td>கொள்கை, அனுமதி அல்லது அவசியமான செயல்முறை மீறப்பட்டதா</td>
+<td>கொள்கைக் களஞ்சியம், action trajectory</td>
+</tr>
+<tr>
+<td>தனியுரிமை எல்லை</td>
+<td>வழங்கக்கூடாத தகவல் வெளிப்படுத்தப்பட்டதா</td>
+<td>பதில் உரை, data access பதிவுகள்</td>
+</tr>
+<tr>
+<td>உண்மை நம்பகத்தன்மை</td>
+<td>கூற்றுகளுக்கு அறிவு அல்லது tool முடிவின் ஆதரவு உள்ளதா</td>
+<td>மேற்கோள் ஆதாரங்கள், tool return</td>
+</tr>
+<tr>
+<td>உறுதி—செயல் ஒற்றுமை</td>
+<td>முடிந்ததாகக் கூறிய செயல் உண்மையில் நிகழ்ந்ததா</td>
+<td>பதிலும் tool log-களும் ஒப்பீடு</td>
+</tr>
+<tr>
+<td>வெளிப்பாட்டுத் தரம்</td>
+<td>இயல்பாகவும் சுருக்கமாகவும் இருந்து, மீளுரைத்தலையும் வார்ப்புருத்தன்மையையும் தவிர்த்ததா</td>
+<td>முழு உரையாடல், மொழி Rubric</td>
+</tr>
+<tr>
+<td>இணக்கமான மாற்றுவழி</td>
+<td>முதன்மைத் திட்டம் செயல்படாதபோது, அனுமதிக்கப்பட்ட மாற்றுப் பாதை கண்டறியப்பட்டதா</td>
+<td>பயனர் இலக்கு, கொள்கை மற்றும் அடுத்தடுத்த செயல்கள்</td>
+</tr>
+</tbody>
+</table>
+<p>இவற்றில், “உறுதி—செயல் ஒற்றுமை” குறிப்பாக Agent சூழலுக்கு ஏற்றது. பாரம்பரிய உரை மதிப்பீடு இறுதிப் பதிலை மட்டுமே படிப்பதால், “உங்களுக்காக refund சமர்ப்பித்துவிட்டேன்” என்பதைச் சிறந்த சேவையாகக் கருதலாம்; trajectory மதிப்பீடு refund tool உண்மையில் அழைக்கப்பட்டதா, அந்த அழைப்பு வெற்றியடைந்ததா, order state மாறியதா என்பதையும் தொடர்ந்து சோதிக்கும். “இணக்கமான மாற்றுவழி” என்பது மாதிரி விதிகளைத் தன்னிச்சையாக மீறுவதை ஊக்குவிப்பதல்ல; பயனரின் உண்மையான இலக்கைப் புரிந்துகொண்டு, refund சாத்தியமில்லாதபோது rebooking, extension அல்லது partial compensation போன்ற சட்டபூர்வமான வாய்ப்புகளைச் சோதிக்க வேண்டும் என்பதாகும்.</p>
+<p>சரிபார்ப்பு முடிவுகளை ஒரே scalar-ஆகச் சுருக்கக்கூடாது. ஒரு trajectory மதிப்பீடு கட்டமைக்கப்பட்ட diagnosis-ஐப் போன்றது: பணி பகுதியளவில் வெற்றியடைந்தது; விதி பின்பற்றல் நிறைவேறியது; ஆனால் ஆதாரமற்ற ஒரு கூற்று, ஒரு பொய்யான உறுதி ஆகியவை இருந்தன; பதில் கொள்கையை மூன்று முறை மீண்டும் விளக்கியது. பரிமாண அடிப்படையிலான signal பிரச்சினையின் தன்மையையும் சான்றின் இடத்தையும் பாதுகாக்கிறது. அதன் பின்னரே அடுத்த module தீர்மானிக்க முடியும்: ஆதாரமற்ற கூற்று அறிவுக் குறைவால் ஏற்பட்டதா, citation தேவை இல்லாததால் ஏற்பட்டதா, அல்லது model capability போதாமையால் ஏற்பட்டதா; பொய்யான உறுதிக்காக Prompt மாற்றப்பட வேண்டுமா, அல்லது Harness-இல் பதிலும் tool state-உம் ஒன்றுபடுகிறதா எனச் சோதிக்க வேண்டுமா.</p>
+<p>LLM verifier-உம் calibration செய்யப்பட வேண்டும். Production அமைப்புகள் பொதுவாக நிபுணர்கள் label செய்த சிறிய trajectory தொகுப்பைத் தயாரித்து, ஒவ்வொரு பரிமாணத்திலும் verifier-இன் consistency-ஐச் சோதிக்கின்றன; அதிக ஆபத்து அல்லது குறைந்த confidence கொண்ட வழக்குகள் இரண்டாவது மாதிரி அல்லது மனித review-க்கு அனுப்பப்படுகின்றன; model version மாறிய பிறகு calibration set மீண்டும் இயக்கப்படுகிறது. Verifier மதிப்பீடும் சான்றுகளும் வழங்க வேண்டும்; Agent-இன் எந்தப் பகுதியை மாற்ற வேண்டும் என்பது தனித்த diagnosis மற்றும் evolution module மூலம் தீர்மானிக்கப்பட வேண்டும். இதனால் ஒரே மாதிரி Judge-ஆகவும் விதிகளை நேரடியாக மாற்றுபவனாகவும் செயல்படுவது தவிர்க்கப்படுகிறது.</p>
+<blockquote>
+<p><strong>பரிசோதனை 8-1 ★★: வாடிக்கையாளர் சேவை Agent-க்கான trajectory verifier-ஐ உருவாக்குதல்</strong></p>
+<p><strong>பரிசோதனை இலக்கு</strong>: ஒரு வாடிக்கையாளர் சேவை இயக்க trajectory-ஐ அடுத்தடுத்த கற்றலுக்குப் பயன்படும் கட்டமைக்கப்பட்ட diagnosis-ஆக மாற்றி, “சான்றுகளுடன் கூடிய பல்பரிமாண முடிவு” ஒரே மொத்த மதிப்பெண்ணைவிட root cause-ஐச் சிறப்பாகக் கண்டறிகிறதா எனச் சரிபார்த்தல்.</p>
+<p><strong>தரவும் செயல்முறையும்</strong>: சாதாரண refund, பொய்யான உறுதி, privacy leak மற்றும் அளவுக்கு மீறிய மறுப்பு என்ற நான்கு வகை, நிபுணர் label செய்த trajectory-களைத் தயாரிக்க வேண்டும். முதல் அடுக்கு order-இன் இறுதி state மற்றும் tool log-களைப் படித்து, refund அல்லது rebooking உண்மையில் நடந்ததா எனத் தீர்மானிக்கிறது. இரண்டாம் அடுக்கு வணிகக் கொள்கையுடன் ஒவ்வொரு படியையும் ஒப்பிட்டு permission, அவசியமான process, privacy, உண்மை ஆதாரம் மற்றும் உறுதி—செயல் ஒற்றுமையைச் சோதிக்கிறது. மூன்றாம் அடுக்கு அட்டவணை 8-1 Rubric-ஐப் பயன்படுத்தி வெளிப்பாட்டுத் தரத்தையும் இணக்கமான மாற்றுவழியையும் மதிப்பிட்டு, தோல்வி முடிவுகளுக்கு ஆதாரமாக உரையாடல் சுற்றுகளைப் பாதுகாக்கிறது. இயல்புநிலை quality Judge deterministic rule-களைப் பயன்படுத்துகிறது; உண்மையான LLM Judge-உம் வழங்கப்படுகிறது. மேலடுக்கில் எந்த மாதிரி பயன்படுத்தப்பட்டாலும், result layer மற்றும் rule layer மொழி மாதிரியின் ஊகத்திற்கு விடப்படக்கூடாது.</p>
+<p><strong>ஒப்பீடும் metrics-உம்</strong>: baseline ஒரே மொத்த மதிப்பெண்ணை மட்டும் வெளியிடுகிறது; பரிசோதனைக் குழு ஒவ்வொரு பரிமாணத்திற்கும் <code>pass</code>, <code>fail</code> அல்லது <code>uncertain</code>, சான்று மற்றும் confidence-ஐ வெளியிடுகிறது. Calibration கட்டத்தில் failure detection-இன் precision மற்றும் recall ஒவ்வொரு பரிமாணத்திற்கும் கணக்கிடப்பட்டு, expert label-உடனான exact-match rate-உம் தெரிவிக்கப்படுகிறது. பொய்யான உறுதி போன்ற தோல்விகளுக்கு வெறும் முடிவு மட்டுமல்லாமல், காலியில்லாத சான்று வழங்கப்பட்டுள்ளதா என்பதும் சோதிக்கப்படுகிறது.</p>
+<p><strong>ஏற்றுக்கொள்ளும் நிபந்தனைகள்</strong>: முக்கிய விதிமீறல், பொய்யான உறுதி மற்றும் அளவுக்கு மீறிய மறுப்பு ஆகியவற்றை verifier நிலையாகக் கண்டறிய வேண்டும். உயர்ந்த மொத்த மதிப்பெண் privacy அல்லது rule பரிமாணத் தோல்வியை மறைக்கக்கூடாது. குறைந்த confidence அல்லது அதிக ஆபத்து கொண்ட case-கள் தானாக learning signal-ஆக மாறாமல், இரண்டாவது verifier அல்லது மனித review-க்கு அனுப்பப்பட வேண்டும்.</p>
+<p>தொடர்புடைய implementation <a href="../chapter8/trajectory-verifier/"><code>trajectory-verifier</code></a> இல் உள்ளது. இயல்புநிலையில் offline-ஆக மறுஉருவாக்கக்கூடிய quality Judge பயன்படுத்தப்படுகிறது; ஏற்கனவே செயல்படுத்தப்பட்ட உண்மையான LLM verifier-ஐ இயக்க <code>--judge llm</code> பயன்படுத்தலாம்.</p>
+</blockquote>
+<h2 id="agent">Agent தொடர்ச்சியான பரிணாமத்தின் நான்கு முறைகள்<a class="headerlink" href="#agent" title="Permanent link">&para;</a></h2>
+<p>Learning signal Agent மாற வேண்டும் என்பதைச் சொல்கிறது; ஆனால் மாற்றம் எங்கு நிகழ வேண்டும் என்பதைச் சொல்லாது. Update முறையைத் தேர்ந்தெடுப்பதற்கான முதன்மை அடிப்படை, ஒரு அனுபவம் எவ்வளவு காலமாக உள்ளது என்பதல்ல; இலக்கு திறனை எந்த carrier இயல்பாக வெளிப்படுத்த முடியும் என்பதே ஆகும். உண்மைகளும் அனுபவங்களும் அறிவு ஆவணங்களாக எழுதப்பட ஏற்றவை; மொழியில் தெளிவாக வெளிப்படுத்தக்கூடிய உத்திகள் Prompt அல்லது Skill-இல் எழுதப்பட ஏற்றவை; துல்லியமாகச் செயல்படுத்தக்கூடிய செயல்முறைகளும் கட்டுப்பாடுகளும் program-ஆக எழுதப்பட ஏற்றவை; perception, மொழிப் பாணி, implicit strategy போன்ற உயர்-பரிமாணத் திறன்கள் model parameters-இல் நுழைய வேண்டும். படம் 8-3 இந்த நான்கு முறைகளையும் அவற்றின் உறவையும் காட்டுகிறது.</p>
+<p><img alt="படம் 8-3 தொடர்ச்சியான பரிணாமத்தின் நான்கு update முறைகள்" src="../images/fig8-3.svg" /></p>
+<p>அட்டவணை 8-2 ஒரு சுருக்கமான ஒப்பீட்டை வழங்குகிறது. இந்த நான்கு முறைகளும் ஒன்றுக்கொன்று விலக்கானவை அல்ல: மருத்துவப் படவியல் Agent lesion-ஐ அடையாளம் காண parameters-ஐ நம்புகிறது; சமீபத்திய வழிகாட்டுதல்களை வழங்க knowledge base-ஐப் பயன்படுத்துகிறது; ஆபத்து metrics-ஐக் கணக்கிட code-ஐப் பயன்படுத்துகிறது. வாடிக்கையாளர் சேவை மாதிரியின் இயல்பான தொனி post-training-இலிருந்து வருகிறது; குறிப்பிட்ட நிறுவனக் கொள்கைகள் அறிவும் Skill-உம் மூலம் வழங்கப்படுகின்றன; முக்கிய compliance கட்டுப்பாடுகள் server-side code மூலம் உறுதிப்படுத்தப்படுகின்றன.</p>
+<p>அட்டவணை 8-2 நான்கு தொடர்ச்சியான பரிணாம முறைகளின் பயன்பாட்டு எல்லைகள்</p>
+<table>
+<thead>
+<tr>
+<th>Update முறை</th>
+<th>ஏற்ற உள்ளடக்கம்</th>
+<th>முக்கிய நன்மை</th>
+<th>முக்கிய வரம்பு</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>அனுபவ knowledge base</td>
+<td>உண்மைகள், அனுபவ விதிகள், விதிவிலக்குகள் மற்றும் ஆதாரங்கள்</td>
+<td>வேகமான update, தடமறியத்தக்கது, தேவைக்கேற்ப retrieval</td>
+<td>retrieval மற்றும் மாதிரியின் சரியான பயன்பாட்டைச் சார்ந்தது</td>
+</tr>
+<tr>
+<td>Prompt மற்றும் Skill</td>
+<td>மொழியாக்கக்கூடிய தீர்மானக் கோட்பாடுகள் மற்றும் செயல்பாட்டு விதிமுறைகள்</td>
+<td>விளக்கக்கூடியது, செயல்பாட்டு வரம்பைக் கட்டுப்படுத்தலாம்</td>
+<td>எளிதில் பெரிதாகலாம், முரண்படலாம் அல்லது புறக்கணிக்கப்படலாம்</td>
+</tr>
+<tr>
+<td>Program மற்றும் Harness</td>
+<td>deterministic செயல்முறைகள், tools மற்றும் வலுவான கட்டுப்பாடுகள்</td>
+<td>test செய்யலாம், நிலையான செயல்பாடு, குறைந்த செலவு</td>
+<td>development மற்றும் maintenance செலவு அதிகம்</td>
+</tr>
+<tr>
+<td>Model parameters</td>
+<td>உயர்-பரிமாண perception, generation style மற்றும் implicit strategy</td>
+<td>வலுவான generalization, குறைந்த inference செலவு</td>
+<td>update மற்றும் regression செலவு அதிகம்</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_1">அனுபவத்தை அறிவாக நிலைநிறுத்துதல்<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p>பல இயக்கங்களில் மீண்டும் மீண்டும் தோன்றும் அனுபவங்களை retrieval செய்யக்கூடிய அறிவு ஆவணங்களாக ஒழுங்குபடுத்துவது மிகவும் இலகுவான evolution முறையாகும். இங்கே “அனுபவ knowledge base” என்பது மூன்றாம் அத்தியாயத்துடன் storage, index மற்றும் retrieval தொழில்நுட்பங்களைப் பகிர்ந்தாலும், அறிவின் மூலமும் சரிபார்ப்பு இலக்கும் வேறுபடுகின்றன. மூன்றாம் அத்தியாயம் முக்கியமாக பயனர் உரையாடல்கள், ஆவணங்கள் மற்றும் dataset-களிலிருந்து “பயனரும் உலகமும் எவ்வாறு உள்ளன” என்பதைப் பிரித்தெடுக்கிறது; இவ்வத்தியாயம் Agent-இன் action trajectory மற்றும் முடிவுகளிலிருந்து “எந்த நிபந்தனையில் எவ்வாறு செயல்பட வேண்டும்” என்பதைப் பிரித்தெடுக்கிறது. உதாரணமாக, “இந்த விமான நிறுவனம் special meal-ஐ இருபத்துநான்கு மணி நேரத்திற்கு முன் முன்பதிவு செய்ய வேண்டும்” என்பது domain knowledge; “ticket முன்பதிவு செய்வதற்கு முன் special meal deadline-ஐச் சோதிக்க வேண்டும்; payment முடிந்த பிறகு தேவையை நிறைவேற்ற முடியாதது தெரியவருவதைத் தவிர்க்க வேண்டும்” என்பது action experience.</p>
+<p>மூல trajectory ஒரு முறையான knowledge unit-ஆகப் பொருத்தமல்ல. அது நீளமானதும் இரைச்சல் நிறைந்ததுமாக இருப்பதுடன், tool-இன் raw output, தற்செயலான சுற்றுப்பாதைகள் மற்றும் சூழல் விவரங்களையும் கொண்டிருக்கும். மேலும் உறுதியான அமைப்பு மூன்று அடுக்கு data-வைப் பாதுகாக்கிறது: audit-க்காக மாற்றமுடியாத மூல trajectory; அந்த இயக்கத்தின் வெற்றி, தோல்வி மற்றும் candidate lesson-களைப் பதிவு செய்யும் single-run analysis; பல ஒரேவகை trajectory-கள் ஒப்பிடப்பட்டு, cluster செய்யப்பட்டு, பொதுமைப்படுத்தப்பட்ட பின் உருவாகும் எதிர்கால நோக்குடைய Markdown அறிவு ஆவணம். முறையான ஆவணம் பொதுவாகப் பயன்பாட்டு சூழல், பரிந்துரைக்கப்பட்ட உத்தி, தடைசெய்யப்பட்ட நடைமுறை, விதிவிலக்கு நிபந்தனை, சான்று ஆதாரம் மற்றும் கடைசியாகச் சரிபார்க்கப்பட்ட நேரம் ஆகியவற்றைத் தெளிவாகக் குறிப்பிடும்; ஒரு குறிப்பிட்ட பணியின் முழு செயல்முறையை மீண்டும் கூறாது.</p>
+<p>இந்த வடிவமைப்பு மூன்றாம் அத்தியாயத்தின் User-as-Code உடன் ஒரே இரு-கட்ட சிந்தனையைப் பகிர்கிறது. User-as-Code முதலில் உரையாடல் உண்மைகளை மாற்றமுடியாத log-இல் append செய்து, பின்னர் காலமுறைப்படி கட்டமைக்கப்பட்ட user model-ஐ மறுஉருவாக்குகிறது; அனுபவக் கற்றலும் முதலில் சான்றைப் பாதுகாத்து, பின்னர் offline-ஆக மாற்றக்கூடிய அறிவை உருவாக்க வேண்டும். படம் 8-4 இந்தச் செயல்முறையைக் காட்டுகிறது. பதிவு செய்தலையும் ஒழுங்குபடுத்தலையும் பிரிப்பது, ஒரு தற்செயலான வெற்றி அல்லது network failure உடனடியாக Agent-ஐ மாற்றுவதைத் தவிர்க்கிறது; பல வெற்றி மற்றும் தோல்வி எடுத்துக்காட்டுகளைப் பார்த்த பிறகே பொதுவான அம்சங்களைத் தீர்மானிக்கவும் அமைப்பை அனுமதிக்கிறது.</p>
+<p><img alt="படம் 8-4 மதிப்பிடப்பட்ட trajectory-களிலிருந்து அனுபவ அறிவு ஆவணத்திற்கான செயல்முறை" src="../images/fig8-4.svg" /></p>
+<p>அனுபவ ஆவணம் trajectory-இன் எளிய சுருக்கமல்ல. உண்மையான transfer மதிப்புள்ள உள்ளடக்கம் ஒப்பீட்டிலிருந்து வருகிறது: ஒரேவகை வெற்றிகரமான trajectory-கள் என்ன செய்தன, தோல்வியடைந்த trajectory-களில் என்ன குறைந்திருந்தது; ஒரு குறிப்பிட்ட உத்தி எந்த environment version-களில் செயல்பட்டது, எந்த precondition-களில் தோல்வியடைந்தது. மூன்றாம் அத்தியாயம் knowledge extraction, clustering மற்றும் retrieval-ஐ ஏற்கனவே அறிமுகப்படுத்தியுள்ளதால், இவ்வத்தியாயம் அந்த algorithm-களை மீண்டும் விவரிக்காது; trajectory மதிப்பீடு extraction condition-ஆக எவ்வாறு செயல்படுகிறது, பிரித்தெடுக்கப்பட்ட அறிவு அடுத்தடுத்த பணிகளின் செயல்திறனை மேம்படுத்துகிறதா என்பதிலேயே கவனம் செலுத்துகிறது.</p>
+<p>ஒரு முழுமையான knowledge distillation pipeline-ஐ ஐந்து படிகளாகப் பிரிக்கலாம். முதலில் மாற்றமுடியாத trajectory மற்றும் environment result சேமிக்கப்பட வேண்டும். அடுத்து, ஒவ்வொரு இயக்கத்திற்கும் task type, தேவையான capability, காணப்பட்ட strategy, error மற்றும் exception ஆகியவற்றைப் பட்டியலிடும் structured analysis உருவாக்கப்பட வேண்டும். பின்னர் ஒரே task family-இன் இயக்கங்கள் தொகுக்கப்பட்டு, ஒவ்வொரு candidate rule-க்கும் “எந்த trajectory ஆதரிக்கிறது, எது மறுக்கிறது” என்ற evidence table அமைக்கப்பட வேண்டும். போதுமான support threshold-ஐ அடைந்த candidate மட்டும் முறையான ஆவணத்தில் எழுதப்பட வேண்டும். இறுதியாக, distillation-இல் பயன்படுத்தப்படாத புதிய பணிகளில் transfer effect சோதிக்கப்பட வேண்டும். Formal knowledge மற்றும் candidate analysis தனித்த store-களில் இருப்பதால், மூலச் சான்றை மாற்றாமல் மீண்டும் பொதுமைப்படுத்தவும், environment version மாறும்போது ஒரு குறிப்பிட்ட முடிவைத் துல்லியமாகத் திரும்பப்பெறவும் முடியும்.</p>
+<p>GAIA அனுபவக் கற்றல் இதற்கான நேரடியான எடுத்துக்காட்டை வழங்குகிறது. GAIA<sup id="fnref:gaia-2023"><a class="footnote-ref" href="#fn:gaia-2023">2</a></sup> தேடல், web page வாசிப்பு, file processing மற்றும் கணக்கீட்டை ஒருங்கிணைக்க வேண்டிய பல்படி கேள்விகளைக் கொண்டது; AWorld<sup id="fnref:aworld-2025"><a class="footnote-ref" href="#fn:aworld-2025">3</a></sup> Agent-ஐ இயக்கவும், இந்த tools-ஐ அழைக்கவும், trajectory-களைச் சேமிக்கவும் தேவையான execution environment-ஐ வழங்குகிறது. முன்னது தேர்வுத்தாள் போன்றது; பின்னது தேர்வறையும் பரிசோதனைப் பதிவு அமைப்பும் போன்றது. பழைய முறை ஒரு பணி வெற்றியடைந்த உடனே strategy summary உருவாக்கி, vectorize செய்து library-இல் சேர்க்கும். கடுமையான implementation முதலில் GAIA answer checker அல்லது வேறு environment verifier மூலம் வெற்றி, பகுதி வெற்றி, தோல்வி என label செய்து, பின்னர் ஒரே task family-இன் பல பாதைகளை ஒப்பிடும். வெற்றி trajectory candidate strategy-ஐ வழங்கும்; தோல்வி trajectory exclusion knowledge-ஐ வழங்கும்; பகுதி வெற்றி “எந்தப் பகுதி வேலை செய்தது, எது இன்னும் சிக்கலாக உள்ளது” என்பதை அடையாளம் காண உதவும். Reflexion<sup id="fnref:reflexion-2023"><a class="footnote-ref" href="#fn:reflexion-2023">1</a></sup> முன்வைத்த natural-language reflection candidate lesson-களை உருவாக்கலாம்; ஆனால் reflection தானாகவே சான்றல்ல. Environment result-உடன் பொருந்தி, பல trajectory-களின் ஆதரவைப் பெற்று, புதிய பணிகளில் positive transfer-ஐக் காட்டும் உள்ளடக்கம் மட்டுமே முறையான அனுபவ ஆவணத்தில் சேர வேண்டும்.</p>
+<blockquote>
+<p><strong>பரிசோதனை 8-2 ★★: GAIA trajectory-களிலிருந்து அனுபவ அறிவு ஆவணங்களைப் பிரித்தெடுத்தல்</strong></p>
+<p><strong>பரிசோதனை இலக்கு</strong>: “பல trajectory-களிலிருந்து உருவான knowledge document”, “ஒரே வெற்றியின் summary-ஐ நினைவில் வைத்தல்” என்பதைக் காட்டிலும் சிறப்பாக transfer ஆகிறதா; மேலும் தற்செயலான வெற்றி மற்றும் தவறான அனுபவத்தால் ஏற்படும் negative transfer-ஐக் குறைக்கிறதா எனச் சோதித்தல்.</p>
+<p><strong>தரவும் செயல்முறையும்</strong>: <code>gaia-experience</code> முதலில் ஒவ்வொரு run-இன் முழு trajectory மற்றும் வெளிப்புற <code>environment_score</code>-ஐச் சேமித்து, பின்னர் அவற்றை <code>task_family</code>, தேவையான <code>capabilities</code>, <code>applies_when</code>, காணப்பட்ட strategy, error, exception மற்றும் source trajectory ID கொண்ட minimal learning record-ஆக மாற்றுகிறது. Result verifier run-ஐ வெற்றி, பகுதி வெற்றி அல்லது தோல்வி எனப் பிரிக்கிறது. Learning module ஒரே task family-இன் பாதைகளை ஒப்பிடுகிறது. LLM candidate generalization-ஐ முன்வைக்கலாம்; ஆனால் ஒரு recommended strategy குறைந்தபட்சம் இரண்டு தோல்வியல்லாத trajectory-களின் ஆதரவைப் பெற வேண்டும். இறுதி Markdown ஆவணத்தில் applicable context, recommended strategy, common mistake, exception condition, source மற்றும் last-verified time இடம்பெறும். Application கட்டத்தில் இவ்வாவணங்கள் மட்டுமே retrieval செய்யப்பட வேண்டும்; நீண்ட மூல trajectory நேரடியாக context-இல் வைக்கப்படக்கூடாது.</p>
+<p><strong>மூன்று ஒப்பீட்டுக் குழுக்கள்</strong>: முதல் குழு வரலாற்று அனுபவத்தைப் பயன்படுத்தாது; இரண்டாவது தற்போதைய பணிக்கு மிகவும் ஒத்த ஒரே trajectory summary-ஐ retrieval செய்கிறது; மூன்றாவது பல trajectory-கள் இணைந்து ஆதரிக்கும் knowledge document-ஐ retrieval செய்கிறது. ஒரே GAIA கேள்வியின் பதில் “அனுபவம்” என்ற பெயரில் evaluation-க்கு கசியாதபடி learning set மற்றும் transfer set ஒன்றுடன் ஒன்று overlap ஆகக்கூடாது.</p>
+<p><strong>Metrics மற்றும் acceptance</strong>: transfer task success rate, சராசரி retrieval character அல்லது Token எண்ணிக்கை, negative-transfer rate ஆகியவை ஒன்றாக அறிக்கையிடப்பட வேண்டும்; ஒவ்வொரு formal conclusion-உம் source trajectory-ஐப் பட்டியலிடுகிறதா எனச் சோதிக்க வேண்டும். Cross-trajectory document context-ஐச் சுருக்கினாலும் புதிய task performance-ஐ மேம்படுத்தவில்லை என்றால், அமைப்பு அனுபவத்திலிருந்து கற்றது என நிரூபிக்க முடியாது. ஒரே தற்செயலான வெற்றி formal knowledge-ஆக உயர்த்தப்படுமானாலும், ஆவணத்தை மூல trajectory வரை trace செய்ய முடியாவிட்டாலும் acceptance தோல்வியடையும்.</p>
+<p>தொடர்புடைய implementation <a href="../chapter8/gaia-experience/"><code>gaia-experience</code></a> இல் உள்ளது. <code>demo_documents.py</code> இயல்புநிலையில் offline-ஆக இயங்குகிறது; <code>--extractor llm</code> பயன்படுத்தினால் உண்மையான LLM பல trajectory-களைக் கடக்கும் அனுபவ candidate-களை முன்வைக்கலாம்.</p>
+</blockquote>
+<h3 id="_2">அனுபவத்தை அறிவுறுத்தலாக எழுதுதல்<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>அனுபவ knowledge base Agent-க்கு reference material-ஐ வழங்குகிறது; Prompt மற்றும் Skill அதைவிட வலுவான அறிவுறுத்தல் தன்மையைக் கொண்டுள்ளன. பல trajectory-கள் ஒரே strategy error-ஐ மீண்டும் மீண்டும் வெளிப்படுத்தி, அதன் விதியை இயல்பான மொழியில் தெளிவாகச் சொல்ல முடிந்தால், அமைப்பு அதை “பார்க்கத்தக்க அனுபவம்” என்பதிலிருந்து “பின்பற்ற வேண்டிய விதி” என உயர்த்தலாம். பெரும்பாலான பணிகளிலும் பொருந்தும் விதிகள் system Prompt-இல் சேர்வதற்கு ஏற்றவை; குறிப்பிட்ட domain, project அல்லது tool-இல் மட்டுமே செயல்படும் சிக்கலான செயல்முறைகள் தேவைக்கேற்ப load செய்யப்படும் Skill அல்லது project instruction file-ஆக எழுதப்படுவது ஏற்றது.</p>
+<p>Prompt learning மற்றும் இரண்டாம் அத்தியாயத்தின் prompt engineering ஆகியவற்றின் பொறுப்புகள் வேறுபட்டவை. இரண்டாம் அத்தியாயம் கட்டமைப்பு தெளிவும் cache-friendly தன்மையும் கொண்ட Prompt-ஐ எவ்வாறு எழுதுவது என்பதற்குப் பதிலளிக்கிறது; இங்கு எந்த production feedback Prompt மாற்றத்தைத் தூண்டுவதற்குப் போதுமானது, deployment-க்கு முன் புதிய விதி எவ்வாறு சரிபார்க்கப்பட வேண்டும் என்பதற்குப் பதிலளிக்கப்படுகிறது. மாற்றம் முழு system Prompt-ஐ மீண்டும் மீண்டும் மறுஎழுதுவதாக இருக்கக்கூடாது. ஒரேவகைத் தோல்விகளின் தொகுப்பை அடிப்படையாகக் கொண்டு minimal diff உருவாக்கி, விதியின் scope-ஐக் குறிப்பிட்டு, தற்போதைய விதிகளுடன் முரண்படுகிறதா எனச் சோதித்து, தோல்வியைத் தூண்டிய boundary case-களிலும் பழைய பணி retention set-இலும் ஒரே நேரத்தில் மதிப்பிடுவது அதிக நம்பகமானது.</p>
+<p>Andrej Karpathy 2025-ஆம் ஆண்டின் ஒரு நீண்ட பதிவில், இந்தச் சாத்தியமான புதிய paradigm-ஐ தற்காலிகமாக <strong>System Prompt Learning</strong> என்று அழைத்தார்<sup id="fnref:karpathy-system-prompt-learning"><a class="footnote-ref" href="#fn:karpathy-system-prompt-learning">7</a></sup>. அவரது சுருக்கம்: pre-training முக்கியமாக அறிவைக் கற்கிறது; fine-tuning வழக்கமான நடத்தையை வடிவமைக்கிறது. ஆனால் மனிதர்களுக்கு இன்னொரு கற்றல் முறை உள்ளது—ஒரு சிக்கலைச் சந்தித்து வழிமுறையைப் புரிந்துகொண்ட பிறகு, “அடுத்த முறை இத்தகைய சிக்கல் வந்தால் முதலில் இந்த முறையை முயற்சி செய்” என்று எதிர்காலத் தமக்குத் தெளிவான மொழியில் நினைவூட்டுவது. இத்தகைய notebook இல்லாத LLM-ஐ அவர் <em>Memento</em> திரைப்படத்தின் நாயகனுடன் ஒப்பிட்டார். System Prompt Learning மற்றும் reinforcement learning இரண்டும் அனுபவத்திலிருந்து நடத்தையை மேம்படுத்தினாலும், update algorithm வேறுபடுகிறது என்றும் குறிப்பிட்டார்—முன்னது உரையைத் திருத்துகிறது; பின்னது gradient descent மூலம் parameter-ஐ மாற்றுகிறது. அப்போதைய Claude-இன் சுமார் 17,000 சொற்களைக் கொண்ட system Prompt-இல், சொல், எழுத்து அல்லது character எண்ணும் கேள்வி வந்தால் முதலில் ஒவ்வொரு உருப்படியையும் எண்ணிட்டு வெளிப்படையாகக் கணக்கிட்டு பின்னரே பதிலளிக்க வேண்டும் என்ற தனிப்பட்ட அறிவுறுத்தல் இருந்ததை அவர் எடுத்துக்காட்டினார். இது “<code>strawberry</code>-இல் எத்தனை <code>r</code> உள்ளன?” போன்ற கேள்விகளுக்காகவே இருந்தது.</p>
+<p>Agent அமைப்பில் இதன் பொருள், தோல்விக்குப் பிறகு மொழியில் வெளிப்படுத்தக்கூடிய lesson எதிர்கால run நேரடியாகப் படிக்கக்கூடிய candidate rule-ஆக எழுதப்படுவது. “வெற்றி/தோல்வி” என்ற scalar result-ஐவிட, சான்றுடன் கூடிய diagnosis identity verification, tool selection அல்லது transfer boundary—எதில் தவறு ஏற்பட்டது என்பதைக் காட்டி, குறிவைத்த candidate modification-ஐ உருவாக்க முடியும். “Knowledge-guided reflection scalar reward-ஐவிட அதிக பரிமாணமுள்ள feedback channel-ஐ வழங்குகிறது” என்ற Karpathy-யின் கருத்து, இந்த முறை ஏன் data-efficient ஆக இருக்கலாம் என்பதை விளக்குகிறது. ஆனால் தகவல் அதிகம் என்பதால் அது இயல்பாகவே சரியானதாகிவிடாது. ஒரே user feedback ஒரு குறிப்பிட்ட வாடிக்கையாளர் அல்லது பழைய policy version-க்கு மட்டும் பொருந்தலாம்; எனவே clustering, scope determination மற்றும் regression test இன்னும் தேவை.</p>
+<p>Prompt-ஐ தானாக மேம்படுத்த பல அணுகுமுறைகள் ஏற்கனவே உள்ளன. DSPy<sup id="fnref:dspy-2023"><a class="footnote-ref" href="#fn:dspy-2023">4</a></sup> பல language-model call-களைக் கொண்ட program-ஐ optimizable object-ஆகக் கொண்டு, development set-இல் instruction மற்றும் example-களைத் தேடுகிறது. OPRO<sup id="fnref:opro-2023"><a class="footnote-ref" href="#fn:opro-2023">5</a></sup> முந்தைய Prompt மற்றும் அவற்றின் score-ஐ அடிப்படையாகக் கொண்டு language model அடுத்த candidate-ஐ முன்வைக்கச் செய்கிறது. GEPA<sup id="fnref:gepa-2025"><a class="footnote-ref" href="#fn:gepa-2025">6</a></sup> தோல்வி trajectory-களின் natural-language reflection-ஐப் பயன்படுத்தி ஒன்றுக்கொன்று துணைபுரியும் candidate Prompt-களை உருவாக்கித் தேர்ந்தெடுக்கிறது. இவை பெரும்பாலும் offline evaluation set-களில் batch optimization-க்கானவை. Production அமைப்பின் minimal diff தொடர்ச்சியான maintenance-ஐப் போன்றது: புதிய boundary case-ஆல் தூண்டப்பட்டு, source, audit மற்றும் விரைவான rollback-ஐ வலியுறுத்துகிறது. நடைமுறையில் முதலில் offline search மூலம் நல்ல initial version-ஐக் கண்டுபிடித்து, release-க்குப் பிறகு long-tail rule-களை case-by-case patch மூலம் பராமரிக்கலாம்.</p>
+<p>உதாரணமாக, விமான சேவை Agent பயனர் கொள்கையை எதிர்க்கும்போது மிக விரைவாக மனித agent-க்கு transfer செய்யக்கூடும். Trajectory மதிப்பீடு அது விதிமீறவில்லை என்றாலும், இணக்கமான மாற்றுவழி இல்லாததை வெளிப்படுத்துகிறது. Candidate patch, Agent முதலில் கொள்கையை விளக்கி, பயனரின் உண்மையான இலக்கை அடையாளம் கண்டு, அனுமதிக்கப்பட்ட மாற்று வழிகளைத் தேடி, பயனர் வெளிப்படையாகக் கோரும்போது அல்லது உண்மையில் அனுமதி எல்லையைத் தாண்டும்போது மட்டுமே transfer செய்ய வேண்டும் எனக் கோரலாம். புதிய விதி அளவுக்கு மீறிய transfer-ஐக் குறைத்தாலும், மனிதரிடம் ஒப்படைக்க வேண்டிய பாதுகாப்பு நிகழ்வுகளையும் தொடர்ந்து கையாளச் செய்தால், அது regression-ஐத் தாண்டவில்லை. System Prompt learning-இன் மதிப்பு தானாகவே மேலும் உரையை append செய்வதில் இல்லை; production boundary case-கள் மூலம் விதிகளின் பயன்பாட்டு வரம்பைத் தொடர்ந்து தெளிவுபடுத்துவதில்தான் உள்ளது.</p>
+<p>Skill learning-உம் இதே கோட்பாட்டைப் பின்பற்றுகிறது; ஆனால் அதன் செயல்பாட்டு வரம்பு மேலும் உள்ளூர்மயமானது. Skill-ஐ தேவைக்கேற்ப திறக்கும் பணிச்செயல் கையேடாகக் கருதலாம். பல அனுபவங்கள் இணைந்து முழுமையான insurance claim செயல்முறையை உருவாக்கினால், அமைப்பு அதற்கான Skill-ஐ உருவாக்கவோ திருத்தவோ முடியும். Candidate Skill ஒரு உரையாடல் summary மட்டும் ஆகக்கூடாது; குறைந்தபட்சம் எப்போது load செய்ய வேண்டும், precondition, operation step, அறியப்பட்ட pitfall, verification method ஆகியவற்றைக் குறிப்பிட்டு source trajectory-ஐச் சேமிக்க வேண்டும். அமைப்பு முதலில் உள்ள Skill library-இல் ஒத்த capability-ஐத் தேடுகிறது. அதே process ஏற்கனவே இருந்தால் local <code>patch</code>-க்கு முன்னுரிமை; உண்மையான புதிய தனித்த capability இருந்தால் மட்டுமே புதிய directory உருவாக்க வேண்டும். இதனால் வேறு பெயருடன் ஒரே உள்ளடக்கம் கொண்ட கையேடுகள் குவிவது தவிர்க்கப்படும். Anthropic-இன் Skill Creator<sup id="fnref:anthropic-skill-creator"><a class="footnote-ref" href="#fn:anthropic-skill-creator">8</a></sup> “draft—test—evaluate—revise” generation loop-ஐக் காட்டுகிறது. இது Skill-ஐ உருவாக்கவும் மேம்படுத்தவும் வழி காட்டுகிறது; ஆனால் எந்த இயக்கச் சான்று generation-ஐத் தூண்டப் போதுமானது, conflict-ஐ எவ்வாறு கையாளுவது, மாற்றத்திற்குப் பிறகு domain task மற்றும் பழைய task regression-ஐக் கடக்கிறதா என்பவையே உண்மையான சிரமங்கள்.</p>
+<blockquote>
+<p><strong>பரிசோதனை 8-3 ★★: தோல்வி trajectory-களை அடிப்படையாகக் கொண்டு system Prompt-ஐ மேம்படுத்துதல்</strong></p>
+<p><strong>பரிசோதனை இலக்கு</strong>: பயனர் policy-ஐக் கேள்வி கேட்கும்போது மிக விரைவாக மனிதரிடம் transfer செய்த தோல்வி trajectory-இலிருந்து விமான வாடிக்கையாளர் சேவை Agent கற்றுக்கொள்ளச் செய்வதோடு, உண்மையில் transfer தேவைப்படும் பழைய scenario-களைப் புதிய விதி பாதிக்கவில்லை என நிரூபித்தல்.</p>
+<p><strong>செயல்முறை</strong>: முதலில் பழைய task retention set மற்றும் over-transfer boundary set தனித்தனியாக இயக்கப்படுகின்றன. <code>learning_signal.py</code> தோல்வியை rule compliance, task resolution மற்றும் compliant workaround என்ற மூன்று பரிமாணங்களாகப் பிரித்து, source case ID-ஐப் பாதுகாக்கிறது. Coding Agent பின்னர் தற்போதைய Prompt-ஐப் படித்து, ஒரே audit செய்யக்கூடிய <code>old_str → new_str</code> minimal edit-ஐ மட்டும் உருவாக்குகிறது: முதலில் policy-ஐ விளக்கி, உண்மையான இலக்கை அடையாளம் கண்டு, இணக்கமான மாற்றுவழியைத் தேட வேண்டும்; அதே நேரத்தில் பயனர் வெளிப்படையாக மனிதரை வேண்டும்போதும் safety incident ஏற்பட்டாலும் transfer path பாதுகாக்கப்பட வேண்டும். Patch, source, target rule மற்றும் change reason candidate manifest-இல் எழுதப்படுகின்றன.</p>
+<p><strong>மூன்று ஒப்பீட்டுக் குழுக்கள்</strong>: initial Prompt, தானாக உருவான candidate Prompt மற்றும் மனிதர் ஒருமுறை tune செய்த Prompt. மூன்றும் ஒரே model மற்றும் ஒரே retention/boundary task-களைப் பயன்படுத்துகின்றன. <code>--quick</code> case எண்ணிக்கையை மட்டுமே குறைக்கிறது; task Agent, LLM Judge மற்றும் Coding Agent உண்மையாக அழைக்கப்படுகின்றன. எனவே அது offline simulation result அல்ல.</p>
+<p><strong>Release threshold மற்றும் metrics</strong>: patch காலியல்ல, source trace செய்யக்கூடியது, boundary-set performance உண்மையில் மேம்பட்டது, retention set சிதையவில்லை என்ற நான்கு நிபந்தனைகளையும் candidate பூர்த்தி செய்ய வேண்டும். Boundary-task accuracy, retention-task accuracy, Prompt growth length, அறிமுகமான regression எண்ணிக்கை, failure கண்டறிந்ததிலிருந்து candidate உருவான நேரம் ஆகியவை ஒப்பிடப்படுகின்றன. Threshold கடந்தாலும் <code>release_to_canary</code> மட்டுமே கிடைக்கும்; stable Prompt நேரடியாக overwrite செய்யப்படாது. எந்த ஒரு நிபந்தனை தோல்வியடைந்தாலும் <code>reject_candidate</code> திரும்ப வேண்டும்.</p>
+<p>தொடர்புடைய implementation <a href="../chapter8/prompt-auto-optimization/"><code>prompt-auto-optimization</code></a> இல் உள்ளது. Offline test-கள் diagnosis மற்றும் release threshold-ஐ உள்ளடக்குகின்றன; <code>--quick</code> உண்மையான task Agent, LLM Judge மற்றும் Coding Agent-ஐ அழைக்கும்.</p>
+</blockquote>
+<h3 id="program-">அனுபவத்தை program-ஆக எழுதுதல்<a class="headerlink" href="#program-" title="Permanent link">&para;</a></h3>
+<p>அனுபவம் நிலையான, மீண்டும் மீண்டும் நிகழும், சரிபார்க்கக்கூடிய operation-ஐ விவரிக்கும்போது, மாதிரி ஒவ்வொரு முறையும் ஆவணத்தை மறுபடியும் படித்து reasoning செய்வது சிக்கனமல்ல. அந்நிலையில் அனுபவத்தை workflow, tool அல்லது Harness code-ஆக compile செய்வதே ஏற்றது; இதனால் ஒருமுறை நிகழ்ந்த exploration மீண்டும் மீண்டும் இயக்கக்கூடிய program-ஆக மாறுகிறது. ஐந்தாம் அத்தியாயம் Coding Agent எவ்வாறு file-களைப் படித்து எழுதுகிறது, test-களை இயக்குகிறது, அமைப்புகளை உருவாக்குகிறது என்பதைக் கூறிவிட்டது. இந்தப் பகுதி பொதுவான code generation-ஐ அல்ல, Agent தனது trajectory-ஐ அடிப்படையாகக் கொண்டு தனது எதிர்கால version-ஐ எவ்வாறு மாற்றுகிறது என்பதைக் கவனிக்கிறது.</p>
+<p>மாற்றக்கூடிய பொருட்கள் புதிய tools-ஐவிட மிகவும் விரிவானவை. Operation layer browser trajectory-ஐ parameterized workflow-ஆக compile செய்யலாம் அல்லது மாறிவரும் API-க்கு adapter உருவாக்கலாம்; control layer tool routing, retry, circuit breaking மற்றும் context compression strategy-ஐ மாற்றலாம்; verification layer production failure-ஐ அடிப்படையாகக் கொண்டு புதிய parameter check, state verifier மற்றும் regression test-களைச் சேர்க்கலாம்; architecture layer Reviewer Agent-ஐச் சேர்த்து planning மற்றும் execution இடையேயான information flow-ஐ மாற்றலாம்.</p>
+<p>Browser workflow, programmatic experience-இன் மதிப்பை விளக்குகிறது. இதை spreadsheet macro recording-உடன் ஒப்பிடலாம். முதன்முறையாக email அனுப்பும்போது, multimodal Agent observation—thought—action மூலம் “compose, recipient, subject, body, send” controls-ஐக் கண்டறிகிறது. பின்னர் வேறு email அனுப்பும்போது process மாறாது; recipient மற்றும் content மட்டும் மாறும். எனவே pixel மற்றும் DOM-இலிருந்து முழுப் பாதையையும் மாதிரி மீண்டும் கண்டுபிடிக்க வேண்டியதில்லை. முதல் exploration trajectory-ஐ parameter, state check மற்றும் version information கொண்ட சிறிய program-ஆக compile செய்வதே அமைப்பின் பணி.</p>
+<p>படம் 8-4-இன் knowledge distillation, browser சூழலில் மேலும் குறிப்பிட்ட lifecycle-ஆக அமைகிறது:</p>
+<ol>
+<li><strong>Trajectory capture</strong>: navigation, click, input, dropdown selection போன்ற action-களைப் பதிவு செய்து, action parameter, அப்போதைய URL, XPath, CSS, <code>id</code>, <code>role</code>, <code>aria-label</code>, <code>data-testid</code> போன்ற element-location evidence-ஐச் சேமிக்க வேண்டும். Location information element-ஐ மீண்டும் கண்டுபிடிக்க மட்டுமே உதவும்; task completion-ஐ நிரூபிக்காது.</li>
+<li><strong>Parameterization</strong>: முதல் run-இன் literal value-களை template variable-ஆக அடையாளம் காண வேண்டும். உதாரணமாக <code>test@example.com</code>, subject மற்றும் body ஆகியவை <code>{recipient}</code>, <code>{subject}</code>, <code>{content}</code> ஆக மாற்றப்பட்டு, மற்ற stable action-கள் மாறாமல் இருக்கும். Teaching implementation regex மற்றும் template replacement-ஐப் பயன்படுத்தலாம்; production system structured task input அல்லது constrained extraction model-ஐப் பயன்படுத்தலாம்.</li>
+<li><strong>State check வரையறுத்தல்</strong>: action-க்கு முன் மற்றும் பின் check-களைச் சேர்க்க வேண்டும்; உதாரணமாக “Send button தற்போது visible”, “navigation-க்கு பின் URL target site-இல் உள்ளது”. முழு workflow-க்கும் “Sent list-இல் புதிய email உள்ளது” அல்லது test page state value எதிர்பார்த்தபடி மாறியது போன்ற final-state check தேவை. Action வெற்றியும் task வெற்றியும் வேறுபட்டவை; final check உண்மையான page அல்லது backend state-ஐப் படிக்க வேண்டும்.</li>
+<li><strong>Candidate verification</strong>: முதல் வெற்றி <code>candidate</code> மட்டுமே உருவாக்கும். Sandbox account அல்லது test site தனித்த initial state-க்கு reset செய்யப்பட்டு, candidate முழுமையாக replay செய்யப்பட வேண்டும். ஒவ்வொரு pre-action, post-action மற்றும் final-state check-உம் கடந்த பிறகே அது <code>validated</code> ஆக வெளியிடப்படும். Email அனுப்புதல் அல்லது order இடுதல் போன்ற side-effect பணிகளுக்கு பாதுகாப்பான reset callback இல்லாவிட்டால், candidate audit-க்காக மட்டும் சேமிக்கப்பட வேண்டும்; verification பெயரில் production account-இல் செயல் மீண்டும் செய்யக்கூடாது.</li>
+<li><strong>Matching மற்றும் replay</strong>: புதிய பணி வந்ததும் formal capability library-இல் intent மற்றும் keyword அடிப்படையில் workflow தேடப்பட்டு, தற்போதைய parameter பிரித்தெடுக்கப்பட்டு, Playwright நேரடியாக இயக்கப்பட வேண்டும். Replay path-க்கு step-by-step LLM call தேவையில்லை; ஆனால் element available ஆகும் வரை காத்திருந்து அனைத்து state check-களையும் முடிக்க வேண்டும்.</li>
+<li><strong>Invalidation மற்றும் relearning</strong>: target element கிடைக்காதது, state check தோல்வியடைதல், API Schema மாறுதல் அல்லது final state தவறுதல் ஏற்பட்டால், அடுத்த action உடனடியாக நிறுத்தப்பட வேண்டும். பழைய version searchable library-இலிருந்து <code>invalid</code> பகுதிக்கு மாற்றப்பட்டு, முழுமையான Agent மீண்டும் explore செய்ய வேண்டும். பழைய file audit மற்றும் comparison-க்காகப் பாதுகாக்கப்படும்; ஆனால் அமைதியாக மீண்டும் match ஆகக்கூடாது.</li>
+</ol>
+<p>Email அனுப்பும் எடுத்துக்காட்டில், compile செய்யப்பட்ட முடிவு “இந்த button-களை வரிசையாக click செய்” என்பதல்ல; recipient, subject மற்றும் body parameter-களைக் கொண்ட சிறிய program. அனுப்புமுன் compose window மற்றும் input field-களைச் சோதித்து, அனுப்பிய பின் success message-ஐச் சோதித்து, இறுதியில் Sent list-இல் அதே email தோன்றியதா என உறுதிப்படுத்துகிறது. PreAct<sup id="fnref:preact"><a class="footnote-ref" href="#fn:preact">9</a></sup> பரிசோதனைகளில் இத்தகைய program-கள் மீளும் பணிகளில் end-to-end 8.5–13 மடங்கு வேகத்தை வழங்கின; replay கட்டத்தில் step-by-step language-model call தேவையில்லை. மேலும் முக்கியமாக, process memory ஒரே நேரத்தில் <strong>pre-action verification, post-action verification மற்றும் save-க்கு முந்தைய independent verification</strong> ஆகியவற்றைக் கொண்டிருக்க வேண்டும். இல்லையெனில் replay coverage 100%, எல்லா button-களும் click செய்யப்பட்டன; ஆனால் ஒரு field காலியாக இருந்ததால் பணி உண்மையில் ஒருபோதும் முடிக்கப்படவில்லை என்ற ஆபத்தான மாயை உருவாகும்.</p>
+<blockquote>
+<p><strong>பரிசோதனை 8-4 ★★★: browser trajectory-இலிருந்து சரிபார்க்கக்கூடிய workflow-ஐ உருவாக்குதல்</strong></p>
+<p><strong>பரிசோதனை இலக்கு</strong>: ஒரு செலவான exploration-ஐ Web Agent மறுபயன்படுத்தக்கூடிய workflow-ஆக மாற்றுகிறதா; web page மாறும்போது “எல்லா action-களும் ஓடின” என்பதை success எனத் தவறாக அறிவிக்காமல் incorrect replay-ஐ நிராகரிக்கிறதா எனச் சோதித்தல்.</p>
+<p><strong>நான்கு கட்ட scenario</strong>: முதல் கட்டத்தில் test mail site அல்லது simulated message page-இல் “<code>test@example.com</code>-க்கு ‘சோதனை மின்னஞ்சல்’ subject கொண்ட message அனுப்பு” என்ற பணி இயக்கப்படுகிறது. Full Agent explore செய்கிறது; wrapper action, parameter மற்றும் page state-ஐப் பதிவு செய்து <code>candidate</code> உருவாக்குகிறது. இரண்டாம் கட்டத்தில் <code>validation_reset</code> sandbox-ஐ மீட்டமைத்து, candidate தனியாக முழுமையாக replay செய்யப்படுகிறது. Pre-action, post-action மற்றும் final-state check அனைத்தையும் கடந்தால் மட்டுமே formal capability library-இல் சேரும். மூன்றாம் கட்டத்தில் recipient, subject, body அனைத்தும் மாறிய அதேவகைப் பணி இயக்கப்படுகிறது; validated workflow match செய்யப்பட்டு, புதிய parameter நிரப்பப்பட்டு, step-by-step LLM loop இல்லாமல் Playwright replay செய்ய வேண்டும். நான்காம் கட்டத்தில் button locator, page text அல்லது final state மாற்றப்பட்டு, பழைய workflow உடனடியாக <code>invalid</code> ஆகி <code>fallback_required=True</code> தருகிறதா எனச் சோதிக்க வேண்டும்.</p>
+<p><strong>ஒப்பீட்டு வடிவமைப்பு</strong>: எளிய baseline click, input போன்ற action exception இல்லாமல் முடிந்ததா என்பதை மட்டும் எண்ணுகிறது. பரிசோதனைக் குழு கூடுதலாக pre-action page, post-action page மற்றும் task final state-ஐச் சரிபார்க்கிறது. இரு குழுக்களுக்கும் ஒரே trajectory மற்றும் page change வழங்கப்பட்டு, “field காலியாக இருந்தாலும் Send button click செய்யப்பட்டது”, “Save click ஆனாலும் data database-இல் எழுதப்படவில்லை” போன்ற false-success case-களின் misclassification rate ஒப்பிடப்படுகிறது.</p>
+<p><strong>Metrics மற்றும் acceptance</strong>: முதல் exploration மற்றும் replay-இன் end-to-end நேரம், LLM call எண்ணிக்கை, success rate, false-success rate, workflow-match rate, page-change detection rate மற்றும் fallback relearning எண்ணிக்கை பதிவு செய்யப்பட வேண்டும். Reset callback இல்லையெனில் workflow candidate பகுதியில் இருக்க வேண்டும்; verification தோல்வியடைந்த version retrieval ஆகக்கூடாது; parameterized replay முதல் run recipient அல்லது content-ஐ மீண்டும் பயன்படுத்தக்கூடாது; page மாறியபின் ஆபத்தான அடுத்த action நிறுத்தப்பட வேண்டும். இந்த நிபந்தனைகள் அனைத்தும் பூர்த்தியானால் மட்டுமே speedup அர்த்தமுள்ளதாகும்.</p>
+<p>தொடர்புடைய implementation <a href="../chapter8/browser-use-rpa/"><code>browser-use-rpa</code></a> இல் உள்ளது; deterministic state-machine demo மற்றும் உண்மையான browser Agent-ஐ அழைக்கும் execution path இரண்டும் வழங்கப்படுகின்றன.</p>
+</blockquote>
+<p>Agent தனது code-ஐ மாற்றுவது, இயங்கிக்கொண்டிருக்கும் process தன்னைத்தானே நேரடியாக overwrite செய்வதைக் குறிக்காது. Production அமைப்பு தற்போதைய stable version-இலிருந்து candidate branch உருவாக்கி, Coding Agent மூலம் minimal patch உருவாக்க வேண்டும்; பின்னர் static check, unit test, security scan, failure-trajectory replay மற்றும் பழைய task regression ஆகியவற்றை வரிசையாகக் கடந்து, canary deployment செய்யக்கூடிய புதிய version-ஐ உருவாக்க வேண்டும். இது “self-modification” என்பதை audit செய்யக்கூடிய software release process-ஆக மாற்றுகிறது. இதுவே எட்டாம் அத்தியாயத்திற்கும் ஐந்தாம் அத்தியாயத்திற்கும் இடையிலான எல்லையாகும்: ஐந்தாம் அத்தியாயம் அமைப்பை மாற்றும் திறனை வழங்குகிறது; இவ்வத்தியாயம் அனுபவத்தால் தூண்டப்பட்டு, verification loop-ஆல் கட்டுப்படுத்தப்படும் self-modification முறையை வழங்குகிறது.</p>
+<p>Patch சிறியதாக இருப்பது மட்டும் நம்பகமான attribution-க்குப் போதாது. ஒவ்வொரு modification request-உம் failure evidence, ஊகிக்கப்பட்ட root cause, பொறுப்பான Harness component, candidate change, மேம்பட வேண்டிய behavior, பின்னடையக்கூடிய பழைய behavior மற்றும் இரண்டிற்குமான test-களைப் பதிவு செய்யும் <strong>falsifiable change contract</strong>-ஆக இருக்க வேண்டும். Agentic Harness Engineering இதை component, experience மற்றும் decision level observability என விவரிக்கிறது: திருத்தக்கூடிய ஒவ்வொரு component-க்கும் file-level representation உள்ளது; பெரும் trajectory collection படிப்படியாக விரிவாக ஆய்வு செய்யக்கூடிய evidence-ஆகச் சுருக்கப்படுகிறது; ஒவ்வொரு edit-உம் செயல்படுத்துவதற்கு முன் impact prediction-ஐ அறிவிக்கிறது, அதை அடுத்த சுற்று result சோதிக்கிறது<sup id="fnref:ahe-2026"><a class="footnote-ref" href="#fn:ahe-2026">19</a></sup>. இதனால் உயர்ந்த score-ஐ ஒரு குறிப்பிட்ட mechanism-உடன் இணைக்க முடியும்; அது விளக்கமற்ற trial-ஆக மட்டும் இருக்காது.</p>
+<p>Candidate generator-க்கு failure case-களை மட்டும் வழங்கக்கூடாது. Self-Harness பாதுகாக்கப்பட வேண்டிய successful behavior மற்றும் முன்பு reject செய்யப்பட்ட modification-களின் பதிவுகளையும் வழங்குகிறது<sup id="fnref:self-harness-2026"><a class="footnote-ref" href="#fn:self-harness-2026">20</a></sup>. முதலாவது repair எதைச் சிதைக்கக்கூடாது என்பதைக் கூறுகிறது; இரண்டாவது அதே தோல்வியடைந்த யோசனையை வேறு சொற்களில் மீண்டும் சமர்ப்பிப்பதைத் தடுக்கிறது. Failure evidence, success constraint மற்றும் prior attempt ஆகியவை சேர்ந்து வரையறுக்கப்பட்ட candidate space-ஐ உருவாக்குகின்றன; அனைத்து source code மற்றும் raw log-களையும் modification Agent-க்கு indiscriminately load செய்வதைவிட இது பயனுள்ளதாகும்.</p>
+<p>Tool creation-உம் இதே protocol-ஐப் பின்பற்றுகிறது. Alita<sup id="fnref:alita-2025"><a class="footnote-ref" href="#fn:alita-2025">10</a></sup> வழங்கும் எடுத்துக்காட்டில், <em>The Lord of the Rings</em>-இல் Gollum-க்கு குரல் கொடுத்த நடிகர் விவரிக்கும் YouTube 360 VR video-வில் dinosaur முதன்முறையாகத் தோன்றிய உடன் குறிப்பிடப்படும் எண்ணை Agent கண்டறிய வேண்டும். Subtitle வாசிக்கும் திறன் இல்லையென அறிந்ததும், அது <code>youtube-transcript-api</code>-ஐத் தேடி test செய்து, புதிய subtitle tool-ஆக wrap செய்து, இறுதியில் transcript-இலிருந்து <code>100000000</code> என்ற பதிலைப் பெற்றது. Security scan, functional test மற்றும் அடுத்தடுத்த task reuse அனைத்தையும் கடந்த பிறகே புதிய tool capability library-இல் நுழையும். நான்காம் அத்தியாயத்தின் active tool discovery “இருக்கும் tools-இல் எது பொருத்தமானது” என்பதைத் தீர்க்கிறது; ஐந்தாம் அத்தியாயம் “tool-ஐ எவ்வாறு எழுதுவது” என்பதைத் தீர்க்கிறது; இவ்வத்தியாயம் “எந்த இயக்கச் சான்று creation-ஐத் தூண்டுகிறது, புதிய tool எவ்வாறு verified long-term capability-ஆகிறது” என்பதில் கவனம் செலுத்துகிறது.</p>
+<blockquote>
+<p><strong>பரிசோதனை 8-5 ★★★: தோல்வி trajectory மூலம் Agent self-modification-ஐத் தூண்டுதல்</strong></p>
+<p><strong>பரிசோதனை இலக்கு</strong>: <code>retryable=false</code> error தொடர்ந்து அழைக்கப்பட்ட பல trajectory-களிலிருந்து root cause retry மற்றும் circuit-breaker code-இல் உள்ளதா எனக் கண்டறிந்து, temporary-failure retry capability-ஐ பாதிக்காமல் candidate fix உருவாக்குகிறதா எனச் சோதித்தல்.</p>
+<p><strong>செயல்முறை</strong>: Diagnosis module முதலில் வேறுபட்ட task-களில் ஏற்பட்ட ஒரே failure-ஐத் தொகுக்கிறது. Cross-trajectory support threshold அடைந்த பிறகே modification request உருவாக்கி, stable version-இன் <code>retry_policy.py</code>-ஐ target செய்கிறது. Candidate generator failure diagnosis, பாதுகாக்க வேண்டிய transient-failure recovery behavior, முன்பு reject செய்யப்பட்ட change-கள் மற்றும் stable source code-ஐப் படிக்கிறது. Minimal code diff-ஐ வெளியிடுவதற்கு முன், non-retryable error-க்கு பிந்தைய call-கள் குறைய வேண்டும்; transient-timeout recovery பின்னடையக்கூடாது என்று impact prediction செய்கிறது. Deterministic generator அல்லது உண்மையான LLM Coding Agent எதுவாக இருந்தாலும், result தனிமைப்படுத்தப்பட்ட candidate directory-இல் மட்டுமே எழுதப்பட வேண்டும். Verification Harness பின்னர் candidate-ஐ compile செய்து, மூல failure trajectory-ஐ replay செய்து, non-retryable error உடனடியாக நிறுத்தப்பட்டு circuit breaker திறக்கிறதா எனச் சோதித்து, temporary timeout பழைய threshold வரை மீண்டும் retry ஆகிறதா என மீள்சோதிக்கிறது.</p>
+<p><strong>Diagnosis ஒப்பீடும் metrics-உம்</strong>: “Prompt-இல் மீண்டும் அழைக்காதே என்று ஒரு வரி மட்டும் சேர்” என்பது தவறான layer localization-க்கான conceptual baseline. Deterministic retry constraint ஏன் program-இல் இருக்க வேண்டும் என்பதை இது காட்டுகிறது. இயங்கக்கூடிய பரிசோதனையில் deterministic patch generator மற்றும் LLM generator ஒப்பிடப்படுகின்றன; இரண்டும் ஒரே release threshold-ஐப் பயன்படுத்துகின்றன. Non-retryable call எண்ணிக்கை, temporary-error recovery rate, பழைய task regression எண்ணிக்கை, patch size மற்றும் candidate acceptance rate பதிவு செய்யப்படுகின்றன.</p>
+<p><strong>ஏற்றுக்கொள்ளும் நிபந்தனைகள்</strong>: எல்லா check-களும் கடந்த பிறகும் <code>release_to_canary</code> மட்டுமே உருவாகும். Static check, failure replay அல்லது பழைய task regression ஏதேனும் தோல்வியடைந்தால் <code>reject_candidate</code> திரும்ப வேண்டும். <code>release_manifest.json</code> failure cluster, source trajectory-கள், inferred root cause, target component மற்றும் file, code diff, expected repair, potential regression, check result, candidate version மற்றும் rollback version-ஐப் பதிவு செய்ய வேண்டும். Reject செய்யப்பட்ட candidate-களின் failure reason அடுத்த generation round-க்காகப் பாதுகாக்கப்பட வேண்டும். Patch உருவாக்கும் Agent stable code, verifier, audit log அல்லது தனது release-ஐ அங்கீகரிக்கும் threshold-ஐ மாற்ற முடியாது.</p>
+<p>தொடர்புடைய implementation <a href="../chapter8/self-modifying-agent/"><code>self-modifying-agent</code></a> இல் உள்ளது. Deterministic candidate generator அல்லது உண்மையான LLM Coding Agent ஆகியவற்றில் ஒன்றைத் தேர்ந்தெடுக்கலாம்; இரு பாதைகளும் ஒரே release threshold-ஐப் பகிர்கின்றன.</p>
+</blockquote>
+<h3 id="parameters-">அனுபவத்தை parameters-இல் எழுதுதல்<a class="headerlink" href="#parameters-" title="Permanent link">&para;</a></h3>
+<p>அறிவு, அறிவுறுத்தல் மற்றும் program ஆகிய அனைத்தும் ஒரு முன்நிபந்தனையை அடிப்படையாகக் கொண்டுள்ளன: இலக்கு திறனை வெளிப்புறக் குறியீடுகள் மூலம் ஒப்பீட்டளவில் முழுமையாக வெளிப்படுத்த முடியும். ஆனால் மருத்துவப் படவியல் புரிதல், இயல்பான speech prosody, உரையின் வார்ப்புருவாத “AI தன்மை” நீக்கம், long-horizon planning போன்ற திறன்களை சில விதிகள் அல்லது workflow-களாகச் சுருக்குவது கடினம். இத்தகைய திறன்கள் post-training மூலம் model parameters-இல் எழுதப்பட வேண்டும்.</p>
+<p>ஒரு திறனை parameterize செய்ய வேண்டுமா என்பது “பணி நீண்டகாலம் நிலையாக உள்ளதா” என்பதனால் மட்டும் தீர்மானிக்கப்படாது. புதிய imaging device ஏற்படுத்தும் domain shift-க்கு LoRA அல்லது continual fine-tuning இன்னும் தேவைப்படலாம்; வேகமாக மாறும் மொழிப் பாணிகளையும் periodic preference training மூலம் தழுவிக்கொள்ளலாம். Stability update frequency மற்றும் செலவைப் பாதிக்கிறது; ஆனால் திறனின் representation இயல்பே அதன் முதன்மை carrier-ஐ நிர்ணயிக்கிறது. மாறாக, நீண்டகாலம் நிலையான money-transfer approval rule-ஐ parameter memory-ஐ மட்டுமே சார்ந்திருக்கச் செய்யக்கூடாது; server-side code deterministic உத்தரவாதத்தை வழங்க வேண்டும்.</p>
+<p>ஏழாம் அத்தியாயம் SFT, distillation மற்றும் RL ஆகியவற்றை முழுமையாக விவாதித்துள்ளதால், இப்பகுதி algorithm-களை மீண்டும் கூறாது. தொடர்ச்சியான பரிணாமத்தைப் பொறுத்தவரை, மதிப்பிடப்பட்ட production trajectory-களை training data-வாக மாற்றுவதே முக்கியம்: உயர்தர demonstration-கள் SFT-க்குச் செல்லலாம்; தெளிவான preference-கள் paired data-ஆக உருவாக்கப்படலாம்; நம்பகமான environment reward கொண்ட interaction-கள் RL-க்கு பயன்படுத்தப்படலாம். Training-க்கு முன் privacy information அகற்றப்பட வேண்டும், தவறான trajectory-கள் filter செய்யப்பட வேண்டும், தனித்த regression set பாதுகாக்கப்பட வேண்டும்; training-க்குப் பிறகு general capability மற்றும் safety alignment மறக்கப்பட்டுள்ளதா எனச் சோதிக்க வேண்டும்.</p>
+<p>Parameter learning பொதுவாக வெளிப்புற முறைகளுடன் ஒருங்கிணைகிறது. மருத்துவப் படவியல் மாதிரி visual representation-ஐ parameters மூலம் கற்றுக்கொள்கிறது; சமீபத்திய வழிகாட்டுதல்களை knowledge base வழங்குகிறது; lesion-ஐ அளவிடவும் risk-ஐக் கணக்கிடவும் code பயன்படுத்தப்படுகிறது. இயல்பான வாடிக்கையாளர் சேவைத் தொனி preference training மூலம் மொத்த distribution-ஆக வடிவமைக்கப்படலாம்; தற்போதைய brand identity-ஐ Prompt நிர்ணயிக்கலாம்; தனிப்பட்ட தொடர்பு விருப்பத்துக்கு user memory தழுவிக்கொள்ளலாம். தொடர்ச்சியான பரிணாமம் நான்கு முறைகளில் ஒரே பதிலைத் தேர்ந்தெடுப்பதல்ல; ஒவ்வொரு திறனையும் அதை வெளிப்படுத்தவும் ஆளுகை செய்யவும் மிகவும் பொருத்தமான இடத்தில் வைப்பதாகும்.</p>
+<h3 id="artifact-">Artifact-ஐப் புதுப்பிப்பதிலிருந்து “புதுப்பிப்பு முறையை” புதுப்பிப்பது வரை<a class="headerlink" href="#artifact-" title="Permanent link">&para;</a></h3>
+<p>முந்தைய நான்கு முறைகளும் <strong>அனுபவம் எங்கு எழுதப்படுகிறது</strong> என்று கேட்கின்றன. ஆனால் தொடர்ச்சியான பரிணாமத்துக்கு இன்னொரு, orthogonal axis உள்ளது: அமைப்பு ஒரு artifact-இன் content-ஐ optimize செய்கிறதா, அல்லது artifact-களை உருவாக்கி, நிர்வகித்து, சரிபார்க்கும் முறையையே optimize செய்கிறதா? இந்த axis-இல் optimization target <strong>ஒரு தனி rule அல்லது memory → structured context → workflow → Harness code → candidate solution-ஐ உருவாக்கும் optimizer code</strong> என விரிவடையலாம்<sup id="fnref:weng-harness-2026"><a class="footnote-ref" href="#fn:weng-harness-2026">14</a></sup>. இவை ஐந்து புதிய update carrier-கள் அல்ல; ஐந்து search scale-கள். Knowledge, Prompt, Skill மற்றும் program இவற்றில் பல scale-களில் தோன்றலாம்.</p>
+<p>உள்ளார்ந்த முதல் level artifact content-ஐ மட்டும் மாற்றுகிறது—தோல்வியடைந்த trajectory-க்கு பிறகு system Prompt-இல் ஒரு local rule சேர்ப்பது அல்லது experience document-இல் exception சேர்ப்பது போன்றவை. இத்தகைய change-களின் blast radius குறைவு; attribution மற்றும் rollback எளிது; எனவே இவையே default-ஆக இருக்க வேண்டும். ஆனால் ஒவ்வொரு round-லும் model-ஐ முழு Prompt அல்லது memory-ஐ rewrite செய்யச் சொல்வது வேறொரு degradation-ஐ ஏற்படுத்தலாம்: சுருக்க முயலும் தொடர்ச்சியான rewrite அரிதான ஆனால் முக்கியமான detail-களை மெதுவாக அழிக்கலாம்; ஒன்றோடொன்று தொடர்புடைய constraint-களை அதிகமாகப் பொதுமைப்படுத்தப்பட்ட principle-ஆகச் சுருக்கலாம். Agentic Context Engineering (ACE) stable identifier கொண்ட entry collection-ஆக context-ஐப் பராமரிக்கிறது. Generation, reflection மற்றும் curation module-கள் incremental update-ஐ முன்வைக்கின்றன; deterministic logic அவற்றை ஒவ்வொரு முறையும் குறுகிய text block-ஆக rewrite செய்யாமல் merge செய்து duplicate-ஐ அகற்றுகிறது<sup id="fnref:ace-2026"><a class="footnote-ref" href="#fn:ace-2026">15</a></sup>. இது minimal diff மற்றும் provenance retention என்ற இவ்வத்தியாயத்தின் கொள்கைகளுக்கான concrete research example ஆகும்.</p>
+<p>அடுத்த level-இல் optimization target context-இன் content மட்டும் அல்ல; context எவ்வாறு கட்டப்படுகிறது என்பதுமாகும். Meta Context Engineering (MCE) இதை inner loop மற்றும் outer loop எனப் பிரிக்கிறது: கொடுக்கப்பட்ட management method-ன் கீழ் inner loop தற்போதைய task-க்கான context artifact-ஐ optimize செய்கிறது; பல execution மற்றும் validation result-களைப் பயன்படுத்தி outer loop search, selection, filtering, formatting போன்ற context operation-களையே மாற்றுகிறது<sup id="fnref:mce-2026"><a class="footnote-ref" href="#fn:mce-2026">16</a></sup>. வேறுபாடு முக்கியமானது. ஒரு retrieval rule-ஐ edit செய்வது content-management mechanism-ஐ மாற்றுகிறது; பல retrieval மற்றும் curation mechanism-களை ஒப்பிட்டு, அதிக transfer தருவதை வைத்துக்கொள்வது context-ஐ எவ்வாறு நிர்வகிப்பது என்பதை கற்றுக்கொள்வதாகும்.</p>
+<p>இதே கருத்து workflow மற்றும் முழு Harness-க்கும் நீள்கிறது. AFlow பல LLM call-களால் ஆன workflow-ஐ code graph-ஆகக் காட்டி, execution feedback மூலம் node மற்றும் control-flow combination-களைத் தேடுகிறது<sup id="fnref:aflow-2025"><a class="footnote-ref" href="#fn:aflow-2025">17</a></sup>. Meta-Harness ஒரு Coding Agent-ஐ candidate Harness source, score மற்றும் trajectory-களை ஆய்வு செய்யச் செய்து, தகவல் எவ்வாறு store, retrieve மற்றும் present செய்யப்படுகிறது என்பதை நிர்ணயிக்கும் code-ஐத் தேடுகிறது<sup id="fnref:meta-harness-2026"><a class="footnote-ref" href="#fn:meta-harness-2026">18</a></sup>. ஐந்தாம் அத்தியாயம் code-ஐ Agent system structure-ஐ வெளிப்படுத்தும் பொதுவான மொழியாக நிறுவியது. இங்குள்ள கூடுதல் கருத்து, code மற்றும் அதன் evaluation history ஆகியவையும் one-time output அல்லாமல் continual search-இன் object-ஆக மாறலாம் என்பதாகும்.</p>
+<p>வெளிப்புற level எப்போதும் சிறந்தது அல்ல. Local rule-ஐத் தேட சில edge case-கள் போதலாம்; முழு workflow அல்லது Harness-ஐத் தேடுவது பெரிய candidate space, அதிக evaluation cost மற்றும் கடினமான attribution-ஐக் கொண்டது. ஒரு component-இல் தெளிவாக localized ஆன, மீண்டும் தோன்றும் fault-க்கு முதலில் audit செய்யக்கூடிய local patch வழங்க வேண்டும். Local change-கள் பலமுறை cross-component பிரச்சினையைத் தீர்க்கத் தவறும்போது அல்லது management method தானே bottleneck ஆகும்போது மட்டுமே workflow, Harness அல்லது optimizer level-க்கு வெளியே செல்ல வேண்டும். எல்லா level-களிலும் evaluator, permission boundary மற்றும் held-out test editable scope-க்கு வெளியே இருக்க வேண்டும்; search space பெரிதாகும்போது இந்த trusted root இன்னும் முக்கியமாகிறது.</p>
+<h2 id="_3">நீண்டகாலம் இயங்கக்கூடிய தொடர்ச்சியான பரிணாமச் சுற்றை உருவாக்குதல்<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>நான்கு update முறைகளும் ஒரே தன்னாட்சி loop-இல் நுழைந்தால்தான் single optimization-இலிருந்து தொடர்ச்சியான பரிணாமமாக மாறும். படம் 8-5 production அமைப்பிற்கான மேலும் நம்பகமான இரட்டை-loop கட்டமைப்பைக் காட்டுகிறது: online execution loop பணியை முடித்து சான்றுகளை மட்டும் பதிவு செய்கிறது; முறையான Agent-ஐ நேரடியாக மாற்றாது. Offline evolution loop trajectory-களைத் தொகுத்து, root cause-ஐ diagnosis செய்து, candidate modification-களை உருவாக்கி, பின்னர் verification threshold-ஐத் தாண்டி புதிய version-ஐ வெளியிடுகிறது. Version செய்யப்பட்ட experience library மற்றும் evaluation set மூலம் இவை இணைக்கப்படுகின்றன.</p>
+<p><img alt="படம் 8-5 online execution மற்றும் offline evolution ஆகியவற்றின் இரட்டைச் சுற்று" src="../images/fig8-5.svg" /></p>
+<p>Voyager<sup id="fnref:voyager-2023"><a class="footnote-ref" href="#fn:voyager-2023">13</a></sup> ஒப்பீட்டளவில் முழுமையான தொடர்ச்சியான பரிணாமச் சுற்றைக் காட்டுகிறது. Minecraft-இல் தற்போதைய திறனை அடிப்படையாகக் கொண்டு புதிய இலக்கைத் தேர்ந்தெடுத்து, environment feedback மூலம் program-ஐ iteratively மேம்படுத்தி, வெற்றியைச் சரிபார்த்த பிறகு code-ஐ skill library-இல் சேமித்து, பழைய skill-களை இணைத்து மேலும் கடினமான பணிகளைத் தீர்க்கிறது. Automatic curriculum, executable skill மற்றும் environment verification—மூன்றும் அவசியமானவை: skill library மட்டும் இருந்து curriculum இல்லாவிட்டால், Agent அடுத்ததாக என்ன கற்க வேண்டும் என்பதை அறியாது; self-reflection மட்டும் இருந்து environment verification இல்லாவிட்டால், skill library தவறுகளைச் சேர்த்துக்கொண்டே இருக்கும்; exploration மட்டும் இருந்து persistence இல்லாவிட்டால், ஒவ்வொரு பணியும் தொடக்கத்திலிருந்து மீண்டும் செய்யப்பட வேண்டும். நிஜ Agent-இன் அறிவு, Prompt, tools மற்றும் parameters மேலும் சிக்கலானவை என்றாலும், அடிப்படை learning process இதேபோன்றதே.</p>
+<p>குறிப்பாக Voyager மூன்று ஒன்றோடொன்று இணைந்த mechanism-களைக் கொண்டது. <strong>Automatic curriculum generator</strong> தற்போதைய item, environment மற்றும் ஏற்கனவே கற்ற skill-களை அடிப்படையாகக் கொண்டு அடுத்த பொருத்தமான கடினத்தன்மையுள்ள இலக்கை முன்வைக்கிறது; exploration சீரற்ற அலைச்சலாக மாறாது. <strong>Skill library</strong> வெற்றிகரமான program-ஐ retrieval மற்றும் composition செய்யக்கூடிய code-ஆகச் சேமிக்கிறது; உதாரணமாக advanced gathering skill, movement மற்றும் crafting போன்ற basic skill-களை அழைக்கலாம். <strong>Iterative Prompt mechanism</strong> environment observation, execution error மற்றும் self-verification result-ஐ அடுத்த code-generation round-க்கு மீண்டும் வழங்கி, task உண்மையில் pass ஆகும் வரை தொடர்கிறது. Paper-ன் அறிக்கைப்படி, அப்போதைய baseline-களுடன் ஒப்பிடும்போது Voyager 3.3 மடங்கு unique item-களைப் பெற்றது, 2.3 மடங்கு தூரம் explore செய்தது, முக்கிய tech-tree milestone-களை அதிகபட்சம் 15.3 மடங்கு வேகமாக unlock செய்தது; மேலும் skill library-ஐ புதிய Minecraft world-க்கு transfer செய்தது. இம்மெட்ரிக் ஒரு frozen Agent-இன் ஒருமுறைத் தேர்வு மதிப்பெண்ணை அல்ல, அனுபவத்துடன் திறன் வளர்கின்ற curve-ஐ அளவிடுகின்றன.</p>
+<h3 id="_4">பிரச்சினை அடையாளத்திலிருந்து அனுபவ நிலைநிறுத்தம் வரை<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>ஒரே மேற்பரப்பு பிரச்சினைக்குப் பல்வேறு மாற்ற முறைகள் தேவைப்படலாம். வாடிக்கையாளர் சேவை Agent உண்மைகளைப் புனையும் hallucination-ஐ வெளிப்படுத்தினால், knowledge base-இல் உண்மை இல்லாததே காரணமாக இருக்கலாம்; அல்லது citation கோராத Prompt காரணமாக இருக்கலாம். பணி முடிவடையாதபோதும் “முடிந்துவிட்டது” என்று பொய்யாக உறுதியளித்தால், அதை அறிவுறுத்தல் மூலம் திருத்தலாம்; அல்லது பதிலும் tool state-உம் ஒத்துள்ளதா என Harness கட்டாயமாகச் சோதிக்கலாம். Evolution module முதலில் root cause-ஐ அடையாளம் கண்டு, மிகச் சிறிய, எளிதாகச் சரிபார்க்கவும் rollback செய்யவும் இயலும் modification target-ஐத் தேர்ந்தெடுக்க வேண்டும். சான்று போதாத தற்செயலான fault உடனடியாக learning-ஐத் தூண்டக்கூடாது; மேலும் sample-கள் சேகரிக்கப்பட வேண்டும்.</p>
+<p>அனுபவம் அதிகரிக்கும்போது இந்தத் தேர்வும் மாறலாம். புதிதாகக் கண்டறியப்பட்ட strategy முதலில் retrieval செய்யக்கூடிய அனுபவ ஆவணமாக வழங்கப்படலாம்; பல case-கள் அதை மீண்டும் மீண்டும் சரிபார்த்த பிறகு, அது knowledge-ஆக உயர்த்தப்படலாம். Knowledge மூன்று வடிவங்களில் வெளிப்படலாம்: இயல்பான மொழியில் தெளிவாக விவரிக்கக்கூடிய விதிகள் Skill-ஆக நிலைநிறுத்தப்படலாம்; படிகள் நிலையாக இருந்து natural-language understanding தேவையில்லாவிட்டால் tool code-ஆக compile செய்யலாம்; அது உண்மையில் பரந்த implicit decision capability-ஐ பிரதிபலித்தால் post-training-க்குச் செல்லலாம்.</p>
+<h3 id="rollback">சரிபார்ப்பு, வெளியீடு மற்றும் rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h3>
+<p>அனைத்து மாற்றங்களும் முதலில் candidate capability அல்லது candidate Agent-ஐ உருவாக்க வேண்டும்; production version-ஐ நேரடியாக overwrite செய்யக்கூடாது. Retrieval செய்யப்பட்ட அறிவு ஆவணம் புதிய பணித் திறனை மேம்படுத்துகிறதா எனச் சரிபார்க்க வேண்டும்; Prompt மற்றும் Skill boundary case-களையும் பழைய task regression-ஐயும் கடக்க வேண்டும்; program sandbox மற்றும் reset சூழலில் test செய்யப்பட வேண்டும்; parameter update மறதி, பாதுகாப்பு மற்றும் out-of-distribution பணிகளில் சோதிக்கப்பட வேண்டும். Verification வெற்றியடைந்த பிறகும் உண்மையான traffic-இல் canary release மூலம் கண்காணிக்கப்பட வேண்டும்; முக்கிய metrics மோசமடைந்தால் அறியப்பட்ட safe version-க்கு தானாக rollback செய்ய வேண்டும்.</p>
+<p>Verification பொதுவாக ஒன்றாகக் கருதப்படும் இரண்டு திறன்களைப் பிரிக்க வேண்டும். <strong>Harness updating</strong> என்பது trajectory-களிலிருந்து மதிப்புள்ள persistent change-களை உருவாக்கும் திறன்; <strong>Harness benefit</strong> என்பது task Agent பின்னர் அந்த change-களை சரியான சூழலில் கண்டறிந்து, activate செய்து, முறையாகப் பயன்படுத்தும் திறன். ஒரு Skill தானாகவே சரியானதாக இருந்தாலும், பலவீனமான task model அதை உரிய சூழலில் load செய்யாமல் இருக்கலாம்; அல்லது நீண்ட trajectory முழுவதும் அதைத் தொடர்ந்து பின்பற்றத் தவறலாம். இரண்டிலும் final score பரிணாமமே நடக்கவில்லை என்று தோன்றும். எனவே end-to-end performance மட்டும் updater-ஐ diagnosis செய்யப் போதாது. Lin et al. செய்த model-swapping experiment-கள் இந்த இரு திறன்களும் base-model capability-உடன் வேறுபட்ட முறையில் தொடர்புடையதாகக் காட்டுகின்றன<sup id="fnref:harness-benefit-2026"><a class="footnote-ref" href="#fn:harness-benefit-2026">21</a></sup>. இந்த relationship மேலும் பல task-களில் சரிபார்க்கப்பட வேண்டும்; இருந்தாலும் இரண்டையும் தனித்தனியாக மதிப்பிடுவது பொதுவாக பயனுள்ளதாகும்.</p>
+<p>அட்டவணை 8-3 தொடர்ச்சியான பரிணாமத்திற்கான layered evaluation metric-கள்</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>பதிலளிக்கும் கேள்வி</th>
+<th>முக்கியச் சான்று</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Candidate-change validity</td>
+<td>Updater பயனுள்ள change-ஐ முன்வைக்கிறதா?</td>
+<td>Acceptance rate மற்றும் independent validation gain</td>
+</tr>
+<tr>
+<td>Artifact activation rate</td>
+<td>Task Agent புதிய Skill, memory அல்லது tool-ஐ சரியான சூழலில் load செய்கிறதா?</td>
+<td>Retrieval, routing மற்றும் tool-call trace</td>
+</tr>
+<tr>
+<td>Successful adherence rate</td>
+<td>Activate ஆன பிறகு Agent புதிய rule அல்லது process-ஐப் பின்பற்றுகிறதா?</td>
+<td>Action sequence மற்றும் process verifier</td>
+</tr>
+<tr>
+<td>Held-out task gain</td>
+<td>Evolution-க்குப் பயன்படுத்தாத task-களில் முழு system மேம்படுகிறதா?</td>
+<td>Held-out success, quality மற்றும் cost</td>
+</tr>
+</tbody>
+</table>
+<p>Diagnosis செய்யும்போது candidate Harness-ஐ நிலையாக வைத்து task model-ஐ மட்டும் மாற்றலாம். Strong model பயனடைந்து weak model புதிய artifact-ஐ activate செய்யவே இல்லையெனில் retrieval அல்லது routing bottleneck ஆகும். இரண்டும் activate செய்தும் strong model மட்டும் சரியாக execute செய்தால் instruction following அல்லது long-horizon planning bottleneck ஆகும். எல்லா model-களும் regress ஆனால் change தானே அதிக சந்தேகத்துக்குரியது. மாறாக task model-ஐ நிலையாக வைத்து change-ஐ முன்வைக்கும் model-ஐ மாற்றுவதன் மூலம் updater quality-ஐ நேரடியாக ஒப்பிடலாம். இந்த two-way model swap, ஒரே post-evolution score-ஐவிட capability budget எங்கு செலவிடப்பட வேண்டும் என்பதைத் தெளிவாகக் காட்டுகிறது.</p>
+<p>Evaluation என்பது learning முடிந்த பிறகு எழுதப்படும் தேர்வு அல்ல; self-evolution process-இன் பிரிக்கமுடியாத பகுதியாகும். நீண்டகால மதிப்பீடு குறைந்தபட்சம் பின்வரும் ஐந்து வகை முடிவுகளை ஒரே நேரத்தில் கண்காணிக்க வேண்டும்:</p>
+<ul>
+<li>regression, அதாவது புதிய அனுபவம் ஏற்கனவே உள்ள மற்ற அனுபவங்களுடன் முரண்படுகிறதா, முன்பு வெற்றியடைந்த case-கள் பின்னடைவைச் சந்திக்கிறதா;</li>
+<li>generalization capability, அதாவது test set இன்னும் உள்ளடக்காத சூழல்களில் புதிய அனுபவம் அளிக்கும் செயல்திறன் உயர்வு;</li>
+<li>Token efficiency, அதாவது பணியை முடிக்கச் செலவாகும் token செலவு;</li>
+<li>safety, அதாவது விதிகள், privacy மற்றும் refusal boundary பரிணாமத்துடன் drift ஆகிறதா;</li>
+<li>long-term engineering quality, அதாவது maintenance complexity, architectural consistency, ownership boundary, backward compatibility மற்றும் எதிர்கால migration, debugging cost ஆகியவை சிதைகிறதா.</li>
+</ul>
+<p>நடப்பு failure case-ஐ மட்டும் தீர்த்து, ஏற்கனவே உள்ள மற்ற case-களிலும் புதிய domain-களிலும் சிதைவடைந்தால், அது வெற்றிகரமான தொடர்ச்சிக் கற்றல் அல்ல.</p>
+<h3 id="loop-">சரிபார்க்கக்கூடிய loop-இன் எல்லை: “முடிந்தது” என்பது “முன்னேற்றம்” அல்ல<a class="headerlink" href="#loop-" title="Permanent link">&para;</a></h3>
+<p>முந்தைய loop Coding, tool use மற்றும் business-state change போன்ற, test, environment state அல்லது deterministic rule விரைவான feedback வழங்கும் பணிகளுக்கு மிகவும் இயல்பாகப் பொருந்துகிறது. Open-ended research, strategic planning மற்றும் complex product design வேறுபட்டவை: feedback தாமதமாகும்; ஒரே சரியான பதில் இல்லாமல் இருக்கலாம்; research taste, long-term value மற்றும் maintainability போன்ற முக்கிய இலக்குகளை உடனடி score-ஆக மாற்றுவது கடினம். அப்போது Harness process-ஐத் தவறின்றி execute செய்தாலும், உண்மையான objective-ஐ முன்னேற்றாமல் result போலத் தோன்றும் பொருட்களை மட்டும் உருவாக்கலாம்.</p>
+<p>Autonomous research இதற்கான நல்ல stress test ஆகும். Trehan மற்றும் Chopra research idea-களை paper-ஆக மாற்ற நான்கு end-to-end முயற்சிகளைப் பதிவு செய்தனர். மூன்று implementation அல்லது evaluation கட்டத்தில் தோல்வியடைந்தன; ஒன்று மட்டுமே முழு pipeline-ஐ முடித்தது<sup id="fnref:llm-scientists-2026"><a class="footnote-ref" href="#fn:llm-scientists-2026">22</a></sup>. Failure-களை மூன்று குழுக்களாகப் பிரிக்கலாம். முதலில், <strong>implementation drift</strong>: முன்மொழிந்த method கடினமானதும் Agent தனது training distribution-இல் பரிச்சயமான implementation-க்கு பின்வாங்குகிறது; அது மூல hypothesis-ஐ இனி சோதிக்காது. இரண்டாவது, <strong>epistemic over-optimism</strong>: signal இன்னும் noise-ஆக இருக்கும்போதே system அதை விளக்கத் தொடங்கி, method-ஐ patch செய்து, finding-ஐ அறிவிக்கிறது; failure மற்றும் negative result எளிதில் புறக்கணிக்கப்படுகின்றன. மூன்றாவது, <strong>tacit judgment இல்லாமை</strong>: Agent experiment-ஐ இயக்கத் தெரிந்தாலும், எந்த baseline முக்கியம், எந்த anomaly-ஐ ஆய்வு செய்ய வேண்டும், hypothesis-ஐ எப்போது கைவிட வேண்டும் என்பதைக் கண்டறிய முடியாமல் இருக்கலாம்.</p>
+<p>இத்தகைய task-களுக்கு paper எழுதும் திறன் கொண்ட model மட்டும் போதாது; evidence மற்றும் supervision structure மாற வேண்டும்:</p>
+<ul>
+<li><strong>Claim-ஐ evidence-இலிருந்து பிரித்தல்</strong>: Citation, number, method மற்றும் conclusion-ன் provenance-ஐ தனித்தனியாகப் பதிவு செய்ய வேண்டும்; final document evidence graph-இன் ஒரு rendering மட்டுமே. ScientistOne-ன் Chain-of-Evidence design ஒவ்வொரு claim class-ஐயும் audit செய்யக்கூடிய source-உடன் இணைக்கிறது. இது traceability-ஐ மேம்படுத்துகிறது; ஆனால் research question-ஐ தானாகவே மதிப்புள்ளதாக மாற்றாது<sup id="fnref:scientistone-2026"><a class="footnote-ref" href="#fn:scientistone-2026">23</a></sup>.</li>
+<li><strong>Negative result-ஐப் பாதுகாத்தல்</strong>: தோல்வியடைந்த experiment, reject செய்யப்பட்ட candidate மற்றும் stopping reason ஆகியவற்றை success-க்கு இணையான retrieval status கொண்ட immutable log-இல் எழுத வேண்டும். இல்லையெனில் evolution module survivor-களை மட்டும் பார்த்து, ஏற்கனவே மறுக்கப்பட்ட பாதைகளை மீண்டும் முயன்று, ambiguous result-ஐ success எனப் புரிந்துகொள்ளும்.</li>
+<li><strong>Search diversity-ஐப் பாதுகாத்தல்</strong>: Open-ended search தற்போது அதிக score கொண்ட chain-ஐ மட்டும் வைத்திருக்கக்கூடாது. Candidate pool mechanism, code novelty அல்லது hypothesis type அடிப்படையில் அர்த்தமுள்ள வேறுபாடு கொண்ட சில குறைந்த-score branch-களையும் வைத்திருக்க வேண்டும்; இல்லையெனில் எல்லா solution-களும் எளிதாக score செய்யக்கூடிய ஒரே template-க்கு converge ஆகும்.</li>
+<li><strong>Human involvement-ஐ மேல்நிலைக்கு நகர்த்தல்</strong>: மனித input ஆபத்தான tool call-ஐ approve செய்வதுடன் முடிவதில்லை. Problem definition, evaluation criteria review, anomalous result interpretation மற்றும் எப்போது நிறுத்த வேண்டும் என்ற முடிவும் இதில் அடங்கும். Feedback ambiguous ஆக இருக்கும்போது இந்த high-level judgment-கள் தனிப்பட்ட execution step-ஐ மனிதர் எடுத்துக்கொள்வதைவிட automate செய்வது கடினம்; அவற்றின் மதிப்பும் அதிகம்.</li>
+</ul>
+<p>இதே வரம்பு சாதாரண software engineering-இலும் உள்ளது. எல்லா unit test-களும் pass ஆகுவது தற்போது காணக்கூடிய behavior test-ஐ பூர்த்தி செய்கிறது என்பதை மட்டுமே நிரூபிக்கிறது; பல மாதங்களுக்குப் பிறகும் codebase maintainable-ஆக இருக்கும் என்பதை நிரூபிக்காது. அதனால் முந்தைய பகுதி long-term engineering quality-ஐ தற்போதைய task success-இல் மறைக்காமல் தனி metric-ஆகக் கருதுகிறது. தொடர்ச்சியான பரிணாமத்தின் உச்சவரம்பு, system உண்மையில் மதிக்கும் objective-ஐ மதிப்பிட முடியுமா என்பதால்தான் தீர்மானிக்கப்படுகிறது; அளவிட எளிதான proxy-ஆல் மட்டும் அல்ல.</p>
+<h3 id="_5">தொடர்ச்சியான பரிணாமத்தின் பாதுகாப்பு எல்லைகள்<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>Agent-இன் self-evolution திறன் ஒரு தவறை நீண்டகால ஆபத்தாக மாற்றலாம். Web page, email அல்லது tool output-இலுள்ள <strong>prompt injection அனுபவமாகச் சுருக்கப்பட்டால்</strong>, அது பல session-களிலும் மீண்டும் செயல்படலாம். தானாகத் தேடப்பட்ட malicious package tool-ஆக wrap செய்யப்பட்டால், அதன் தாக்கம் ஒரு sandbox run-இலிருந்து அடுத்தடுத்த எல்லாப் பணிகளுக்கும் பரவும். குறைபாடுள்ள verifier மேம்பாடு போலத் தோன்றும் ஆனால் உண்மையில் சிதைந்த candidate version-களைத் தொடர்ந்து அங்கீகரிக்கலாம். எனவே self-evolution system “மேலும் வலுவானதா” என்பதை மட்டும் சரிபார்க்காமல், “யார் எதை மாற்றலாம், ஆதாரம் எங்கிருந்து வருகிறது” என்பதையும் கட்டுப்படுத்த வேண்டும்.</p>
+<p>முதல் எல்லை <strong>சான்றையும் அறிவுறுத்தலையும் பிரித்தல்</strong>. மூல web page மற்றும் raw tool output நம்பகமற்ற சான்றுகள்; அவை Skill போன்றவற்றில் நேரடியாக எழுதப்படக்கூடாது. எழுதுவதற்கு முன் LLM summary தேவை. Version control முறையில் எழுதப்பட்டு, pull request சமர்ப்பிக்கப்பட்டு, வேறு source கொண்ட reviewer LLM review செய்த பிறகே merge செய்யப்பட வேண்டும்.</p>
+<p>இரண்டாவது எல்லை <strong>candidate capability மற்றும் formal capability-ஐப் பிரித்தல்</strong>. புதிய knowledge, Prompt, Skill, program மற்றும் parameter அனைத்தும் உண்மையான traffic-ஐ serve செய்யாத candidate பகுதியில் முதலில் செல்ல வேண்டும். புதிதாக உருவான code மற்றும் external dependency sandbox, permission check, supply-chain scan, behavior test போன்ற safety check-களைக் கடக்க வேண்டும். Safety check மற்றும் regression test கடந்த பிறகே அவை உண்மையான traffic-ஐ serve செய்து formal capability ஆகலாம்.</p>
+<p>மூன்றாவது எல்லை <strong>பாதுகாப்பு mechanism தன்னைத்தானே மாற்றக்கூடாது</strong>. Business Agent Prompt, Skill, knowledge base மற்றும் tool-ஐ மாற்றலாம்; ஆனால் தனது update-ஐ அங்கீகரிக்கும் verifier, test case, release threshold, audit log மற்றும் stable-version backup-ஐ மாற்றக்கூடாது. இல்லையெனில் test threshold-ஐக் குறைத்தோ failure case-ஐ நீக்கியோ சிதைவை முன்னேற்றமாகக் காட்ட முடியும்.</p>
+<h3 id="_6">உறக்கக் கற்றல்: ஒருங்கிணைப்பு, மறதி மற்றும் திறன் பராமரிப்பு<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>“உறக்கக் கற்றல்” என்பது offline consolidation-க்கான அறிவாற்றல் ஒப்புமை; பணி உண்மையில் இரவில்தான் இயங்க வேண்டும் என்பதல்ல. Online Agent-இன் முதன்மைப் பொறுப்பு தற்போதைய பணியை முடித்து, மாற்றமுடியாத சான்றை append செய்வது. Background learning process idle நேரத்தில் அல்லது gating condition நிறைவேறும்போது புதிய அனுபவங்களின் batch-ஐப் படித்து, புதிய மற்றும் பழைய conclusion-களை ஒப்பிட்டு, duplicate-ஐ merge செய்து, conflict-ஐத் தீர்த்து, candidate update-ஐ முன்வைத்து regression இயக்குகிறது. Collection மற்றும் organization-ஐப் பிரிப்பது ஒரு தற்செயலான வெற்றி, network failure அல்லது malicious input உடனடியாக long-term capability-ஐ மாற்றுவதைத் தடுக்கும்; மேலும் பெரிய batch மற்றும் மலிவான model-ஐப் பயன்படுத்த அனுமதிக்கும்.</p>
+<p>ஒரு வழக்கமான உறக்கக் கற்றல் cycle ஐந்து படிகளைக் கொண்டது:</p>
+<ol>
+<li><strong>Trigger</strong>: time interval, புதிய trajectory எண்ணிக்கை, storage capacity அல்லது error-frequency threshold அடைந்துள்ளதா; தற்போது high-priority online task இல்லையா என உறுதிப்படுத்தல்.</li>
+<li><strong>Orientation</strong>: formal knowledge, Prompt, Skill directory மற்றும் அவற்றின் version-ஐப் படித்து, தற்போதைய capability மற்றும் மாற்றக்கூடாத எல்லைகளை அறிதல்.</li>
+<li><strong>Collection மற்றும் integration</strong>: சமீபத்தில் மதிப்பிடப்பட்ட trajectory-களிலிருந்து புதிய signal-ஐத் தேடி, duplicate-ஐ ஒன்றிணைத்து, conflict மற்றும் applicable condition-ஐக் குறித்துவைத்து, local patch-க்கு முன்னுரிமை அளித்தல்.</li>
+<li><strong>Verification மற்றும் approval</strong>: transfer set, retention set மற்றும் safety set-இல் candidate-ஐ மதிப்பிட்டு, high-risk write-களை மனித approval-க்காக நிறுத்துதல்.</li>
+<li><strong>Pruning மற்றும் indexing</strong>: retrieval index-ஐ update செய்து, நீண்டகாலம் பயன்படுத்தப்படாத அல்லது புதிய சான்றால் மறுக்கப்பட்ட capability-ஐ expired, archived அல்லது deleted எனக் குறித்தல்; source மற்றும் rollback version-ஐப் பாதுகாத்தல்.</li>
+</ol>
+<p>User memory இதற்கான நேரடியான எடுத்துக்காட்டு; ஆனால் action experience-இலிருந்து வேறுபடுத்த வேண்டும். Claude Code automatic memory ஒவ்வொரு project-க்கும் <code>MEMORY.md</code> index மற்றும் topic அடிப்படையில் பிரிக்கப்பட்ட detail file-களைப் பராமரிக்கிறது. Session தொடக்கத்தில் index-இன் bounded prefix மட்டுமே load செய்யப்படுகிறது; மற்றவை தேவைக்கேற்பப் படிக்கப்படுகின்றன. Index limit-ஐ அணுகும்போது detail-ஐ merge செய்யவோ வேறு file-க்கு நகர்த்தவோ Agent-க்கு அமைப்பு அறிவுறுத்துகிறது. Plain-text memory-க்கும் capacity constraint, layered loading மற்றும் active organization தேவை என்பதை இது காட்டுகிறது. ஆனால் வெளியிடப்பட்ட தற்போதைய mechanism முக்கியமாக session-இல் தொடர்ந்து எழுதுகிறது; அதை ஒரு fixed nightly background task-க்கு நேரடியாகச் சமமாகக் கருத முடியாது<sup id="fnref:claude-code-memory"><a class="footnote-ref" href="#fn:claude-code-memory">11</a></sup>.</p>
+<p>Hermes மேலும் முழுமையான background evolution எடுத்துக்காட்டை வழங்குகிறது. Long-term information-ஐ bounded <code>MEMORY.md</code> மற்றும் <code>USER.md</code>, SQLite/FTS5 அடிப்படையிலான historical-session retrieval, தேவைக்கேற்ப load செய்யப்படும் Skill, Honcho போன்ற optional external-memory provider எனப் பிரிக்கிறது. Historical retrieval முதலில் LLM summary செய்யாமல் raw message-ஐத் தருகிறது; retrieval மற்றும் generation audit செய்ய முடியாத ஒரே படியாக கலப்பதைத் தவிர்க்கிறது. ஒரு task பல tool call-களைக் கொண்டிருந்தால், error அல்லது dead end-இலிருந்து recover செய்தால், user correction பெற்றால், அல்லது வெளிப்படையில்லாத workflow கண்டுபிடித்தால், background reflection புதிய Skill உருவாக்கவோ local revision செய்யவோ முடியும்; memory மற்றும் Skill write approval gate-ஐயும் கடக்கலாம். தனித்த Curator Skill usage, staleness மற்றும் archival state-ஐக் கண்காணித்து, idle நேரத்தில் deterministic pruning செய்கிறது; தேவையெனில் LLM merge-ஐ இயக்குகிறது. Change-க்கு முன் snapshot சேமிக்கப்படுவதால் தவறான organization rollback செய்யப்படலாம்<sup id="fnref:hermes-memory"><a class="footnote-ref" href="#fn:hermes-memory">12</a></sup>. இந்த எடுத்துக்காட்டு “பதிவு—ஒருங்கிணைப்பு—சரிபார்ப்பு—pruning” என்பதை ஒப்புமையிலிருந்து இயங்கக்கூடிய capability lifecycle-ஆக மாற்றுகிறது.</p>
+<p>தொடர்ச்சியான பரிணாமம் knowledge, Prompt மற்றும் tools முடிவில்லாமல் வளர்வதைக் குறிக்காது. இரண்டாம் அத்தியாயத்தில் கூறப்பட்ட context corruption நீண்டகால அளவிலும் மீண்டும் தோன்றும்: அனுபவ ஆவணங்கள் ஒன்றுக்கொன்று முரண்படும்; Prompt boundary rule-களால் மூழ்கும்; Skill library-இல் duplicate capability-கள் தோன்றும்; பலமுறை fine-tuning செய்வதால் catastrophic forgetting ஏற்படும். அமைப்பிற்கு காலமுறை offline consolidation தேவை:</p>
+<ul>
+<li>duplicate அனுபவங்களை ஒன்றிணைத்து, source மற்றும் version-ஐப் பாதுகாத்தல்;</li>
+<li>local rule-களை global Prompt-இலிருந்து domain Skill-க்கு மாற்றி, global Prompt-ஐச் சீராக வைத்தல்;</li>
+<li>Prompt மற்றும் Skill ஆகியவற்றின் கட்டமைப்பைத் தெளிவாக வைத்துக் கொண்டு, புதிய பணியாளருக்காக எழுதப்பட்ட வழிகாட்டிப் புத்தகம்போல் அமைத்தல்; “99 இராணுவ விதிகள்” போன்ற பட்டியலைத் தவிர்த்தல்.</li>
+<li>நீண்டகாலமாகப் பயன்படுத்தப்படாத tools-ஐ மீண்டும் சரிபார்த்தல்;</li>
+<li>புதிய சான்றுகளால் மறுக்கப்பட்ட knowledge-ஐ நீக்குதல்;</li>
+<li>மூல base model-இலிருந்து LoRA-வை மீண்டும் பயிற்றுவித்தல்.</li>
+</ul>
+<blockquote>
+<p><strong>பரிசோதனை 8-6 ★★★: Agent தொடர்ச்சியாகப் பரிணமிக்கிறதா என்பதை மதிப்பிடுதல்</strong></p>
+<p><strong>பரிசோதனை இலக்கு</strong>: “ஒருமுறை feedback-ஐச் சேமிக்கக்கூடியது”, “append மட்டும் செய்யக்கூடியது”, “capability-ஐ update, transfer மற்றும் retain செய்யக்கூடியது” என்ற மூன்று நீண்டகால நடத்தைகளை வேறுபடுத்தி, ஒரே கேள்வித் தொகுப்பை மீண்டும் இயக்குவதை continual learning எனக் காட்டுவதைத் தவிர்த்தல்.</p>
+<p><strong>நான்கு கட்ட task flow</strong>: Learning கட்டத்தில் refund, identity verification மற்றும் baggage policy போன்ற பகிரப்பட்ட latent rule கொண்ட task-கள் வழங்கப்படுகின்றன. Transfer கட்டத்தில் wording, user மற்றும் local environment மாற்றப்பட்டு, பழைய அனுபவம் புதிய task-க்கு பயன்படுகிறதா எனச் சோதிக்கப்படுகிறது. Rule-change கட்டத்தில் baggage limit 20kg-இலிருந்து 23kg-ஆக மாற்றப்பட்டு, பழைய knowledge replace அல்லது retire செய்யப்பட வேண்டும். Retention கட்டத்தில் மாறாத capability மற்றும் தற்போதைய valid rule மீண்டும் சோதிக்கப்பட்டு, update forgetting ஏற்படுத்தியதா என அளவிடப்படுகிறது. Feedback கொண்ட ஒவ்வொரு task முடிந்த பிறகே external memory update அனுமதிக்கப்படும்; தற்போதைய கேள்வியின் expected action முன்கூட்டியே Agent-க்கு leak ஆகக்கூடாது.</p>
+<p><strong>ஒப்பீட்டுக் குழுக்கள்</strong>: <code>static</code> feedback-ஐ persist செய்யாது; <code>append_only</code> முதல் version rule-ஐ நினைவில் வைக்கும், ஆனால் conflict-ஐத் தீர்க்கவோ obsolete rule-ஐ நீக்கவோ முடியாது; <code>evolving</code> version-ஐச் சேமித்து புதிய evidence மூலம் பழைய rule-ஐ மாற்றுகிறது. Reference implementation evaluation Harness இவ்விதமான நடத்தைகளை வேறுபடுத்துகிறதா எனச் சோதிக்கிறது. உண்மையான பரிசோதனையில் LLM அதே 14-question sequential task flow-ஐ அனுபவிக்கலாம்; ஆனால் result model-க்கு வெளியே உள்ள Harness மூலம் கணக்கிடப்பட வேண்டும்.</p>
+<p><strong>Metrics மற்றும் acceptance</strong>: ஒவ்வொரு கட்டத்திற்கும் accuracy மற்றும் learning curve தெரிவிக்கப்பட வேண்டும்; transfer accuracy, புதிய rule பெற்ற பிறகு சரியான பதிலுக்கு மீளத் தேவையான task எண்ணிக்கை, old-capability retention rate, negative-transfer rate, safety-Rubric pass rate, Token, latency மற்றும் storage cost தனித்தனியாகக் கணக்கிடப்பட வேண்டும். Prompt, Skill அல்லது Harness-ஐ update செய்யும் உண்மையான system-களில் candidate-change validity, artifact activation rate மற்றும் successful adherence rate ஆகியவற்றையும் பதிவு செய்ய வேண்டும்; இதனால் “update சரியாக இருந்தது, ஆனால் load செய்யப்படவில்லை” என்பது update failure எனத் தவறாக வகைப்படுத்தப்படாது. Final accuracy உயர்ந்திருந்தாலும் obsolete rule-ஐத் தொடர்ந்து மேற்கோள் காட்டினால், விதிமீறிய shortcut மூலம் task முடித்தால், அல்லது update-க்கு பின் பழைய capability-ஐ மறந்தால், அந்த Agent தொடர்ச்சியாகப் பரிணமிக்கிறது எனக் கருத முடியாது.</p>
+<p>தொடர்புடைய implementation <a href="../chapter8/self-evolution-eval/"><code>self-evolution-eval</code></a> இல் உள்ளது. இயல்புநிலையில் update செய்யக்கூடிய, append-only மற்றும் static ஆகிய மூன்று reference Agent-கள் ஒப்பிடப்படுகின்றன; <code>--profile llm</code> பயன்படுத்தினால் உண்மையான LLM அதே நீண்டகால task flow-ஐ அனுபவிக்கலாம்.</p>
+</blockquote>
+<h2 id="_7">அத்தியாயச் சுருக்கம்<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<p>தொடர்ச்சிக் கற்றல் Agent-இன் மிக முக்கியமான திறன்களில் ஒன்றாக மாறிவருகிறது; ஆனால் இன்றைய மாதிரிகள் இன்னும் நம்பகமான தொடர்ச்சிக் கற்றலைத் தாமாகவே நிறைவேற்ற முடியாது. Inference நேர context adaptation தானாகவே நிலைபெறாது; சரிபார்க்கப்படாத online parameter update இரைச்சல், தாக்குதல் மற்றும் capability drift ஆகியவற்றை பெரிதாக்கும். எனவே, தற்போதைய நடைமுறை வழி மாதிரியைச் சுற்றி சரிபார்க்கக்கூடிய learning system ஒன்றை அமைப்பதாகும்.</p>
+<p>Interaction மற்றும் evaluation-இலிருந்து learning signal-ஐப் பெற்ற பிறகு, திறன் எவ்வாறு represent செய்யப்படுகிறது என்பதற்கேற்ப Agent knowledge, Prompt, Skill, program அல்லது model parameter-ஐ update செய்கிறது. இந்த artifact-களை நிர்வகித்து உருவாக்கும் method-களையும் system optimize செய்யலாம்; ஆனால் attribution, verification மற்றும் rollback செய்யக்கூடிய local change-களுக்கு முன்னுரிமை அளிக்க வேண்டும்.</p>
+<p>தொடர்ச்சியான பரிணாமம் online execution மற்றும் offline learning-ஐப் பிரிக்க வேண்டும்: online-இல் evidence-ஐப் பதிவு செய்து, offline-இல் candidate update-ஐ உருவாக்கிச் சரிபார்த்து, பின்னர் படிப்படியாக release, consolidate அல்லது rollback செய்ய வேண்டும். Outcome தானாகச் சரிபார்க்கக்கூடியபோது இந்த loop மிகவும் நம்பகமானது. Ambiguous objective மற்றும் delayed feedback கொண்ட open-ended task-களில் problem definition மற்றும் evaluation criteria design-இல் மனிதர்கள் இன்னும் பங்கேற்க வேண்டும்.</p>
+<h2 id="_8">சிந்தனைக் கேள்விகள்<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+<ol>
+<li>★★ ஒரு அனுபவ ஆவணத்திற்கு மூன்று வெற்றிகரமான trajectory-களும் ஒரு தோல்வி trajectory-உம் ஆதரவளிக்கின்றன. தோல்வி புதிய API version-இல் நிகழ்ந்துள்ளது. அனுபவம் மறுக்கப்பட்டதாகவா, அல்லது applicable condition மாறியதாகவா அமைப்பு எவ்வாறு தீர்மானிக்க வேண்டும்?</li>
+<li>★★ வாடிக்கையாளர் சேவை Agent-இன் user satisfaction உயர்ந்துள்ளது; ஆனால் விதிமீறல் விகிதமும் உயர்ந்துள்ளது. Satisfaction-ஐ ஏன் ஒரே learning signal-ஆகப் பயன்படுத்த முடியாது? Guardrail metric-களை எவ்வாறு வடிவமைப்பீர்கள்?</li>
+<li>★★★ ஒரே “பொய்யான உறுதி” பிரச்சினையை Prompt, Harness check அல்லது parameter training மூலம் குறைக்கலாம். எந்தச் சான்றுகளின் அடிப்படையில் modification location-ஐத் தேர்ந்தெடுப்பீர்கள்?</li>
+<li>★★★ Agent tools மற்றும் verifier-களை மாற்ற முடியும்; ஆனால் தனது update-ஐ அங்கீகரிக்கும் trusted root-ஐ மாற்றக்கூடாது. இவ்விரு பகுதிகளுக்கிடையே permission மற்றும் code boundary-ஐ எவ்வாறு பிரிப்பீர்கள்?</li>
+<li>★★ அனுபவ knowledge base தொடர்ந்து வளரும்போது retrieval error மற்றும் knowledge conflict ஆகியவை learning benefit-ஐ நீக்கும். Version, freshness மற்றும் retirement mechanism-களை எவ்வாறு வடிவமைப்பீர்கள்?</li>
+<li>★★★ Parameter learning இயல்பான மொழிப் பாணியில் திறமையானது; ஆனால் கடுமையான வணிக விதிகளை உத்தரவாதப்படுத்துவது கடினம். மருத்துவ வாடிக்கையாளர் சேவைக்காக parameters, knowledge, Skill மற்றும் code constraint ஆகியவை ஒருங்கிணையும் தொடர்ச்சியான பரிணாமத் திட்டத்தை வடிவமைக்கவும்.</li>
+</ol>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:reflexion-2023">
+<p>Shinn, N., et al. <em>Reflexion: Language Agents with Verbal Reinforcement Learning.</em> arXiv:2303.11366, 2023.&#160;<a class="footnote-backref" href="#fnref:reflexion-2023" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:gaia-2023">
+<p>Mialon, G., et al. <em>GAIA: a benchmark for General AI Assistants.</em> arXiv:2311.12983, 2023.&#160;<a class="footnote-backref" href="#fnref:gaia-2023" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:aworld-2025">
+<p>Yu, C., et al. <em>AWorld: Orchestrating the Training Recipe for Agentic AI.</em> arXiv:2508.20404, 2025.&#160;<a class="footnote-backref" href="#fnref:aworld-2025" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:dspy-2023">
+<p>Khattab, O., et al. <em>DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines.</em> arXiv:2310.03714, 2023.&#160;<a class="footnote-backref" href="#fnref:dspy-2023" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:opro-2023">
+<p>Yang, C., et al. <em>Large Language Models as Optimizers.</em> arXiv:2309.03409, 2023.&#160;<a class="footnote-backref" href="#fnref:opro-2023" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:gepa-2025">
+<p>Agrawal, L., et al. <em>GEPA: Reflective Prompt Evolution Can Outperform Reinforcement Learning.</em> arXiv:2507.19457, 2025.&#160;<a class="footnote-backref" href="#fnref:gepa-2025" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:karpathy-system-prompt-learning">
+<p>Karpathy, A. “We’re missing (at least one) major paradigm for LLM learning … system prompt learning?” X, May 11, 2025. https://x.com/karpathy/status/1921368644069765486&#160;<a class="footnote-backref" href="#fnref:karpathy-system-prompt-learning" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+<li id="fn:anthropic-skill-creator">
+<p>Anthropic. <em>Skill Creator.</em> 2026. https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md&#160;<a class="footnote-backref" href="#fnref:anthropic-skill-creator" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+</li>
+<li id="fn:preact">
+<p>Li, Bojie. <em>PreAct: Computer-Using Agents that Get Faster on Repeated Tasks.</em> arXiv:2606.17929, 2026.&#160;<a class="footnote-backref" href="#fnref:preact" title="Jump back to footnote 9 in the text">&#8617;</a></p>
+</li>
+<li id="fn:alita-2025">
+<p>Qiu, J., et al. <em>Alita: Generalist Agent Enabling Scalable Agentic Reasoning with Minimal Predefinition and Maximal Self-Evolution.</em> arXiv:2505.20286, 2025.&#160;<a class="footnote-backref" href="#fnref:alita-2025" title="Jump back to footnote 10 in the text">&#8617;</a></p>
+</li>
+<li id="fn:claude-code-memory">
+<p>Anthropic, “How Claude remembers your project”, 2026. https://code.claude.com/docs/en/memory&#160;<a class="footnote-backref" href="#fnref:claude-code-memory" title="Jump back to footnote 11 in the text">&#8617;</a></p>
+</li>
+<li id="fn:hermes-memory">
+<p>Nous Research, <em>Hermes Agent Documentation: Persistent Memory, Skills System, and Curator</em>, 2026. https://hermes-agent.nousresearch.com/docs/user-guide/features/memory ; https://hermes-agent.nousresearch.com/docs/user-guide/features/skills ; https://hermes-agent.nousresearch.com/docs/user-guide/features/curator&#160;<a class="footnote-backref" href="#fnref:hermes-memory" title="Jump back to footnote 12 in the text">&#8617;</a></p>
+</li>
+<li id="fn:voyager-2023">
+<p>Wang, G., et al. <em>Voyager: An Open-Ended Embodied Agent with Large Language Models.</em> arXiv:2305.16291, 2023.&#160;<a class="footnote-backref" href="#fnref:voyager-2023" title="Jump back to footnote 13 in the text">&#8617;</a></p>
+</li>
+<li id="fn:weng-harness-2026">
+<p>Weng, Lilian. “Harness Engineering for Self-Improvement.” <em>Lil’Log</em>, 2026. https://lilianweng.github.io/posts/2026-07-04-harness/&#160;<a class="footnote-backref" href="#fnref:weng-harness-2026" title="Jump back to footnote 14 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ace-2026">
+<p>Zhang, Qizheng, et al. <em>Agentic Context Engineering: Evolving Contexts for Self-Improving Language Models.</em> ICLR 2026. arXiv:2510.04618.&#160;<a class="footnote-backref" href="#fnref:ace-2026" title="Jump back to footnote 15 in the text">&#8617;</a></p>
+</li>
+<li id="fn:mce-2026">
+<p>Ye, Haoran, et al. <em>Meta Context Engineering via Agentic Skill Evolution.</em> arXiv:2601.21557, 2026.&#160;<a class="footnote-backref" href="#fnref:mce-2026" title="Jump back to footnote 16 in the text">&#8617;</a></p>
+</li>
+<li id="fn:aflow-2025">
+<p>Zhang, Jiayi, et al. <em>AFlow: Automating Agentic Workflow Generation.</em> ICLR 2025. arXiv:2410.10762.&#160;<a class="footnote-backref" href="#fnref:aflow-2025" title="Jump back to footnote 17 in the text">&#8617;</a></p>
+</li>
+<li id="fn:meta-harness-2026">
+<p>Lee, Yoonho, et al. <em>Meta-Harness: End-to-End Optimization of Model Harnesses.</em> arXiv:2603.28052, 2026.&#160;<a class="footnote-backref" href="#fnref:meta-harness-2026" title="Jump back to footnote 18 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ahe-2026">
+<p>Lin, Jiahang, et al. <em>Agentic Harness Engineering: Observability-Driven Automatic Evolution of Coding-Agent Harnesses.</em> arXiv:2604.25850, 2026.&#160;<a class="footnote-backref" href="#fnref:ahe-2026" title="Jump back to footnote 19 in the text">&#8617;</a></p>
+</li>
+<li id="fn:self-harness-2026">
+<p>Zhang, Hangfan, et al. <em>Self-Harness: Harnesses That Improve Themselves.</em> arXiv:2606.09498, 2026.&#160;<a class="footnote-backref" href="#fnref:self-harness-2026" title="Jump back to footnote 20 in the text">&#8617;</a></p>
+</li>
+<li id="fn:harness-benefit-2026">
+<p>Lin, Minhua, et al. <em>Harness Updating Is Not Harness Benefit: Disentangling Evolution Capabilities in Self-Evolving LLM Agents.</em> arXiv:2605.30621, 2026.&#160;<a class="footnote-backref" href="#fnref:harness-benefit-2026" title="Jump back to footnote 21 in the text">&#8617;</a></p>
+</li>
+<li id="fn:llm-scientists-2026">
+<p>Trehan, Dhruv and Paras Chopra. <em>Why LLMs Aren't Scientists Yet: Lessons from Four Autonomous Research Attempts.</em> arXiv:2601.03315, 2026.&#160;<a class="footnote-backref" href="#fnref:llm-scientists-2026" title="Jump back to footnote 22 in the text">&#8617;</a></p>
+</li>
+<li id="fn:scientistone-2026">
+<p>Meng, et al. <em>ScientistOne: Towards Human-Level Autonomous Research via Chain-of-Evidence.</em> arXiv:2605.26340, 2026.&#160;<a class="footnote-backref" href="#fnref:scientistone-2026" title="Jump back to footnote 23 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:46 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:46 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
