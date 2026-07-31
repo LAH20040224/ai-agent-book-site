@@ -1,0 +1,2195 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/book-hu/en_chapter8/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Continual Evolution of Agents - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="Continual Evolution of Agents">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/book-hu/en_chapter8/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Continual Evolution of Agents">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#continual-evolution-of-agents" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Continual Evolution of Agents
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#deriving-learning-signals-from-operational-trajectories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deriving Learning Signals from Operational Trajectories
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#four-methods-for-continual-agent-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Four Methods for Continual Agent Evolution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Four Methods for Continual Agent Evolution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#consolidating-experience-into-knowledge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consolidating Experience into Knowledge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encoding-experience-as-instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encoding Experience as Instructions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encoding-experience-as-programs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encoding Experience as Programs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encoding-experience-in-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encoding Experience in Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-updating-artifacts-to-updating-the-update-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From Updating Artifacts to Updating the “Update Method”
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-a-continual-evolution-closed-loop-for-long-term-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building a Continual-Evolution Closed Loop for Long-Term Operation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building a Continual-Evolution Closed Loop for Long-Term Operation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-problem-diagnosis-to-experience-consolidation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From Problem Diagnosis to Experience Consolidation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-release-and-rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation, Release, and Rollback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-boundary-of-a-verifiable-loop-when-done-does-not-mean-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Boundary of a Verifiable Loop: When “Done” Does Not Mean “Progress”
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#safety-boundaries-for-continual-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safety Boundaries for Continual Evolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sleep-learning-consolidation-forgetting-and-capability-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sleep Learning: Consolidation, Forgetting, and Capability Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chapter-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chapter Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions-for-reflection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions for Reflection
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/book-hu/en_chapter8.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/book-hu/en_chapter8.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="continual-evolution-of-agents">Continual Evolution of Agents<a class="headerlink" href="#continual-evolution-of-agents" title="Permanent link">&para;</a></h1>
+<p>Today’s Agents face a striking capability paradox: they can solve previously unseen complex tasks zero-shot, yet after handling ten thousand similar tasks, they may still repeat tomorrow the mistakes they made on the first day. <strong>The ability to learn autonomously from experience</strong> is becoming essential for Agents to progress from “being able to complete tasks” to “being able to work reliably,” and it is also a central research topic for the next generation of models. Yet current models remain far from capable of continual learning on their own.</p>
+<p>A deployed model does not automatically change its parameters after an inference. The in-context learning, state maintenance, and compression discussed in Chapter 2 allow an Agent to adapt <strong>within the current task</strong>; once the context ends, however, these changes do not naturally carry over to the next task. Storing conversations in memory is not equivalent to learning new behavior. Raw trajectories may be lengthy and contain effective strategies alongside accidental successes, incorrect attributions, and untrusted inputs.</p>
+<p>An important distinction is easy to miss here: <strong>preserving experience is not the same as learning from it</strong>. Placing a hundred trajectories in a long context or vector store may help the model retrieve a case when needed, but it does not automatically compare cases: which steps recur across successful trajectories, which practices work only with an older interface, or whether a success came from a sound strategy rather than environmental chance. Learning occurs only after the system actively evaluates, compares, generalizes, and validates the evidence—not when a log is written to disk. User memory in Chapter 3 primarily captures “what the user and the world are like”; experience learning in this chapter goes further, capturing “what to do under which conditions.” The former helps an Agent remember more; the latter helps it become more proficient rather than merely more knowledgeable.</p>
+<p>Why not let the model train itself directly after every task? Because production environments rarely provide clean learning signals. User satisfaction does not imply compliance, and tests may pass because failing cases were deleted. Even a local update may cause capability forgetting, policy drift, or safety degradation. If a running model is allowed to modify itself directly based on unverified feedback, erroneous experience and Prompt injection may become entrenched and continue to amplify across later tasks. Periodic training of foundation models can improve general capabilities, but it cannot promptly absorb the private rules, tool changes, and local experience encountered daily by each Agent.</p>
+<p>Therefore, while models themselves cannot yet learn continually and reliably, “learning” must first be constructed as an autonomous system around the model: record operational evidence, verify outcomes and processes, extract common patterns from multiple trajectories, and then decide whether to update knowledge, instructions, programs, or model parameters. Every modification must first become a candidate version and may alter the next round of operation only after regression testing and safety checks. This does not replace a model’s learning capability; rather, under current technical constraints, it is an engineering path for giving Agents continual learning capabilities.</p>
+<p>The preceding chapters have already introduced the principal components required by this system. Chapter 2 addresses within-task state, Chapter 3 provides knowledge infrastructure, Chapter 5 gives Agents the meta-capability to create tools and modify systems, Chapter 6 establishes evaluation and verification, and Chapter 7 explains how to update model parameters. The task of Chapter 8 is to organize these components into the continual evolution loop shown in Figure 8-1.</p>
+<p><img alt="Figure 8-1 Overall loop of continual Agent evolution" src="../images/fig8-1.svg" /></p>
+<p>Continual evolution must arise from traceable operational experience, change subsequent behavior, and be verified not to cause significant degradation. This chapter first discusses how to determine what exactly went well or wrong in a run; it then compares four update methods and their applicable boundaries; finally, it examines how these updates are verified, released, revised, and retired during long-term operation.</p>
+<h2 id="deriving-learning-signals-from-operational-trajectories">Deriving Learning Signals from Operational Trajectories<a class="headerlink" href="#deriving-learning-signals-from-operational-trajectories" title="Permanent link">&para;</a></h2>
+<p>The starting point of continual evolution is not “summarization,” but “evaluation.” If the system does not know whether a task was completed or which step caused success or failure, reflections generated by a language model can only be guesses. Once an incorrect evaluation enters long-term knowledge, a system Prompt, or training data, its effects can compound across subsequent tasks.</p>
+<p>The outcomes of some tasks are relatively easy to verify. A Coding Agent can run tests, type checks, and performance benchmarks; an Agent processing a refund for a user can query the order status and actual refund amount. Such signals come from real environmental states and are generally more reliable than the model’s descriptions of its own behavior. A correct outcome, however, does not imply a correct process. Deleting failing test cases can also make tests pass, while telling a user, “We will issue your refund within seven days; please be patient,” may produce temporary satisfaction. Reliable evaluation must therefore assess both the outcome and the path taken to achieve it.</p>
+<p>Many other tasks have no single correct answer. Whether customer service is patient, whether it offers compliant alternatives, whether a research report identifies the key evidence, and whether generated text is natural and concise all require contextual judgment. LLM-as-a-Judge, introduced in Chapter 6, can be used here, but the judge should not merely assign a vague overall score. A more effective approach is to define a Rubric in advance and require the verifier to score each item, cite trajectory evidence, and explicitly indicate uncertainty when evidence is insufficient.</p>
+<p>Figure 8-2 presents a three-layer verification structure. The bottom-layer outcome verifier reads test results, database states, and tool returns to answer, “Was the task actually completed?” The middle-layer process verifier checks business rules, permissions, and action sequences to answer, “Was it completed in an allowed manner?” The upper-layer quality verifier evaluates language and strategy according to the Rubric to answer, “Was it handled appropriately?” Lower-level metrics should rely more heavily on code and environmental ground truth; only aspects that are difficult to formalize should be delegated to a language model.</p>
+<p><img alt="Figure 8-2 Three-layer trajectory verification from environmental outcomes to an LLM Rubric" src="../images/fig8-2.svg" /></p>
+<p>For a customer-service Agent, a useful Rubric should cover at least the dimensions listed in Table 8-1. The first five primarily enforce baseline requirements, while the final two measure service quality. This decomposition is more diagnostically useful than asking whether the user was satisfied: a user may be satisfied because the Agent issued a noncompliant refund, or dissatisfied because of a compliance restriction. A single satisfaction score cannot distinguish the two.</p>
+<p>Table 8-1 Trajectory evaluation dimensions for a customer-service Agent</p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Verification question</th>
+<th>Primary evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Task outcome</td>
+<td>Was the user’s core request resolved?</td>
+<td>Final environmental state, tool results</td>
+</tr>
+<tr>
+<td>Rule compliance</td>
+<td>Were any policies, permissions, or required procedures violated?</td>
+<td>Policy repository, action trajectory</td>
+</tr>
+<tr>
+<td>Privacy boundaries</td>
+<td>Was any information disclosed that should not have been provided?</td>
+<td>Response text, data-access records</td>
+</tr>
+<tr>
+<td>Factual reliability</td>
+<td>Are statements supported by knowledge or tool results?</td>
+<td>Cited sources, tool returns</td>
+</tr>
+<tr>
+<td>Promise–action consistency</td>
+<td>Did the actions claimed as completed actually occur?</td>
+<td>Comparison of responses and tool logs</td>
+</tr>
+<tr>
+<td>Expression quality</td>
+<td>Is the language natural and concise, without repetition or templated phrasing?</td>
+<td>Full conversation, language Rubric</td>
+</tr>
+<tr>
+<td>Compliant alternatives</td>
+<td>When the original plan was infeasible, was an allowed alternative found?</td>
+<td>User goal, policies, and subsequent actions</td>
+</tr>
+</tbody>
+</table>
+<p>“Promise–action consistency” is particularly suitable for Agent scenarios. Traditional text evaluation reads only the final response and may easily regard “I have submitted your refund” as good service. Trajectory evaluation instead continues by checking whether the refund tool was actually called, whether the call succeeded, and whether the order status changed. “Compliant alternatives” does not encourage the model to disregard rules at will; it requires the model to understand the user’s true goal and, when a refund is unavailable, examine lawful options such as rescheduling, extension, or partial compensation.</p>
+<p>Verification results should not be compressed into a scalar. A trajectory evaluation is closer to a structured diagnosis: the task partially succeeded and rule compliance passed, but there was one unsupported statement, one false promise, and the response repeated the policy explanation three times. Dimensional signals preserve both the nature of each issue and the location of its evidence. Only then can downstream modules determine whether an unsupported statement reflects missing knowledge, absent citation requirements, or insufficient model capability, and whether a false promise calls for Prompt revision or a consistency check between responses and tool states in the Harness.</p>
+<p>LLM verifiers also require calibration. Production systems typically maintain a small set of expert-annotated trajectories to check verifier consistency on each dimension; high-risk or low-confidence cases are referred to a second model or human reviewer; and the calibration set is rerun after model-version changes. The verifier should provide evaluations and evidence, while an independent diagnosis and evolution module should decide which part of the Agent to modify. This prevents the same model from acting as judge while directly rewriting the rules.</p>
+<blockquote>
+<p><strong>Experiment 8-1 ★★: Build a Trajectory Verifier for a Customer-Service Agent</strong></p>
+<p><strong>Objective:</strong> Convert a customer-service trajectory into a structured diagnosis that can support subsequent learning, and test whether “multidimensional conclusions with evidence” identify root causes better than a single overall score.</p>
+<p><strong>Data and procedure:</strong> Prepare expert-labeled trajectories covering four categories: normal refunds, false promises, privacy disclosures, and excessive refusals. The first layer reads the final order state and tool logs to determine whether a refund or rescheduling actually occurred. The second checks every step against business policies, including permissions, required procedures, privacy, factual support, and promise–action consistency. The third evaluates language quality and compliant alternatives against the Rubric in Table 8-1 and retains the relevant turns as evidence for each failure. The default quality Judge uses deterministic rules, with a real LLM Judge also available. Regardless of the upper-layer model, the outcome and rule layers must not be left for a language model to guess.</p>
+<p><strong>Controls and metrics:</strong> The baseline outputs only an overall score; the experimental condition outputs <code>pass</code>, <code>fail</code>, or <code>uncertain</code> for each dimension, together with evidence and confidence. During calibration, measure precision and recall for detecting failures in each dimension and report exact agreement with expert labels. Also verify that failures such as false promises contain nonempty evidence rather than unsupported conclusions.</p>
+<p><strong>Acceptance criteria:</strong> The verifier should reliably detect critical violations, false promises, and excessive refusals. A high overall score must not conceal a privacy or policy failure. Low-confidence and high-risk cases should be sent to a second verifier or human review instead of automatically becoming learning signals.</p>
+<p>The accompanying implementation is available at <a href="../chapter8/trajectory-verifier/"><code>trajectory-verifier</code></a>. By default, it uses a quality Judge that can be reproduced offline; use <code>--judge llm</code> to run the implemented real LLM verifier.</p>
+</blockquote>
+<h2 id="four-methods-for-continual-agent-evolution">Four Methods for Continual Agent Evolution<a class="headerlink" href="#four-methods-for-continual-agent-evolution" title="Permanent link">&para;</a></h2>
+<p>Learning signals indicate that an Agent should change, but not where that change should occur. The primary basis for choosing an update method is not how long an experience has persisted, but whether the target capability can be naturally represented by a particular medium. Facts and experience are suited to knowledge documents; strategies that can be clearly expressed in language belong in Prompts or Skills; precisely executable procedures and constraints should be encoded as programs; and high-dimensional capabilities such as perception, language style, and implicit strategies must enter model parameters. Figure 8-3 shows these four methods and their relationships.</p>
+<p><img alt="Figure 8-3 Four update methods for continual evolution" src="../images/fig8-3.svg" /></p>
+<p>Table 8-2 provides a concise comparison. The four methods are not mutually exclusive: a medical-imaging Agent relies on parameters to identify lesions, uses a knowledge base to provide current guidelines, and employs code to calculate risk indicators. A customer-service model derives its natural tone from post-training, obtains enterprise-specific policies from knowledge and Skills, and relies on server-side code to enforce critical compliance requirements.</p>
+<p>Table 8-2 Applicable boundaries of four continual evolution methods</p>
+<table>
+<thead>
+<tr>
+<th>Update method</th>
+<th>Suitable content</th>
+<th>Primary advantages</th>
+<th>Primary limitations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Experience knowledge base</td>
+<td>Facts, experiential patterns, exceptions, and sources</td>
+<td>Fast updates, traceability, on-demand retrieval</td>
+<td>Depends on retrieval and correct model application</td>
+</tr>
+<tr>
+<td>Prompt and Skill</td>
+<td>Linguistically expressible judgment principles and operating procedures</td>
+<td>Interpretable, controllable scope</td>
+<td>Prone to bloat, conflict, or being ignored</td>
+</tr>
+<tr>
+<td>Programs and Harness</td>
+<td>Deterministic procedures, tools, and hard constraints</td>
+<td>Testable, stable execution, low cost</td>
+<td>Higher development and maintenance costs</td>
+</tr>
+<tr>
+<td>Model parameters</td>
+<td>High-dimensional perception, generation style, and implicit strategies</td>
+<td>Strong generalization, low inference overhead</td>
+<td>High update and regression costs</td>
+</tr>
+</tbody>
+</table>
+<h3 id="consolidating-experience-into-knowledge">Consolidating Experience into Knowledge<a class="headerlink" href="#consolidating-experience-into-knowledge" title="Permanent link">&para;</a></h3>
+<p>The most lightweight form of evolution is to organize recurring experience from multiple runs into retrievable knowledge documents. The “experience knowledge base” described here shares storage, indexing, and retrieval technologies with Chapter 3, but differs in its knowledge sources and verification objectives. Chapter 3 primarily extracts “what the user and the world are like” from user conversations, documents, and datasets; this chapter extracts “what should be done under which conditions” from Agent action trajectories and outcomes. For example, “This airline requires special meals to be reserved twenty-four hours in advance” is domain knowledge, whereas “Check the special-meal deadline before booking to avoid discovering only after payment that the request cannot be fulfilled” is action experience.</p>
+<p>Raw trajectories are unsuitable as formal knowledge units. They are lengthy and noisy, containing raw tool output, incidental detours, and environmental details. A more robust system retains three layers of data: immutable raw trajectories for auditing; per-run analyses recording the outcome and candidate lessons; and comparisons, clustering, and induction across multiple similar trajectories to produce future-oriented Markdown knowledge documents. A formal document typically specifies applicable scenarios, recommended strategies, prohibited practices, exceptions, evidence sources, and the latest verification time rather than retelling the complete course of a single task.</p>
+<p>This design shares the same two-stage principle as User-as-Code in Chapter 3. User-as-Code first appends conversational facts to an immutable log and then periodically rebuilds a structured user model. Experience learning should likewise preserve evidence first and generate mutable knowledge offline afterward. Figure 8-4 illustrates this process. Separating recording from organization prevents a single accidental success or network failure from immediately changing the Agent, while allowing the system to identify common patterns only after observing multiple successes and failures.</p>
+<p><img alt="Figure 8-4 From evaluated trajectories to experience knowledge documents" src="../images/fig8-4.svg" /></p>
+<p>Experience documents are not simple trajectory summaries. Transferable content emerges from comparison: what successful trajectories of the same type did, what failed trajectories lacked, in which environment versions a strategy was effective, and under which prerequisites it failed. Chapter 3 has already introduced knowledge extraction, clustering, and retrieval, so this chapter does not repeat those algorithms. Instead, it focuses on how trajectory evaluation becomes a condition for extraction and whether the extracted knowledge improves performance on subsequent tasks.</p>
+<p>A complete knowledge-distillation pipeline can be divided into five steps. First, preserve immutable trajectories and environmental outcomes. Next, produce a structured analysis for each run, listing the task type, required capabilities, observed strategies, errors, and exceptions. Then aggregate runs by task family and build an evidence table showing which trajectories support or contradict each candidate pattern. Only candidates that meet the support threshold enter formal documents. Finally, evaluate transfer on new tasks that were not used during distillation. Keeping formal knowledge separate from candidate analyses allows the system to generalize again without altering the original evidence and to revoke a conclusion precisely when the environment changes.</p>
+<p>GAIA experience learning provides an intuitive example. GAIA<sup id="fnref:gaia-2023"><a class="footnote-ref" href="#fn:gaia-2023">2</a></sup> contains multistep problems that combine search, web reading, file processing, and computation, while AWorld<sup id="fnref:aworld-2025"><a class="footnote-ref" href="#fn:aworld-2025">3</a></sup> provides the environment for running Agents, invoking those tools, and recording trajectories: the former is like the exam, and the latter is the exam room and laboratory record system. A simplistic approach generates a strategy summary and immediately vectorizes it after one successful run. A stricter implementation first uses a GAIA answer verifier or another environmental verifier to label runs as successful, partially successful, or failed, and then compares multiple paths within the same task family. Successful trajectories contribute candidate strategies, failures contribute exclusionary knowledge, and partial successes reveal which segment worked and which still failed. The natural-language reflection proposed by Reflexion<sup id="fnref:reflexion-2023"><a class="footnote-ref" href="#fn:reflexion-2023">1</a></sup> can help generate candidate lessons, but reflection itself is not evidence. Only content consistent with environmental outcomes, supported across trajectories, and showing positive transfer on new tasks should enter formal experience documents.</p>
+<blockquote>
+<p><strong>Experiment 8-2 ★★: Distill Experience Knowledge Documents from GAIA Trajectories</strong></p>
+<p><strong>Objective:</strong> Test whether cross-trajectory knowledge documents transfer better than a summary of a single success and reduce negative transfer from accidental successes and incorrect experience.</p>
+<p><strong>Data and procedure:</strong> <code>gaia-experience</code> first stores the full trajectory and external <code>environment_score</code> for each run, then converts them into minimal learning records containing <code>task_family</code>, required <code>capabilities</code>, <code>applies_when</code>, observed strategies, errors, exceptions, and source trajectory IDs. An outcome verifier classifies runs as successful, partially successful, or failed. The learning module compares paths within the same task family. An LLM may propose candidate generalizations, but a recommended strategy must be supported by at least two non-failed trajectories. The resulting Markdown document includes applicable scenarios, recommended strategies, common pitfalls, exceptions, provenance, and the latest validation time. During application, only these documents are retrieved; lengthy raw trajectories are not inserted directly into the context.</p>
+<p><strong>Three controls:</strong> The first condition uses no historical experience; the second retrieves the one trajectory summary most similar to the current task; the third retrieves a knowledge document supported by multiple trajectories. The learning and transfer sets must be disjoint so that answers to the same GAIA question do not leak into evaluation as “experience.”</p>
+<p><strong>Metrics and acceptance:</strong> Report transfer-task success rate, average retrieved characters or Tokens, and negative-transfer rate, and verify that every formal conclusion cites its source trajectories. If cross-trajectory documents merely shorten the context without improving new-task performance, they do not demonstrate learned experience. The experiment also fails if one accidental success can be promoted directly to formal knowledge or if a document cannot be traced to its original trajectories.</p>
+<p>The accompanying implementation is available at <a href="../chapter8/gaia-experience/"><code>gaia-experience</code></a>. <code>demo_documents.py</code> runs offline by default; with <code>--extractor llm</code>, a real LLM can propose cross-trajectory experience candidates.</p>
+</blockquote>
+<h3 id="encoding-experience-as-instructions">Encoding Experience as Instructions<a class="headerlink" href="#encoding-experience-as-instructions" title="Permanent link">&para;</a></h3>
+<p>An experience knowledge base provides reference material for an Agent, whereas Prompts and Skills are more prescriptive. When multiple trajectories repeatedly reveal the same strategic error, and the pattern can be clearly expressed in natural language, the system can elevate it from “experience for reference” to “a rule that must be followed.” Rules that apply to nearly all tasks are suitable for inclusion in the system Prompt; complex procedures that apply only to a particular domain, project, or tool are better written as on-demand Skills or project instruction files.</p>
+<p>Prompt learning serves a different role from the Prompt engineering discussed in Chapter 2. Chapter 2 explains how to write structurally clear, cache-friendly Prompts; this section addresses what production feedback is sufficient to trigger a Prompt revision and how new rules should be validated before deployment. Revision should not mean repeatedly rewriting the entire system Prompt. A more reliable approach is to generate a minimal diff from a group of similar failures, specify the rule’s scope, check for conflicts with existing rules, and evaluate it against both the boundary cases that triggered the failures and a retention set of old tasks.</p>
+<p>In a 2025 long-form post, Andrej Karpathy provisionally called this possible new paradigm <strong>System Prompt Learning</strong><sup id="fnref:karpathy-system-prompt-learning"><a class="footnote-ref" href="#fn:karpathy-system-prompt-learning">7</a></sup>. His summary was that pretraining primarily learns knowledge and fine-tuning primarily shapes habitual behavior, while another kind of human learning occurs when we solve a problem and leave an explicit note to our future selves: “Next time I encounter this kind of problem, I should try this approach first.” He compared an LLM without such a notebook to the protagonist of the film <em>Memento</em> and noted that System Prompt Learning and reinforcement learning both improve behavior from experience but use different update algorithms—the former edits text, while the latter changes parameters through gradient descent. His example was an instruction in Claude’s then roughly 17,000-word system Prompt requiring the model to number and explicitly count words, letters, or characters before answering, precisely to handle questions such as “How many <code>r</code>s are in <code>strawberry</code>?”</p>
+<p>In an Agent system, this means turning lessons that can be expressed in language into candidate rules that future runs can read directly. Compared with a scalar success/failure result, an evidence-backed diagnosis can identify whether the error was in identity verification, tool selection, or escalation boundaries, enabling a more targeted candidate change. Karpathy’s observation that a knowledge-guided review is a higher-dimensional feedback channel than a scalar reward helps explain the method’s potential data efficiency. Richer information is not automatically correct, however: one user’s feedback may apply only to that customer or an outdated policy, so clustering, scope analysis, and regression testing remain necessary.</p>
+<p>Several established approaches automate Prompt optimization in different ways. DSPy<sup id="fnref:dspy-2023"><a class="footnote-ref" href="#fn:dspy-2023">4</a></sup> treats a program composed of multiple language-model calls as an optimizable object and searches instructions and examples on a development set. OPRO<sup id="fnref:opro-2023"><a class="footnote-ref" href="#fn:opro-2023">5</a></sup> asks a language model to propose new candidates from the history of Prompts and their scores. GEPA<sup id="fnref:gepa-2025"><a class="footnote-ref" href="#fn:gepa-2025">6</a></sup> uses natural-language reflection over failed trajectories to generate and select complementary candidate Prompts. These methods primarily perform batch optimization on offline evaluation sets; minimal production diffs are closer to continual maintenance, triggered by newly observed boundary cases and designed for provenance, auditing, and rapid rollback. In practice, offline search can establish a strong initial version, followed by case-by-case patches for long-tail production rules.</p>
+<p>For example, an airline customer-service Agent may escalate to a human too early when users challenge a policy. Trajectory evaluation shows that it violates no rules but lacks compliant flexibility. A candidate patch can require the Agent to explain the policy first, identify the user’s actual goal, and seek permitted alternatives, escalating only when the user explicitly requests it or the issue genuinely exceeds the Agent’s authority. If the new rule reduces unnecessary escalation but causes the Agent to continue handling safety incidents that should be escalated, it has failed regression testing. The value of system Prompt learning lies not in automatically appending more text, but in continually clarifying the scope of rules through production boundary cases.</p>
+<p>Skill learning follows the same principle, but with a more localized scope. A Skill can be understood as an on-demand operating manual for a particular job: if multiple experiences collectively form a complete insurance claims process, the system can generate or revise the corresponding Skill. A candidate Skill should not merely summarize one conversation; at minimum, it should specify when to load, prerequisites, operating steps, known pitfalls, validation methods, and source trajectories. The system first searches the existing Skill library for similar capabilities, preferring a local <code>patch</code> when the same process already exists and creating a new directory only for a genuinely independent capability. This prevents the library from filling with manuals that differ in name but duplicate one another. Anthropic’s Skill Creator<sup id="fnref:anthropic-skill-creator"><a class="footnote-ref" href="#fn:anthropic-skill-creator">8</a></sup> demonstrates a draft–test–evaluate–revise loop. It addresses how to create and improve a Skill; the harder questions remain what operational evidence is sufficient to trigger creation, how to resolve conflicts, and whether the revision passes domain-specific and old-task regression tests.</p>
+<blockquote>
+<p><strong>Experiment 8-3 ★★: Optimizing System Prompts from Failure Trajectories</strong></p>
+<p><strong>Objective:</strong> Teach an airline customer-service Agent from trajectories in which it escalates too quickly when a user challenges a policy, while demonstrating that the new rule does not break older scenarios that genuinely require escalation.</p>
+<p><strong>Procedure:</strong> First run the old-task retention set and the excessive-escalation boundary set separately. <code>learning_signal.py</code> decomposes failures into rule adherence, task resolution, and compliant flexibility, while retaining source case IDs. A Coding Agent then reads the existing Prompt and produces exactly one auditable <code>old_str → new_str</code> minimal edit: require the Agent to explain the policy, identify the actual goal, and seek compliant alternatives before escalating, while preserving escalation when the user explicitly requests a human or a safety incident occurs. The patch, provenance, target rule, and rationale are written into a candidate manifest.</p>
+<p><strong>Three controls:</strong> Compare the initial Prompt, the automatically generated candidate Prompt, and a one-time manually optimized Prompt. All three use the same model and the same retention and boundary tasks. <code>--quick</code> only reduces the number of cases; it still makes real calls to the task Agent, LLM Judge, and Coding Agent and must not be reported as an offline simulation.</p>
+<p><strong>Release gate and metrics:</strong> A candidate must pass four conditions: a nonempty patch, traceable provenance, measurable improvement on the boundary set, and no degradation on the retention set. Compare boundary-task accuracy, retention-task accuracy, Prompt growth, regressions introduced, and time from failure discovery to candidate generation. Passing the gate produces only <code>release_to_canary</code>, never a direct overwrite of the stable Prompt; failure of any condition returns <code>reject_candidate</code>.</p>
+<p>The accompanying implementation is available at <a href="../chapter8/prompt-auto-optimization/"><code>prompt-auto-optimization</code></a>. Offline tests cover diagnosis and release gates, while <code>--quick</code> makes real calls to the task Agent, LLM Judge, and Coding Agent.</p>
+</blockquote>
+<h3 id="encoding-experience-as-programs">Encoding Experience as Programs<a class="headerlink" href="#encoding-experience-as-programs" title="Permanent link">&para;</a></h3>
+<p>When experience describes operations that are stable, repetitive, and verifiable, it is inefficient to have the model reread documentation and reason through them each time. A more appropriate approach is to compile the experience into workflows, tools, or Harness code, turning a one-time exploration into a repeatedly executable program. Chapter 5 explained how Coding Agents read and write files, run tests, and generate systems; this section focuses not on general code generation, but on how an Agent modifies future versions of itself based on its own trajectories.</p>
+<p>The modifiable objects extend far beyond new tools. At the operation layer, browser trajectories can be compiled into parameterized workflows, or adapters can be generated for changing APIs. At the control layer, tool routing, retries, circuit breakers, and context compression strategies can be modified. At the validation layer, parameter checks, state validators, and regression tests can be added in response to production failures. At the architecture layer, a Reviewer Agent can be added or the information flow between planning and execution can be changed.</p>
+<p>Browser workflows illustrate the value of programmatic experience. They are analogous to recording a spreadsheet macro. The first time an email is sent, a multimodal Agent uses an observe–reason–act loop to find the compose, recipient, subject, body, and send controls. For another email, the process is unchanged; only the recipient and content differ, so there is no need to call the model again to rediscover the entire path from pixels and the DOM. The system compiles the first exploratory trajectory into a small program containing parameters, state checks, and version information.</p>
+<p>In the browser setting, the knowledge-distillation process shown in Figure 8-4 becomes a more concrete lifecycle:</p>
+<ol>
+<li><strong>Capture the trajectory:</strong> Record navigation, clicks, text entry, and drop-down selection, together with action parameters, the current URL, and element-locator evidence such as XPath, CSS, <code>id</code>, <code>role</code>, <code>aria-label</code>, and <code>data-testid</code>. Locator evidence only helps find an element again; it does not prove that the task was completed.</li>
+<li><strong>Parameterize:</strong> Replace literals from the first run with template variables—for example, convert <code>test@example.com</code>, the subject, and the body into <code>{recipient}</code>, <code>{subject}</code>, and <code>{content}</code>—while leaving stable actions unchanged. The teaching implementation uses regular expressions and template replacement; a production system may use structured task input or a constrained extraction model.</li>
+<li><strong>Define state checks:</strong> Add checks before and after actions, such as “the send button is visible” and “the URL after navigation belongs to the target site.” Add a final-state check for the workflow as a whole, such as “the sent-mail list contains the new message” or “the test page’s state value changed as expected.” Successfully executing an action is not the same as successfully completing the task; the final check must read the real page or backend state.</li>
+<li><strong>Validate the candidate:</strong> A first success produces only a <code>candidate</code>. The system must reset the sandbox account or test site to an independent initial state and replay the candidate in full. It can be published as <code>validated</code> only if all before-action, after-action, and final-state checks pass. If a side-effecting task such as sending mail or placing an order has no safe reset callback, the workflow may be retained as an auditable candidate but must not be validated by repeating the action in a production account.</li>
+<li><strong>Match and replay:</strong> When a new task arrives, search the formal capability library for a workflow by intent and keywords, extract the current parameters, and execute it directly with Playwright. Replay requires no step-by-step LLM calls, but it must still wait for elements to become available and complete every state check.</li>
+<li><strong>Invalidate and relearn:</strong> If the target element cannot be found, a state check fails, the API Schema changes, or the final state is wrong, stop subsequent actions immediately, move the old version from the searchable library to the <code>invalid</code> area, and fall back to the full Agent for fresh exploration. Retain the old file for audit and comparison, but never let it continue to match silently.</li>
+</ol>
+<p>For an email workflow, the compiled result is not merely “click these buttons in order,” but a small program parameterized by recipient, subject, and body: it checks the compose window and fields before sending, checks the success indicator afterward, and finally confirms that the corresponding message appears in the sent list. In PreAct<sup id="fnref:preact"><a class="footnote-ref" href="#fn:preact">9</a></sup>, such programs delivered an 8.5–13× end-to-end speedup on repeated tasks and required no step-by-step language-model calls during replay. More importantly, process memory needs <strong>before-action validation, after-action validation, and independent pre-storage validation</strong>. Otherwise, the system can produce a dangerous illusion: replay coverage is 100 percent and every button was clicked, yet one field was empty and the task was never actually completed.</p>
+<blockquote>
+<p><strong>Experiment 8-4 ★★★: Generating Verifiable Workflows from Browser Trajectories</strong></p>
+<p><strong>Objective:</strong> Determine whether a web Agent can turn one expensive exploration into a reusable workflow and reject an incorrect replay when the page changes, rather than reporting success merely because every action ran.</p>
+<p><strong>Four-stage scenario:</strong> In the first stage, run “send a message with the subject ‘Test Email’ to <code>test@example.com</code>” on a test mail site or simulated messaging page. The full Agent explores, while a wrapper captures actions, parameters, and page states and produces a <code>candidate</code>. In the second stage, call <code>validation_reset</code> to restore the sandbox and independently replay the entire workflow; the candidate enters the formal capability library only if all before-action, after-action, and final-state checks pass. In the third stage, perform the same kind of task with a different recipient, subject, and body. The system should match the validated workflow, fill the new parameters, and replay it through Playwright without entering the step-by-step LLM loop. In the fourth stage, change a button locator, page text, or final state and verify that the old workflow immediately becomes <code>invalid</code> and returns <code>fallback_required=True</code>.</p>
+<p><strong>Control design:</strong> A simplified baseline records only whether clicks, text entry, and other actions complete without exceptions. The experimental condition also validates the page before each action, the page after each action, and the final task state. Both conditions use the same trajectories and page changes. Compare their false-positive rates on cases such as “the send button was clicked while a field was empty” and “Save was clicked but the data was not persisted.”</p>
+<p><strong>Metrics and acceptance:</strong> Record end-to-end time for initial exploration and replay, number of LLM calls, success rate, false-success rate, workflow match rate, page-change detection rate, and number of fallbacks to relearning. Without a reset callback, a workflow must remain a candidate; a version that fails validation must not be retrievable; parameterized replay must not reuse the first run’s recipient or content; and after a page change, dangerous subsequent actions must stop. Acceleration matters only if all these conditions are satisfied.</p>
+<p>The accompanying implementation is available at <a href="../chapter8/browser-use-rpa/"><code>browser-use-rpa</code></a>, which provides both a deterministic state-machine demonstration and an execution path that invokes a real browser Agent.</p>
+</blockquote>
+<p>An Agent modifying its own code does not mean that the running process directly overwrites itself. A production system should create a candidate branch from the current stable version, have a Coding Agent generate a minimal patch, and then sequentially run static checks, unit tests, security scans, failure-trajectory replay, and regression tests on old tasks before producing a new version eligible for canary deployment. This turns “self-modification” into an auditable software release process and defines the boundary between Chapters 8 and 5: Chapter 5 provides the capability to modify systems, while this chapter provides a method for self-modification that is triggered by experience and constrained by a validation loop.</p>
+<p>Making the patch small is not enough for reliable attribution. Each modification request should also be a <strong>falsifiable change contract</strong> that records the failure evidence, inferred root cause, responsible Harness component, candidate change, behavior expected to improve, existing behavior that may regress, and tests for both. Agentic Harness Engineering describes this in terms of component-, experience-, and decision-level observability: every editable component has a file-level representation; large collections of trajectories are distilled into evidence that can be inspected at increasing levels of detail; and every edit declares an impact prediction before execution, which the next round of results then tests<sup id="fnref:ahe-2026"><a class="footnote-ref" href="#fn:ahe-2026">19</a></sup>. A higher score can then be connected to a specific mechanism rather than remaining an uninterpretable trial.</p>
+<p>The candidate generator should not receive only failed cases. Self-Harness also supplies successful behavior that must be preserved and records of previously rejected modifications<sup id="fnref:self-harness-2026"><a class="footnote-ref" href="#fn:self-harness-2026">20</a></sup>. The former tells the Agent what the repair must not break; the latter prevents it from resubmitting the same failed idea in different words. Failure evidence, success constraints, and prior attempts together define a bounded candidate space and are more useful than indiscriminately loading all source code and raw logs into the modifying Agent.</p>
+<p>Tool creation follows the same protocol. Alita<sup id="fnref:alita-2025"><a class="footnote-ref" href="#fn:alita-2025">10</a></sup> presents a case in which an Agent must identify the number mentioned immediately after dinosaurs first appear in a YouTube 360 VR video narrated by the voice actor for Gollum in <em>The Lord of the Rings</em>. After recognizing that it lacks subtitle-reading capability, the Agent finds and tests <code>youtube-transcript-api</code>, wraps it as a new subtitle tool, and extracts the answer <code>100000000</code> from the transcript. A new tool enters the capability library only after safety scanning, functional tests, and successful reuse on later tasks. Chapter 4’s proactive tool discovery asks which existing tool fits; Chapter 5 asks how to write a tool; this chapter asks what operational evidence should trigger creation and how a new tool becomes a validated long-term capability.</p>
+<blockquote>
+<p><strong>Experiment 8-5 ★★★: Triggering Agent Self-Modification from Failure Trajectories</strong></p>
+<p><strong>Objective:</strong> Given multiple trajectories in which errors marked <code>retryable=false</code> are still called repeatedly, determine whether the system can locate the root cause in retry and circuit-breaker code and produce a candidate fix without breaking recovery from transient failures.</p>
+<p><strong>Procedure:</strong> The diagnosis module first aggregates the same fault across different tasks. It creates a modification request only after the cross-trajectory support threshold is met and targets <code>retry_policy.py</code> in the stable version. The candidate generator reads the failure diagnosis, the transient-failure recovery behavior that must be preserved, previously rejected changes, and the stable source. Before emitting a minimal code diff, it predicts that calls after non-retryable errors should fall while transient-timeout recovery should not. Whether the generator is deterministic or a real LLM Coding Agent, it may write only to an isolated candidate directory. The validation Harness then compiles the candidate, replays the original failure trajectories, verifies that a non-retryable error stops immediately and opens the circuit breaker, and retests that transient timeouts still retry according to the original threshold.</p>
+<p><strong>Diagnostic control and metrics:</strong> Treat “add one sentence to the Prompt telling the Agent not to repeat the call” as a conceptual example of choosing the wrong modification layer, demonstrating why a deterministically enforceable retry constraint belongs in code. The executable experiment compares deterministic and LLM patch generators under the same release gate. Record the number of calls after non-retryable errors, transient-error recovery rate, regressions on old tasks, patch size, and candidate acceptance rate.</p>
+<p><strong>Acceptance criteria:</strong> Passing every check produces only <code>release_to_canary</code>. Failure of any static check, failure replay, or old-task regression returns <code>reject_candidate</code>. <code>release_manifest.json</code> must record the failure cluster, source trajectories, inferred root cause, target component and file, code diff, expected repair, possible regressions, check results, candidate version, and rollback version. Rejected candidates must retain their failure reasons for the next generation round. The patch-generating Agent must not modify stable code, validators, audit logs, or the gate that approves its own release.</p>
+<p>The accompanying implementation is available at <a href="../chapter8/self-modifying-agent/"><code>self-modifying-agent</code></a>. It supports either a deterministic candidate generator or a real LLM Coding Agent, with both paths sharing the same release gate.</p>
+</blockquote>
+<h3 id="encoding-experience-in-parameters">Encoding Experience in Parameters<a class="headerlink" href="#encoding-experience-in-parameters" title="Permanent link">&para;</a></h3>
+<p>Knowledge, instructions, and programs all rest on one premise: the target capability can be expressed relatively completely through external symbols. Yet capabilities such as medical-image understanding, natural speech prosody, removing a formulaic “AI feel” from text, and long-horizon planning are difficult to compress into a few rules or workflows. Such capabilities must be written into model parameters through post-training.</p>
+<p>Whether a capability should be parameterized is not determined solely by whether the task is stable over the long term. Domain shifts caused by new imaging equipment may still require LoRA or continual fine-tuning; rapidly changing linguistic styles can also be accommodated through periodic preference training. Stability affects update frequency and cost, but the representational nature of the capability determines its primary medium. Conversely, a long-stable rule for approving transfers should not rely solely on parametric memory; server-side code must still provide deterministic guarantees.</p>
+<p>Chapter 7 provided a complete discussion of SFT, distillation, and RL, so this section does not repeat it. For continual evolution, the key is to transform evaluated production trajectories into training data: high-quality demonstrations can be used for SFT, explicit preferences can form paired data, and interactions with reliable environmental rewards can be used for RL. Before training, private information must still be removed, erroneous trajectories filtered out, and an independent regression set retained. After training, the system must check whether general capabilities or safety alignment have been forgotten.</p>
+<p>Parameter learning usually works in conjunction with external methods. A medical-imaging model can learn visual representations through parameters, obtain the latest guidelines from a knowledge base, and use code to measure lesions and calculate risk. A natural customer-service tone can be shaped at the distributional level through preference training, while a Prompt specifies the current brand identity and user memory adapts communication to individual preferences. Continual evolution does not mean selecting a single answer from among the four methods, but placing each capability in the medium best suited to expressing and governing it.</p>
+<h3 id="from-updating-artifacts-to-updating-the-update-method">From Updating Artifacts to Updating the “Update Method”<a class="headerlink" href="#from-updating-artifacts-to-updating-the-update-method" title="Permanent link">&para;</a></h3>
+<p>The preceding four methods ask <strong>where experience is written</strong>, but continual evolution has another, orthogonal axis: is the system optimizing the contents of an artifact, or the method used to produce, manage, and validate artifacts? Along this axis, the optimization target can expand from <strong>an individual rule or memory → structured context → workflow → Harness code → optimizer code that generates candidate solutions</strong><sup id="fnref:weng-harness-2026"><a class="footnote-ref" href="#fn:weng-harness-2026">14</a></sup>. These are not five new update carriers but five search scales; knowledge, Prompts, Skills, and programs may appear at several of them.</p>
+<p>The innermost level changes only artifact content—for example, adding a local rule to a system Prompt after a failed trajectory or adding an exception to an experience document. Such changes have a small blast radius and are easier to attribute and roll back, so they should be the default. Repeatedly asking a model to rewrite an entire Prompt or memory, however, introduces another form of degradation: successive attempts at brevity can gradually erase rare but important details, and interacting constraints can be collapsed into an overgeneral principle. Agentic Context Engineering (ACE) maintains context as a collection of entries with stable identifiers. Generation, reflection, and curation modules propose incremental updates, which deterministic logic merges and deduplicates instead of rewriting an ever-shorter text block each round<sup id="fnref:ace-2026"><a class="footnote-ref" href="#fn:ace-2026">15</a></sup>. It is a concrete research example of this chapter's earlier principles of minimal diffs and retained provenance.</p>
+<p>At the next level, the optimization target is no longer merely what context contains but how context is constructed. Meta Context Engineering (MCE) separates the two into inner and outer loops: the inner loop optimizes the context artifact for the current task under a given management method, while the outer loop uses results from multiple executions and validations to modify the context operations themselves—search, selection, filtering, and formatting<sup id="fnref:mce-2026"><a class="footnote-ref" href="#fn:mce-2026">16</a></sup>. The distinction matters. Editing a retrieval rule changes a content-management mechanism; comparing several retrieval and curation mechanisms and retaining the one with better transfer is learning how to manage context.</p>
+<p>The same idea extends to workflows and the entire Harness. AFlow represents workflows composed of multiple LLM calls as code graphs and searches over combinations of nodes and control flow using execution feedback<sup id="fnref:aflow-2025"><a class="footnote-ref" href="#fn:aflow-2025">17</a></sup>. Meta-Harness has a Coding Agent inspect candidate Harness source, scores, and trajectories to search the code that determines how information is stored, retrieved, and presented<sup id="fnref:meta-harness-2026"><a class="footnote-ref" href="#fn:meta-harness-2026">18</a></sup>. Chapter 5 established code as a general language for expressing Agent system structure. The additional point here is that code, together with its evaluation history, can itself become the object of continual search rather than a one-time output.</p>
+<p>Higher levels are not automatically better. Searching for a local rule may require only a few edge cases, whereas searching an entire workflow or Harness faces a much larger candidate space, higher evaluation cost, and harder attribution. A clear, recurring fault localized to one component should first receive an auditable local patch. Only when local changes repeatedly fail to address a cross-component problem, or when the current management method itself becomes the bottleneck, is it worth moving outward to the workflow, Harness, or optimizer. At every level, evaluators, permission boundaries, and held-out tests must remain outside the editable scope—the larger the search space, the more important this trusted root becomes.</p>
+<h2 id="building-a-continual-evolution-closed-loop-for-long-term-operation">Building a Continual-Evolution Closed Loop for Long-Term Operation<a class="headerlink" href="#building-a-continual-evolution-closed-loop-for-long-term-operation" title="Permanent link">&para;</a></h2>
+<p>The four update methods become continual evolution rather than one-off optimization only when incorporated into the same autonomous loop. Figure 8-5 shows a more robust dual-loop architecture for production systems: the online execution loop only completes tasks and records evidence, without directly rewriting the production Agent; the offline evolution loop aggregates trajectories, diagnoses root causes, generates candidate modifications, and releases new versions only after they pass validation gates. The two loops are connected through versioned experience repositories and evaluation sets.</p>
+<p><img alt="Figure 8-5 Dual loops for online execution and offline evolution" src="../images/fig8-5.svg" /></p>
+<p>Voyager<sup id="fnref:voyager-2023"><a class="footnote-ref" href="#fn:voyager-2023">13</a></sup> demonstrates a relatively complete continual-evolution loop. In Minecraft, it selects new goals based on its current capabilities, iteratively refines programs using environmental feedback, stores successfully validated code in a skill library, and then combines existing skills to solve harder tasks. An automatic curriculum, executable skills, and environmental validation are all indispensable: with a skill library but no curriculum, the Agent does not know what to learn next; with self-reflection but no environmental validation, the skill library accumulates errors; with exploration but no persistence, every task must still begin from scratch. Although the knowledge, Prompt, tools, and parameters of real-world Agents are more complex, the basic learning process is similar.</p>
+<p>More specifically, Voyager consists of three interlocking mechanisms. The <strong>automatic curriculum generator</strong> proposes a suitably challenging next objective from the current inventory, environment, and acquired skills, so exploration does not become random wandering. The <strong>skill library</strong> stores successful programs as retrievable, composable code; an advanced gathering skill, for example, can invoke basic movement and crafting skills. The <strong>iterative prompting mechanism</strong> feeds environmental observations, execution errors, and self-verification results back into the next round of code generation until the task actually passes. Compared with the baselines used in the paper, Voyager obtained 3.3× as many unique items, traveled 2.3× as far, unlocked key technology-tree milestones up to 15.3× faster, and transferred its skill library to new Minecraft worlds. These metrics measure how capability grows with experience rather than how a frozen Agent performs on a single examination.</p>
+<h3 id="from-problem-diagnosis-to-experience-consolidation">From Problem Diagnosis to Experience Consolidation<a class="headerlink" href="#from-problem-diagnosis-to-experience-consolidation" title="Permanent link">&para;</a></h3>
+<p>The same surface-level problem may require different forms of modification. When a customer-service Agent hallucinates fabricated facts, the cause may be missing information in the knowledge base, or the Prompt may fail to require citations. When an Agent falsely promises “it has been completed” before completing a task, the problem can be corrected through instructions or by having the Harness enforce consistency between the response and tool state. The evolution module should first identify the root cause and then select the smallest modification target that is easiest to validate and roll back. Sporadic failures with insufficient evidence should not immediately trigger learning; the system should continue collecting examples instead.</p>
+<p>This choice may also change as experience accumulates. A newly discovered strategy can initially be stored as an experience document for retrieval; after repeated validation across multiple cases, it can be promoted to knowledge. Knowledge can be expressed in three ways: rules that can be clearly described in natural language can be consolidated into a Skill; stable procedures that require no natural-language understanding can be compiled into tool code; and capabilities that actually reflect broad, implicit decision-making can enter post-training.</p>
+<h3 id="validation-release-and-rollback">Validation, Release, and Rollback<a class="headerlink" href="#validation-release-and-rollback" title="Permanent link">&para;</a></h3>
+<p>Every modification should first produce a candidate capability or candidate Agent rather than directly overwrite the production version. Knowledge documents must be tested to determine whether retrieval improves performance on new tasks; Prompts and Skills must be checked against edge cases and for regressions on previous tasks; programs must be tested in sandboxes and reset environments; and parameter updates must be evaluated for forgetting, safety, and out-of-distribution performance. Even after validation, a new version should be released gradually and monitored on real traffic; if key metrics deteriorate, the system should automatically roll back to a known safe version.</p>
+<p>Validation must also separate two capabilities that are often conflated. <strong>Harness updating</strong> is the ability to produce valuable persistent changes from trajectories; <strong>Harness benefit</strong> is the task Agent's ability to find, activate, and correctly use those changes later. A Skill may be correct in itself, yet a weaker task model may fail to load it in the right situation or fail to follow it over a long trajectory. Either failure makes the final score look as if no evolution occurred. End-to-end performance alone therefore cannot diagnose the updater. Model-swapping experiments by Lin et al. indicate that the two abilities relate differently to base-model capability<sup id="fnref:harness-benefit-2026"><a class="footnote-ref" href="#fn:harness-benefit-2026">21</a></sup>. The exact relationship requires validation on more tasks, but evaluating them separately is broadly useful.</p>
+<p>Table 8-3 Layered evaluation metrics for continual evolution</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Question answered</th>
+<th>Primary evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Candidate-change validity</td>
+<td>Does the updater propose useful changes?</td>
+<td>Acceptance rate and gain in independent validation</td>
+</tr>
+<tr>
+<td>Artifact activation rate</td>
+<td>Does the task Agent load the new Skill, memory, or tool in the right situation?</td>
+<td>Retrieval, routing, and tool-call traces</td>
+</tr>
+<tr>
+<td>Successful adherence rate</td>
+<td>After activation, does the Agent follow the new rule or process?</td>
+<td>Action sequences and process verifiers</td>
+</tr>
+<tr>
+<td>Held-out task gain</td>
+<td>Does the whole system improve on tasks not used during evolution?</td>
+<td>Held-out success, quality, and cost</td>
+</tr>
+</tbody>
+</table>
+<p>For diagnosis, hold a candidate Harness fixed and swap only the task model. If a strong model benefits while a weak model never activates the new artifact, retrieval or routing is the bottleneck. If both activate it but only the strong model executes it correctly, instruction following or long-horizon planning is the bottleneck. If every model regresses, the change itself is more suspect. Conversely, hold the task model fixed and swap the model that proposes changes to compare updater quality directly. This two-way model swap locates where capability budget should be spent more effectively than a single post-evolution score.</p>
+<p>Evaluation is not an examination performed after learning ends, but an indispensable part of self-evolution. Long-term evaluation should observe at least five types of outcomes simultaneously:</p>
+<ul>
+<li>Regression, namely whether new experience conflicts with other existing experience and whether previously successful cases begin to fail;</li>
+<li>Generalization, namely the improvements produced by new experience in scenarios not yet covered by the test set;</li>
+<li>Token efficiency, namely the token cost of completing tasks;</li>
+<li>Safety, namely whether rules, privacy protections, and refusal boundaries drift during evolution;</li>
+<li>Long-term engineering quality, namely whether maintenance complexity, architectural consistency, ownership boundaries, backward compatibility, and future migration and debugging costs deteriorate.</li>
+</ul>
+<p>Fixing only the current failed case while degrading performance on other existing cases or in new domains does not constitute successful continual learning.</p>
+<h3 id="the-boundary-of-a-verifiable-loop-when-done-does-not-mean-progress">The Boundary of a Verifiable Loop: When “Done” Does Not Mean “Progress”<a class="headerlink" href="#the-boundary-of-a-verifiable-loop-when-done-does-not-mean-progress" title="Permanent link">&para;</a></h3>
+<p>The preceding loop works most naturally for Coding, tool use, and business-state changes, where tests, environment state, or deterministic rules can provide rapid feedback. Open-ended research, strategic planning, and complex product design are different: feedback is delayed, there may be no unique correct answer, and the objectives that matter most—research taste, long-term value, and maintainability—are difficult to turn into an immediate score. A Harness can then execute the process flawlessly while merely producing things that look like results rather than advancing the real objective.</p>
+<p>Autonomous research is a useful stress test. Trehan and Chopra documented four end-to-end attempts to turn research ideas into papers. Three failed during implementation or evaluation, and only one completed the full pipeline<sup id="fnref:llm-scientists-2026"><a class="footnote-ref" href="#fn:llm-scientists-2026">22</a></sup>. The failures fall into three groups. First, <strong>implementation drift</strong>: once the proposed method becomes difficult, the Agent retreats toward a familiar implementation from its training distribution that no longer tests the original hypothesis. Second, <strong>epistemic over-optimism</strong>: while the signal may still be noise, the system begins explaining it, patching the method, and announcing a finding, while failures and negative results are more easily ignored. Third, <strong>missing tacit judgment</strong>: an Agent may be able to run experiments without knowing which baseline matters, which anomaly deserves investigation, or when a hypothesis should be abandoned.</p>
+<p>These tasks require changes to the evidence and supervision structure, not merely a model that writes better papers:</p>
+<ul>
+<li><strong>Separate claims from evidence:</strong> Record provenance separately for citations, numbers, methods, and conclusions; the final document is only one rendering of the evidence graph. ScientistOne's Chain-of-Evidence design links each class of claim to auditable sources. This improves traceability but does not by itself make the research question valuable<sup id="fnref:scientistone-2026"><a class="footnote-ref" href="#fn:scientistone-2026">23</a></sup>.</li>
+<li><strong>Retain negative results:</strong> Write failed experiments, rejected candidates, and stopping reasons to an immutable log with the same retrieval status as successes. Otherwise the evolution module sees only survivors, revisits disproved paths, and learns to interpret ambiguous results as success.</li>
+<li><strong>Preserve search diversity:</strong> Open-ended search should not retain only the currently highest-scoring chain. The candidate pool should also preserve some lower-scoring but meaningfully different branches by mechanism, code novelty, or hypothesis type, so that every solution does not converge on the same easy-to-score template.</li>
+<li><strong>Move human involvement upward:</strong> Human input is not limited to approving dangerous tool calls. It also includes defining problems, reviewing evaluation criteria, interpreting anomalous results, and deciding when to stop. With ambiguous feedback, these high-level judgments are harder to automate—and more valuable—than taking over individual execution steps.</li>
+</ul>
+<p>The same limitation appears in ordinary software engineering. Passing every unit test proves only that currently observable behavior satisfies the tests; it does not prove that the codebase will remain maintainable months later. That is why the previous section treats long-term engineering quality as an independent metric rather than expecting present task success to cover delayed externalities. The ceiling of continual evolution is ultimately set by whether the system can evaluate what it actually cares about, not merely the easiest proxy to measure.</p>
+<h3 id="safety-boundaries-for-continual-evolution">Safety Boundaries for Continual Evolution<a class="headerlink" href="#safety-boundaries-for-continual-evolution" title="Permanent link">&para;</a></h3>
+<p>An Agent’s self-evolution capability can turn a single error into a long-term risk. <strong>If Prompt injection in web pages, email, or tool output is summarized as experience</strong>, it may take effect repeatedly across sessions. If a malicious package found through automated search is wrapped as a tool, its impact can spread from one sandbox run to every subsequent task. A defective verifier may also continue approving candidates that appear to improve but actually regress. An Agent self-evolution system must therefore ask not only whether a candidate is stronger, but also who may modify what and what evidence justifies the change.</p>
+<p>The first boundary is <strong>separating evidence from instructions</strong>. Raw web pages and tool output are untrusted evidence and must not be written directly into a Skill or similar capability; an LLM must first summarize them. Writes should be version-controlled and submitted as pull requests, which are merged only after review by a reviewer LLM from a different source.</p>
+<p>The second boundary is <strong>separating candidate capabilities from production capabilities</strong>. New knowledge, Prompts, Skills, programs, and parameters first enter a candidate area that cannot serve real traffic. Newly generated code and external dependencies must also pass security checks such as sandbox execution, permission review, supply-chain scanning, and behavioral testing. Only after security checks and regression tests pass may a candidate serve real traffic as a production capability.</p>
+<p>The third boundary is that <strong>safety mechanisms must not be self-modifiable</strong>. A business Agent may modify Prompts, Skills, the knowledge base, and tools, but it must not modify the validators, test cases, release thresholds, audit logs, or stable-version backups that approve its own updates. Otherwise, an Agent can disguise regression as progress simply by lowering a test threshold or deleting failing cases.</p>
+<h3 id="sleep-learning-consolidation-forgetting-and-capability-maintenance">Sleep Learning: Consolidation, Forgetting, and Capability Maintenance<a class="headerlink" href="#sleep-learning-consolidation-forgetting-and-capability-maintenance" title="Permanent link">&para;</a></h3>
+<p>“Sleep learning” is a cognitive analogy for offline consolidation; it does not require the process to run literally at night. The online Agent’s primary responsibility is to complete the current task and append immutable evidence. A background learning process reads a batch of new experience during idle periods or when gating conditions are met, compares old and new conclusions, merges duplicates, resolves conflicts, proposes candidate updates, and runs regressions. Separating collection from organization prevents an accidental success, network failure, or malicious input from immediately rewriting long-term capabilities, and it allows consolidation to use larger batches and cheaper models.</p>
+<p>A typical sleep-learning cycle has five steps:</p>
+<ol>
+<li><strong>Trigger:</strong> Reach a threshold for elapsed time, number of new trajectories, storage use, or error frequency, while confirming that no high-priority online task is running.</li>
+<li><strong>Orient:</strong> Read the production knowledge, Prompt, and Skill directories and their versions to understand existing capabilities and immutable boundaries.</li>
+<li><strong>Collect and consolidate:</strong> Find new signals in recently evaluated trajectories, merge duplicates, mark conflicts and applicability conditions, and prefer local patches.</li>
+<li><strong>Validate and approve:</strong> Evaluate candidates on transfer, retention, and safety sets; high-risk writes wait for human approval.</li>
+<li><strong>Prune and index:</strong> Update retrieval indexes and mark capabilities that are long unused or contradicted by new evidence as expired, archived, or deleted, while retaining provenance and rollback versions.</li>
+</ol>
+<p>User memory is the most intuitive example, but it must be distinguished from action experience. Claude Code’s auto memory maintains a <code>MEMORY.md</code> index and topic-specific detail files for each project. At session startup it loads only a bounded prefix of the index and reads the remaining content on demand; when the index approaches its limit, the Agent is instructed to merge or move details elsewhere. This shows that even plain-text memory requires capacity limits, layered loading, and active organization. The currently documented mechanism primarily writes memory during sessions and should not simply be equated with a fixed nightly background task<sup id="fnref:claude-code-memory"><a class="footnote-ref" href="#fn:claude-code-memory">11</a></sup>.</p>
+<p>Hermes provides a more complete example of background evolution. It separates long-term information into bounded <code>MEMORY.md</code> and <code>USER.md</code> files, SQLite/FTS5 search over prior sessions, on-demand Skills, and optional external memory providers such as Honcho. Session search returns original messages rather than first summarizing them with an LLM, keeping retrieval distinct from generation and auditable. When a task contains many tool calls, recovers from an error or dead end, receives a user correction, or discovers a non-obvious workflow, a background review can create or locally revise a Skill; memory and Skill writes can also pass through an approval gate. A separate Curator tracks Skill usage, staleness, and archival status, performs deterministic pruning while idle, and may optionally invoke an LLM to merge content. It snapshots changes first so that incorrect consolidation can be rolled back<sup id="fnref:hermes-memory"><a class="footnote-ref" href="#fn:hermes-memory">12</a></sup>. This turns “record–consolidate–validate–prune” from a metaphor into an operational capability lifecycle.</p>
+<p>Continual evolution does not mean allowing knowledge, Prompts, and tools to grow without limit. The context corruption discussed in Chapter 2 reappears over longer timescales: experience documents conflict with one another, Prompts become overwhelmed by boundary rules, Skill libraries accumulate duplicate capabilities, and repeated fine-tuning causes catastrophic forgetting. The system therefore requires periodic offline consolidation:</p>
+<ul>
+<li>Merge duplicate experience while retaining provenance and version information;</li>
+<li>Move local rules from the global Prompt into domain-specific Skills to keep the global Prompt clean;</li>
+<li>Keep Prompts and Skills clearly structured, like a handbook for new employees, and avoid enumerations resembling “99 ironclad rules.”</li>
+<li>Revalidate tools that have not been used for a long time;</li>
+<li>Delete knowledge invalidated by new evidence;</li>
+<li>Retrain LoRA from the original base model.</li>
+</ul>
+<blockquote>
+<p><strong>Experiment 8-6 ★★★: Evaluating Whether an Agent Is Continually Evolving</strong></p>
+<p><strong>Objective:</strong> Distinguish among three long-term behaviors—saving one piece of feedback, merely appending forever, and genuinely updating, transferring, and retaining capabilities—so that repeatedly running the same tasks is not mistaken for continual learning.</p>
+<p><strong>Four-stage task stream:</strong> The learning stage presents refund, identity-verification, and baggage-policy tasks that share latent patterns. The transfer stage changes the phrasing, user, and local environment to test whether old experience applies to new tasks. The rule-change stage updates the baggage limit from 20 kg to 23 kg and requires the system to replace or retire obsolete knowledge. The retention stage retests unchanged capabilities and currently valid rules to measure forgetting. External memory may be updated only after each feedback-bearing task ends; the expected action for the current task must never be leaked to the Agent in advance.</p>
+<p><strong>Control groups:</strong> <code>static</code> persists no feedback. <code>append_only</code> remembers the first version of a rule but cannot resolve conflicts or retire it. <code>evolving</code> stores versions and replaces old rules with new evidence. The reference implementation verifies that the evaluation Harness can distinguish these behaviors. A real experiment can put an LLM through the same ordered stream of 14 tasks, but outcomes must be computed by a Harness outside the model.</p>
+<p><strong>Metrics and acceptance:</strong> Report accuracy and the learning curve for each stage, and separately calculate transfer accuracy, tasks needed to recover after a new rule, old-capability retention, negative-transfer rate, safety-Rubric pass rate, and Token, latency, and storage costs. For real systems that update Prompts, Skills, or a Harness, also record candidate-change validity, artifact activation rate, and successful adherence rate, so that “the update was correct but never loaded” is not misclassified as a failed update. Even an Agent with high final accuracy does not qualify as continually evolving if it still cites retired rules, succeeds through unsafe shortcuts, or forgets existing capabilities after an update.</p>
+<p>The accompanying implementation is available at <a href="../chapter8/self-evolution-eval/"><code>self-evolution-eval</code></a>. By default, it compares three reference Agents: updatable, append-only, and static. Use <code>--profile llm</code> to have a real LLM undergo the same long-term task stream.</p>
+</blockquote>
+<h2 id="chapter-summary">Chapter Summary<a class="headerlink" href="#chapter-summary" title="Permanent link">&para;</a></h2>
+<p>Continual learning is becoming one of the most important capabilities of Agents, but today's models still cannot perform it reliably on their own. Contextual adaptation during inference does not persist automatically, while unvalidated online parameter updates amplify noise, attacks, and capability drift. The more practical approach today is therefore to build a verifiable learning system around the model.</p>
+<p>An Agent obtains learning signals from interaction and evaluation, then updates knowledge, Prompts, Skills, programs, or model parameters according to how the capability is represented. The system can also optimize the methods used to manage and generate these artifacts, but it should prefer local changes that are attributable, verifiable, and reversible.</p>
+<p>Continual evolution should separate online execution from offline learning: record evidence online; generate and validate candidate updates offline; then release, consolidate, or roll them back gradually. This loop is most reliable when outcomes are automatically verifiable. For open-ended tasks with ambiguous objectives and delayed feedback, people must still participate in problem definition and the design of evaluation criteria.</p>
+<h2 id="questions-for-reflection">Questions for Reflection<a class="headerlink" href="#questions-for-reflection" title="Permanent link">&para;</a></h2>
+<ol>
+<li>★★ An experience document is supported by three successful trajectories and one failed trajectory. The failure occurred with a newer API version. How should the system determine whether the experience has been invalidated or its applicability conditions have changed?</li>
+<li>★★ A customer-service Agent’s user satisfaction increases, but its rate of rule violations also rises. Why can satisfaction not serve as the sole learning signal? How would you design guardrail metrics?</li>
+<li>★★★ The same “false promise” problem can be mitigated through a Prompt, Harness checks, or parameter training. What evidence would you use to choose where to make the modification?</li>
+<li>★★★ An Agent may modify tools and validators, but it should not be allowed to modify the trusted root that approves its own updates. How would you separate the permissions and code boundaries of these two parts?</li>
+<li>★★ As the experience knowledge base grows, retrieval errors and knowledge conflicts may offset the benefits of learning. How should versioning, freshness, and retirement mechanisms be designed?</li>
+<li>★★★ Parameter learning is effective for natural-language style but struggles to guarantee strict business rules. Design a continual-evolution scheme for medical customer service that coordinates parameters, knowledge, Skills, and code-level constraints.</li>
+</ol>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:reflexion-2023">
+<p>Shinn, N., et al. <em>Reflexion: Language Agents with Verbal Reinforcement Learning.</em> arXiv:2303.11366, 2023.&#160;<a class="footnote-backref" href="#fnref:reflexion-2023" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:gaia-2023">
+<p>Mialon, G., et al. <em>GAIA: a benchmark for General AI Assistants.</em> arXiv:2311.12983, 2023.&#160;<a class="footnote-backref" href="#fnref:gaia-2023" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:aworld-2025">
+<p>Yu, C., et al. <em>AWorld: Orchestrating the Training Recipe for Agentic AI.</em> arXiv:2508.20404, 2025.&#160;<a class="footnote-backref" href="#fnref:aworld-2025" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:dspy-2023">
+<p>Khattab, O., et al. <em>DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines.</em> arXiv:2310.03714, 2023.&#160;<a class="footnote-backref" href="#fnref:dspy-2023" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:opro-2023">
+<p>Yang, C., et al. <em>Large Language Models as Optimizers.</em> arXiv:2309.03409, 2023.&#160;<a class="footnote-backref" href="#fnref:opro-2023" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:gepa-2025">
+<p>Agrawal, L., et al. <em>GEPA: Reflective Prompt Evolution Can Outperform Reinforcement Learning.</em> arXiv:2507.19457, 2025.&#160;<a class="footnote-backref" href="#fnref:gepa-2025" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:karpathy-system-prompt-learning">
+<p>Karpathy, A. “We’re missing (at least one) major paradigm for LLM learning … system prompt learning?” X, May 11, 2025. https://x.com/karpathy/status/1921368644069765486&#160;<a class="footnote-backref" href="#fnref:karpathy-system-prompt-learning" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+<li id="fn:anthropic-skill-creator">
+<p>Anthropic. <em>Skill Creator.</em> 2026. https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md&#160;<a class="footnote-backref" href="#fnref:anthropic-skill-creator" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+</li>
+<li id="fn:preact">
+<p>Li, Bojie. <em>PreAct: Computer-Using Agents that Get Faster on Repeated Tasks.</em> arXiv:2606.17929, 2026.&#160;<a class="footnote-backref" href="#fnref:preact" title="Jump back to footnote 9 in the text">&#8617;</a></p>
+</li>
+<li id="fn:alita-2025">
+<p>Qiu, J., et al. <em>Alita: Generalist Agent Enabling Scalable Agentic Reasoning with Minimal Predefinition and Maximal Self-Evolution.</em> arXiv:2505.20286, 2025.&#160;<a class="footnote-backref" href="#fnref:alita-2025" title="Jump back to footnote 10 in the text">&#8617;</a></p>
+</li>
+<li id="fn:claude-code-memory">
+<p>Anthropic, “How Claude remembers your project”, 2026. https://code.claude.com/docs/en/memory&#160;<a class="footnote-backref" href="#fnref:claude-code-memory" title="Jump back to footnote 11 in the text">&#8617;</a></p>
+</li>
+<li id="fn:hermes-memory">
+<p>Nous Research, <em>Hermes Agent Documentation: Persistent Memory, Skills System, and Curator</em>, 2026. https://hermes-agent.nousresearch.com/docs/user-guide/features/memory ; https://hermes-agent.nousresearch.com/docs/user-guide/features/skills ; https://hermes-agent.nousresearch.com/docs/user-guide/features/curator&#160;<a class="footnote-backref" href="#fnref:hermes-memory" title="Jump back to footnote 12 in the text">&#8617;</a></p>
+</li>
+<li id="fn:voyager-2023">
+<p>Wang, G., et al. <em>Voyager: An Open-Ended Embodied Agent with Large Language Models.</em> arXiv:2305.16291, 2023.&#160;<a class="footnote-backref" href="#fnref:voyager-2023" title="Jump back to footnote 13 in the text">&#8617;</a></p>
+</li>
+<li id="fn:weng-harness-2026">
+<p>Weng, Lilian. “Harness Engineering for Self-Improvement.” <em>Lil’Log</em>, 2026. https://lilianweng.github.io/posts/2026-07-04-harness/&#160;<a class="footnote-backref" href="#fnref:weng-harness-2026" title="Jump back to footnote 14 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ace-2026">
+<p>Zhang, Qizheng, et al. <em>Agentic Context Engineering: Evolving Contexts for Self-Improving Language Models.</em> ICLR 2026. arXiv:2510.04618.&#160;<a class="footnote-backref" href="#fnref:ace-2026" title="Jump back to footnote 15 in the text">&#8617;</a></p>
+</li>
+<li id="fn:mce-2026">
+<p>Ye, Haoran, et al. <em>Meta Context Engineering via Agentic Skill Evolution.</em> arXiv:2601.21557, 2026.&#160;<a class="footnote-backref" href="#fnref:mce-2026" title="Jump back to footnote 16 in the text">&#8617;</a></p>
+</li>
+<li id="fn:aflow-2025">
+<p>Zhang, Jiayi, et al. <em>AFlow: Automating Agentic Workflow Generation.</em> ICLR 2025. arXiv:2410.10762.&#160;<a class="footnote-backref" href="#fnref:aflow-2025" title="Jump back to footnote 17 in the text">&#8617;</a></p>
+</li>
+<li id="fn:meta-harness-2026">
+<p>Lee, Yoonho, et al. <em>Meta-Harness: End-to-End Optimization of Model Harnesses.</em> arXiv:2603.28052, 2026.&#160;<a class="footnote-backref" href="#fnref:meta-harness-2026" title="Jump back to footnote 18 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ahe-2026">
+<p>Lin, Jiahang, et al. <em>Agentic Harness Engineering: Observability-Driven Automatic Evolution of Coding-Agent Harnesses.</em> arXiv:2604.25850, 2026.&#160;<a class="footnote-backref" href="#fnref:ahe-2026" title="Jump back to footnote 19 in the text">&#8617;</a></p>
+</li>
+<li id="fn:self-harness-2026">
+<p>Zhang, Hangfan, et al. <em>Self-Harness: Harnesses That Improve Themselves.</em> arXiv:2606.09498, 2026.&#160;<a class="footnote-backref" href="#fnref:self-harness-2026" title="Jump back to footnote 20 in the text">&#8617;</a></p>
+</li>
+<li id="fn:harness-benefit-2026">
+<p>Lin, Minhua, et al. <em>Harness Updating Is Not Harness Benefit: Disentangling Evolution Capabilities in Self-Evolving LLM Agents.</em> arXiv:2605.30621, 2026.&#160;<a class="footnote-backref" href="#fnref:harness-benefit-2026" title="Jump back to footnote 21 in the text">&#8617;</a></p>
+</li>
+<li id="fn:llm-scientists-2026">
+<p>Trehan, Dhruv and Paras Chopra. <em>Why LLMs Aren't Scientists Yet: Lessons from Four Autonomous Research Attempts.</em> arXiv:2601.03315, 2026.&#160;<a class="footnote-backref" href="#fnref:llm-scientists-2026" title="Jump back to footnote 22 in the text">&#8617;</a></p>
+</li>
+<li id="fn:scientistone-2026">
+<p>Meng, et al. <em>ScientistOne: Towards Human-Level Autonomous Research via Chain-of-Evidence.</em> arXiv:2605.26340, 2026.&#160;<a class="footnote-backref" href="#fnref:scientistone-2026" title="Jump back to footnote 23 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:45 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:45 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

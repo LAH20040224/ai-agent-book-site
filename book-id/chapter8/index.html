@@ -1,0 +1,2195 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/book-id/chapter8/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Evolusi Kontinual pada Agent - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="Evolusi Kontinual pada Agent">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/book-id/chapter8/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Evolusi Kontinual pada Agent">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#evolusi-kontinual-pada-agent" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Evolusi Kontinual pada Agent
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#menurunkan-sinyal-pembelajaran-dari-lintasan-operasional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Menurunkan Sinyal Pembelajaran dari Lintasan Operasional
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#empat-metode-untuk-evolusi-agent-secara-kontinual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Empat Metode untuk Evolusi Agent secara Kontinual
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Empat Metode untuk Evolusi Agent secara Kontinual">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mengkonsolidasikan-pengalaman-menjadi-pengetahuan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mengkonsolidasikan Pengalaman menjadi Pengetahuan
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mengenkode-pengalaman-sebagai-instruksi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mengenkode Pengalaman sebagai Instruksi
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mengenkode-pengalaman-sebagai-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mengenkode Pengalaman sebagai Program
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mengodekan-pengalaman-dalam-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mengodekan Pengalaman dalam Parameter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dari-memperbarui-artefak-hingga-memperbarui-metode-pembaruan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dari Memperbarui Artefak hingga Memperbarui "Metode Pembaruan"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#membangun-loop-tertutup-evolusi-berkelanjutan-untuk-operasi-jangka-panjang" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Membangun Loop Tertutup Evolusi Berkelanjutan untuk Operasi Jangka Panjang
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Membangun Loop Tertutup Evolusi Berkelanjutan untuk Operasi Jangka Panjang">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dari-diagnosis-masalah-hingga-konsolidasi-pengalaman" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dari Diagnosis Masalah hingga Konsolidasi Pengalaman
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validasi-rilis-dan-rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validasi, Rilis, dan Rollback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batas-loop-yang-dapat-diverifikasi-ketika-selesai-tidak-berarti-kemajuan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batas Loop yang Dapat Diverifikasi: Ketika "Selesai" Tidak Berarti "Kemajuan"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batas-keamanan-untuk-evolusi-berkelanjutan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batas Keamanan untuk Evolusi Berkelanjutan
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sleep-learning-konsolidasi-lupa-dan-pemeliharaan-kapabilitas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sleep Learning: Konsolidasi, Lupa, dan Pemeliharaan Kapabilitas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ringkasan-bab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ringkasan Bab
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pertanyaan-refleksi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pertanyaan Refleksi
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/book-id/chapter8.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/book-id/chapter8.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="evolusi-kontinual-pada-agent">Evolusi Kontinual pada Agent<a class="headerlink" href="#evolusi-kontinual-pada-agent" title="Permanent link">&para;</a></h1>
+<p>Agent saat ini menghadapi paradoks kemampuan yang mencolok: mereka dapat menyelesaikan tugas kompleks yang belum pernah dilihat sebelumnya secara zero-shot, namun setelah menangani sepuluh ribu tugas serupa, mereka mungkin masih mengulangi kesalahan tersebut keesokan harinya yang mereka buat pada hari pertama. <strong>Kemampuan untuk belajar secara otonom dari pengalaman</strong> menjadi esensial bagi Agent untuk berkembang dari “mampu menyelesaikan tugas” menjadi “mampu bekerja dengan andal,” dan ini juga merupakan topik penelitian sentral untuk generasi model berikutnya. Namun, model saat ini masih jauh dari mampu melakukan pembelajaran berkelanjutan dengan sendirinya.</p>
+<p>Model yang di-deploy tidak secara otomatis mengubah parameternya setelah sebuah inferensi. In-Context Learning, pemeliharaan state, dan kompresi yang dibahas pada Bab 2 memungkinkan sebuah Agent untuk beradaptasi <strong>di dalam tugas saat ini</strong>; namun, begitu konteks berakhir, perubahan ini tidak secara alami terbawa ke tugas berikutnya. Menyimpan percakapan di memori tidak sama dengan mempelajari perilaku baru. Lintasan (trajectories) mentah mungkin panjang dan berisi strategi yang efektif bersamaan dengan keberhasilan tak sengaja, atribusi yang salah, dan input yang tidak tepercaya.</p>
+<p>Perbedaan penting di sini mudah terlewatkan: <strong>menyimpan pengalaman tidak sama dengan belajar darinya</strong>. Menempatkan seratus lintasan (trajectories) dalam konteks panjang atau vector store mungkin membantu model mengambil sebuah kasus saat dibutuhkan, tetapi itu tidak secara otomatis membandingkan kasus: langkah mana yang berulang di berbagai lintasan yang sukses, praktik mana yang hanya berfungsi dengan antarmuka lama, atau apakah keberhasilan berasal dari strategi yang masuk akal alih-alih sekadar kebetulan lingkungan. Pembelajaran hanya terjadi setelah sistem secara aktif mengevaluasi, membandingkan, menggeneralisasi, dan memvalidasi bukti—bukan saat log ditulis ke disk. User Memory pada Bab 3 terutama menangkap “seperti apa pengguna dan dunia itu”; pengalaman belajar di bab ini melangkah lebih jauh, menangkap “apa yang harus dilakukan di bawah kondisi yang mana.” Yang pertama membantu Agent mengingat lebih banyak; yang terakhir membantunya menjadi lebih mahir daripada sekadar lebih berpengetahuan.</p>
+<p>Mengapa tidak membiarkan model melatih dirinya sendiri secara langsung setelah setiap tugas? Karena lingkungan produksi jarang memberikan sinyal pembelajaran yang bersih. Kepuasan pengguna tidak menyiratkan kepatuhan, dan pengujian mungkin lulus karena kasus yang gagal dihapus. Bahkan pembaruan lokal dapat menyebabkan hilangnya kemampuan (capability forgetting), penyimpangan kebijakan (policy drift), atau penurunan keamanan (safety degradation). Jika model yang berjalan dibiarkan mengubah dirinya sendiri secara langsung berdasarkan umpan balik yang tidak diverifikasi, pengalaman yang salah dan Prompt Injection mungkin menjadi mengakar dan terus menguat di tugas-tugas berikutnya. Pelatihan berkala dari foundation model dapat meningkatkan kemampuan umum, tetapi tidak dapat segera menyerap aturan privat, perubahan tool, dan pengalaman lokal yang dihadapi setiap hari oleh setiap Agent.</p>
+<p>Oleh karena itu, sementara model itu sendiri belum dapat belajar secara terus-menerus dan andal, “pembelajaran” pertama-tama harus dibangun sebagai sistem otonom di sekitar model: merekam bukti operasional, memverifikasi hasil dan proses, mengekstrak pola umum dari beberapa lintasan, dan kemudian memutuskan apakah akan memperbarui pengetahuan, instruksi, program, atau parameter model. Setiap modifikasi pertama-tama harus menjadi versi kandidat dan dapat mengubah putaran operasi berikutnya hanya setelah pengujian regresi dan pemeriksaan keamanan. Hal ini tidak menggantikan kemampuan belajar model; melainkan, di bawah batasan teknis saat ini, ini adalah jalur rekayasa untuk memberikan Agent kemampuan pembelajaran yang terus-menerus (continual learning).</p>
+<p>Bab-bab sebelumnya telah memperkenalkan komponen-komponen utama yang diperlukan oleh sistem ini. Bab 2 membahas state di dalam tugas, Bab 3 menyediakan infrastruktur pengetahuan (knowledge infrastructure), Bab 5 memberi Agent kemampuan meta untuk membuat tool dan memodifikasi sistem, Bab 6 menetapkan evaluasi dan verifikasi, dan Bab 7 menjelaskan cara memperbarui parameter model. Tugas Bab 8 adalah mengatur komponen-komponen ini ke dalam loop evolusi kontinual seperti yang ditunjukkan pada Gambar 8-1.</p>
+<p><img alt="Gambar 8-1 Loop keseluruhan evolusi Agent secara kontinual" src="../images/fig8-1.svg" /></p>
+<p>Evolusi kontinual harus muncul dari pengalaman operasional yang dapat dilacak, mengubah perilaku berikutnya, dan diverifikasi agar tidak menyebabkan degradasi yang signifikan. Bab ini pertama-tama membahas cara menentukan apa sebenarnya yang berjalan baik atau salah dalam sebuah run; kemudian membandingkan empat metode pembaruan dan batasan penerapannya; akhirnya, bab ini menguji bagaimana pembaruan ini diverifikasi, dirilis, direvisi, dan dipensiunkan selama operasi jangka panjang.</p>
+<h2 id="menurunkan-sinyal-pembelajaran-dari-lintasan-operasional">Menurunkan Sinyal Pembelajaran dari Lintasan Operasional<a class="headerlink" href="#menurunkan-sinyal-pembelajaran-dari-lintasan-operasional" title="Permanent link">&para;</a></h2>
+<p>Titik awal evolusi kontinual bukanlah “ringkasan” (summarization), melainkan “evaluasi”. Jika sistem tidak mengetahui apakah sebuah tugas telah diselesaikan atau langkah mana yang menyebabkan keberhasilan atau kegagalan, refleksi yang dihasilkan oleh model bahasa hanya bisa menjadi tebakan. Begitu evaluasi yang salah memasuki pengetahuan jangka panjang (long-term knowledge), System Prompt, atau data pelatihan, efeknya dapat berlipat ganda pada tugas-tugas berikutnya.</p>
+<p>Hasil dari beberapa tugas relatif mudah untuk diverifikasi. Sebuah Coding Agent dapat menjalankan pengujian (tests), pemeriksaan tipe (type checks), dan benchmark kinerja; sebuah Agent yang memproses pengembalian dana untuk pengguna dapat menanyakan status pesanan dan jumlah pengembalian dana aktual. Sinyal semacam ini berasal dari state lingkungan nyata dan umumnya lebih dapat diandalkan daripada deskripsi model tentang perilakunya sendiri. Namun, hasil yang benar tidak menyiratkan proses yang benar. Menghapus kasus pengujian (test cases) yang gagal juga dapat membuat pengujian lulus, sementara memberi tahu pengguna, “Kami akan menerbitkan pengembalian dana Anda dalam tujuh hari; mohon bersabar,” mungkin menghasilkan kepuasan sementara. Oleh karena itu, evaluasi yang andal harus menilai hasil (outcome) dan jalur yang diambil untuk mencapainya.</p>
+<p>Banyak tugas lain tidak memiliki jawaban tunggal yang benar. Apakah layanan pelanggan bersabar, apakah ia menawarkan alternatif yang patuh aturan, apakah laporan penelitian mengidentifikasi bukti utama, dan apakah teks yang dihasilkan alami dan ringkas semuanya membutuhkan penilaian kontekstual. LLM-as-a-Judge, yang diperkenalkan pada Bab 6, dapat digunakan di sini, tetapi judge tidak boleh hanya memberikan skor keseluruhan yang samar. Pendekatan yang lebih efektif adalah dengan mendefinisikan Rubric terlebih dahulu dan mengharuskan pemverifikasi (verifier) untuk menilai setiap item, mengutip bukti lintasan, dan secara eksplisit menunjukkan ketidakpastian ketika buktinya tidak cukup.</p>
+<p>Gambar 8-2 menyajikan struktur verifikasi tiga lapis. Verifikator hasil (outcome verifier) lapisan bawah membaca hasil pengujian, state basis data, dan balasan tool untuk menjawab, “Apakah tugas tersebut benar-benar diselesaikan?” Verifikator proses (process verifier) lapisan tengah memeriksa aturan bisnis, izin, dan urutan tindakan untuk menjawab, “Apakah itu diselesaikan dengan cara yang diizinkan?” Verifikator kualitas (quality verifier) lapisan atas mengevaluasi bahasa dan strategi menurut Rubric untuk menjawab, “Apakah itu ditangani dengan tepat?” Metrik tingkat bawah harus lebih bergantung pada kode dan kebenaran dasar lingkungan (environmental ground truth); hanya aspek-aspek yang sulit diformalkan yang harus didelegasikan ke model bahasa.</p>
+<p><img alt="Gambar 8-2 Verifikasi lintasan tiga lapis dari hasil lingkungan ke LLM Rubric" src="../images/fig8-2.svg" /></p>
+<p>Untuk Agent layanan pelanggan, sebuah Rubric yang berguna setidaknya harus mencakup dimensi-dimensi yang tercantum dalam Tabel 8-1. Lima yang pertama terutama menegakkan persyaratan dasar, sementara dua yang terakhir mengukur kualitas layanan. Dekomposisi ini secara diagnostik lebih berguna daripada menanyakan apakah pengguna merasa puas: pengguna mungkin puas karena Agent menerbitkan pengembalian dana yang tidak patuh aturan, atau tidak puas karena pembatasan kepatuhan. Skor kepuasan tunggal tidak dapat membedakan keduanya.</p>
+<p>Tabel 8-1 Dimensi evaluasi lintasan (trajectory evaluation) untuk Agent layanan pelanggan</p>
+<table>
+<thead>
+<tr>
+<th>Dimensi</th>
+<th>Pertanyaan verifikasi</th>
+<th>Bukti utama</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hasil tugas</td>
+<td>Apakah permintaan inti pengguna terselesaikan?</td>
+<td>State lingkungan akhir, hasil tool</td>
+</tr>
+<tr>
+<td>Kepatuhan aturan</td>
+<td>Apakah ada kebijakan, izin, atau prosedur wajib yang dilanggar?</td>
+<td>Repositori kebijakan, lintasan tindakan</td>
+</tr>
+<tr>
+<td>Batasan privasi</td>
+<td>Apakah ada informasi yang diungkapkan yang seharusnya tidak diberikan?</td>
+<td>Teks respons, catatan akses data</td>
+</tr>
+<tr>
+<td>Keandalan faktual</td>
+<td>Apakah pernyataan didukung oleh pengetahuan atau hasil tool?</td>
+<td>Sumber yang dikutip, kembalian tool</td>
+</tr>
+<tr>
+<td>Konsistensi janji-tindakan</td>
+<td>Apakah tindakan yang diklaim selesai benar-benar terjadi?</td>
+<td>Perbandingan respons dan log tool</td>
+</tr>
+<tr>
+<td>Kualitas ekspresi</td>
+<td>Apakah bahasanya alami dan ringkas, tanpa pengulangan atau susunan kata berbasis templat?</td>
+<td>Percakapan penuh, bahasa Rubric</td>
+</tr>
+<tr>
+<td>Alternatif patuh aturan</td>
+<td>Ketika rencana asli tidak memungkinkan, apakah alternatif yang diizinkan ditemukan?</td>
+<td>Tujuan pengguna, kebijakan, dan tindakan berikutnya</td>
+</tr>
+</tbody>
+</table>
+<p>“Konsistensi janji-tindakan” (Promise–action consistency) sangat cocok untuk skenario Agent. Evaluasi teks tradisional hanya membaca respons akhir dan mungkin dengan mudah menganggap “Saya telah mengirimkan pengembalian dana Anda” sebagai layanan yang baik. Evaluasi lintasan (trajectory evaluation) sebaliknya dilanjutkan dengan memeriksa apakah tool pengembalian dana benar-benar dipanggil, apakah pemanggilannya berhasil, dan apakah status pesanan berubah. “Alternatif patuh aturan” tidak mendorong model untuk mengabaikan aturan sesuka hati; ini mengharuskan model untuk memahami tujuan sebenarnya pengguna dan, saat pengembalian dana tidak tersedia, memeriksa opsi yang sah seperti penjadwalan ulang, perpanjangan, atau kompensasi sebagian.</p>
+<p>Hasil verifikasi tidak boleh dikompresi menjadi skalar. Sebuah evaluasi lintasan lebih dekat ke diagnosis terstruktur: tugas sebagian berhasil dan kepatuhan aturan lulus, tetapi ada satu pernyataan yang tidak didukung, satu janji palsu, dan respons mengulangi penjelasan kebijakan tiga kali. Sinyal dimensi (dimensional signals) mempertahankan sifat dari setiap masalah dan lokasi buktinya. Hanya dengan begitu modul hilir (downstream modules) dapat menentukan apakah pernyataan yang tidak didukung mencerminkan kurangnya pengetahuan, tidak adanya persyaratan kutipan, atau kemampuan model yang tidak mencukupi, dan apakah janji palsu membutuhkan revisi Prompt atau pemeriksaan konsistensi antara respons dan state tool di dalam Harness.</p>
+<p>LLM verifiers juga memerlukan kalibrasi. Sistem produksi biasanya memelihara sekumpulan kecil lintasan yang dianotasi pakar (expert-annotated trajectories) untuk memeriksa konsistensi pemverifikasi di setiap dimensi; kasus berisiko tinggi atau dengan keyakinan rendah dirujuk ke model kedua atau peninjau manusia; dan set kalibrasi dijalankan ulang setelah perubahan versi model. Pemverifikasi harus memberikan evaluasi dan bukti, sementara modul diagnosis dan evolusi independen harus memutuskan bagian mana dari Agent yang akan dimodifikasi. Hal ini mencegah model yang sama bertindak sebagai Judge sambil menulis ulang aturan secara langsung.</p>
+<blockquote>
+<p><strong>Eksperimen 8-1 ★★: Membangun Pemverifikasi Lintasan (Trajectory Verifier) untuk Agent Layanan Pelanggan</strong></p>
+<p><strong>Tujuan:</strong> Mengubah lintasan layanan pelanggan menjadi diagnosis terstruktur yang dapat mendukung pembelajaran selanjutnya, dan menguji apakah “kesimpulan multidimensi dengan bukti” mengidentifikasi akar penyebab lebih baik daripada satu skor keseluruhan.</p>
+<p><strong>Data dan prosedur:</strong> Siapkan lintasan berlabel pakar (expert-labeled trajectories) yang mencakup empat kategori: pengembalian dana normal, janji palsu, pengungkapan privasi, dan penolakan berlebihan. Lapisan pertama membaca state pesanan akhir dan log tool untuk menentukan apakah pengembalian dana atau penjadwalan ulang benar-benar terjadi. Lapisan kedua memeriksa setiap langkah terhadap kebijakan bisnis, termasuk izin, prosedur wajib, privasi, dukungan faktual, dan konsistensi janji-tindakan. Lapisan ketiga mengevaluasi kualitas bahasa dan alternatif yang patuh aturan terhadap Rubric di Tabel 8-1 dan mempertahankan giliran (turns) yang relevan sebagai bukti untuk setiap kegagalan. Judge kualitas default menggunakan aturan deterministik, dengan LLM Judge nyata juga tersedia. Terlepas dari model lapisan atas, hasil dan lapisan aturan tidak boleh diserahkan pada model bahasa untuk ditebak.</p>
+<p><strong>Kontrol dan metrik:</strong> Baseline hanya mengeluarkan skor keseluruhan; kondisi eksperimental mengeluarkan <code>pass</code>, <code>fail</code>, atau <code>uncertain</code> untuk setiap dimensi, bersama dengan bukti dan keyakinan (confidence). Selama kalibrasi, ukur presisi dan recall untuk mendeteksi kegagalan di setiap dimensi dan laporkan kecocokan yang tepat (exact agreement) dengan label pakar. Verifikasikan juga bahwa kegagalan seperti janji palsu mengandung bukti tidak kosong (nonempty evidence) daripada sekadar kesimpulan yang tidak didukung.</p>
+<p><strong>Kriteria penerimaan (Acceptance criteria):</strong> Pemverifikasi harus secara andal mendeteksi pelanggaran kritis, janji palsu, dan penolakan berlebihan. Skor keseluruhan yang tinggi tidak boleh menyembunyikan kegagalan privasi atau kebijakan. Kasus berkeyakinan rendah (low-confidence) dan berisiko tinggi harus dikirim ke pemverifikasi kedua atau tinjauan manusia alih-alih secara otomatis menjadi sinyal pembelajaran.</p>
+<p>Implementasi yang menyertai tersedia di <a href="../chapter8/trajectory-verifier/"><code>trajectory-verifier</code></a>. Secara default, ini menggunakan Judge kualitas yang dapat direproduksi secara offline; gunakan <code>--judge llm</code> untuk menjalankan pemverifikasi LLM nyata yang diimplementasikan.</p>
+</blockquote>
+<h2 id="empat-metode-untuk-evolusi-agent-secara-kontinual">Empat Metode untuk Evolusi Agent secara Kontinual<a class="headerlink" href="#empat-metode-untuk-evolusi-agent-secara-kontinual" title="Permanent link">&para;</a></h2>
+<p>Sinyal pembelajaran menunjukkan bahwa sebuah Agent harus berubah, tetapi tidak di mana perubahan itu harus terjadi. Basis utama untuk memilih metode pembaruan bukanlah berapa lama sebuah pengalaman telah bertahan, melainkan apakah kemampuan target dapat diwakili secara alami oleh media tertentu. Fakta dan pengalaman cocok untuk dokumen pengetahuan (knowledge documents); strategi yang dapat diungkapkan secara jelas dalam bahasa termasuk dalam Prompt atau Skills; prosedur dan kendala yang dapat dieksekusi secara tepat harus dikodekan sebagai program; dan kemampuan dimensi tinggi seperti persepsi, gaya bahasa, dan strategi implisit harus masuk ke parameter model. Gambar 8-3 menunjukkan keempat metode ini dan hubungannya.</p>
+<p><img alt="Gambar 8-3 Empat metode pembaruan untuk evolusi kontinual" src="../images/fig8-3.svg" /></p>
+<p>Tabel 8-2 memberikan perbandingan yang ringkas. Keempat metode ini tidak saling eksklusif: Agent pencitraan medis (medical-imaging) mengandalkan parameter untuk mengidentifikasi lesi, menggunakan Knowledge Base untuk menyediakan panduan saat ini, dan menggunakan kode untuk menghitung indikator risiko. Model layanan pelanggan memperoleh nada aslinya dari post-training, memperoleh kebijakan spesifik perusahaan dari pengetahuan (knowledge) dan Skills, dan bergantung pada kode sisi server untuk menegakkan persyaratan kepatuhan kritis.</p>
+<p>Tabel 8-2 Batasan yang berlaku dari empat metode evolusi kontinual</p>
+<table>
+<thead>
+<tr>
+<th>Metode pembaruan</th>
+<th>Konten yang sesuai</th>
+<th>Keuntungan utama</th>
+<th>Keterbatasan utama</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Knowledge Base pengalaman</td>
+<td>Fakta, pola eksperiensial, pengecualian, dan sumber</td>
+<td>Pembaruan cepat, keterlacakan, pengambilan (retrieval) sesuai permintaan</td>
+<td>Bergantung pada pengambilan dan penerapan model yang benar</td>
+</tr>
+<tr>
+<td>Prompt dan Skill</td>
+<td>Prinsip penilaian yang dapat diekspresikan secara linguistik dan prosedur operasi</td>
+<td>Dapat diinterpretasikan, ruang lingkup yang dapat dikontrol</td>
+<td>Rentan terhadap pembengkakan (bloat), konflik, atau diabaikan</td>
+</tr>
+<tr>
+<td>Program dan Harness</td>
+<td>Prosedur deterministik, tool, dan kendala ketat (hard constraints)</td>
+<td>Dapat diuji, eksekusi stabil, biaya rendah</td>
+<td>Biaya pengembangan dan pemeliharaan lebih tinggi</td>
+</tr>
+<tr>
+<td>Parameter model</td>
+<td>Persepsi dimensi tinggi, gaya generasi, dan strategi implisit</td>
+<td>Generalisasi kuat, overhead inferensi rendah</td>
+<td>Biaya pembaruan dan regresi tinggi</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mengkonsolidasikan-pengalaman-menjadi-pengetahuan">Mengkonsolidasikan Pengalaman menjadi Pengetahuan<a class="headerlink" href="#mengkonsolidasikan-pengalaman-menjadi-pengetahuan" title="Permanent link">&para;</a></h3>
+<p>Bentuk evolusi yang paling ringan adalah mengorganisir pengalaman berulang dari beberapa run ke dalam dokumen pengetahuan yang dapat diambil (retrievable knowledge documents). “Knowledge Base pengalaman” yang dijelaskan di sini berbagi teknologi penyimpanan, pengindeksan, dan pengambilan dengan Bab 3, tetapi berbeda dalam sumber pengetahuannya dan tujuan verifikasinya. Bab 3 terutama mengekstrak “seperti apa pengguna dan dunia itu” dari percakapan pengguna, dokumen, dan dataset; bab ini mengekstrak “apa yang harus dilakukan di bawah kondisi yang mana” dari lintasan (trajectories) tindakan dan hasil Agent. Misalnya, “Maskapai ini mewajibkan makanan khusus untuk dipesan dua puluh empat jam sebelumnya” adalah pengetahuan domain, sedangkan “Periksa batas waktu makanan khusus sebelum memesan untuk menghindari mengetahui hanya setelah pembayaran bahwa permintaan tersebut tidak dapat dipenuhi” adalah pengalaman tindakan (action experience).</p>
+<p>Lintasan mentah tidak cocok sebagai unit pengetahuan formal. Mereka panjang dan berisik (noisy), berisi output tool mentah, jalan memutar yang tidak disengaja, dan detail lingkungan. Sistem yang lebih kuat mempertahankan tiga lapisan data: lintasan mentah yang tidak dapat diubah untuk auditing; analisis per-run yang mencatat hasil dan kandidat pelajaran (candidate lessons); serta perbandingan, pengelompokan (clustering), dan induksi di berbagai lintasan yang serupa untuk menghasilkan dokumen pengetahuan Markdown yang berorientasi ke masa depan. Sebuah dokumen formal biasanya menentukan skenario yang berlaku, strategi yang disarankan, praktik yang dilarang, pengecualian, sumber bukti, dan waktu verifikasi terbaru daripada menceritakan ulang jalannya penyelesaian sebuah tugas tunggal secara lengkap.</p>
+<p>Desain ini berbagi prinsip dua tahap yang sama seperti User-as-Code pada Bab 3. User-as-Code pertama-tama menambahkan fakta percakapan ke log yang tidak dapat diubah dan kemudian secara berkala membangun kembali model pengguna terstruktur. Pembelajaran pengalaman (experience learning) juga harus menyimpan bukti terlebih dahulu dan menghasilkan pengetahuan yang dapat diubah (mutable knowledge) secara offline setelahnya. Gambar 8-4 mengilustrasikan proses ini. Memisahkan perekaman dari pengorganisasian mencegah satu keberhasilan yang tidak disengaja atau kegagalan jaringan segera mengubah Agent, sambil memungkinkan sistem untuk mengidentifikasi pola umum hanya setelah mengamati beberapa keberhasilan dan kegagalan.</p>
+<p><img alt="Gambar 8-4 Dari lintasan yang dievaluasi ke dokumen pengetahuan pengalaman" src="../images/fig8-4.svg" /></p>
+<p>Dokumen pengalaman bukanlah ringkasan lintasan sederhana. Konten yang dapat ditransfer (transferable content) muncul dari perbandingan: apa yang dilakukan oleh lintasan sukses dengan tipe yang sama, apa yang kurang pada lintasan gagal, di versi lingkungan mana sebuah strategi efektif, dan di bawah prasyarat mana strategi tersebut gagal. Bab 3 telah memperkenalkan ekstraksi pengetahuan, clustering, dan pengambilan (retrieval), sehingga bab ini tidak mengulangi algoritma-algoritma tersebut. Sebaliknya, ini berfokus pada bagaimana evaluasi lintasan (trajectory evaluation) menjadi kondisi untuk ekstraksi dan apakah pengetahuan yang diekstrak meningkatkan performa pada tugas-tugas berikutnya.</p>
+<p>Sebuah pipeline penyulingan pengetahuan (knowledge-distillation pipeline) yang lengkap dapat dibagi menjadi lima langkah. Pertama, simpan lintasan yang tidak dapat diubah dan hasil lingkungan. Selanjutnya, hasilkan analisis terstruktur untuk setiap run, buat daftar tipe tugas, kemampuan yang diperlukan, strategi yang diamati, kesalahan, dan pengecualian. Kemudian agregasikan run menurut kelompok tugas (task family) dan buat tabel bukti yang menunjukkan lintasan mana yang mendukung atau bertentangan dengan setiap kandidat pola. Hanya kandidat yang memenuhi ambang batas dukungan (support threshold) yang masuk ke dokumen formal. Terakhir, evaluasi transfer pada tugas baru yang tidak digunakan selama penyulingan (distillation). Mempertahankan pengetahuan formal terpisah dari kandidat analisis memungkinkan sistem untuk menggeneralisasi lagi tanpa mengubah bukti asli dan untuk mencabut sebuah kesimpulan secara tepat ketika lingkungannya berubah.</p>
+<p>Pembelajaran pengalaman GAIA memberikan contoh intuitif. GAIA<sup id="fnref:gaia-2023"><a class="footnote-ref" href="#fn:gaia-2023">2</a></sup> berisi masalah multi-langkah yang menggabungkan pencarian, pembacaan web, pemrosesan file, dan komputasi, sementara AWorld<sup id="fnref:aworld-2025"><a class="footnote-ref" href="#fn:aworld-2025">3</a></sup> menyediakan lingkungan untuk menjalankan Agent, memanggil tool tersebut, dan merekam lintasan: yang pertama seperti ujian, dan yang terakhir adalah ruang ujian dan sistem catatan laboratorium. Pendekatan yang terlalu sederhana (simplistic) menghasilkan ringkasan strategi dan segera memvektorisasinya setelah satu operasi sukses (successful run). Implementasi yang lebih ketat (stricter implementation) pertama-tama menggunakan pemverifikasi jawaban GAIA atau pemverifikasi lingkungan lainnya untuk memberi label run sebagai sukses, sebagian sukses, atau gagal, dan kemudian membandingkan beberapa jalur di dalam kelompok tugas yang sama. Lintasan sukses menyumbangkan strategi kandidat, kegagalan menyumbangkan pengetahuan pengecualian (exclusionary knowledge), dan kesuksesan sebagian mengungkapkan segmen mana yang berhasil dan mana yang masih gagal. Refleksi bahasa alami yang diajukan oleh Reflexion<sup id="fnref:reflexion-2023"><a class="footnote-ref" href="#fn:reflexion-2023">1</a></sup> dapat membantu menghasilkan pelajaran kandidat, tetapi refleksi itu sendiri bukanlah bukti. Hanya konten yang konsisten dengan hasil lingkungan, didukung di seluruh lintasan, dan menunjukkan transfer positif pada tugas-tugas baru yang harus dimasukkan ke dalam dokumen pengalaman formal.</p>
+<blockquote>
+<p><strong>Eksperimen 8-2 ★★: Menyaring Dokumen Pengetahuan Pengalaman dari Lintasan GAIA</strong></p>
+<p><strong>Tujuan:</strong> Menguji apakah dokumen pengetahuan lintas-lintasan (cross-trajectory) ditransfer lebih baik daripada ringkasan satu keberhasilan dan mengurangi transfer negatif dari kesuksesan yang tak disengaja dan pengalaman yang salah.</p>
+<p><strong>Data dan prosedur:</strong> <code>gaia-experience</code> pertama-tama menyimpan lintasan penuh (full trajectory) dan <code>environment_score</code> eksternal untuk setiap run, lalu mengubahnya menjadi rekaman pembelajaran minimal yang mengandung <code>task_family</code>, <code>capabilities</code> yang diperlukan, <code>applies_when</code>, strategi yang diamati, kesalahan, pengecualian, dan ID lintasan sumber (source trajectory IDs). Verifikator hasil (outcome verifier) mengklasifikasikan run sebagai sukses, sebagian sukses, atau gagal. Modul pembelajaran membandingkan jalur dalam kelompok tugas yang sama. Sebuah LLM mungkin mengusulkan kandidat generalisasi, tetapi strategi yang direkomendasikan harus didukung oleh setidaknya dua lintasan yang tidak gagal. Dokumen Markdown yang dihasilkan mencakup skenario yang berlaku, strategi yang direkomendasikan, kesalahan umum (common pitfalls), pengecualian, asal-usul (provenance), dan waktu validasi terbaru. Selama penerapan (application), hanya dokumen ini yang diambil (retrieved); lintasan mentah yang panjang tidak dimasukkan langsung ke dalam konteks.</p>
+<p><strong>Tiga kontrol (Three controls):</strong> Kondisi pertama tidak menggunakan pengalaman historis; yang kedua mengambil satu ringkasan trajektori (trajectory summary) yang paling mirip dengan tugas saat ini; yang ketiga mengambil dokumen pengetahuan (knowledge document) yang didukung oleh beberapa trajektori. Set pembelajaran (learning set) dan transfer (transfer set) harus terpisah sehingga jawaban atas pertanyaan GAIA yang sama tidak bocor ke dalam evaluasi sebagai "pengalaman."</p>
+<p><strong>Metrik dan penerimaan (Metrics and acceptance):</strong> Laporkan tingkat keberhasilan transfer tugas (transfer-task success rate), rata-rata karakter atau Tokens yang diambil, dan tingkat transfer negatif (negative-transfer rate), serta verifikasi bahwa setiap kesimpulan formal mengutip sumber trajektorinya. Jika dokumen lintas-trajektori (cross-trajectory) hanya menyingkat konteks tanpa meningkatkan kinerja tugas baru, itu tidak menunjukkan pengalaman yang dipelajari. Eksperimen ini juga gagal jika satu keberhasilan kebetulan dapat secara langsung dipromosikan menjadi pengetahuan formal atau jika sebuah dokumen tidak dapat ditelusuri ke trajektori aslinya.</p>
+<p>Implementasi yang menyertainya tersedia di <a href="../chapter8/gaia-experience/"><code>gaia-experience</code></a>. <code>demo_documents.py</code> berjalan secara offline secara default; dengan <code>--extractor llm</code>, sebuah LLM nyata dapat mengusulkan kandidat pengalaman lintas-trajektori.</p>
+</blockquote>
+<h3 id="mengenkode-pengalaman-sebagai-instruksi">Mengenkode Pengalaman sebagai Instruksi<a class="headerlink" href="#mengenkode-pengalaman-sebagai-instruksi" title="Permanent link">&para;</a></h3>
+<p>Knowledge Base pengalaman menyediakan materi referensi untuk sebuah Agent, sedangkan Prompts dan Agent Skills bersifat lebih preskriptif. Ketika beberapa trajektori berulang kali mengungkapkan kesalahan strategis yang sama, dan pola tersebut dapat diekspresikan dengan jelas dalam bahasa alami, sistem dapat meningkatkannya dari "pengalaman untuk referensi" menjadi "aturan yang harus diikuti." Aturan yang berlaku untuk hampir semua tugas cocok untuk dimasukkan ke dalam System Prompt; prosedur kompleks yang hanya berlaku untuk domain, proyek, atau alat tertentu lebih baik ditulis sebagai Skills <em>on-demand</em> atau file instruksi proyek.</p>
+<p>Prompt learning melayani peran yang berbeda dari Prompt engineering yang dibahas pada Bab 2. Bab 2 menjelaskan cara menulis Prompts yang jernih secara struktural dan ramah terhadap KV Cache; bagian ini membahas umpan balik produksi apa yang cukup untuk memicu revisi Prompt dan bagaimana aturan baru harus divalidasi sebelum di-deploy. Revisi tidak berarti berulang kali menulis ulang seluruh System Prompt. Pendekatan yang lebih andal adalah menghasilkan <em>diff</em> minimal dari sekelompok kegagalan yang serupa, menentukan ruang lingkup aturan, memeriksa konflik dengan aturan yang ada, dan mengevaluasinya terhadap <em>boundary cases</em> yang memicu kegagalan tersebut serta <em>retention set</em> dari tugas-tugas lama.</p>
+<p>Dalam postingan format panjang tahun 2025, Andrej Karpathy untuk sementara menyebut kemungkinan paradigma baru ini sebagai <strong>System Prompt Learning</strong><sup id="fnref:karpathy-system-prompt-learning"><a class="footnote-ref" href="#fn:karpathy-system-prompt-learning">7</a></sup>. Ringkasannya adalah bahwa <em>pretraining</em> utamanya mempelajari pengetahuan dan <em>fine-tuning</em> utamanya membentuk perilaku habitual, sementara jenis pembelajaran manusia lainnya terjadi ketika kita memecahkan masalah dan meninggalkan catatan eksplisit untuk diri kita di masa depan: "Lain kali saya menghadapi masalah semacam ini, saya harus mencoba pendekatan ini terlebih dahulu." Ia membandingkan LLM tanpa buku catatan semacam itu dengan protagonis film <em>Memento</em> dan mencatat bahwa System Prompt Learning dan <em>reinforcement learning</em> sama-sama meningkatkan perilaku dari pengalaman tetapi menggunakan algoritma pembaruan yang berbeda—yang pertama mengedit teks, sementara yang kedua mengubah parameter melalui gradien desenden (gradient descent). Contoh yang ia berikan adalah instruksi dalam System Prompt Claude yang saat itu terdiri dari sekitar 17.000 kata, yang mengharuskan model untuk menomori dan menghitung kata, huruf, atau karakter secara eksplisit sebelum menjawab, tepatnya untuk menangani pertanyaan seperti "Berapa banyak huruf <code>r</code> dalam <code>strawberry</code>?"</p>
+<p>Dalam sistem Agent, ini berarti mengubah pelajaran yang dapat diekspresikan dalam bahasa menjadi aturan kandidat yang dapat dibaca secara langsung oleh proses selanjutnya. Dibandingkan dengan hasil berhasil/gagal yang skalar, diagnosis yang didukung bukti dapat mengidentifikasi apakah kesalahan terjadi pada verifikasi identitas, pemilihan alat (Tool Use), atau batas eskalasi, sehingga memungkinkan perubahan kandidat yang lebih bertarget. Observasi Karpathy bahwa tinjauan yang dipandu pengetahuan adalah saluran umpan balik berdimensi lebih tinggi daripada <em>reward</em> skalar membantu menjelaskan potensi efisiensi data dari metode ini. Namun, informasi yang lebih kaya tidak secara otomatis benar: umpan balik satu pengguna mungkin hanya berlaku untuk pelanggan tersebut atau kebijakan yang sudah usang, sehingga <em>clustering</em>, analisis ruang lingkup, dan pengujian regresi tetap diperlukan.</p>
+<p>Beberapa pendekatan yang sudah mapan mengotomatiskan optimasi Prompt dengan berbagai cara. DSPy<sup id="fnref:dspy-2023"><a class="footnote-ref" href="#fn:dspy-2023">4</a></sup> memperlakukan program yang terdiri dari beberapa panggilan model bahasa sebagai objek yang dapat dioptimalkan dan mencari instruksi serta contoh pada <em>development set</em>. OPRO<sup id="fnref:opro-2023"><a class="footnote-ref" href="#fn:opro-2023">5</a></sup> meminta model bahasa untuk mengusulkan kandidat baru dari sejarah Prompts dan skor mereka. GEPA<sup id="fnref:gepa-2025"><a class="footnote-ref" href="#fn:gepa-2025">6</a></sup> menggunakan <em>natural-language reflection</em> atas trajektori yang gagal untuk menghasilkan dan memilih Prompts kandidat komplementer. Metode-metode ini utamanya melakukan optimasi <em>batch</em> pada set evaluasi offline; <em>diffs</em> produksi yang minimal lebih dekat ke pemeliharaan berkelanjutan, dipicu oleh <em>boundary cases</em> yang baru diamati dan dirancang untuk asal-usul (provenance), audit, dan <em>rollback</em> cepat. Dalam praktiknya, pencarian offline dapat membentuk versi awal yang kuat, diikuti oleh <em>patch</em> kasus-per-kasus untuk aturan produksi <em>long-tail</em>.</p>
+<p>Sebagai contoh, Agent layanan pelanggan maskapai penerbangan mungkin melakukan eskalasi ke manusia terlalu awal ketika pengguna menantang suatu kebijakan. Evaluasi trajektori menunjukkan bahwa ia tidak melanggar aturan apa pun tetapi kurang memiliki fleksibilitas yang patuh (compliant flexibility). Kandidat <em>patch</em> dapat mengharuskan Agent untuk menjelaskan kebijakan terlebih dahulu, mengidentifikasi tujuan aktual pengguna, dan mencari alternatif yang diizinkan, eskalasi hanya ketika pengguna secara eksplisit memintanya atau masalah tersebut benar-benar melampaui otoritas Agent. Jika aturan baru tersebut mengurangi eskalasi yang tidak perlu tetapi menyebabkan Agent terus menangani insiden keselamatan yang seharusnya dieskalasi, itu berarti telah gagal dalam pengujian regresi. Nilai dari System Prompt Learning tidak terletak pada sekadar menambahkan lebih banyak teks secara otomatis, tetapi pada pengklarifikasian ruang lingkup aturan secara terus-menerus melalui <em>boundary cases</em> produksi.</p>
+<p>Agent Skills learning mengikuti prinsip yang sama, tetapi dengan ruang lingkup yang lebih terlokalisasi. Sebuah Skill dapat dipahami sebagai manual operasi <em>on-demand</em> untuk pekerjaan tertentu: jika beberapa pengalaman secara kolektif membentuk proses klaim asuransi yang lengkap, sistem dapat menghasilkan atau merevisi Skill yang sesuai. Skill kandidat tidak boleh sekadar meringkas satu percakapan; minimal, ia harus menentukan kapan harus dimuat, prasyarat, langkah operasi, jebakan yang diketahui, metode validasi, dan trajektori sumber. Sistem pertama-tama mencari <em>library</em> Skill yang ada untuk kemampuan serupa, lebih memilih <code>patch</code> lokal ketika proses yang sama sudah ada dan membuat direktori baru hanya untuk kemampuan yang benar-benar mandiri. Ini mencegah <em>library</em> terisi oleh manual yang berbeda nama tetapi menduplikasi satu sama lain. Skill Creator dari Anthropic<sup id="fnref:anthropic-skill-creator"><a class="footnote-ref" href="#fn:anthropic-skill-creator">8</a></sup> mendemonstrasikan <em>loop draft–test–evaluate–revise</em>. Ia menjawab cara membuat dan menyempurnakan Skill; pertanyaan yang lebih sulit yang tersisa adalah bukti operasional apa yang cukup untuk memicu pembuatan, bagaimana menyelesaikan konflik, dan apakah revisi tersebut lulus tes regresi tugas-lama dan spesifik-domain.</p>
+<blockquote>
+<p><strong>Eksperimen 8-3 ★★: Mengoptimalkan System Prompts dari Trajektori Kegagalan</strong></p>
+<p><strong>Tujuan (Objective):</strong> Mengajari Agent layanan pelanggan maskapai penerbangan dari trajektori di mana ia melakukan eskalasi terlalu cepat ketika pengguna menantang suatu kebijakan, sekaligus mendemonstrasikan bahwa aturan baru tersebut tidak merusak skenario lama yang benar-benar membutuhkan eskalasi.</p>
+<p><strong>Prosedur (Procedure):</strong> Pertama-tama jalankan <em>retention set</em> tugas-lama dan <em>boundary set</em> eskalasi-berlebihan secara terpisah. <code>learning_signal.py</code> menguraikan kegagalan ke dalam kepatuhan aturan, penyelesaian tugas, dan fleksibilitas yang patuh, sambil mempertahankan ID kasus sumber. Sebuah Coding Agent kemudian membaca Prompt yang ada dan menghasilkan tepat satu edit minimal <code>old_str → new_str</code> yang dapat diaudit: mengharuskan Agent untuk menjelaskan kebijakan, mengidentifikasi tujuan aktual, dan mencari alternatif yang patuh sebelum eskalasi, sekaligus mempertahankan eskalasi saat pengguna secara eksplisit meminta campur tangan manusia atau terjadi insiden keselamatan. <em>Patch</em>, asal-usul, aturan target, dan dasar pemikirannya ditulis ke dalam <em>candidate manifest</em>.</p>
+<p><strong>Tiga kontrol (Three controls):</strong> Bandingkan Prompt awal, Prompt kandidat yang dihasilkan secara otomatis, dan Prompt yang dioptimalkan secara manual satu kali. Ketiganya menggunakan model yang sama dan tugas retensi serta <em>boundary</em> yang sama. <code>--quick</code> hanya mengurangi jumlah kasus; ia masih melakukan panggilan nyata ke <em>task Agent</em>, <em>LLM Judge</em>, dan <em>Coding Agent</em> dan tidak boleh dilaporkan sebagai simulasi offline.</p>
+<p><strong>Gerbang rilis dan metrik (Release gate and metrics):</strong> Sebuah kandidat harus melewati empat kondisi: <em>patch</em> yang tidak kosong, asal-usul yang dapat dilacak, peningkatan terukur pada <em>boundary set</em>, dan tidak ada degradasi pada <em>retention set</em>. Bandingkan akurasi tugas-batas (boundary-task accuracy), akurasi tugas-retensi (retention-task accuracy), pertumbuhan Prompt, regresi yang dimasukkan, dan waktu dari penemuan kegagalan hingga pembuatan kandidat. Melewati gerbang hanya menghasilkan <code>release_to_canary</code>, tidak pernah <em>overwrite</em> langsung dari Prompt stabil; kegagalan kondisi apa pun mengembalikan <code>reject_candidate</code>.</p>
+<p>Implementasi yang menyertainya tersedia di <a href="../chapter8/prompt-auto-optimization/"><code>prompt-auto-optimization</code></a>. Tes offline mencakup diagnosis dan gerbang rilis, sementara <code>--quick</code> melakukan panggilan nyata ke <em>task Agent</em>, <em>LLM Judge</em>, dan <em>Coding Agent</em>.</p>
+</blockquote>
+<h3 id="mengenkode-pengalaman-sebagai-program">Mengenkode Pengalaman sebagai Program<a class="headerlink" href="#mengenkode-pengalaman-sebagai-program" title="Permanent link">&para;</a></h3>
+<p>Ketika pengalaman mendeskripsikan operasi yang stabil, berulang, dan dapat diverifikasi, adalah tidak efisien jika meminta model membaca ulang dokumentasi dan melakukan <em>reasoning</em> melaluinya setiap kali. Pendekatan yang lebih tepat adalah mengompilasi pengalaman tersebut ke dalam alur kerja (workflows), alat (tools), atau kode <em>Harness</em>, mengubah eksplorasi satu kali menjadi program yang dapat dieksekusi berulang kali. Bab 5 menjelaskan bagaimana Coding Agents membaca dan menulis file, menjalankan tes, dan menghasilkan sistem; bagian ini tidak berfokus pada generasi kode secara umum, tetapi tentang bagaimana sebuah Agent memodifikasi versi dirinya di masa depan berdasarkan trajektorinya sendiri.</p>
+<p>Objek yang dapat dimodifikasi meluas jauh melampaui alat baru. Pada lapisan operasi, trajektori peramban (browser trajectories) dapat dikompilasi menjadi alur kerja yang terparameterisasi, atau <em>adapters</em> dapat dihasilkan untuk API yang berubah. Pada lapisan kontrol, <em>tool routing</em>, <em>retries</em>, <em>circuit breakers</em>, dan strategi kompresi konteks dapat dimodifikasi. Pada lapisan validasi, pemeriksaan parameter, <em>state validators</em>, dan tes regresi dapat ditambahkan sebagai respons terhadap kegagalan produksi. Pada lapisan arsitektur, sebuah <em>Reviewer Agent</em> dapat ditambahkan atau aliran informasi antara perencanaan dan eksekusi dapat diubah.</p>
+<p>Alur kerja peramban (Browser workflows) mengilustrasikan nilai pengalaman terprogram. Mereka analog dengan merekam <em>spreadsheet macro</em>. Pertama kali email dikirim, Agent multimodal menggunakan <em>loop</em> amati–pikir–tindak (observe–reason–act) untuk menemukan kontrol <em>compose</em>, penerima, subjek, <em>body</em>, dan <em>send</em>. Untuk email yang lain, prosesnya tidak berubah; hanya penerima dan kontennya yang berbeda, jadi tidak perlu memanggil model lagi untuk menemukan kembali seluruh jalur dari piksel dan DOM. Sistem mengompilasi trajektori eksplorasi pertama ke dalam program kecil yang berisi parameter, pemeriksaan status (state checks), dan informasi versi.</p>
+<p>Dalam <em>setting</em> peramban, proses distilasi pengetahuan (knowledge-distillation) yang ditunjukkan pada Gambar 8-4 menjadi siklus hidup yang lebih konkret:</p>
+<ol>
+<li><strong>Capture the trajectory:</strong> Rekam navigasi, klik, entri teks, dan pilihan <em>drop-down</em>, bersama dengan parameter tindakan, URL saat ini, dan bukti lokator elemen seperti XPath, CSS, <code>id</code>, <code>role</code>, <code>aria-label</code>, dan <code>data-testid</code>. Bukti lokator hanya membantu menemukan elemen lagi; itu tidak membuktikan bahwa tugas telah selesai.</li>
+<li><strong>Parameterize:</strong> Ganti literal dari proses pertama dengan variabel templat—misalnya, ubah <code>test@example.com</code>, subjek, dan <em>body</em> menjadi <code>{recipient}</code>, <code>{subject}</code>, dan <code>{content}</code>—sambil membiarkan tindakan yang stabil tidak berubah. Implementasi pengajaran menggunakan ekspresi reguler (regular expressions) dan penggantian templat; sistem produksi mungkin menggunakan input tugas terstruktur atau model ekstraksi terbatas (constrained extraction model).</li>
+<li><strong>Define state checks:</strong> Tambahkan pemeriksaan sebelum dan sesudah tindakan, seperti "tombol <em>send</em> terlihat" dan "URL setelah navigasi milik situs target." Tambahkan pemeriksaan <em>final-state</em> untuk alur kerja secara keseluruhan, seperti "daftar <em>sent-mail</em> berisi pesan baru" atau "nilai <em>state</em> halaman pengujian berubah seperti yang diharapkan." Berhasil mengeksekusi tindakan tidak sama dengan berhasil menyelesaikan tugas; pemeriksaan akhir harus membaca halaman sebenarnya atau status <em>backend</em>.</li>
+<li><strong>Validate the candidate:</strong> Keberhasilan pertama hanya menghasilkan <code>candidate</code>. Sistem harus mereset akun <em>sandbox</em> atau situs pengujian ke <em>initial state</em> independen dan memutar ulang kandidat secara penuh. Ia dapat dipublikasikan sebagai <code>validated</code> hanya jika semua pemeriksaan sebelum-tindakan, sesudah-tindakan, dan status-akhir lulus. Jika tugas yang memiliki efek samping (<em>side-effecting task</em>) seperti mengirim email atau melakukan pemesanan tidak memiliki <em>callback</em> reset yang aman, alur kerja mungkin dipertahankan sebagai kandidat yang dapat diaudit tetapi tidak boleh divalidasi dengan mengulangi tindakan di akun produksi.</li>
+<li><strong>Match and replay:</strong> Saat tugas baru tiba, cari <em>library</em> kemampuan formal untuk suatu alur kerja berdasarkan niat (<em>intent</em>) dan kata kunci, ekstrak parameter saat ini, dan eksekusi langsung dengan Playwright. Pemutaran ulang (<em>replay</em>) tidak memerlukan panggilan LLM langkah demi langkah, tetapi masih harus menunggu elemen tersedia dan menyelesaikan setiap <em>state check</em>.</li>
+<li><strong>Invalidate and relearn:</strong> Jika elemen target tidak dapat ditemukan, <em>state check</em> gagal, API Schema berubah, atau status akhirnya salah, hentikan tindakan selanjutnya dengan segera, pindahkan versi lama dari <em>library</em> yang dapat dicari ke area <code>invalid</code>, dan gunakan kembali (<em>fallback</em>) Agent penuh untuk eksplorasi baru. Simpan file lama untuk audit dan perbandingan, tetapi jangan biarkan file itu terus cocok secara diam-diam.</li>
+</ol>
+<p>Untuk alur kerja email, hasil kompilasinya bukan sekadar "klik tombol-tombol ini secara berurutan," melainkan program kecil yang diparameterisasi oleh penerima, subjek, dan <em>body</em>: program ini memeriksa jendela <em>compose</em> dan kolom-kolom sebelum mengirim, memeriksa indikator keberhasilan setelahnya, dan akhirnya mengonfirmasi bahwa pesan terkait muncul di daftar terkirim. Di PreAct<sup id="fnref:preact"><a class="footnote-ref" href="#fn:preact">9</a></sup>, program semacam itu memberikan percepatan (speedup) ujung-ke-ujung (end-to-end) sebesar 8,5–13× pada tugas yang berulang dan tidak memerlukan panggilan model bahasa langkah-demi-langkah selama pemutaran ulang. Yang lebih penting, memori proses memerlukan <strong>validasi sebelum-tindakan, validasi sesudah-tindakan, dan validasi prapengarsipan (pre-storage) independen</strong>. Jika tidak, sistem dapat menghasilkan ilusi yang berbahaya: cakupan <em>replay</em> adalah 100 persen dan setiap tombol diklik, namun ada satu kolom yang kosong dan tugas tersebut sebenarnya tidak pernah selesai.</p>
+<blockquote>
+<p><strong>Eksperimen 8-4 ★★★: Menghasilkan Alur Kerja yang Dapat Diverifikasi dari Trajektori Peramban</strong></p>
+<p><strong>Tujuan (Objective):</strong> Menentukan apakah web Agent dapat mengubah satu eksplorasi mahal menjadi alur kerja yang dapat digunakan kembali dan menolak pemutaran ulang yang salah ketika halaman berubah, alih-alih melaporkan keberhasilan hanya karena setiap tindakan berjalan.</p>
+<p><strong>Skenario empat tahap (Four-stage scenario):</strong> Pada tahap pertama, jalankan "kirim pesan dengan subjek 'Test Email' ke <code>test@example.com</code>" di situs email percobaan atau halaman pesan yang disimulasikan. Agent penuh mengeksplorasi, sementara sebuah <em>wrapper</em> merekam tindakan, parameter, dan status halaman, dan menghasilkan sebuah <code>candidate</code>. Pada tahap kedua, panggil <code>validation_reset</code> untuk memulihkan <em>sandbox</em> dan secara mandiri memutar ulang seluruh alur kerja; kandidat hanya masuk ke <em>library</em> kemampuan formal jika semua pemeriksaan sebelum-tindakan, sesudah-tindakan, dan status-akhir lulus. Pada tahap ketiga, lakukan jenis tugas yang sama dengan penerima, subjek, dan <em>body</em> yang berbeda. Sistem harus mencocokkan alur kerja yang divalidasi, mengisi parameter baru, dan memutarnya kembali melalui Playwright tanpa memasuki <em>loop</em> LLM langkah-demi-langkah. Pada tahap keempat, ubah lokator tombol, teks halaman, atau status akhir, dan pastikan alur kerja yang lama segera menjadi <code>invalid</code> dan mengembalikan <code>fallback_required=True</code>.</p>
+<p><strong>Desain kontrol (Control design):</strong> <em>Baseline</em> yang disederhanakan hanya mencatat apakah klik, entri teks, dan tindakan lainnya selesai tanpa pengecualian. Kondisi eksperimental juga memvalidasi halaman sebelum setiap tindakan, halaman setelah setiap tindakan, dan status tugas akhir. Kedua kondisi menggunakan trajektori dan perubahan halaman yang sama. Bandingkan tingkat positif palsu (<em>false-positive rates</em>) keduanya pada kasus-kasus seperti "tombol kirim diklik saat sebuah kolom kosong" dan "Simpan (Save) diklik tetapi data tidak disimpan persisten (persisted)."</p>
+<p><strong>Metrik dan penerimaan (Metrics and acceptance):</strong> Rekam waktu <em>end-to-end</em> untuk eksplorasi dan <em>replay</em> awal, jumlah panggilan LLM, tingkat keberhasilan, tingkat keberhasilan-palsu (false-success rate), tingkat kecocokan alur kerja, tingkat deteksi perubahan-halaman (page-change detection rate), dan jumlah <em>fallbacks</em> untuk pembelajaran ulang (relearning). Tanpa panggilan ulang reset (reset callback), alur kerja harus tetap menjadi kandidat; versi yang gagal divalidasi tidak boleh dapat diambil (retrievable); <em>replay</em> terparameterisasi tidak boleh menggunakan ulang penerima atau konten dari <em>run</em> pertama; dan setelah ada perubahan halaman, tindakan selanjutnya yang berbahaya harus dihentikan. Akselerasi hanya berarti jika semua kondisi ini terpenuhi.</p>
+<p>Implementasi yang menyertainya tersedia di <a href="../chapter8/browser-use-rpa/"><code>browser-use-rpa</code></a>, yang menyediakan demonstrasi mesin-status deterministik (deterministic state-machine) maupun jalur eksekusi yang memanggil Agent peramban nyata.</p>
+</blockquote>
+<p>Agent yang memodifikasi kodenya sendiri tidak berarti bahwa proses yang berjalan secara langsung menimpa dirinya sendiri (<em>overwrites itself</em>). Sistem produksi harus membuat cabang kandidat dari versi stabil saat ini, meminta Coding Agent menghasilkan <em>patch</em> minimal, lalu secara berurutan menjalankan <em>static checks</em>, <em>unit tests</em>, <em>security scans</em>, pemutaran ulang <em>failure-trajectory</em>, dan tes regresi pada tugas-tugas lama sebelum menghasilkan versi baru yang memenuhi syarat untuk <em>canary deployment</em>. Ini mengubah "modifikasi diri" (self-modification) menjadi proses perilisan perangkat lunak yang dapat diaudit dan mendefinisikan batasan antara Bab 8 dan 5: Bab 5 memberikan kemampuan untuk memodifikasi sistem, sementara bab ini memberikan metode untuk modifikasi diri yang dipicu oleh pengalaman dan dibatasi oleh <em>loop</em> validasi.</p>
+<p>Membuat <em>patch</em> berukuran kecil saja tidak cukup untuk atribusi yang dapat diandalkan. Setiap permintaan modifikasi juga harus berupa <strong>kontrak perubahan yang dapat difalsifikasi (falsifiable change contract)</strong> yang mencatat bukti kegagalan, akar penyebab yang disimpulkan, komponen <em>Harness</em> yang bertanggung jawab, perubahan kandidat, perilaku yang diharapkan membaik, perilaku yang ada yang mungkin mengalami regresi, dan pengujian untuk keduanya. Agentic Harness Engineering menggambarkan hal ini dalam istilah observabilitas (observability) tingkat komponen, pengalaman, dan keputusan: setiap komponen yang dapat diedit memiliki representasi tingkat-file; koleksi besar dari trajektori disuling menjadi bukti yang dapat diperiksa pada tingkat detail yang semakin meningkat; dan setiap pengeditan mendeklarasikan prediksi dampak sebelum eksekusi, yang mana hasil dari ronde berikutnya akan mengujinya<sup id="fnref:ahe-2026"><a class="footnote-ref" href="#fn:ahe-2026">19</a></sup>. Skor yang lebih tinggi kemudian dapat dihubungkan ke mekanisme tertentu daripada tetap menjadi uji coba yang tidak dapat diinterpretasikan.</p>
+<p><em>Candidate generator</em> seharusnya tidak hanya menerima kasus-kasus yang gagal. Self-Harness juga menyediakan perilaku sukses yang harus dipertahankan dan catatan modifikasi yang sebelumnya ditolak<sup id="fnref:self-harness-2026"><a class="footnote-ref" href="#fn:self-harness-2026">20</a></sup>. Yang pertama memberi tahu Agent tentang apa yang tidak boleh dirusak oleh perbaikan tersebut; yang kedua mencegahnya mengirimkan ulang ide gagal yang sama dengan kata-kata yang berbeda. Bukti kegagalan, batasan keberhasilan, dan upaya sebelumnya secara bersama-sama menentukan ruang kandidat (candidate space) yang dibatasi dan lebih berguna daripada memuat semua <em>source code</em> dan log mentah ke dalam <em>modifying Agent</em> secara sembarangan.</p>
+<p>Pembuatan alat (tool creation) mengikuti protokol yang sama. Alita<sup id="fnref:alita-2025"><a class="footnote-ref" href="#fn:alita-2025">10</a></sup> menyajikan kasus di mana Agent harus mengidentifikasi nomor yang disebutkan segera setelah dinosaurus pertama kali muncul dalam video 360 VR YouTube yang dinarasikan oleh aktor pengisi suara untuk Gollum di <em>The Lord of the Rings</em>. Setelah mengenali bahwa ia kurang memiliki kemampuan membaca subtitel (subtitle-reading capability), Agent tersebut menemukan dan menguji <code>youtube-transcript-api</code>, membungkusnya sebagai alat subtitel baru, dan mengekstrak jawaban <code>100000000</code> dari transkrip tersebut. Sebuah alat baru (Tool Use) memasuki <em>library</em> kemampuan hanya setelah melalui <em>safety scanning</em>, tes fungsional, dan penggunaan ulang yang berhasil pada tugas-tugas berikutnya. Penemuan alat proaktif di Bab 4 menanyakan alat apa yang sudah ada dan cocok; Bab 5 menanyakan cara menulis alat; bab ini menanyakan bukti operasional apa yang seharusnya memicu pembuatan dan bagaimana alat baru menjadi kemampuan jangka panjang yang divalidasi.</p>
+<blockquote>
+<p><strong>Eksperimen 8-5 ★★★: Memicu Modifikasi Diri Agent dari Trajektori Kegagalan</strong></p>
+<p><strong>Tujuan (Objective):</strong> Diberikan beberapa trajektori di mana kesalahan yang ditandai <code>retryable=false</code> masih dipanggil berulang kali, tentukan apakah sistem dapat menemukan akar penyebab di kode <em>retry</em> dan <em>circuit-breaker</em> dan menghasilkan <em>patch</em> kandidat perbaikan tanpa merusak pemulihan dari kegagalan sementara (transient failures).</p>
+<p><strong>Prosedur (Procedure):</strong> Modul diagnosis pertama-tama mengagregasi kesalahan yang sama di berbagai tugas berbeda. Ia membuat permintaan modifikasi hanya setelah ambang batas dukungan lintas-trajektori terpenuhi dan menargetkan <code>retry_policy.py</code> di versi yang stabil. <em>Candidate generator</em> membaca diagnosis kegagalan, perilaku pemulihan kegagalan-sementara yang harus dipertahankan, perubahan yang sebelumnya ditolak, dan sumber yang stabil. Sebelum mengeluarkan <em>diff</em> kode yang minimal, ia memprediksi bahwa panggilan setelah kesalahan yang tidak dapat diulang (non-retryable errors) seharusnya menurun sementara pemulihan batas waktu sementara (transient-timeout recovery) tidak. Terlepas dari apakah <em>generator</em> itu deterministik atau LLM Coding Agent sungguhan, ia hanya boleh menulis ke direktori kandidat yang terisolasi. Kode <em>Harness</em> validasi kemudian mengompilasi kandidat, memutar ulang trajektori kegagalan awal, memverifikasi bahwa kesalahan yang tidak dapat diulang (non-retryable error) segera berhenti dan membuka <em>circuit breaker</em>, dan menguji ulang bahwa <em>transient timeouts</em> masih mencoba lagi (retry) sesuai dengan ambang batas aslinya.</p>
+<p><strong>Kontrol dan metrik diagnostik (Diagnostic control and metrics):</strong> Perlakukan "tambahkan satu kalimat ke Prompt yang memberi tahu Agent agar tidak mengulang panggilan" sebagai contoh konseptual dalam memilih lapisan modifikasi yang salah, mendemonstrasikan mengapa batasan <em>retry</em> yang dapat ditegakkan secara deterministik (deterministically enforceable retry constraint) harus ada di dalam kode. Eksperimen yang dapat dieksekusi membandingkan <em>patch generators</em> yang deterministik dan LLM di bawah gerbang rilis (release gate) yang sama. Rekam jumlah panggilan setelah kesalahan yang tidak dapat diulang, tingkat pemulihan kesalahan-sementara, regresi pada tugas-tugas lama, ukuran <em>patch</em>, dan tingkat penerimaan kandidat.</p>
+<p><strong>Kriteria penerimaan (Acceptance criteria):</strong> Lulus di setiap pemeriksaan hanya akan menghasilkan <code>release_to_canary</code>. Kegagalan dari <em>static check</em> mana pun, <em>failure replay</em>, atau regresi tugas-lama mengembalikan <code>reject_candidate</code>. <code>release_manifest.json</code> harus mencatat klaster kegagalan, trajektori sumber, akar penyebab yang disimpulkan, komponen dan file target, <em>code diff</em>, perbaikan yang diharapkan, kemungkinan regresi, hasil pemeriksaan, versi kandidat, dan versi <em>rollback</em>. Kandidat yang ditolak harus mempertahankan alasan kegagalan mereka untuk ronde <em>generation</em> berikutnya. <em>Patch-generating Agent</em> tidak boleh memodifikasi kode stabil, validator, log audit, atau gerbang yang menyetujui perilisannya sendiri.
+</p>
+<p>Implementasi yang menyertai tersedia di <a href="../chapter8/self-modifying-agent/"><code>self-modifying-agent</code></a>. Implementasi ini mendukung generator kandidat deterministik atau LLM Coding Agent sungguhan, di mana kedua jalur tersebut berbagi gerbang rilis (<em>release gate</em>) yang sama.</p>
+</blockquote>
+<h3 id="mengodekan-pengalaman-dalam-parameter">Mengodekan Pengalaman dalam Parameter<a class="headerlink" href="#mengodekan-pengalaman-dalam-parameter" title="Permanent link">&para;</a></h3>
+<p>Pengetahuan, instruksi, dan program semuanya bertumpu pada satu premis: kapabilitas target dapat diekspresikan secara relatif lengkap melalui simbol-simbol eksternal. Namun kapabilitas seperti pemahaman citra medis, prosodi ucapan alami, menghilangkan "rasa AI" yang kaku dari teks, dan perencanaan jangka panjang (<em>long-horizon planning</em>) sulit untuk dikompresi ke dalam beberapa aturan atau alur kerja (<em>workflows</em>). Kapabilitas semacam ini harus ditulis ke dalam parameter model melalui <em>post-training</em>.</p>
+<p>Apakah sebuah kapabilitas harus diparameterisasi tidak ditentukan semata-mata oleh apakah tugas tersebut stabil dalam jangka panjang. Pergeseran domain (<em>domain shifts</em>) yang disebabkan oleh peralatan pencitraan baru mungkin masih memerlukan LoRA atau <em>continual fine-tuning</em>; gaya bahasa yang berubah dengan cepat juga dapat diakomodasi melalui pelatihan preferensi berkala (<em>periodic preference training</em>). Stabilitas memengaruhi frekuensi dan biaya pembaruan, tetapi sifat representasional dari kapabilitas tersebut yang menentukan media utamanya. Sebaliknya, aturan yang sudah lama stabil untuk menyetujui transfer seharusnya tidak hanya bergantung pada memori parametrik; kode <em>server-side</em> masih harus memberikan jaminan deterministik.</p>
+<p>Bab 7 telah memberikan pembahasan lengkap tentang SFT, distilasi, dan RL, sehingga bagian ini tidak mengulanginya. Untuk evolusi berkelanjutan (<em>continual evolution</em>), kuncinya adalah mengubah trajektori produksi yang telah dievaluasi menjadi data pelatihan: demonstrasi berkualitas tinggi dapat digunakan untuk SFT, preferensi eksplisit dapat membentuk data berpasangan, dan interaksi dengan <em>reward</em> lingkungan yang andal dapat digunakan untuk RL. Sebelum pelatihan, informasi pribadi tetap harus dihapus, trajektori yang keliru disaring, dan sekumpulan regresi independen (<em>independent regression set</em>) harus dipertahankan. Setelah pelatihan, sistem harus memeriksa apakah kapabilitas umum atau penyelarasan keamanan (<em>safety alignment</em>) telah terlupakan.</p>
+<p>Pembelajaran parameter biasanya bekerja bersamaan dengan metode eksternal. Sebuah model pencitraan medis dapat mempelajari representasi visual melalui parameter, memperoleh panduan terbaru dari Knowledge Base, dan menggunakan kode untuk mengukur lesi serta menghitung risiko. Nada layanan pelanggan yang alami dapat dibentuk pada tingkat distribusional melalui pelatihan preferensi, sementara sebuah Prompt menentukan identitas merek saat ini dan User Memory mengadaptasi komunikasi dengan preferensi individu. Evolusi berkelanjutan tidak berarti memilih satu jawaban dari keempat metode tersebut, melainkan menempatkan setiap kapabilitas ke dalam media yang paling cocok untuk mengekspresikan dan mengaturnya.</p>
+<h3 id="dari-memperbarui-artefak-hingga-memperbarui-metode-pembaruan">Dari Memperbarui Artefak hingga Memperbarui "Metode Pembaruan"<a class="headerlink" href="#dari-memperbarui-artefak-hingga-memperbarui-metode-pembaruan" title="Permanent link">&para;</a></h3>
+<p>Keempat metode sebelumnya menanyakan <strong>di mana pengalaman ditulis</strong>, tetapi evolusi berkelanjutan memiliki sumbu lain yang ortogonal: apakah sistem sedang mengoptimalkan isi dari sebuah artefak, atau metode yang digunakan untuk memproduksi, mengelola, dan memvalidasi artefak? Sepanjang sumbu ini, target optimasi dapat meluas dari <strong>sebuah aturan individu atau memori → konteks terstruktur → alur kerja → kode Harness → kode <em>optimizer</em> yang menghasilkan solusi kandidat</strong><sup id="fnref:weng-harness-2026"><a class="footnote-ref" href="#fn:weng-harness-2026">14</a></sup>. Ini bukanlah lima pembawa pembaruan baru, melainkan lima skala pencarian; pengetahuan, Prompts, Skills, dan program dapat muncul di beberapa di antaranya.</p>
+<p>Tingkat paling dalam hanya mengubah isi artefak—misalnya, menambahkan aturan lokal ke System Prompt setelah kegagalan trajektori atau menambahkan pengecualian pada sebuah dokumen pengalaman. Perubahan semacam ini memiliki radius dampak (<em>blast radius</em>) yang kecil dan lebih mudah untuk diatribusikan serta di-<em>roll back</em>, sehingga ini harus menjadi <em>default</em>. Namun, berulang kali meminta model untuk menulis ulang seluruh Prompt atau memori akan memunculkan bentuk degradasi lain: upaya berturut-turut untuk mempersingkat dapat secara bertahap menghapus detail yang langka namun penting, dan batasan-batasan yang saling berinteraksi bisa runtuh menjadi prinsip yang terlalu umum. Agentic Context Engineering (ACE) mempertahankan konteks sebagai kumpulan entri dengan pengidentifikasi yang stabil. Modul generasi, refleksi, dan kurasi mengusulkan pembaruan inkremental, yang kemudian digabungkan dan dideduplikasi oleh logika deterministik alih-alih menulis ulang blok teks yang semakin pendek di setiap putarannya<sup id="fnref:ace-2026"><a class="footnote-ref" href="#fn:ace-2026">15</a></sup>. Ini adalah contoh penelitian konkret dari prinsip-prinsip awal bab ini tentang perbedaan minimal (<em>minimal diffs</em>) dan asal-usul yang dipertahankan (<em>retained provenance</em>).</p>
+<p>Pada tingkat berikutnya, target optimasinya bukan lagi semata-mata apa yang terkandung dalam konteks, tetapi bagaimana konteks tersebut dibangun. Meta Context Engineering (MCE) memisahkan keduanya menjadi <em>inner loop</em> dan <em>outer loop</em>: <em>inner loop</em> mengoptimalkan artefak konteks untuk tugas saat ini di bawah metode manajemen tertentu, sedangkan <em>outer loop</em> menggunakan hasil dari berbagai eksekusi dan validasi untuk memodifikasi operasi konteks itu sendiri—pencarian, pemilihan, pemfilteran, dan pemformatan<sup id="fnref:mce-2026"><a class="footnote-ref" href="#fn:mce-2026">16</a></sup>. Perbedaan ini penting. Mengedit aturan pengambilan (<em>retrieval</em>) mengubah mekanisme manajemen konten; membandingkan beberapa mekanisme pengambilan dan kurasi lalu mempertahankan mekanisme dengan transfer yang lebih baik berarti mempelajari cara mengelola konteks.</p>
+<p>Gagasan yang sama meluas ke alur kerja dan seluruh Harness. AFlow merepresentasikan alur kerja yang terdiri dari beberapa pemanggilan LLM sebagai graf kode dan mencari melalui kombinasi <em>nodes</em> dan <em>control flow</em> menggunakan umpan balik eksekusi<sup id="fnref:aflow-2025"><a class="footnote-ref" href="#fn:aflow-2025">17</a></sup>. Meta-Harness memiliki sebuah Coding Agent yang memeriksa kode sumber Harness kandidat, skor, dan trajektori untuk menelusuri kode yang menentukan bagaimana informasi disimpan, diambil, dan disajikan<sup id="fnref:meta-harness-2026"><a class="footnote-ref" href="#fn:meta-harness-2026">18</a></sup>. Bab 5 telah menetapkan kode sebagai bahasa umum untuk mengekspresikan struktur sistem Agent. Poin tambahan di sini adalah bahwa kode, bersama dengan riwayat evaluasinya, itu sendiri bisa menjadi objek pencarian berkelanjutan dan bukan sekadar keluaran satu kali.</p>
+<p>Tingkat yang lebih tinggi tidak otomatis menjadi lebih baik. Mencari aturan lokal mungkin hanya memerlukan beberapa <em>edge cases</em>, sedangkan mencari seluruh alur kerja atau Harness berhadapan dengan ruang kandidat yang jauh lebih besar, biaya evaluasi yang lebih tinggi, dan atribusi yang lebih sulit. Kesalahan yang jelas dan berulang yang terlokalisasi pada satu komponen pertama-tama harus menerima <em>patch</em> lokal yang dapat diaudit. Hanya ketika perubahan lokal berulang kali gagal mengatasi masalah lintas-komponen, atau ketika metode manajemen saat ini itu sendiri menjadi <em>bottleneck</em>, barulah layak untuk bergerak ke arah luar menuju alur kerja, Harness, atau <em>optimizer</em>. Pada setiap tingkat, evaluator, batas izin (<em>permission boundaries</em>), dan tes terpisah (<em>held-out tests</em>) harus tetap berada di luar ruang lingkup yang dapat diedit—semakin besar ruang pencarian, semakin penting <em>trusted root</em> ini.</p>
+<h2 id="membangun-loop-tertutup-evolusi-berkelanjutan-untuk-operasi-jangka-panjang">Membangun Loop Tertutup Evolusi Berkelanjutan untuk Operasi Jangka Panjang<a class="headerlink" href="#membangun-loop-tertutup-evolusi-berkelanjutan-untuk-operasi-jangka-panjang" title="Permanent link">&para;</a></h2>
+<p>Keempat metode pembaruan tersebut menjadi evolusi berkelanjutan alih-alih optimasi satu kali hanya ketika dimasukkan ke dalam <em>autonomous loop</em> yang sama. Gambar 8-5 menunjukkan arsitektur <em>dual-loop</em> yang lebih tangguh untuk sistem produksi: <em>online execution loop</em> hanya menyelesaikan tugas dan mencatat bukti, tanpa menulis ulang Agent produksi secara langsung; <em>offline evolution loop</em> mengumpulkan trajektori, mendiagnosis akar penyebab, menghasilkan modifikasi kandidat, dan merilis versi baru hanya setelah mereka melewati <em>validation gates</em>. Kedua loop ini terhubung melalui repositori pengalaman berversi dan set evaluasi.</p>
+<p><img alt="Gambar 8-5 Dual loop untuk eksekusi online dan evolusi offline" src="../images/fig8-5.svg" /></p>
+<p>Voyager<sup id="fnref:voyager-2023"><a class="footnote-ref" href="#fn:voyager-2023">13</a></sup> mendemonstrasikan sebuah <em>continual-evolution loop</em> yang relatif lengkap. Di dalam Minecraft, Voyager memilih tujuan-tujuan baru berdasarkan kapabilitasnya saat ini, secara iteratif menyempurnakan program menggunakan umpan balik lingkungan, menyimpan kode yang berhasil divalidasi dalam pustaka keahlian (<em>skill library</em>), dan kemudian menggabungkan keahlian-keahlian yang ada untuk memecahkan tugas yang lebih sulit. Kurikulum otomatis, keahlian yang dapat dieksekusi, dan validasi lingkungan semuanya sangat diperlukan: dengan pustaka keahlian tetapi tanpa kurikulum, Agent tidak tahu apa yang harus dipelajari selanjutnya; dengan refleksi diri tetapi tanpa validasi lingkungan, pustaka keahlian akan menumpuk kesalahan; dengan eksplorasi tetapi tanpa persistensi, setiap tugas masih harus dimulai dari awal. Meskipun pengetahuan, Prompt, <em>tools</em>, dan parameter dari Agent dunia nyata lebih kompleks, proses pembelajaran dasarnya serupa.</p>
+<p>Secara lebih spesifik, Voyager terdiri dari tiga mekanisme yang saling terkait. <strong>Generator kurikulum otomatis</strong> mengusulkan tujuan selanjutnya yang cukup menantang dari inventaris saat ini, lingkungan, dan keahlian yang telah diperoleh, sehingga eksplorasi tidak menjadi pengembaraan acak. <strong>Pustaka keahlian</strong> menyimpan program yang berhasil sebagai kode yang dapat diambil (<em>retrievable</em>) dan dapat disusun (<em>composable</em>); keahlian mengumpulkan (<em>gathering</em>) tingkat lanjut, misalnya, dapat memanggil keahlian gerakan dan merakit (<em>crafting</em>) dasar. <strong>Mekanisme <em>iterative prompting</em></strong> mengumpankan observasi lingkungan, kesalahan eksekusi, dan hasil verifikasi diri kembali ke putaran generasi kode berikutnya sampai tugas tersebut benar-benar lulus. Dibandingkan dengan <em>baselines</em> yang digunakan dalam makalah, Voyager memperoleh barang unik 3,3 kali lipat lebih banyak, melakukan perjalanan 2,3 kali lipat lebih jauh, membuka tonggak pencapaian <em>technology-tree</em> utama hingga 15,3 kali lipat lebih cepat, dan mentransfer pustaka keahliannya ke dunia Minecraft yang baru. Metrik-metrik ini mengukur bagaimana kapabilitas tumbuh seiring dengan pengalaman dan bukan bagaimana sebuah Agent yang kaku (beku/<em>frozen</em>) melakukan suatu ujian tunggal.</p>
+<h3 id="dari-diagnosis-masalah-hingga-konsolidasi-pengalaman">Dari Diagnosis Masalah hingga Konsolidasi Pengalaman<a class="headerlink" href="#dari-diagnosis-masalah-hingga-konsolidasi-pengalaman" title="Permanent link">&para;</a></h3>
+<p>Masalah tingkat permukaan yang sama mungkin memerlukan bentuk modifikasi yang berbeda. Ketika Agent layanan pelanggan berhalusinasi dengan membuat-buat fakta, penyebabnya mungkin karena kurangnya informasi di dalam Knowledge Base, atau Prompt mungkin gagal mengharuskan adanya kutipan. Ketika Agent secara keliru menjanjikan "ini telah selesai" sebelum menyelesaikan sebuah tugas, masalah tersebut dapat diperbaiki melalui instruksi atau dengan membuat Harness menerapkan konsistensi antara respons dan <em>tool state</em>. Modul evolusi pertama-tama harus mengidentifikasi akar penyebab dan kemudian memilih target modifikasi terkecil yang paling mudah divalidasi dan di-<em>roll back</em>. Kegagalan sporadis dengan bukti yang tidak mencukupi tidak boleh langsung memicu pembelajaran; sebaliknya sistem harus terus mengumpulkan contoh-contoh.</p>
+<p>Pilihan ini mungkin juga berubah seiring dengan bertumpuknya pengalaman. Strategi yang baru ditemukan pada awalnya dapat disimpan sebagai dokumen pengalaman untuk pengambilan (<em>retrieval</em>); setelah divalidasi berulang kali di berbagai kasus, ini dapat dipromosikan menjadi pengetahuan. Pengetahuan dapat diekspresikan dalam tiga cara: aturan yang dapat dijelaskan dengan jelas dalam bahasa alami dapat dikonsolidasikan menjadi sebuah Skill; prosedur stabil yang tidak memerlukan pemahaman bahasa alami dapat dikompilasi menjadi kode <em>tool</em>; dan kapabilitas yang sebenarnya mencerminkan pengambilan keputusan yang implisit dan luas dapat dimasukkan ke dalam <em>post-training</em>.</p>
+<h3 id="validasi-rilis-dan-rollback">Validasi, Rilis, dan Rollback<a class="headerlink" href="#validasi-rilis-dan-rollback" title="Permanent link">&para;</a></h3>
+<p>Setiap modifikasi pertama-tama harus menghasilkan kapabilitas kandidat atau kandidat Agent dan bukan langsung menimpa versi produksi. Dokumen pengetahuan harus diuji untuk menentukan apakah pengambilan (<em>retrieval</em>) meningkatkan kinerja pada tugas-tugas baru; Prompts dan Skills harus diperiksa terhadap <em>edge cases</em> dan untuk regresi pada tugas-tugas sebelumnya; program harus diuji di dalam <em>sandboxes</em> dan <em>reset environments</em>; serta pembaruan parameter harus dievaluasi untuk lupa (<em>forgetting</em>), keamanan, dan kinerja <em>out-of-distribution</em>. Bahkan setelah divalidasi, versi baru harus dirilis secara bertahap dan dipantau pada lalu lintas nyata; jika metrik utama memburuk, sistem harus secara otomatis men-<em>roll back</em> ke versi aman yang diketahui.</p>
+<p>Validasi juga harus memisahkan dua kapabilitas yang sering disamakan. <strong>Harness updating</strong> adalah kemampuan untuk menghasilkan perubahan persisten yang berharga dari trajektori; <strong>Harness benefit</strong> adalah kemampuan Task Agent untuk menemukan, mengaktifkan, dan menggunakan perubahan tersebut dengan benar nantinya. Sebuah Skill mungkin sudah benar pada dirinya sendiri, namun model tugas yang lebih lemah mungkin gagal memuatnya pada situasi yang tepat atau gagal mengikutinya selama trajektori yang panjang. Kegagalan mana pun membuat skor akhir terlihat seolah-olah tidak terjadi evolusi. Oleh karena itu, kinerja <em>end-to-end</em> saja tidak dapat mendiagnosis si <em>updater</em>. Eksperimen penukaran model (<em>model-swapping</em>) oleh Lin dkk. menunjukkan bahwa kedua kemampuan ini berhubungan secara berbeda terhadap kapabilitas <em>base-model</em><sup id="fnref:harness-benefit-2026"><a class="footnote-ref" href="#fn:harness-benefit-2026">21</a></sup>. Hubungan pastinya memerlukan validasi pada lebih banyak tugas, tetapi mengevaluasi keduanya secara terpisah secara luas sangat berguna.</p>
+<p>Tabel 8-3 Metrik evaluasi berlapis untuk evolusi berkelanjutan</p>
+<table>
+<thead>
+<tr>
+<th>Metrik</th>
+<th>Pertanyaan yang dijawab</th>
+<th>Bukti utama</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Candidate-change validity</td>
+<td>Apakah <em>updater</em> mengusulkan perubahan yang berguna?</td>
+<td>Tingkat penerimaan (<em>acceptance rate</em>) dan perolehan (<em>gain</em>) dalam validasi independen</td>
+</tr>
+<tr>
+<td>Artifact activation rate</td>
+<td>Apakah tugas Agent memuat Skill, memori, atau <em>tool</em> baru dalam situasi yang tepat?</td>
+<td>Jejak <em>retrieval</em>, rute, dan <em>tool-call</em></td>
+</tr>
+<tr>
+<td>Successful adherence rate</td>
+<td>Setelah aktivasi, apakah Agent mengikuti aturan atau proses baru tersebut?</td>
+<td>Urutan tindakan (<em>action sequences</em>) dan <em>process verifiers</em></td>
+</tr>
+<tr>
+<td>Held-out task gain</td>
+<td>Apakah seluruh sistem membaik pada tugas-tugas yang tidak digunakan selama evolusi?</td>
+<td>Keberhasilan pada tugas yang disisihkan (<em>held-out</em>), kualitas, dan biaya</td>
+</tr>
+</tbody>
+</table>
+<p>Untuk diagnosis, pertahankan sebuah kandidat Harness agar tetap (<em>fixed</em>) dan tukar hanya model tugasnya. Jika model yang kuat memperoleh manfaat sementara model yang lemah tidak pernah mengaktifkan artefak baru tersebut, maka pengambilan atau perutean (<em>routing</em>) adalah <em>bottleneck</em>-nya. Jika keduanya mengaktifkan tetapi hanya model yang kuat yang mengeksekusinya dengan benar, maka kepatuhan pada instruksi (<em>instruction following</em>) atau <em>long-horizon planning</em> adalah <em>bottleneck</em>-nya. Jika setiap model mengalami regresi, perubahan itu sendiri lebih dicurigai. Sebaliknya, pertahankan model tugas tetap dan tukar model yang mengusulkan perubahan untuk membandingkan kualitas <em>updater</em> secara langsung. Penukaran model dua arah (<em>two-way model swap</em>) ini menempatkan di mana anggaran kapabilitas harus dihabiskan dengan lebih efektif daripada sebuah skor <em>post-evolution</em> tunggal.</p>
+<p>Evaluasi bukanlah ujian yang dilakukan setelah pembelajaran berakhir, melainkan bagian yang sangat penting dari evolusi diri (<em>self-evolution</em>). Evaluasi jangka panjang harus mengamati setidaknya lima jenis hasil secara bersamaan:</p>
+<ul>
+<li>Regresi, yaitu apakah pengalaman baru bertentangan dengan pengalaman lain yang sudah ada dan apakah kasus-kasus yang sebelumnya berhasil mulai gagal;</li>
+<li>Generalisasi, yaitu peningkatan yang dihasilkan oleh pengalaman baru dalam skenario yang belum tercakup oleh <em>test set</em>;</li>
+<li>Efisiensi token, yaitu biaya token untuk menyelesaikan tugas;</li>
+<li>Keamanan, yaitu apakah aturan, perlindungan privasi, dan batasan penolakan (<em>refusal boundaries</em>) menyimpang (<em>drift</em>) selama evolusi;</li>
+<li>Kualitas <em>engineering</em> jangka panjang, yaitu apakah kompleksitas pemeliharaan, konsistensi arsitektur, batas kepemilikan, kompatibilitas ke belakang (<em>backward compatibility</em>), serta biaya migrasi dan <em>debugging</em> di masa depan semakin memburuk.</li>
+</ul>
+<p>Hanya memperbaiki kasus gagal saat ini sembari menurunkan performa pada kasus-kasus lain yang sudah ada atau di domain baru tidak sama dengan pembelajaran berkelanjutan (<em>continual learning</em>) yang sukses.</p>
+<h3 id="batas-loop-yang-dapat-diverifikasi-ketika-selesai-tidak-berarti-kemajuan">Batas Loop yang Dapat Diverifikasi: Ketika "Selesai" Tidak Berarti "Kemajuan"<a class="headerlink" href="#batas-loop-yang-dapat-diverifikasi-ketika-selesai-tidak-berarti-kemajuan" title="Permanent link">&para;</a></h3>
+<p>Loop sebelumnya bekerja paling alami untuk pengodean (Coding), penggunaan <em>tool</em> (<em>Tool Use</em>), dan perubahan <em>business-state</em>, di mana pengujian, <em>environment state</em>, atau aturan deterministik dapat memberikan umpan balik yang cepat. Penelitian <em>open-ended</em>, perencanaan strategis, dan desain produk kompleks adalah berbeda: umpan baliknya tertunda, mungkin tidak ada satu-satunya jawaban yang benar, dan tujuan yang paling penting—selera penelitian, nilai jangka panjang, dan <em>maintainability</em>—sulit untuk diubah menjadi skor langsung. Sebuah Harness dengan demikian dapat mengeksekusi proses dengan sempurna sembari hanya memproduksi sesuatu yang terlihat seperti hasil dan bukan memajukan tujuan yang sebenarnya.</p>
+<p>Penelitian otonom adalah tes tekanan (<em>stress test</em>) yang berguna. Trehan dan Chopra mendokumentasikan empat percobaan <em>end-to-end</em> untuk mengubah ide-ide penelitian menjadi makalah. Tiga gagal selama implementasi atau evaluasi, dan hanya satu yang menyelesaikan <em>pipeline</em> penuh<sup id="fnref:llm-scientists-2026"><a class="footnote-ref" href="#fn:llm-scientists-2026">22</a></sup>. Kegagalan-kegagalan tersebut masuk ke dalam tiga kelompok. Pertama, <strong>penyimpangan implementasi</strong> (<em>implementation drift</em>): begitu metode yang diusulkan menjadi sulit, Agent mundur ke implementasi yang tidak asing dari distribusi pelatihannya yang tidak lagi menguji hipotesis awal. Kedua, <strong>optimisme berlebih epistemik</strong> (<em>epistemic over-optimism</em>): meskipun sinyal mungkin masih berupa <em>noise</em>, sistem mulai menjelaskannya, menambal metodenya, dan mengumumkan sebuah temuan, sementara kegagalan dan hasil negatif lebih mudah diabaikan. Ketiga, <strong>hilangnya penilaian taksit</strong> (<em>missing tacit judgment</em>): sebuah Agent mungkin dapat menjalankan eksperimen tanpa mengetahui mana <em>baseline</em> yang penting, mana anomali yang layak diselidiki, atau kapan sebuah hipotesis harus ditinggalkan.</p>
+<p>Tugas-tugas ini memerlukan perubahan pada bukti dan struktur pengawasan, bukan hanya sebuah model yang menulis makalah dengan lebih baik:</p>
+<ul>
+<li><strong>Pisahkan klaim dari bukti:</strong> Catat asal-usul (<em>provenance</em>) secara terpisah untuk kutipan, angka, metode, dan kesimpulan; dokumen akhir hanyalah salah satu penyajian (<em>rendering</em>) dari graf bukti. Desain Chain-of-Evidence dari ScientistOne menautkan setiap kelas klaim ke sumber-sumber yang dapat diaudit. Ini meningkatkan keterlacakan tetapi dengan sendirinya tidak membuat pertanyaan penelitian menjadi berharga<sup id="fnref:scientistone-2026"><a class="footnote-ref" href="#fn:scientistone-2026">23</a></sup>.</li>
+<li><strong>Pertahankan hasil negatif:</strong> Tulis eksperimen yang gagal, kandidat yang ditolak, dan alasan berhenti ke sebuah <em>log</em> abadi (<em>immutable log</em>) dengan status <em>retrieval</em> yang sama dengan kesuksesan. Jika tidak, modul evolusi hanya melihat yang bertahan, menelusuri kembali jalur yang telah disangkal, dan belajar menafsirkan hasil yang ambigu sebagai kesuksesan.</li>
+<li><strong>Lestarikan keragaman pencarian:</strong> Pencarian <em>open-ended</em> tidak boleh hanya mempertahankan <em>chain</em> dengan skor tertinggi saat ini. Kumpulan kandidat juga harus melestarikan beberapa cabang dengan skor lebih rendah tetapi berbeda secara bermakna menurut mekanisme, kebaruan kode, atau jenis hipotesis, sehingga setiap solusi tidak konvergen pada templat yang sama yang mudah dinilai.</li>
+<li><strong>Pindahkan keterlibatan manusia ke tingkat atas:</strong> Input manusia tidak terbatas pada menyetujui pemanggilan <em>tool</em> (<em>tool calls</em>) yang berbahaya. Ia juga mencakup mendefinisikan masalah, meninjau kriteria evaluasi, menafsirkan hasil yang anomali, dan memutuskan kapan harus berhenti. Dengan umpan balik yang ambigu, penilaian tingkat tinggi ini lebih sulit untuk diotomatisasi—dan lebih berharga—daripada mengambil alih langkah-langkah eksekusi individu.</li>
+</ul>
+<h3 id="batas-keamanan-untuk-evolusi-berkelanjutan">Batas Keamanan untuk Evolusi Berkelanjutan<a class="headerlink" href="#batas-keamanan-untuk-evolusi-berkelanjutan" title="Permanent link">&para;</a></h3>
+<p>Kemampuan <em>self-evolution</em> dari sebuah Agent dapat mengubah satu kesalahan menjadi risiko jangka panjang. <strong>Jika Prompt Injection di halaman web, email, atau <em>tool output</em> dirangkum sebagai pengalaman</strong>, ia bisa berdampak secara berulang-ulang di seluruh sesi. Jika sebuah paket berbahaya yang ditemukan melalui pencarian otomatis dibungkus sebagai sebuah <em>tool</em>, dampaknya dapat menyebar dari satu putaran <em>sandbox</em> ke setiap tugas berikutnya. Pemeriksa (<em>verifier</em>) yang cacat mungkin juga terus menyetujui kandidat yang tampaknya membaik tetapi sebenarnya meregresi. Sistem <em>self-evolution</em> Agent dengan demikian tidak hanya harus menanyakan apakah seorang kandidat lebih kuat, tetapi juga siapa yang boleh mengubah apa dan bukti apa yang membenarkan perubahan tersebut.</p>
+<p>Batas pertama adalah <strong>memisahkan bukti dari instruksi</strong>. Halaman web mentah dan keluaran <em>tool</em> (<em>tool output</em>) adalah bukti yang tidak tepercaya dan tidak boleh ditulis langsung ke dalam Skill atau kapabilitas serupa; sebuah LLM pertama-tama harus merangkumnya. Penulisan harus dikontrol versinya (<em>version-controlled</em>) dan diajukan sebagai <em>pull requests</em>, yang baru digabungkan (<em>merged</em>) setelah ditinjau oleh sebuah LLM peninjau dari sumber yang berbeda.</p>
+<p>Batas kedua adalah <strong>memisahkan kapabilitas kandidat dari kapabilitas produksi</strong>. Pengetahuan, Prompts, Skills, program, dan parameter baru pertama-tama memasuki area kandidat yang tidak dapat melayani lalu lintas nyata. Kode yang baru dihasilkan dan dependensi eksternal juga harus melewati pemeriksaan keamanan seperti eksekusi <em>sandbox</em>, peninjauan izin, pemindaian rantai pasokan (<em>supply-chain scanning</em>), dan pengujian perilaku. Hanya setelah melewati pemeriksaan keamanan dan pengujian regresi, barulah sebuah kandidat boleh melayani lalu lintas nyata sebagai kapabilitas produksi.</p>
+<p>Batas ketiga adalah bahwa <strong>mekanisme keamanan tidak boleh dimodifikasi sendiri</strong>. Sebuah Agent bisnis mungkin memodifikasi Prompts, Skills, Knowledge Base, dan <em>tools</em>, tetapi ia tidak boleh memodifikasi validator, <em>test cases</em>, ambang rilis (<em>release thresholds</em>), <em>audit logs</em>, atau cadangan versi stabil yang menyetujui pembaruannya sendiri. Jika tidak, sebuah Agent dapat menyamarkan regresi sebagai kemajuan hanya dengan menurunkan ambang batas pengujian atau menghapus kasus yang gagal.</p>
+<h3 id="sleep-learning-konsolidasi-lupa-dan-pemeliharaan-kapabilitas">Sleep Learning: Konsolidasi, Lupa, dan Pemeliharaan Kapabilitas<a class="headerlink" href="#sleep-learning-konsolidasi-lupa-dan-pemeliharaan-kapabilitas" title="Permanent link">&para;</a></h3>
+<p>"Sleep learning" adalah analogi kognitif untuk konsolidasi offline; ini tidak berarti proses tersebut harus berjalan benar-benar di malam hari. Tanggung jawab utama Agent online adalah menyelesaikan tugas saat ini dan melampirkan bukti yang tidak dapat diubah (<em>immutable</em>). Proses pembelajaran latar belakang (<em>background learning process</em>) membaca sekumpulan pengalaman baru selama periode menganggur atau ketika kondisi pelolosan (<em>gating conditions</em>) terpenuhi, membandingkan kesimpulan lama dan baru, menggabungkan duplikat, menyelesaikan konflik, mengusulkan kandidat pembaruan, dan menjalankan regresi. Memisahkan pengumpulan dari pengorganisasian mencegah terjadinya kesuksesan yang tidak disengaja, kegagalan jaringan, atau input berbahaya dari segera menulis ulang kapabilitas jangka panjang, dan ini memungkinkan konsolidasi untuk menggunakan <em>batches</em> yang lebih besar dan model yang lebih murah.</p>
+<p>Siklus sleep-learning khas memiliki lima langkah:</p>
+<ol>
+<li><strong>Trigger:</strong> Mencapai ambang batas waktu yang berlalu, jumlah trajectories baru, penggunaan penyimpanan, atau frekuensi kesalahan, sambil memastikan tidak ada tugas online berprioritas tinggi yang berjalan.</li>
+<li><strong>Orient:</strong> Membaca direktori production knowledge, Prompt, dan Skill beserta versinya untuk memahami kapabilitas yang ada dan immutable boundaries.</li>
+<li><strong>Collect and consolidate:</strong> Menemukan sinyal baru dalam trajectories yang baru dievaluasi, menggabungkan duplikat, menandai konflik dan kondisi keberlakuan, dan memprioritaskan local patches.</li>
+<li><strong>Validate and approve:</strong> Mengevaluasi kandidat pada set transfer, retention, dan safety; penulisan berisiko tinggi menunggu persetujuan manusia.</li>
+<li><strong>Prune and index:</strong> Memperbarui retrieval indexes dan menandai kapabilitas yang lama tidak digunakan atau bertentangan dengan bukti baru sebagai kedaluwarsa, diarsipkan, atau dihapus, sambil mempertahankan provenance dan versi untuk rollback.</li>
+</ol>
+<p>User memory adalah contoh yang paling intuitif, tetapi ini harus dibedakan dari action experience. Auto memory pada Claude Code mempertahankan indeks <code>MEMORY.md</code> dan file detail spesifik topik untuk setiap proyek. Pada saat memulai sesi, sistem hanya memuat prefix terbatas dari indeks dan membaca konten yang tersisa on demand; ketika indeks mendekati batasnya, Agent diinstruksikan untuk menggabungkan atau memindahkan detail ke tempat lain. Ini menunjukkan bahwa plain-text memory pun memerlukan batas kapasitas, layered loading, dan pengorganisasian aktif. Mekanisme yang saat ini didokumentasikan terutama menulis memori selama sesi dan tidak boleh sekadar disamakan dengan background task malam hari yang tetap<sup id="fnref:claude-code-memory"><a class="footnote-ref" href="#fn:claude-code-memory">11</a></sup>.</p>
+<p>Hermes memberikan contoh background evolution yang lebih lengkap. Ini memisahkan informasi jangka panjang ke dalam file <code>MEMORY.md</code> dan <code>USER.md</code> berbatas, pencarian SQLite/FTS5 pada sesi sebelumnya, on-demand Skills, dan opsional penyedia memori eksternal seperti Honcho. Pencarian sesi mengembalikan pesan asli daripada terlebih dahulu merangkumnya dengan LLM, menjaga retrieval tetap terpisah dari generation dan dapat diaudit. Ketika sebuah tugas berisi banyak tool calls, pulih dari kesalahan atau jalan buntu, menerima koreksi pengguna, atau menemukan alur kerja yang tidak biasa, sebuah background review dapat membuat atau merevisi Skill secara lokal; penulisan memori dan Skill juga dapat melewati approval gate. Sebuah Curator terpisah melacak penggunaan Skill, staleness, dan status arsip, melakukan pemangkasan deterministik saat idle, dan dapat secara opsional memanggil LLM untuk menggabungkan konten. Ia mengambil snapshot perubahan terlebih dahulu sehingga konsolidasi yang salah dapat dibatalkan (rolled back)<sup id="fnref:hermes-memory"><a class="footnote-ref" href="#fn:hermes-memory">12</a></sup>. Ini mengubah “rekam–konsolidasi–validasi–pangkas” dari sebuah metafora menjadi siklus hidup kapabilitas operasional.</p>
+<p>Continual evolution bukan berarti membiarkan knowledge, Prompts, dan tools tumbuh tanpa batas. Korupsi konteks yang dibahas di Bab 2 muncul kembali dalam jangka waktu yang lebih lama: experience documents saling bertentangan, Prompts menjadi kewalahan oleh aturan batasan, perpustakaan Skill mengumpulkan kapabilitas duplikat, dan fine-tuning berulang menyebabkan catastrophic forgetting. Oleh karena itu, sistem memerlukan konsolidasi offline berkala:</p>
+<ul>
+<li>Menggabungkan pengalaman duplikat sambil mempertahankan provenance dan informasi versi;</li>
+<li>Memindahkan aturan lokal dari global Prompt ke domain-specific Skills untuk menjaga global Prompt tetap bersih;</li>
+<li>Menjaga Prompts dan Skills terstruktur dengan jelas, seperti buku panduan untuk karyawan baru, dan menghindari enumerasi yang menyerupai "99 aturan besi".</li>
+<li>Memvalidasi ulang tools yang sudah lama tidak digunakan;</li>
+<li>Menghapus knowledge yang dibatalkan oleh bukti baru;</li>
+<li>Melatih ulang LoRA dari base model aslinya.</li>
+</ul>
+<blockquote>
+<p><strong>Eksperimen 8-6 ★★★: Mengevaluasi Apakah Agent Terus Berevolusi</strong></p>
+<p><strong>Tujuan:</strong> Membedakan antara tiga perilaku jangka panjang—menyimpan satu masukan (feedback), hanya menambahkan selamanya (append forever), dan benar-benar memperbarui, mentransfer, serta mempertahankan kapabilitas—sehingga menjalankan tugas yang sama berulang kali tidak disalahartikan sebagai continual learning.</p>
+<p><strong>Alur tugas empat tahap:</strong> Tahap learning menyajikan tugas-tugas pengembalian dana, verifikasi identitas, dan kebijakan bagasi yang berbagi pola laten. Tahap transfer mengubah frasa, pengguna, dan lingkungan lokal untuk menguji apakah pengalaman lama berlaku untuk tugas baru. Tahap rule-change memperbarui batas bagasi dari 20 kg menjadi 23 kg dan mengharuskan sistem untuk mengganti atau memensiunkan knowledge yang usang. Tahap retention menguji ulang kapabilitas yang tidak berubah dan aturan yang saat ini berlaku untuk mengukur kelupaan (forgetting). Memori eksternal hanya dapat diperbarui setelah setiap tugas yang membawa feedback berakhir; tindakan yang diharapkan untuk tugas saat ini tidak boleh dibocorkan ke Agent sebelumnya.</p>
+<p><strong>Grup kontrol:</strong> <code>static</code> tidak mempertahankan feedback apa pun. <code>append_only</code> mengingat versi pertama dari sebuah aturan tetapi tidak dapat menyelesaikan konflik atau memensiunkannya. <code>evolving</code> menyimpan versi dan mengganti aturan lama dengan bukti baru. Implementasi referensi memverifikasi bahwa evaluasi Harness dapat membedakan perilaku-perilaku ini. Sebuah eksperimen nyata dapat memasukkan LLM melalui urutan yang sama dari 14 tugas, tetapi hasil harus dihitung oleh Harness di luar model.</p>
+<p><strong>Metrik dan penerimaan:</strong> Melaporkan akurasi dan learning curve untuk setiap tahap, dan secara terpisah menghitung akurasi transfer, tugas yang dibutuhkan untuk pulih setelah aturan baru, retention kapabilitas lama, tingkat negative-transfer, tingkat kelulusan safety-Rubric, serta biaya Token, latency, dan penyimpanan. Untuk sistem nyata yang memperbarui Prompts, Skills, atau sebuah Harness, catat juga validitas candidate-change, tingkat aktivasi artefak, dan tingkat kepatuhan yang berhasil, sehingga "pembaruan tersebut benar tetapi tidak pernah dimuat" tidak disalahklasifikasikan sebagai pembaruan yang gagal. Bahkan sebuah Agent dengan akurasi akhir yang tinggi tidak memenuhi syarat sebagai continually evolving jika ia masih mengutip aturan yang telah dipensiunkan, berhasil melalui jalan pintas yang tidak aman, atau melupakan kapabilitas yang ada setelah pembaruan.</p>
+<p>Implementasi yang menyertainya tersedia di <a href="../chapter8/self-evolution-eval/"><code>self-evolution-eval</code></a>. Secara default, ini membandingkan tiga referensi Agents: updatable, append-only, dan static. Gunakan <code>--profile llm</code> untuk membuat LLM nyata menjalani task stream jangka panjang yang sama.</p>
+</blockquote>
+<h2 id="ringkasan-bab">Ringkasan Bab<a class="headerlink" href="#ringkasan-bab" title="Permanent link">&para;</a></h2>
+<p>Continual learning menjadi salah satu kapabilitas terpenting dari Agents, tetapi model saat ini masih belum dapat melakukannya secara andal dengan sendirinya. Adaptasi kontekstual selama inferensi tidak bertahan secara otomatis, sementara pembaruan parameter online yang tidak tervalidasi memperkuat noise, serangan, dan capability drift. Oleh karena itu, pendekatan yang lebih praktis saat ini adalah membangun sistem pembelajaran yang dapat diverifikasi di sekitar model tersebut.</p>
+<p>Sebuah Agent memperoleh learning signals dari interaksi dan evaluasi, kemudian memperbarui knowledge, Prompts, Skills, programs, atau model parameters sesuai dengan bagaimana kapabilitas tersebut direpresentasikan. Sistem juga dapat mengoptimalkan metode yang digunakan untuk mengelola dan menghasilkan artefak ini, tetapi harus memprioritaskan perubahan lokal yang attributable, verifiable, dan reversible.</p>
+<p>Continual evolution harus memisahkan eksekusi online dari pembelajaran offline: merekam bukti secara online; membuat dan memvalidasi pembaruan kandidat secara offline; kemudian merilis, mengonsolidasikan, atau membatalkannya (roll them back) secara bertahap. Putaran ini paling andal ketika hasil dapat diverifikasi secara otomatis. Untuk tugas-tugas open-ended dengan tujuan ambigu dan feedback yang tertunda, manusia masih harus berpartisipasi dalam definisi masalah dan perancangan kriteria evaluasi.</p>
+<h2 id="pertanyaan-refleksi">Pertanyaan Refleksi<a class="headerlink" href="#pertanyaan-refleksi" title="Permanent link">&para;</a></h2>
+<ol>
+<li>★★ Sebuah experience document didukung oleh tiga trajectories yang berhasil dan satu trajectory yang gagal. Kegagalan terjadi dengan versi API yang lebih baru. Bagaimana sistem harus menentukan apakah pengalaman tersebut telah ditiadakan (invalidated) atau applicability conditions-nya telah berubah?</li>
+<li>★★ Kepuasan pengguna Agent layanan pelanggan meningkat, tetapi tingkat pelanggaran aturannya juga meningkat. Mengapa kepuasan tidak dapat berfungsi sebagai satu-satunya learning signal? Bagaimana Anda akan merancang guardrail metrics?</li>
+<li>★★★ Masalah "false promise" yang sama dapat dikurangi melalui sebuah Prompt, pemeriksaan Harness, atau parameter training. Bukti apa yang akan Anda gunakan untuk memilih di mana modifikasi harus dilakukan?</li>
+<li>★★★ Sebuah Agent mungkin memodifikasi tools dan validator, tetapi ia tidak boleh diizinkan untuk memodifikasi trusted root yang menyetujui pembaruannya sendiri. Bagaimana Anda akan memisahkan izin dan batas-batas kode dari kedua bagian ini?</li>
+<li>★★ Seiring dengan berkembangnya knowledge base pengalaman, retrieval errors dan konflik knowledge dapat meniadakan manfaat pembelajaran. Bagaimana mekanisme versioning, freshness, dan retirement harus dirancang?</li>
+<li>★★★ Parameter learning efektif untuk natural-language style tetapi kesulitan untuk menjamin aturan bisnis yang ketat. Rancang skema continual-evolution untuk layanan pelanggan medis yang mengoordinasikan parameter, knowledge, Skills, dan code-level constraints.</li>
+</ol>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:reflexion-2023">
+<p>Shinn, N., et al. <em>Reflexion: Language Agents with Verbal Reinforcement Learning.</em> arXiv:2303.11366, 2023.&#160;<a class="footnote-backref" href="#fnref:reflexion-2023" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:gaia-2023">
+<p>Mialon, G., et al. <em>GAIA: a benchmark for General AI Assistants.</em> arXiv:2311.12983, 2023.&#160;<a class="footnote-backref" href="#fnref:gaia-2023" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:aworld-2025">
+<p>Yu, C., et al. <em>AWorld: Orchestrating the Training Recipe for Agentic AI.</em> arXiv:2508.20404, 2025.&#160;<a class="footnote-backref" href="#fnref:aworld-2025" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:dspy-2023">
+<p>Khattab, O., et al. <em>DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines.</em> arXiv:2310.03714, 2023.&#160;<a class="footnote-backref" href="#fnref:dspy-2023" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:opro-2023">
+<p>Yang, C., et al. <em>Large Language Models as Optimizers.</em> arXiv:2309.03409, 2023.&#160;<a class="footnote-backref" href="#fnref:opro-2023" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:gepa-2025">
+<p>Agrawal, L., et al. <em>GEPA: Reflective Prompt Evolution Can Outperform Reinforcement Learning.</em> arXiv:2507.19457, 2025.&#160;<a class="footnote-backref" href="#fnref:gepa-2025" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:karpathy-system-prompt-learning">
+<p>Karpathy, A. “We’re missing (at least one) major paradigm for LLM learning … system prompt learning?” X, May 11, 2025. https://x.com/karpathy/status/1921368644069765486&#160;<a class="footnote-backref" href="#fnref:karpathy-system-prompt-learning" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+<li id="fn:anthropic-skill-creator">
+<p>Anthropic. <em>Skill Creator.</em> 2026. https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md&#160;<a class="footnote-backref" href="#fnref:anthropic-skill-creator" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+</li>
+<li id="fn:preact">
+<p>Li, Bojie. <em>PreAct: Computer-Using Agents that Get Faster on Repeated Tasks.</em> arXiv:2606.17929, 2026.&#160;<a class="footnote-backref" href="#fnref:preact" title="Jump back to footnote 9 in the text">&#8617;</a></p>
+</li>
+<li id="fn:alita-2025">
+<p>Qiu, J., et al. <em>Alita: Generalist Agent Enabling Scalable Agentic Reasoning with Minimal Predefinition and Maximal Self-Evolution.</em> arXiv:2505.20286, 2025.&#160;<a class="footnote-backref" href="#fnref:alita-2025" title="Jump back to footnote 10 in the text">&#8617;</a></p>
+</li>
+<li id="fn:claude-code-memory">
+<p>Anthropic, “How Claude remembers your project”, 2026. https://code.claude.com/docs/en/memory&#160;<a class="footnote-backref" href="#fnref:claude-code-memory" title="Jump back to footnote 11 in the text">&#8617;</a></p>
+</li>
+<li id="fn:hermes-memory">
+<p>Nous Research, <em>Hermes Agent Documentation: Persistent Memory, Skills System, and Curator</em>, 2026. https://hermes-agent.nousresearch.com/docs/user-guide/features/memory ; https://hermes-agent.nousresearch.com/docs/user-guide/features/skills ; https://hermes-agent.nousresearch.com/docs/user-guide/features/curator&#160;<a class="footnote-backref" href="#fnref:hermes-memory" title="Jump back to footnote 12 in the text">&#8617;</a></p>
+</li>
+<li id="fn:voyager-2023">
+<p>Wang, G., et al. <em>Voyager: An Open-Ended Embodied Agent with Large Language Models.</em> arXiv:2305.16291, 2023.&#160;<a class="footnote-backref" href="#fnref:voyager-2023" title="Jump back to footnote 13 in the text">&#8617;</a></p>
+</li>
+<li id="fn:weng-harness-2026">
+<p>Weng, Lilian. “Harness Engineering for Self-Improvement.” <em>Lil’Log</em>, 2026. https://lilianweng.github.io/posts/2026-07-04-harness/&#160;<a class="footnote-backref" href="#fnref:weng-harness-2026" title="Jump back to footnote 14 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ace-2026">
+<p>Zhang, Qizheng, et al. <em>Agentic Context Engineering: Evolving Contexts for Self-Improving Language Models.</em> ICLR 2026. arXiv:2510.04618.&#160;<a class="footnote-backref" href="#fnref:ace-2026" title="Jump back to footnote 15 in the text">&#8617;</a></p>
+</li>
+<li id="fn:mce-2026">
+<p>Ye, Haoran, et al. <em>Meta Context Engineering via Agentic Skill Evolution.</em> arXiv:2601.21557, 2026.&#160;<a class="footnote-backref" href="#fnref:mce-2026" title="Jump back to footnote 16 in the text">&#8617;</a></p>
+</li>
+<li id="fn:aflow-2025">
+<p>Zhang, Jiayi, et al. <em>AFlow: Automating Agentic Workflow Generation.</em> ICLR 2025. arXiv:2410.10762.&#160;<a class="footnote-backref" href="#fnref:aflow-2025" title="Jump back to footnote 17 in the text">&#8617;</a></p>
+</li>
+<li id="fn:meta-harness-2026">
+<p>Lee, Yoonho, et al. <em>Meta-Harness: End-to-End Optimization of Model Harnesses.</em> arXiv:2603.28052, 2026.&#160;<a class="footnote-backref" href="#fnref:meta-harness-2026" title="Jump back to footnote 18 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ahe-2026">
+<p>Lin, Jiahang, et al. <em>Agentic Harness Engineering: Observability-Driven Automatic Evolution of Coding-Agent Harnesses.</em> arXiv:2604.25850, 2026.&#160;<a class="footnote-backref" href="#fnref:ahe-2026" title="Jump back to footnote 19 in the text">&#8617;</a></p>
+</li>
+<li id="fn:self-harness-2026">
+<p>Zhang, Hangfan, et al. <em>Self-Harness: Harnesses That Improve Themselves.</em> arXiv:2606.09498, 2026.&#160;<a class="footnote-backref" href="#fnref:self-harness-2026" title="Jump back to footnote 20 in the text">&#8617;</a></p>
+</li>
+<li id="fn:harness-benefit-2026">
+<p>Lin, Minhua, et al. <em>Harness Updating Is Not Harness Benefit: Disentangling Evolution Capabilities in Self-Evolving LLM Agents.</em> arXiv:2605.30621, 2026.&#160;<a class="footnote-backref" href="#fnref:harness-benefit-2026" title="Jump back to footnote 21 in the text">&#8617;</a></p>
+</li>
+<li id="fn:llm-scientists-2026">
+<p>Trehan, Dhruv and Paras Chopra. <em>Why LLMs Aren't Scientists Yet: Lessons from Four Autonomous Research Attempts.</em> arXiv:2601.03315, 2026.&#160;<a class="footnote-backref" href="#fnref:llm-scientists-2026" title="Jump back to footnote 22 in the text">&#8617;</a></p>
+</li>
+<li id="fn:scientistone-2026">
+<p>Meng, et al. <em>ScientistOne: Towards Human-Level Autonomous Research via Chain-of-Evidence.</em> arXiv:2605.26340, 2026.&#160;<a class="footnote-backref" href="#fnref:scientistone-2026" title="Jump back to footnote 23 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:45 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:45 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

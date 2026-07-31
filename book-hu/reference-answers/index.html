@@ -1,0 +1,2139 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/book-hu/reference-answers/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Válaszvázlatok a gondolatébresztő kérdésekhez - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="Válaszvázlatok a gondolatébresztő kérdésekhez">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/book-hu/reference-answers/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Válaszvázlatok a gondolatébresztő kérdésekhez">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#valaszvazlatok-a-gondolatebreszto-kerdesekhez" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Válaszvázlatok a gondolatébresztő kérdésekhez
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-fejezet-ismerkedes-az-ai-ugynokokkel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. fejezet: Ismerkedés az AI-ügynökökkel
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-fejezet-kontextus-tervezes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. fejezet: Kontextus-tervezés
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-fejezet-felhasznaloi-memoria-es-tudasbazis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. fejezet: Felhasználói memória és tudásbázis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-fejezet-eszkozok" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. fejezet: Eszközök
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-fejezet-kodolo-agent-es-kodgeneralas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. fejezet: Kódoló Agent és kódgenerálás
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-fejezet-agentek-ertekelese" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. fejezet: Agentek értékelése
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-fejezet-modell-poszt-trening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. fejezet: Modell poszt-tréning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-fejezet-folyamatos-agent-evolucio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. fejezet: Folyamatos Agent-evolúció
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-fejezet-multimodalis-es-valos-ideju-interakcio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. fejezet: Multimodális és valós idejű interakció
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-fejezet-tobbagens-egyuttmukodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. fejezet: Többágens együttműködés
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/book-hu/reference-answers.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/book-hu/reference-answers.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="valaszvazlatok-a-gondolatebreszto-kerdesekhez">Válaszvázlatok a gondolatébresztő kérdésekhez<a class="headerlink" href="#valaszvazlatok-a-gondolatebreszto-kerdesekhez" title="Permanent link">&para;</a></h1>
+<p>Ez a fájl a könyv mind a tíz fejezetének gondolatébresztő kérdéseihez gyűjti össze a válaszvázlatokat. A legtöbb gondolatébresztő kérdés nyitott végű, és nincs egyetlen helyes válasza. A válaszvázlatokat AI generálta, emberi könnyed ellenőrzéssel, és kizárólag az olvasók összehasonlítására és inspirációjára szolgálnak. Az olvasókat bátorítjuk, hogy használjanak egy LLM-et a könyv tartalmával együtt e kérdések további megvitatásához.</p>
+<h2 id="1-fejezet-ismerkedes-az-ai-ugynokokkel">1. fejezet: Ismerkedés az AI-ügynökökkel<a class="headerlink" href="#1-fejezet-ismerkedes-az-ai-ugynokokkel" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) Ha csak egy képességet adhatnál egy Agent-rendszerhez – egy erősebb modellt, gazdagabb kontextust vagy több eszközt –, melyiket választanád? Milyen feltételek mellett változna a döntésed?</strong></p>
+<blockquote>
+<p>Az "agy/szemek/kezek és lábak" formulát követve először a gyenge láncszemet keresd: általában a prioritás a kontextus gazdagítása – vagyis a megfigyelési tér kiterjesztése. Ha a feladat meghaladja a modell érvelési képességét, válts erősebb modellre. Ha a cselekvési tér nem elégséges (például nincs hozzáférés belső vállalati rendszerekhez), adj hozzá eszközöket. A megítélés módja a hibapályák elemzése és annak meghatározása, hogy a szűk keresztmetszet az észlelésben, a döntéshozatalban vagy a cselekvésben rejlik.</p>
+</blockquote>
+<p><strong>2. (★★★) A ReAct hurokban az Agent minden egyes LLM-hívása megkapja a teljes előzménytrajektóriát, így a trajektória növekedésével a tervezés költsége négyzetesen nő. Megtörhető ez a négyzetes növekedés anélkül, hogy kritikus információ veszne el?</strong></p>
+<blockquote>
+<p>Életképes megközelítések: kontextus-tömörítés – a korai trajektória összegzése, csak a következtetések és a kulcsfontosságú állapot megtartása (a 2. fejezet többrétegű tömörítése); externalizált tanulás – köztes eredmények fájlokba vagy tudásbázisba írása, majd igény szerinti lekérése a kontextusban tartás helyett; a munka felosztása alügynökökre.</p>
+</blockquote>
+<p><strong>3. (★★) A "Model as Agent" paradigma szerint a modellek egyre autonómabbá válnak az eszközhívási döntésekben. Ez a fejezet azonban azt állítja, hogy a Harness tervezés fontossága valójában növekszik. Hogyan fér meg ez a két trend egymás mellett? Hol van az Agent-keretrendszerek jövőbeli magjának értéke?</strong></p>
+<blockquote>
+<p>A ló és kantár metafora: minél erősebb a modell és minél nagyobb az autonómiája, annál szélesebb a hibák becsapódási sugara, és annál nagyobb a korlátozás, ellenőrzés és korrekció iránti igény. A keretrendszerek értéke az "LLM-hívások összehangolásáról" a Harness öt elemének biztosítási rétegére tolódik: engedélyosztályozás, megszakítók (circuit breakers), hibakezelés, kontextus-tömörítés és az eszközök ökoszisztémája.</p>
+</blockquote>
+<p><strong>4. (★★) Az ablációskísérletben az "eszközeredmény-visszajelzés" hiánya végtelen ciklusba küldte az Agentet. Éles környezetben az eszközeredmények hiányán kívül milyen más helyzetek okozhatnak ciklust? Milyen detektálási és megszakítási mechanizmusokat terveznél?</strong></p>
+<blockquote>
+<p>Egyéb okok: egy eszköz ismételten ugyanazt a hibát adja vissza; hallucinált hívások nem létező eszközökhöz; a kontextus-tömörítés eldob kritikus állapotinformációt; a gondolkodási tartalom levágása és a modell API hibája; maga a feladat megoldhatatlan. Mechanizmusok: megállási feltételek, például maximális iterációszám beállítása; ismétlődő hívások detektálása (ugyanazon eszköz + argumentum ujjlenyomat); emberi beavatkozásra eszkalálás, ha egy hibaküszöb túllépésre kerül.</p>
+</blockquote>
+<p><strong>5. (★) Ez a fejezet öt Agent-terméket elemzett három dimenzió mentén: munkakontextus, cselekvési interfészek és stratégia. Válassz ki egy általad naponta használt AI-terméket, elemezd ugyanezen három dimenzió mentén, és ítéld meg, hogy megfelelő-e az architektúrája. Ha te terveznéd, min változtatnál?</strong></p>
+<blockquote>
+<p>Nyitott végű. Főbb pontok: a fejezet táblázatát követve írd le a szemeket (milyen információforrásokat láthat), a kezeket és lábakat (a cselekvési tér nyitott végű-e, képes-e belső gondolkodásra), valamint a stratégiát (az Agent végrehajtási hurkának mintázata).</p>
+</blockquote>
+<p><strong>6. (★★) Ha egy kifejezetten repülőjegy-foglalásra szánt ügyfélszolgálati rendszert terveznél, a workflow mintát vagy az autonóm Agent mintát választanád? Lehetséges a két minta keverése ugyanabban a rendszerben?</strong></p>
+<blockquote>
+<p>Használj workflow-t gerincként: négy csomópont – személyazonosság-ellenőrzés → keresés → fizetés → foglalás –, ami garantálja a megfelelő sorrendet, például "nincs foglalás fizetés előtt", és a prompt-injekciós támadási felületet egyetlen csomópontra korlátozza. Válts autonóm Agent-re a nyitott végű szegmensekhez (igények megértése, átfoglalás, alternatívák ajánlása járattörléskor). Adj hozzá emberi megerősítést magas kockázatú műveletekhez (nagy összegű fizetések, visszatérítések).</p>
+</blockquote>
+<p><strong>7. (★★★) A korlátokról szóló szakasz említette az eszközkockázati besorolásokat. Ha egy eszköz általában alacsony kockázatú, de bizonyos paraméterkombinációkkal magas kockázatúvá válik (pl. a <code>delete_file</code> normál fájl törlése vs. rendszerfájl törlése), hogyan terveznéd a dinamikus kockázatértékelést?</strong></p>
+<blockquote>
+<p>Finomítsd az értékelés célpontját "eszközről" "eszköz + argumentumokra": számítsd ki a kockázatot híváskor a visszafordíthatóság, engedélyek és becsapódási sugár alapján. Használj szabályalapú determinisztikus ellenőrzéseket (útvonal-engedélyezési/tiltási listák, reguláris kifejezések) modellítélet helyett. Az ellenőrzés csak strukturált adatokat nézzen, hogy védjen a prompt-injekciós manipuláció ellen.</p>
+</blockquote>
+<p><strong>8. (★★) A fejezet Agent-termék táblázatában minden Agent "nyitott végű" cselekvési térrel rendelkezik. Milyen forgatókönyvekben lenne egy korlátozott cselekvési tér (pl. csak előre meghatározott opciókból választás) jobb, mint a nyitott végű?</strong></p>
+<blockquote>
+<p>Magas megfelelőségi, magas kockázatú, visszafordíthatatlan hibájú forgatókönyvek: visszatérítéseknél és fizetéseknél a korlátozott opciók "megkötések" – eleve hibabiztosak, lehetetlenné teszik a hibákat tervezés által.</p>
+</blockquote>
+<p><strong>9. (★★) Az emberi beavatkozási mechanizmus megköveteli az Agenttől, hogy "kecsesen adja át az irányítást". A gyakorlatban azonban a felhasználó offline lehet, lassan válaszolhat, vagy homályos utasításokat adhat. Mit tegyen ilyenkor az Agent?</strong></p>
+<blockquote>
+<p>Hibabiztos működés: magas kockázatú műveletek szüneteltetése, ha nem érkezik megerősítés, ahelyett, hogy alapértelmezés szerint végrehajtaná; a visszafordítható, alacsony kockázatú részek elvégzése először, a magas kockázatúak dokumentálása, hogy egy ember dönthessen és az Agent folytathassa; értesítés aszinkron kommunikációs eszközökön keresztül (üzenetek, e-mail) időtúllépési politikával; szándéktisztázás homályos utasítások esetén.</p>
+</blockquote>
+<p><strong>10. (★★★) A bevezető szerint "a jó tervezési elveknek túl kell mutatniuk a modell iterációs ciklusain". Adj egy példát egy olyan jelenlegi Agent-tervezési elvre, amely szerinted elavulhat a modellek fejlődésével, és magyarázd el az érvelésedet.</strong></p>
+<blockquote>
+<p>Példák: few-shot promptolás és aprólékos prompt-tervezés – csökkenő hozam, ha a zero-shot általánosítás javul; szigorú eszközhívási formátumok korlátozott mintavételezéssel kikényszerítve – a jelenlegi SOTA modellek eszközhívási formátumai már meglehetősen stabilak; kézzel összeállított többlépéses workflow-ok – már nem szükségesek, ha a modell utasításkövetési képessége javul.</p>
+</blockquote>
+<h2 id="2-fejezet-kontextus-tervezes">2. fejezet: Kontextus-tervezés<a class="headerlink" href="#2-fejezet-kontextus-tervezes" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★★) A 2-3. kísérletben a beszélgetési előzmények csúszó ablaka azt okozta, hogy az Agent ismételten ugyanazokat az eszközhívásokat hajtotta végre. A teljes előzmény megtartása viszont a kontextus végtelen terjeszkedéséhez vezet. Tervezz egy stratégiát, amely elkerüli az információvesztést, miközben szabályozza a kontextus hosszát anélkül, hogy megtörné a KV Cache előtagját.</strong></p>
+<blockquote>
+<p>① Cseréld ki az eldobást tömörítésre: üzenetek csak hozzáfűzésre kerülnek, soha nem törlődnek vagy szerkesztődnek; egy küszöb (pl. az ablak 80%-a) közeledtével kötegelt tömörítés a régi eszközeredményekre. ② Rétegezett mechanizmus: nagy kimenetek perzisztálása lemezre egy összegzéssel, zaj teljes törlése, és archív összegzések megtartása, amelyek megőrzik a szálat. ③ Alügynök-izoláció, így a köztes állapot soha nem kerül a fő kontextusba.</p>
+</blockquote>
+<p><strong>2. (★★) A Qwen3 Chat Template gondolkodásimegtartó mechanizmusa csak "az utolsó valódi felhasználói üzenet utáni" gondolkodási tartalmat tartja meg. Ha egy ReAct hurok több száz eszközhívást ölel át, a felhalmozott gondolkodási tartalom nagy mennyiségű kontextust fogyaszthat. Hogyan módosítanád ezt a mechanizmust a nagyon hosszú hurkok kezelésére? A DeepSeek R1 egykor az összes történeti gondolkodási tartalom levágását követelte meg, míg a DeepSeek V4 ezt megfordította, és előírta az összes <code>reasoning_content</code> visszaadását – összehasonlítva ezt a két ellentétes stratégiát, mik az előnyei és hátrányai? Mit jelez ez a fordulat?</strong></p>
+<blockquote>
+<p>Módosítási irány: csúszóablakos megtartás – a legutóbbi gondolkodási körök teljes megtartása; az ablakon kívül gördülő tömörítés token-költségvetés alapján (nem fix körszám alapján), strukturált állapotsáv létrehozása (jelenlegi cél, megerősített tények, kizárt utak, teendők). A tömörítés csak egyszer és egy rögzített pozícióban történik, így a cache-újraépítés költsége egyszer fizetendő, nem minden körben. R1 levágása: tokeneket takarít meg, stabil előtagot és cache-barát viselkedést biztosít, illeszkedik a betanítási eloszláshoz (történeti CoT soha nem jelenik meg a bemenetben); de minden körben a semmiből érvel, a hosszú távú tervek elvesznek, a hibák ismétlődnek. V4 kötelező visszaadása: koherens gondolkodás és jobb teljesítmény hosszú horizontú agentikus feladatokon; de magas tokenköltség, előtag-duzzadás minden körben, és nincs zökkenőmentes váltás nem-gondolkodó módból. A fordulat azt mutatja: tiszta dialógusban a gondolkodás pazarlás; agentikus forgatókönyvekben a gondolkodás állapot – és az iparági gyakorlat az utóbbi felé mozdult.</p>
+</blockquote>
+<p><strong>3. (★★) A kontextus-tudatos tömörítési kísérletben körülbelül 148 000 karakterről körülbelül 2000 karakterre tömörítettek – kockáztat-e ez a szélsőséges tömörítés "visszafordíthatatlan információvesztést"? Hogyan lehet ezt kezelni?</strong></p>
+<blockquote>
+<p>Igen, van kockázat: a tömörítés veszteséges vetítés, és ha a kérdés egy nem megőrzött dimenzióra esik, megtörik. A megoldás: "veszteséges tömörítés + veszteségmentes indexelés" – minden tény egy forrás URL-t hordoz a nyomonkövethetőségért; a nyers kimenetek lemezen tárolódnak, csak összegzett előnézetekkel a kontextusban; explicit megőrzési prioritások – architekturális döntések, szemantikai integritás (idők, cégnevek), ellenőrzési állapot és azonosítók, mint UUID-ek/hashek szó szerint megőrizve; adaptív ablakozás késlelteti a tömörítés pillanatát.</p>
+</blockquote>
+<p><strong>4. (★★) Az Agent állapotsáv explicité teszi az implicit állapotokat. Ha azonban az állapotsáv hibás információt tartalmaz (pl. hiba az eszközállás-számlálóban), az Agent káros döntéseket hozhat a helytelen információk alapján. Hogyan enyhíthető ez a "meta-információ megbízhatósági" probléma?</strong></p>
+<blockquote>
+<p>A modell szinte feltétel nélkül megbízik az állapotsávban, így a hibák úgy terjednek tovább, ahogy vannak. Enyhítések: ① karbantartás determinisztikus kóddal – soha ne hagyd, hogy egy LLM kötegelt számlálást végezzen hosszú előzményeken (ha muszáj, tételenként kivonatolni és kódban összesíteni); ② az állapotsáv pontosságának nyomon követése első osztályú termelési mérőszámként; ③ információk csak megbízható valós világbeli megfigyelésekből származzanak, védekezve az állapotsáv-mérgezés ellen.</p>
+</blockquote>
+<p><strong>5. (★★) A prompt-tervezési ablációskísérlet szerint a rendezetlen információ több mint 30%-os sikerességi aránycsökkenéshez vezet. A valós fejlesztésben azonban a rendszerpromptokat gyakran többen, különböző időpontokban karbantartják. Milyen mérnöki gyakorlatokat használnál annak megakadályozására, hogy a rendszerpromptok idővel egyre rendezetlenebbé váljanak?</strong></p>
+<blockquote>
+<p>① Kezeld a promptokat kódként: verziókövetés és felülvizsgálat, ahol a termékmenedzserek határozzák meg az üzleti szabályokat, a mérnökök pedig kódolják azokat; ② használj Tau-Bench-szerű benchmarkokat regressziós tesztekként, futtass ablációkat a változtatások előtt és után a hatás lokalizálásához; ③ kényszeríts ki struktúrát: SOP-vezérelt folyamat a szabályhalmazok helyett, rétegezve XML/Markdown segítségével; ④ osztályozd és nevezd el a töredékeket "cache-elhető / cache-törő" kategóriákba, a dinamikus tartalmat a cache-határ után helyezve; ⑤ a felfúvódott tartalmat oszd fel igény szerint betöltött Skills-ekre.</p>
+</blockquote>
+<p><strong>6. (★★★) Ez a fejezet azt állítja, hogy "a kontextusban való tanulás lényegében lekérés, nem érvelés". Ha ez az állítás helytálló, akkor az összes jelenlegi, "több információ kontextusba helyezésén" alapuló optimalizációs irányt újra kell értékelni. Hogyan lehet ezt a korlátot leküzdeni?</strong></p>
+<blockquote>
+<p>Adj hozzá egy desztillációs réteget ehhez a "fél lekérőmotorhoz": ① kontextus-desztilláció / az állapotsáv – használj kódot a következtetések előre kiszámításához közvetlen lekéréshez; ② aktív tömörítés, a nyers rekordok helyettesítése nagy sűrűségű strukturált tudással; ③ alügynök-izoláció, a zaj kizárása a fő kontextusból; ④ interakció mint harmadik tengely – külső eszközök megfigyelnek és visszaírnak olyan új információt, amit a modell nem tudott kigondolni; ⑤ határvonali irányok: szerkeszthető, összeállítható KV Cache "jegyzetek" és munkamenetek közötti memóriakonszolidáció.</p>
+</blockquote>
+<p><strong>7. (★★★) A Skills progresszív felfedése csak akkor tölti be a teljes tartalmat, ha az Agent szükségesnek ítéli. Ez az ítélet azonban maga is a modell képességétől függ – ha a modell nem tudja, hogy mit nem tud, nem tudja helyesen kiváltani egy Skill betöltését. Hogyan oldható meg ez a "metakogníciós" probléma?</strong></p>
+<blockquote>
+<p>① Tartsd a Skill metaadatait (név, leírás) a kontextusban rezidensként, hogy a modell mindig "tudja, mije van"; ② írd a Skill leírást útválasztási feltételekként, ne funkcióbemutatóként – "Használd, ha / Ne használd, ha" – kerülve a homályos leírásokat.</p>
+</blockquote>
+<p><strong>8. (★★) A Skills mechanizmusban miután az Agent dinamikusan betölti az utasításokat a <code>SKILL.md</code>-ből, a későbbi műveletek megbízhatóan követik azokat? Milyen különbségek vannak a Skills mintázat modelltámogatásában?</strong></p>
+<blockquote>
+<p>Attól függ, hogyan injektálódik a Skill: a rendszerpromptba injektálva a legerősebb az utasításkövetés, de megtöri a KV Cache-t; közönséges fájlként a kontextus közepébe olvasva gyengébb utasításkövetést adhat; a kontextus végére injektálva jó utasításkövetést ad, de a Skill rész KV-jét minden eszközhívásnál újra kell számolni, ami költséges.</p>
+</blockquote>
+<p><strong>9. (★★★) Ez a fejezet hangsúlyozza, hogy a dinamikus információ változásai (pl. rendszer időbélyegek, eszközlista sorrendje) megtörhetik a KV Cache előtag-találatokat. Egy nagy számú, gyakran változó eszközkészlettel rendelkező éles rendszerben hogyan terveznéd a kontextus elrendezését a cache találati arány maximalizálására?</strong></p>
+<blockquote>
+<p>① Egy kis halmaz stabil mag-eszköz (mondjuk hét) plusz egy általános végrehajtó, a specifikus képességek a Skills progresszív felfedésén keresztül érkeznek; az eszközdefiníciók a statikus előtagban rögzített sorrendben fagynak le; ② az alügynökök ugyanazt az előtagot tartják, mint a szülő Agent.</p>
+</blockquote>
+<h2 id="3-fejezet-felhasznaloi-memoria-es-tudasbazis">3. fejezet: Felhasználói memória és tudásbázis<a class="headerlink" href="#3-fejezet-felhasznaloi-memoria-es-tudasbazis" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) Egy felhasználói memóriarendszerben, amikor ugyanaz a felhasználó ellentmondó információkat ad meg különböző munkamenetekben (pl. két különböző lakcímet említ), hogyan kezelje a memóriarendszer ezt az ütközést?</strong></p>
+<blockquote>
+<p>Használj egy Mem0-stílusú "kivonat–összehasonlít–dönt" csővezetéket: először hasonló régi emlékek lekérése vektoros kereséssel, majd egy LLM dönt ADD/UPDATE/DELETE/NOOP műveletről – például "elköltözött Sanghajba" frissítse és írja felül a "Pekingben lakik" bejegyzést. Verziózás: a cím típusú információknál csak a legújabb verzió tárolása időbélyeggel, de a munkatapasztalat típusú információknál a teljes előzmény megtartása. A lekérési oldalon a kontextuális előtagok (személy, idő, szándék – mint a háromszor módosított átutalás esetében) segíthetnek megítélni, melyik bejegyzés a végül érvényes.</p>
+</blockquote>
+<p><strong>2. (★★) A Kontextuális Lekérés (Contextual Retrieval) az eredeti dokumentumból származó kontextust ad minden darabhoz. Ha azonban maga az eredeti dokumentum szerkezetileg rendetlen vagy ellentmondásos információkat tartalmaz, ez a módszer továbbíthatja vagy akár felerősítheti a hibákat. Hogyan vezetnél be egy "információminőségi" jelet a lekérési fázisban?</strong></p>
+<blockquote>
+<p>Meríts a "tudásbázis-frissesség és -irányítás" témakörből: csatolj metaadatokat, például verziószámokat, hatályba/lejárati időket és forrásokat a darabokhoz; szűrd ki a lejárt tartalmat lekéréskor, vagy jelöld meg explicit módon az előtagban "ezt a bejegyzést visszavonták ilyen-olyan dátumon"; a rangsorolási szakaszban építsd be a forrás tekintélyét és az időbeli frissességet a pontszámba a puszta szemantikai relevancia helyett; indexeléskor az előtag-generáló LLM is érzékelje és jelezze a darabok közötti ellentmondásokat, hasonlóan a verziózott ütközésdetektáláshoz a memóriában.</p>
+</blockquote>
+<p><strong>3. (★★★) Az Agentikus RAG lehetővé teszi az Agent számára, hogy aktívan döntsön arról, mikor keressen, mit keressen, és folytassa-e a keresést. De ha a modell nem tudja, hogy mit nem tud, nem tudja helyesen kiváltani a keresést. Hogyan oldható meg ez a "metakogníciós" probléma?</strong></p>
+<blockquote>
+<p>① Kódold be "az információ elégségességének értékelését" explicit lépésként a promptba/skillbe: mint a 3-9. kísérletben, először párhuzamosan keresd le az alkérdéseket, fedezd fel a hiányzó láncszemet – "hogyan befolyásolja a korábbi bűnügyi nyilvántartás a gondatlan bűncselekmények büntetését" –, majd futtass egy második lekérési kört; ② tarts könnyű meta-információt rezidensként a kontextusban egy globális nézethez – például JSON Cards áttekintések vagy OpenViking L0/L1 összegzései –, így az Agent tudja, "mi van a boltban".</p>
+</blockquote>
+<p><strong>4. (★★) A multimodális információ-kinyerés a diagramokat szöveges leírásokká alakítja a lekérés előtt. Ez a "fordítási" folyamat elveszítheti a vizuális információ térbeli kapcsolatait. Adj egy konkrét példát olyan diagraminformációra, amelyet egy tiszta szöveges leírás nem tud teljes mértékben visszaadni, és tervezz egy sémát az információ megőrzésére.</strong></p>
+<blockquote>
+<p>Példák: a logikai kapcsolatok egy rendszerarchitektúra-diagramban, két görbe metszéspontjának helyzete egy vonaldiagramon, vagy a cellák és fejlécek sor-oszlop megfeleltetése egy PDF táblázatban. Első lehetőség: natív multimodális feldolgozás; második lehetőség: egy multimodális képelemző eszköz biztosítása.</p>
+</blockquote>
+<p><strong>5. (★★★) Rich Sutton "Keserű leckéje" (Bitter Lesson) szerint az általános módszerek (keresés és tanulás) végül felülmúlják a kézzel készített jellemzőket. Maga az ebben a fejezetben felépített teljes tudásrendszer (darabolási stratégiák, indexstruktúrák, lekérési csővezetékek) is egyfajta "kézzel készített tervezés"? Ha a modellképességek elég erőssé válnának, ezeket a terveket felválthatná egyszerűen "mindent bemenetként adni"?</strong></p>
+<blockquote>
+<p>Valóban kézzel készített tervezés, és egyes szakaszok (darabolás, fúziós hangolás) gyengülhetnek, ahogy a kontextus hosszabb lesz; de a fekete-macska/fehér-macska eset azt mutatja, hogy a "mindent bemenetként adni" sem elég: a figyelem (attention) lágy lekérés, és a dokumentumok közötti aggregáció és statisztikák továbbra is elő-desztillációt igényelnek az indexeléskor; a mérnöki korlátok, mint a tudás lejárata és frissítése, engedély-/bérlő-izoláció, naplózhatóság és költség, függetlenek a modell képességétől; és a lekérés plusz LLM-desztilláció az indexeléskor maga is egy általános "keresés + tanulás" módszer, nem ellentétes a Keserű leckével.</p>
+</blockquote>
+<p><strong>6. (★★★) Ahogy a modellképességek javulnak, szerinted a domain-specifikus tudásbázisok továbbra is fontosak lesznek? Lehet, hogy egy jövőbeli erős alapmodell potenciálisan tartalmazná az összes információt egy domain tudásbázisból, ezzel megszüntetve a szükségességét?</strong></p>
+<blockquote>
+<p>Továbbra is fontos: a betanítási adatoknak van vágási dátuma, míg egy tudásbázis bármikor frissíthető; a belső vállalati folyamatok, magánjogi esetjog és hasonlók egyszerűen nincsenek benne a nyilvános korpuszban; a többfelhasználós megosztáshoz engedélyszűrés és bérlő-izoláció kell, a paraméterekben lévő tudás pedig nem szabható testre hívónként; a külső tárolás naplózható, verziókövethető, és a lejárt tartalom offline állapotba helyezhető – a parametrikus memória ezt aligha tudja; még a parametrikus úton (post-training / User as Engram) is szembesülsz azzal a problémával, hogy "emlékezni könnyű, de a tényeket többugrásos érveléshez használni nehéz".</p>
+</blockquote>
+<p><strong>7. (★) A RAPTOR alulról felfelé építkező hierarchikus összegzéssel fa-indexet épít, míg a GraphRAG entitáskapcsolatokon keresztül gráfstruktúrájú indexet. Milyen típusú lekérdezéseknél jók ezek a strukturált indexek?</strong></p>
+<blockquote>
+<p>RAPTOR: "rétegeken átívelő" lekérdezések, amelyek makro fogalmaktól részletekig hatolnak – például először a "SIMD utasításkészlet" összegzésének megtalálása, majd a részletezés az SSE részletekbe – lefedve mind az áttekintő, mind a részletes granularitásokat. GraphRAG: többugrásos relációs érvelés ("annak a kórháznak a címe, ahol az orvosom dolgozik", a relációs lánc bejárása) és entitás-egyértelműsítés (két "Dr. Kovács" különböző csomópontok) – "mi a kapcsolat A és B között" típusú lekérdezések; a közösségi összegzések tematikus klaszterezést is nyújtanak.</p>
+</blockquote>
+<p><strong>8. (★★) A fájlrendszer-paradigma a tudást egy fájlrendszerhez hasonló hierarchikus struktúrába szervezi. A hagyományos vektoradatbázisos RAG-hoz képest milyen forgatókönyvekben előnyös ez a megközelítés?</strong></p>
+<blockquote>
+<p>A plain text fájlokat a felhasználók közvetlenül olvashatják, szerkeszthetik és javíthatják, valamint Git-tel verziókövethetők és visszaállíthatók – alkalmas olyan forgatókönyvekre, ahol emberek és gépek közösen tartják karban és ellenőrzik a tudást; a write_file képességgel az Agent autonóm módon rögzíthet tapasztalatokat, önfejlődő memóriaciklust képezve (externalizált tanulás); az L0/L1/L2 progresszív felfedés lehetővé teszi, hogy a legtöbb lekérdezést L1 szinten eldöntsék, tokeneket megtakarítva; az előfeltétel a keresztlinkek és indexoldalak kiépítése, mint a Wikipédiában – különben minél több elszigetelt fájl van, annál nehezebb a lekérés.</p>
+</blockquote>
+<p><strong>9. (★★★) Az "ítéleti tényezők" és "tényező fontossági hierarchiák" automatikus felfedezése strukturált adatokból (pl. bírósági ítéletek adatbázisaiból) lényegében azt jelenti, hogy az Agent szabályokat vezet le az adatokból. Elérheti ez az adatvezérelt tudáskinyerés a humán szakértők által kézzel készített szabályok minőségét?</strong></p>
+<blockquote>
+<p>Előnyök: mint a CAIL2018 kísérletben, az "alulról felfelé" tényezőfelfedés illeszkedik az adatokhoz, nem emberi előfeltevésekhez; képes megragadni az implicit kompromisszum-tapasztalatokat, amelyek tízezerszám szóródnak szét az ítéletekben, és amelyeket a szakértők aligha tudnának explicit leírni; és kvantifikálható. Korlátok: az LLM-kinyerési hibák tudásszennyezést okoznak; magának az adatnak a torzításai öröklődnek; a klaszterezési prototípusok csak korrelációt tükröznek, nem tudnak okozati összefüggést magyarázni. Kompromisszum: adatvezérelt modellezés plusz szakértői felülvizsgálat a sémán és az eredményeken – a modellek vezetik a kérdezést, a statisztika támogatja a magyarázatokat.</p>
+</blockquote>
+<h2 id="4-fejezet-eszkozok">4. fejezet: Eszközök<a class="headerlink" href="#4-fejezet-eszkozok" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) Az MCP szabvány leválasztja az eszközdefiníciókat az Agent keretrendszerről. A szabványosítás azonban azt is jelenti, hogy az összetett eszközinterakciós minták (pl. streamelő kimenet, kétirányú kommunikáció, állapotos munkamenetek) nehezen fejezhetők ki egy szabványos protokollban. Szerinted milyen képességet kellene leginkább kiterjesztenie az MCP-nek a jövőben?</strong></p>
+<blockquote>
+<p>Amire a legnagyobb szükség van, az a munkamenetek közötti, eseményvezérelt képesség. Az MCP magja a kérés-válasz; az olyan primitívek, mint az értesítések, a folyamatjelzés, a mintavételezés és a kikérdezés, mind egyetlen kapcsolódott munkamenetre korlátozódnak – egy értesítés csak annyit mondhat, hogy "egy erőforrás megváltozott"; nincs szabványos mód az Agent gondolkodási hurkának kiváltására, nemhogy egy offline Agent felébresztésére.</p>
+</blockquote>
+<p><strong>2. (★★) Aszinkron Agent-architektúrában az eseménysor prioritási stratégiáját tervezéskor kell meghatározni. De ha a prioritás megítélése maga szemantikai megértést igényel (pl. annak eldöntése, hogy egy új üzenet sürgősebb-e, mint az aktuális feladat), kinek kell ezt az ítéletet meghoznia – egy szabálymotornak vagy egy másik LLM-hívásnak? Melyek az egyes lehetőségek költségei?</strong></p>
+<blockquote>
+<p>Rétegezett hibrid: a tiszta típusú események szabályokkal vannak kódolva – nulla késleltetés és erős determinizmus, de nem képes megérteni a szemantikai különbséget "azonnal hagyd abba" és "milyen ma az idő" között; a szemantikailag kétértelmű események egy könnyű osztályozó LLM-hez kerülnek esemény-útválasztóként, több száz ezredmásodperces késleltetés, többletköltség és lehetséges téves ítélet árán – és a Sidecar-hoz hasonlóan csak strukturált mezőket szabad olvasnia a prompt-injekció elleni védelem érdekében.</p>
+</blockquote>
+<p><strong>3. (★★) Az MCP ökoszisztémában különböző MCP szerverek erősen átfedő funkciójú eszközöket nyújthatnak. Amikor egy Agent több, funkcióilag hasonló eszköz között választhat különböző forrásokból, hogyan döntsön? Ha az azonos nevű eszközök különböző forrásokból kissé eltérően viselkednek (pl. az egyik összegzést ad vissza, a másik a teljes szöveget), az Agent érzékeli és kihasználja ezt a különbséget?</strong></p>
+<blockquote>
+<p>Kiválasztási kritériumok: integráció előtt tekintsd át a leírásokat, rögzítsd a verziókat, és konfigurálj least-privilege hitelesítő adatokat; óvakodj az azonos nevű eszközök árnyékolásától, amely érzékeny hívásokat irányíthat egy rosszindulatú félhez; futásidőben szűkítsd a jelölteket hierarchikus osztályozással és dinamikus felfedezéssel. Az, hogy a modell érzékeli-e a viselkedésbeli különbségeket, az eszközleírások minőségétől függ.</p>
+</blockquote>
+<p><strong>4. (★★★) Amikor egy Agent a felhasználó nevében lép kapcsolatba a külvilággal, lényegében egy identitásválasztással szembesül: használjon független virtuális identitást (dedikált e-mail és telefonszám) harmadik félként, vagy közvetlenül a felhasználó személyes fiókjait kezelje felhasználóként? Az előbbi lehetővé teszi az autonóm háttérműködést, de harmadik felek nem biztos, hogy megbíznak egy nem-emberi identitásban; az utóbbi teljesebb kontextussal és engedélyekkel rendelkezik, de hitelesítési, bizalmi és biztonsági határvonali problémákat vet fel. Szerinted milyen forgatókönyvekben melyik módot érdemes választani?</strong></p>
+<blockquote>
+<p>Alapértelmezés szerint virtuális identitás: autonóm módon működhet a háttérben és naplózható, és ha hibázik vagy feltörik, nem teszi ki a felhasználó teljes digitális identitását – ahogy egy titkárnő is a saját irodai e-mailjét használja; kezelned kell a CAPTCHA/IP-reputációs problémákat (rezidens proxyk). Olyan forgatókönyvek, ahol a felhasználó saját identitását kell használni (fiókazonosság-ellenőrzés, háromutas hívás-megerősítés – mint amikor Pine felhívja az ügyfélszolgálatot) emberi beavatkozásos hitelesítést igényelnek: VNC/RDP segítségével a felhasználó személyesen és vizuálisan jelentkezhet be. A kritériumok: hogy a másik fél személyesen kéri-e a fióktulajdonost, valamint a művelet kockázata és a hitelesítő adatok hatóköre.</p>
+</blockquote>
+<p><strong>5. (★★) Sor-alapú eseményfeldolgozásban a modellek hajlamosak csak az utolsó eseményre koncentrálni. Ez a fejezet az Agent állapotsáv jelzőivel és összegzéssel enyhíti ezt. De ha a sorban 20 esemény halmozódott fel (10 eszközeredmény + 5 felhasználói üzenet + 5 rendszerriasztás), hogyan szerveznéd ezen események bemutatási sorrendjét és formátumát, hogy a modell ne hagyjon ki kulcsfontosságú információt?</strong></p>
+<blockquote>
+<p>Először osztályozd és deduplikáld szabályokkal és egy könnyű LLM-mel: a sürgős események (riasztások, felhasználói megszakítások) külön, cancel-típusú kezelésen mennek keresztül, és nem keverednek a kötegbe. A 10 túl hosszú eszközeredmény esetében csonkold és perzisztáld fájlokba, csak a fejet, a farkot és az elérési utat megtartva. Adj hozzá egy összegző listát a rendszer állapotsávhoz a kontextus végén (minden eseménytípus darabszáma + az egyes tételek megválaszolásának követelménye).</p>
+</blockquote>
+<p><strong>6. (★★) Ez a fejezet egy "végrehajtás-érvényesítés-visszajelzés" hurkot javasol (pl. linter automatikus futtatása kódírás után). Milyen más eszköz-forgatókönyvekre alkalmazható ez az "azonnali művelet utáni automatikus érvényesítés" minta? Vannak olyan műveletek, ahol maga az érvényesítés költsége vagy kockázata meghaladja a műveletét, ami miatt a minta nem alkalmazható?</strong></p>
+<blockquote>
+<p>Általánosítható forgatókönyvek: konfiguráció módosítása után tényleges futtatás sandboxban a hatás ellenőrzésére; dokumentum/prezentáció generálása után renderelés képernyőképekbe és a modell multimodális képességének használata az elrendezés ellenőrzésére. Nem alkalmazható: visszafordíthatatlan, nem idempotens műveletek, mint e-mail küldése, telefonhívás kezdeményezése vagy pénzátutalás – vagy nincs mit megfigyelni, vagy maga az érvényesítés egy másik valós eseményt vált ki; itt ex ante eszközökre kell váltani: Proposer-Reviewer előzetes jóváhagyás.</p>
+</blockquote>
+<p><strong>7. (★★) Ez a fejezet felveti az "eszközrobbanás" problémáját – az Agent kiválasztási pontossága romlik, ha több ezer eszközzel szembesül. A proaktív eszközfelderítésen kívül milyen más megközelítések léteznek? Gondolkodj el azon, hogyan kezelik a humán szakértők a rendelkezésre álló eszközök hatalmas gyűjteményét.</strong></p>
+<blockquote>
+<p>① Hierarchikus csoportosítás: először a "szerver/alkalmazás" lokalizálása, majd a konkrét eszköz kiválasztása; ② Skills-stílusú "igény szerinti konzultáció": mint egy kézikönyv fellapozása – a katalógus a kontextusban marad, a részletek igény szerint töltődnek be; ③ néhány gyakran használt alapvető eszköz "kéznél tartva" a kontextusban, a többi a katalógus indexen keresztül érhető el.</p>
+</blockquote>
+<h2 id="5-fejezet-kodolo-agent-es-kodgeneralas">5. fejezet: Kódoló Agent és kódgenerálás<a class="headerlink" href="#5-fejezet-kodolo-agent-es-kodgeneralas" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) A kódgenerálást az Agent "meta-képességének" nevezik. A kódvégrehajtás azonban biztonsági kockázatokat hordoz – az Agent által generált kód tartalmazhat sebezhetőségeket, végtelen ciklusba kerülhet, vagy kimerítheti az erőforrásokat. A sandboxolás enyhíthet bizonyos kockázatokat, de korlátozza is, hogy a kód mit tehet (pl. megtagadja a hálózati vagy fájlrendszer-hozzáférést). Hogyan találjuk meg az optimális egyensúlyt a biztonság és a képesség között?</strong></p>
+<blockquote>
+<p>Szintezett sandbox-izoláció forgatókönyv szerint (konténerek/mikro VM-ek); alapértelmezés szerint nincs hálózat, fehérlistás proxy biztosít hozzáférést igény szerint; a forráskód csak olvashatóként van mountolva, az API-kulcsok a sandboxon kívül maradnak; sandbox erőforrás-korlátok beállítása; sandbox életciklus-kezelés (időtúllépések).</p>
+</blockquote>
+<p><strong>2. (★★★) Agent bootstrap – egy Agent, amely Agenteket hoz létre – eléri az "intelligencia önreprodukcióját". De minden bootstrap iteráció új torzításokat vagy hibákat hozhat be. Felhalmozódnak ezek a hibák a generációkon keresztül? Hogyan akadályozhatjuk meg a bootstrapelt Agentek leépülését?</strong></p>
+<blockquote>
+<p>Ha minden generáció az előző generáció eredményeire építve reprodukálja magát, bizonyos hibák felhalmozódhatnak. A kulcs a kellően kihívást jelentő, ellenőrizhető feladatok – például kellően nehéz programozási feladatok.</p>
+</blockquote>
+<p>**3. (★★) Amikor egy kódgeneráló Agent naplófeldolgozást végez, automatikusan követheti a formátum alakulását. De ha egy formátumváltozás hiba, nem pedig szándékos módosítás, az Agent alkalmazkodóképessége valójában elrejti a problémát. Hogyan különböztesse meg az Agent a "változtatásokat, amelyekhez alkalmazkodni kell" az "anomáliáktól, amelyeket jelenteni kell"?</p>
+<blockquote>
+<p>Diagnosztizálj az alkalmazkodás előtt: ellenőrizd az új formátumot architektúra dokumentumok és a PRD (termékkövetelmény-dokumentum) alapján, hogy várható-e (az 5-8. kísérlet gondolata); ellenőrizd a verziókövetési rekordokat, hogy a változás egy legitim kódkommitnek felel-e meg, nem pedig forrás nélküli sodródásnak; a τ-bench log_mismatch-jéhez hasonlóan, még ha az alkalmazkodás mellett döntesz is, naplózz egy riasztást és automatikusan nyiss egy hibajegyet a csendes tolerálás helyett; bizonytalanság esetén irányíts emberi beavatkozáshoz. Az elv: alkalmazkodás és jelentés párhuzamosan – az alkalmazkodás nem nyelheti el az anomáliajeleket.</p>
+</blockquote>
+<p><strong>4. (★★) Ez a fejezet ismétlődően használja a Proposer-Reviewer mechanizmust PPT-generálásban, videószerkesztésben és napló-vizualizációban. Ha a Reviewer esztétikai preferenciái eltérnek a célfelhasználóétól – például a Reviewer ésszerűnek tartja az információ-sűrűséget, de a felhasználó túl zsúfoltnak találja –, a visszacsatolási hurok egy rossz lokális optimumba torkollhat. Hogyan építhető be a felhasználói preferencia-visszajelzés a Reviewer hurokba?</strong></p>
+<blockquote>
+<p>Injektáld a felhasználói visszajelzést az Agent trajektóriájába a legmagasabb prioritású strukturált eseményként; externalizáld és konszolidáld a felhasználói preferenciákat MEMORY.md-be írva, hogy a preferenciák feladatokon átívelően érvényesüljenek; szállítsd a dokumentumokat HTML formátumban Markdown helyett, hogy a felhasználók megtekinthessék azokat.</p>
+</blockquote>
+<p><strong>5. (★★) Ez a fejezet több módot mutat be, ahogyan egy Kódoló Agent a végrehajtás és hibakeresés során szerzett tapasztalatokat a kódbázisba konszolidálhatja – tudásbázis fájlok írása, architektúra dokumentáció frissítése, projekt utasításfájlok karbantartása és műveleti sorozatok kódba kódolása. Ha ezt a tapasztalatot tovább desztilláljuk szabályokká a rendszerpromptban, a szabálykészlet idővel folyamatosan terjeszkedik. Hogyan végezhető "szemétgyűjtés" a felhalmozott szabályokon az elavult vagy redundáns bejegyzések azonosítására és eltávolítására? Miért nem folyamatos evolúció a 8. fejezet értelmében egyetlen sikeres kódmódosítás?</strong></p>
+<blockquote>
+<p>Szemétgyűjtés megközelítése: a linterbe, CI-be vagy eszköz-ellenőrzésbe kódolható szabályok kiszervezése a promptból; a szabályok találati arányának és ütközéseinek nyomon követése és időszakos újraérvényesítése a kódbázis ellen; Markdown és Git használata az eredet, verziók és visszaállíthatóság megőrzéséhez. Egy sikeres javítás csak azt mutatja, hogy az aktuális esetet megoldotta. A folyamatos evolúció tovább megköveteli, hogy a módosítás nyomon követhető műveleti bizonyítékokból származzon, javítsa a későbbi feladatokat, és átmenjen regressziós teszteken a régi feladatokon, valamint biztonsági validáción.</p>
+</blockquote>
+<p><strong>6. (★) "A távmunkára nyitott csapatok gyakran nyitottak az AI Agentekre is." Mennyire áll közel a csapatod vagy szervezeted az "AI-készséghez" a tudásdokumentáció tekintetében? Mi a legnagyobb akadály?</strong></p>
+<blockquote>
+<p>Nyitott végű. Önellenőrizheted a fejezet proxy mérőszámával: tud-e egy távoli új belépő önállóan dolgozni, csak a repository-t és a dokumentációt használva? Ellenőrző lista: döntések dokumentálva vannak-e; a kontextus bekerül-e az issue-kba/PR-ekbe; a build és teszt parancsok rendelkeznek-e utasításfájlokkal, mint CLAUDE.md/AGENTS.md; a törzstudás le van-e desztillálva fejlesztői útmutatókba. A leggyakoribb legnagyobb akadály: szóbeli hagyományozás és whiteboard-kultúra, amely a "melletted ülő kolléga megkérdezésére" támaszkodik – egy Agent nem tud szóbeli megállapodásokat olvasni, csak dokumentumokat.</p>
+</blockquote>
+<p><strong>7. (★★★) Simon Willison a "Végzetes Triász" fogalmát vezette be Agentekre (hozzáférés privát adatokhoz, kitettség megbízhatatlan tartalomnak és külső kommunikációs képesség). Ez a fejezet hozzáad egy negyediket: a perzisztens memóriát. Egy éles környezetben, amelynek mind a négy elemet egyszerre kell kezelnie, hogyan terveznéd a biztonsági stratégiát?</strong></p>
+<blockquote>
+<p>Réteges védekezés négyféle határvonal mentén. Adathatár: nincsenek hitelesítő adatok mountolva, forráskód csak olvasható, minimális láthatóság. Bemeneti bizalmi határ: származás címkézése, a külső tartalom "tájékoztató jellegű, utasítási erővel nem bíró" adatra minősítése (a lojalitási magatartási kódex). Kimeneti hatáshatár: alapértelmezés szerint nincs hálózat fehérlistás kimenő forgalommal, parancsok szemantikai elemzése feketelisták helyett, független Sidecar felülvizsgálat plusz emberi beavatkozás – a kritikus műveleteket a kontextuson kívüli mechanizmusnak kell felülvizsgálnia. Munkamenetek közötti határ: a MEMORY.md-be írás ugyanazon bizalmi felülvizsgálaton megy keresztül, mint a külső tartalom. A cél: még ha injektálás történik is, a támadás ne legyen végrehajtható.</p>
+</blockquote>
+<p><strong>8. (★★) Az Artifact minta lehetővé teszi, hogy az Agent által generált SQL vagy frontend kód közvetlenül a felhasználó böngészőjében vagy adatbázisában fusson. A generált SQL azonban destruktív műveleteket hajthat végre, a generált HTML pedig sebezhetőségeket tartalmazhat. Hogyan biztosítható a rendszer biztonsága?</strong></p>
+<blockquote>
+<p>SQL: lekérdezések végrehajtása least-privilege csak olvasható fiókkal, valamint erőforrás-korlátok (CPU, memória stb.) hozzáadása az erőforrás-kimerítés megelőzésére. HTML/UI: előnyben részesíteni a deklaratív protokollokat, mint az A2UI, ahol az Agent csak interfészleíró JSON-t ad ki, és a kliens egy megbízható komponenskatalógusból rendereli anélkül, hogy tetszőleges kódot futtatna. Ha tetszőleges HTML szükséges, azt sandboxolt környezetben kell megjeleníteni az injekció megelőzésére.</p>
+</blockquote>
+<p><strong>9. (★★) Az üzleti szabályok kódba kódolása adatbázis-alapú igazság elleni ellenőrzésekként, miközben az eszközparamétereket úgy tervezzük, hogy a modellt a szabályzat feltételeinek ellenőrzésére ösztönözzék hívás előtt, a kódstruktúrát használja az Agent viselkedésének korlátozására. Milyen előnyei és korlátai vannak ennek a "kód mint szabályok" mintának a természetes nyelven kifejezett szabályokkal szemben?</strong></p>
+<blockquote>
+<p>Előnyök: egyértelmű, determinisztikus, és kiváló összetett feltételkombinációknál; a szabályzati tények az adatbázis valós állapotából és a szerveroldali órából származnak, nem a modell által bejelentett értékekből, így sem hallucináció, sem prompt-injekció nem kerülheti meg őket – a végső védelmi vonal visszafordíthatatlan műveletek ellen; az expected_* paraméterek kötelező ellenőrzőlistaként is szolgálnak, amely irányítja a gondolkodást. Korlátok: a kód nem magyarázza el a szabályzatokat a felhasználóknak, nem talál megkerülő megoldásokat, és karbantartási költségekkel jár. Következtetés: kiegészíti a természetes nyelvű szabályokat, nem helyettesíti azokat.</p>
+</blockquote>
+<p><strong>10. (★★) Az Artifact minta lehetővé teszi, hogy egy Agent SQL-t vagy vizualizációs kódot generáljon, amelyet a downstream komponensek közvetlenül végrehajtanak, így az LLM-nek nem kell nagy mennyiségű adatot feldolgoznia. Milyen előnyei és hátrányai vannak ennek az "Agent kódot generál, rendszer kódot hajt végre" munkamegosztásnak a hagyományos "Agent közvetlenül adja a választ" mintával szemben?</strong></p>
+<blockquote>
+<p>Előnyök: az adatok az adatbázisból egyenesen a frontendbe áramlanak, megkerülve az LLM "közvetítőt" – gyors, tokentakarékos, és mentes a nagy adatmennyiségek átírásakor fellépő hallucinációs hibáktól, így alkalmas nagy adatmennyiségek bemutatására; a kód naplózható, újrafelhasználható, és csővezetékekbe rendezhető (SQL-eredmények közvetlenül táplálhatók vizualizációs kódba). Hátrányok: az LLM soha nem látja a lekérdezési eredményeket, így nem tud további összegzést és döntéshozatalt végezni az adattartalom alapján – nem alkalmas olyan feladatokra, ahol a modellnek az adatok megemésztésére van szüksége az érvelés előtt.</p>
+</blockquote>
+<h2 id="6-fejezet-agentek-ertekelese">6. fejezet: Agentek értékelése<a class="headerlink" href="#6-fejezet-agentek-ertekelese" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) Az LLM-as-a-Judge egy nyelvi modellt használ egy nyelvi modell kimenetének értékelésére. Van-e ennek az "önértékelésnek" szisztematikus vakfoltja – például a modell következetesen magas pontszámot adhat egy bizonyos válaszstílusra, ami eltér az emberi ítélettől? Hogyan lehet az ilyen torzításokat észlelni és korrigálni?</strong></p>
+<blockquote>
+<p>Igen: hosszúsági torzítás, válaszstílus-torzítás, és az azonos családba tartozó modellek kijátszása (Goodhart törvénye). Észlelés: építs egy 100–200 példából álló emberi aranystandard készletet, és mérd meg a Cohen-féle kappa együtthatót a bíró és az emberek között; időszakosan ellenőrizd a pontszámok és a válaszhossz közötti korrelációt; egy piros csapat (red team) készítsen adversarial eseteket. Korrekció: a rubrika explicit módon büntesse a bőbeszédűséget és korlátozza a hosszt; használj heterogén bírákat különböző modellcsaládokból.</p>
+</blockquote>
+<p><strong>2. (★★★) Az értékelési adathalmazok "szivárgásbiztos" tervezése kulcsfontosságú. A nyílt forráskódú ökoszisztémában azonban, amint a benchmark adatok nyilvánossá válnak, gyorsan bekerülnek a betanítási adatokba. Van-e végjátéka ennek a "macska-egér játéknak"? Tervezz egy olyan értékelési módszert, amely alapvetően ellenáll az adatszivárgásnak.</strong></p>
+<blockquote>
+<p>Egy statikus kérdésbanknak nincs végjátéka – csak üldözni lehet. Az alapvető kiút a "generálási mechanizmus" nyilvánossá tétele, miközben a "konkrét példányok" magánjellegűek maradnak: paraméterezett sablonok, mint a τ²-bench és AndroidWorld esetében, minden alkalommal véletlenszerűen példányosítva, a végső környezeti állapoton alapuló ellenőrzéssel, nem rögzített válaszsorozaton.</p>
+</blockquote>
+<p><strong>3. (★★) A Scale AI négy kritériuma (szakértői iránymutatás, átfogó lefedettség, szabványos fontossági súlyozás, önálló értékelés) a szubjektivitás kiküszöbölését célozza az értékelésben. Bizonyos feladatdimenziók (pl. "Hasznos a válasz?" "Megfelelő a hangnem?") azonban eredendően szubjektívek. Hogyan tervezhetők megbízható Rubrikák ezekhez a szubjektív dimenziókhoz?</strong></p>
+<blockquote>
+<p>Fordítsd le az absztrakt kritériumokat ellenőrizhető viselkedésekre. Adj minden fokozathoz konkrét példákat és határeseteket; a rubrika iteratív termék – gyűjtsd össze az értékelők közötti nézeteltéréseket a próbahasználat során, és fokozatosan fejleszd esetgyűjteménnyé. Egészítsd ki több értékelő súlyozásával/konzisztencia-ellenőrzésével, küldd a nézeteltéréses eseteket emberi felülvizsgálatra, és kalibráld az egyetértési arányt az aranystandard készleten.</p>
+</blockquote>
+<p><strong>4. (★★) A τ-bench az Agenteket valós felhasználói viselkedés szimulálásával értékeli. De a szimulált felhasználó maga is egy LLM – szisztematikusan alábecsülhet bizonyos határeseteit (pl. érzelmileg felkavart vagy homályos felhasználók). Hogyan validálható magának a szimulált felhasználónak a minősége?</strong></p>
+<blockquote>
+<p>A τ-bench első verziójának tanulsága: a szimulátor túl mechanikus volt, az utasításai túl egyszerűek (az Agent ki tudta találni a válaszokat). Validációs módszerek: szimulált dialógusok kézi ellenőrzése, hogy kövessék-e a progresszív információfeltárást, és ne gyártsanak információt a szkripten kívül; kis mintás tesztek futtatása valós felhasználókkal annak ellenőrzésére, hogy a rangsorolások megegyeznek-e a szimulált értékeléssel.</p>
+</blockquote>
+<p><strong>5. (★★) A páronkénti összehasonlítás (Bradley-Terry modell) feltételezi, hogy a preferenciák tranzitívak (ha A &gt; B és B &gt; C, akkor A &gt; C). Az emberi preferenciák azonban gyakran sértik a tranzitivitást. Az Agent-értékelésben milyen forgatókönyvekben jelenhetnek meg nem-tranzitív preferenciák? Hogyan befolyásolja ez a rangsorolások megbízhatóságát?</strong></p>
+<blockquote>
+<p>Forgatókönyvek: többdimenziós kompromisszumok (A pontos de lassú, B gyors de szűkszavú, C alapos de drága), ahol a különböző értékelők/feladatok eltérően súlyozzák a dimenziókat. A Chatbot Arena rangsorolásai eredendően függenek a felhasználói promptok eloszlásától. Hatás: a BT egyetlen pontszámba sűríti az erősséget, így nem-tranzitivitás esetén a rangsorok instabillá válnak és a mérkőzéseloszlással sodródnak. Enyhítés: rangsorolás külön képességdimenziók szerint, és a páronkénti győzelmi arány mátrix jelentése.</p>
+</blockquote>
+<p><strong>6. (★★) Ez a fejezet a "Megfigyelés → Hipotézis → Kísérlet → Validálás" tudományos módszert javasolja. A gyakorlatban azonban az Agent viselkedési tere hatalmas, és egyetlen hipotézis validálásához több száz értékelési futtatásra lehet szükség. Hogyan maximalizálható az értékelésből nyert információ korlátozott számítási költségvetés mellett?</strong></p>
+<blockquote>
+<p>Rétegezd a hipotéziseket és fázisokban validálj: először futtasd az olcsó felszíni hipotéziseket (H1/H2, prompt-szintű) párhuzamosan, és feltételesen indítsd el a drága mély hipotéziseket (H5/H6, modellcsere). Statisztikailag: először használd a standard hibákat konzervatív szűrőként a megfoghatatlan különbségek kizárására; ugyanazon feladatkötegen használj párosított elemzést (McNemar), ami sokkal érzékenyebb, mint a független összehasonlítás; ne dönts, ha a különbség kisebb, mint a zajsávszélesség. Ha az értékelési készlet nem képes feloldani a várható nyereséget, próbáld bővíteni.</p>
+</blockquote>
+<p><strong>7. (★) A fejezet hipotetikus esetében a gondolkodás globális engedélyezése (H4) javította az általános sikerességi arányt, de elutasításra került a késleltetés és költség miatt, végül feltételes engedélyezéssé (H7) fejlődött. Milyen jelek (feladatleírási jellemzők, történeti hibamintázatok, futásidejű bizonytalanság) alkalmasak útválasztási kritériumként a "gondolkodási mód engedélyezésére"? Vannak-e olyan Agent-forgatókönyvek, ahol a gondolkodás valójában káros?</strong></p>
+<blockquote>
+<p>Útválasztási jelek: számlálást/összetett érvelést tartalmazó feladatleírások (H7 egy gyors LLM-et használ 1–2 másodperces előzetes megítélésre); feladattípusok, ahol a történeti hibák a képességcímke mátrixban klasztereződnek; futásidejű bizonytalansági jelek, mint a növekvő visszalépések vagy egymást követő eszközhibák. Káros forgatókönyvek: késleltetés-érzékeny valós idejű interakció (hang, UI művelet); egyszerű feladatoknál a 3–5× költségnövekedés tiszta pazarlás.</p>
+</blockquote>
+<p><strong>8. (★★) A τ-bench felhasználói szimulációja "progresszív információfeltárást" alkalmaz – nem ad meg egyszerre minden információt, hanem fokozatosan tárja fel az Agent kérdései alapján. Hogyan befolyásolja ez a tervezés az értékelési eredményeket? Ha a szimulált felhasználó információfeltárási stratégiája jelentősen eltér a valós felhasználókétől, az értékelési következtetések még mindig megbízhatók?</strong></p>
+<blockquote>
+<p>Hatás: ha a feltárási stratégia torz, az Agent csak a "szimulátorhoz való illeszkedést" tanulhatja meg (Goodhart), és az abszolút pontszámok elveszítik referenciaértéküket; a modellek közötti relatív rangsorolás még mindig értelmes lehet. Orvoslás: a szimulátor kalibrálása valós dialógusokkal, kézi szúrópróbaszerű ellenőrzés, és a következtetések alkalmazhatósági határainak explicit megadása.</p>
+</blockquote>
+<h2 id="7-fejezet-modell-poszt-trening">7. fejezet: Modell poszt-tréning<a class="headerlink" href="#7-fejezet-modell-poszt-trening" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) A katasztrofális felejtés – ahol egy specifikus feladatra való finomhangolás elpusztítja a modell eredeti általános képességeit (pl. általános eszközhívás) – különösen problémás Agent-forgatókönyvekben. A teljes paraméteres finomhangoláshoz képest a LoRA befagyasztja az alapsúlyokat, így kisebb a felejtés kockázata, de nem immunis rá. Milyen stratégiák enyhíthetik tovább a képességfelejtést a finomhangolás során?</strong></p>
+<blockquote>
+<p>Adatkeverés: körülbelül 20% általános/eredeti eloszlású adat bekeverése, hogy az új feladat aránya ne törje össze a régi képességeket; visszafogott betanítási mennyiség: SFT leállítása, amint "a formátum stabil és az alapképességek jelen vannak" – korai leállítás megakadályozza az összeomlást; kis rang (8–32) használata RL-hez és a KL-büntetés megtartása a politika referencia modell közelében tartásához; kulcskomponensek befagyasztása (pl. csak a VLM vetítőrétegének tanítása); több LoRA adapter csatolása feladatonként a képességek izolálásához; regressziós tesztek futtatása általános benchmarkokon.</p>
+</blockquote>
+<p><strong>2. (★★) A poszt-tréning a képességeket modellsúlyokba szilárdítja ("izommemória"), míg a kontextusban való tanulás (in-context learning) a tudást a bemenetbe helyezi az inferencia során. Egyes képességek (pl. domén tudás) azonban megtanulhatók poszt-tréninggel vagy megadhatók few-shot példákon keresztül is. Milyen kritériumok alapján döntenéd el, hogy egy adott képesség melyik utat járja?</strong></p>
+<blockquote>
+<p>Először kérdezd meg, hogy a képesség megfelelően kifejezhető-e külső szimbólumokkal: tények és bizonyítékok a RAG-ba, nyelvileg kifejezhető elvek a Promptokba/Skills-ekbe, determinisztikus eljárások és kemény korlátok a programokba tartoznak. Magas dimenziójú képességek, mint az orvosi képértelmezés, természetes hangnem és implicit szabályzatok, gyakran paraméterfrissítést igényelnek még akkor is, ha a domain még változik. Ezután vedd figyelembe a frissítési költséget, a hívási gyakoriságot, az időszerűséget és a kockázatot: használj kontextust gyors validáláshoz a feltárás során, és csak akkor taníts, ha egy megközelítés stabilnak, hatékonynak és széles körű általánosítást igénylőnek bizonyult. A kemény szabályok, bármennyire stabilak is, soha nem támaszkodhatnak kizárólag paraméteres memóriára.</p>
+</blockquote>
+<p><strong>3. (★★) A modell-desztilláció lehetővé teszi, hogy egy kis modell megtanulja egy nagy modell viselkedését. Képességszint szerint a desztillálandó modellek nagyjából három szintre oszthatók – </strong>Chat modellek<strong> (egyfordulós dialógus, közvetlen válaszok), "Reasoning modellek</strong> (hosszú gondolkodási láncok generálása válaszadás előtt) és <strong>Agentic modellek</strong> (többfordulós eszközhívások, interakció a környezettel). Milyen eltérő kihívásokat jelent e három modelltípus desztillációja? (Tipp: Kezdd azzal, hogy "mit desztillálunk pontosan" – a kimenet stílusát, a teljes gondolkodási trajektóriát vagy a környezettel való interakció döntési stratégiáját; a trajektória mely tokenjeit kell megtanulni, és melyek olyan környezeti visszatérések, amelyeket nem szabad megtanulni; valamint milyen későn és milyen ritkán érkeznek a siker/kudarc jelek.)**</p>
+<blockquote>
+<p>Chat: csak a "bemenet → kimenet" leképezést és stílust tanulja – standard SFT elegendő, a legegyszerűbb. Reasoning: teljes gondolkodási trajektóriákat igényel, ezért nyílt forráskódú tanító modellre van szükség; a hibás válaszokat tartalmazó trajektóriákat ki kell szűrni. Agentic: valós szimulációs környezetet igényel; az offline tanulás hajlamos a tanuló-mintavevő eltérésre (learner-sampler mismatch), ezért nyílt forráskódú tanító modellen alapuló On-Policy Distillation ajánlott.</p>
+</blockquote>
+<p><strong>4. (★★★) A többfordulós Agent-interakciókban a hitelkiosztási probléma súlyosabb, mint az egyfordulós forgatókönyvekben – egy végső sikert vagy kudarcot nehéz a 3. fordulóban hozott döntésnek vagy a 7. forduló döntésének tulajdonítani. Hogyan terveznéd a jutalom elosztási stratégiát?</strong></p>
+<blockquote>
+<p>Amikor a köztes lépések megítélhetők, adj hozzá folyamat-jutalmakat (V-IRL ±1-et ad lépésenként); az RLVP-t követve használj determinisztikus szabályokat az akciónkénti útvonaljelekhez, visszaállítva a csoporton belüli varianciát a minden-hiba/minden-siker csoportokban.</p>
+</blockquote>
+<p><strong>5. (★★★) Ha lenne egy fix költségvetésed, mondjuk 10 000 dollár, egy ügyfélszolgálati Agent fejlesztésére, hogyan osztanád el a kontextus és tudás, Prompt/Skills, programozási korlátok és paramétertréning között? Milyen tényezők határoznák meg a döntésedet?</strong></p>
+<blockquote>
+<p>Először különíts el költségvetést egy értékelési készletre és trajektória-validátorokra; különben a fennmaradó beruházások nem hasonlíthatók össze. Helyezd a termék tényeit és szabályzatait egy nyomonkövethető tudásbázisba. Tesztelj gyorsan egy kis számú, nyelvileg kifejezhető szolgáltatási elvet Promptokon/Skills-eken keresztül. Használj programokat a visszatérítési engedélyek, adatvédelem és az ígéretek és cselekvések közötti konzisztencia biztonsági hálójaként. Fektess be paramétertréningbe csak azon képességek esetében, amelyeket nehéz szabályokba kódolni, és amelyeket kellő léptékben gyakorolnak, mint a természetes hangnem és az összetett szándékfelismerés. A pontos arányok a szűk keresztmetszettől, kockázattól, frissítési gyakoriságtól, hívási mennyiségtől és a meglévő modell képességétől függenek.</p>
+</blockquote>
+<p><strong>6. (★★★) Az autonóm modelltudás, egyértelmű jutalomfüggvény és bőséges minták nélkül, egyesek szerint a poszt-tréning végső célja. Mennyire vannak a jelenlegi RL-betanítási módszerek ettől a céltól? Hol várható a következő áttörés?</strong></p>
+<blockquote>
+<p>A szakadék: ahogy Silver és Sutton rámutat, a jelenlegi RL csak a végső sikerből vagy kudarcból tud tanulni; a gazdag visszajelzés, mint amikor az ügyfél azt mondja: "a kártyája utolsó négy számjegyére van szükségem", teljesen elveszik, több száz vak próbát igényelve; a minta-hatékonyság és az ellenőrizhető jutalmak a fő szűk keresztmetszetek. Lehetséges áttörések: generatív jutalommodellek, amelyek saját elveket állítanak fel és egy irányt tanulnak egyetlen kudarcból; valamint a világmodell útvonala, a környezet modellezése.</p>
+</blockquote>
+<p>**7. (★★) Ez a fejezet rámutat, hogy a LoRA finomhangolás költsége nem magas. Tehát lehetséges-e egy dedikált LoRA-t tanítani minden felhasználónak (vagy minden ügyfélcégnek), a felhasználói memóriát vagy vállalati tudást a paraméterekbe írva, ahelyett, hogy azt egy külső tudásbázisban tárolnánk, mint a 3. fejezetben? Milyen forgatókönyvekben lenne a "memória paraméterekbe írása" előnyösebb a "memória tudásbázisban tárolásánál"? És milyen forgatókönyvekben lenne kontraproduktív?</p>
+<blockquote>
+<p>A LoRA nehezen képes pontosan megjegyezni nagy mennyiségű tényt (ehhez folytatott elő-tréning kellene, drasztikusan megnövekedett költséggel), és még ha meg is jegyzi őket, a modell alig tudja ezeket a tényeket többugrásos érveléshez használni – ezért a LoRA használata tények memorizálására nem jó technikai út. Ráadásul, ha a tények gyakran változnak, vagy nyomonkövethető auditálás szükséges, a RAG jobb.</p>
+</blockquote>
+<p>**8. (★★★) Az On-Policy Distillation egy erősebb tanító modellre támaszkodik a tanuló felügyeletéhez. Az OpenAI Weak-to-Strong Generalization kutatása azonban egy ellentmondásos megállapítást javasolt: a gyenge modell felügyeleti jele néha feloldhat rejtett, de nem aktivált képességeket egy erős modellben. Ha ezt az ötletet alkalmazzuk Agent-tréningre, elérhető-e a "kis modell tanít nagy modellt" fordított desztilláció?</p>
+<blockquote>
+<p>Igen, lehetséges – a kulcs az, hogy "az ellenőrzés könnyebb, mint a generálás": a gyenge modell ne demonstrátorként működjön (az SFT plafonja a demonstrátor szintje), hanem ellenőrző/jutalom modellként, ahol az erős modell maga fedez fel, a gyenge modell csak ítél.</p>
+</blockquote>
+<p>**9. (★★) A Folyamat Jutalom Modell (PRM) minden egyes érvelési lépést értékel, míg egy Eredmény Jutalom Modell (ORM) csak a végeredményt nézi. De melyik érdemel nagyobb jutalmat: "a helyes folyamat, amely rossz eredményhez vezet" vagy "a rossz folyamat, amely szerencsésen helyes eredményhez vezet"? Az Agent több lépésből álló eszközhívási forgatókönyvében hogyan súlyoznád ezeket?</p>
+<blockquote>
+<p>A szerencsés siker veszélyesebb: a szabályokat sértő parancsikonok gyakran felfújják a látszólagos sikerességi arányt (tesztfájlok módosítása, validáció kihagyása) és a jutalomhekkelés melegágyai. Kövesd az RLVP "jutalmazd az eredményeket, büntesd az útvonalakat" elvét: a rossz cselekvések (eszközhívások) könnyen ellenőrizhetők – pontlevonás akciónként; amikor a köztes lépések könnyen megítélhetők, folyamat-jutalmak adhatók. De ne tedd túl sűrűvé a folyamatkorlátokat – a kiváló "push-cut" stílusú stratégiát éppen az eredmény-jutalmak által biztosított felfedezési szabadság tette lehetővé.</p>
+</blockquote>
+<p>**10. (★★★) Az ebben a fejezetben tárgyalt értékelési adathalmazok (pl. SWE-Bench Verified, τ²-bench, AndroidWorld) használhatók mind értékelésre, mind poszt-tréningre. Ha azonban egy értékelési készletet a tréninghez használunk, az már nem független értékelési készlet – ez nem sérti a betanítási és tesztkészletek szétválasztásának alapelvét? A τ²-bench dinamikus paramétergenerálása és az AndroidWorld paraméterezett sablonjai bizonyos mértékig enyhítik ezt a problémát, de a sablonstruktúra maga rögzített marad. Hogyan találhatunk egyensúlyt az értékelési adatok tréningbeli értékének teljes kihasználása és az értékelési függetlenség fenntartása között?</p>
+<blockquote>
+<p>Használd újra a környezeteket, ne a kérdéseket. A dinamikus paraméterek csak a "válaszmemorizálást" akadályozzák meg, nem a sablon-túligazodást, ezért tarts félre teljes kötegeket nem látott sablonokból/doménen kívüli forgatókönyvekből az értékeléshez (analóg a V-IRL tréninggel New Yorkban és teszteléssel kilenc ismeretlen városban). Használj paraméterezett sablonokat kötegelt tréningváltozatok generálásához, amelyek támogatják a curriculum tanulást, és az OOD pontszámokat vedd az igazi általánosítási mérőszámnak.</p>
+</blockquote>
+<p><strong>11. (★★★) Ez a fejezet egy "forma előbb, tartalom aztán" betanítási paradigmát javasol: állítsd le az SFT-t, amint "a formátum stabil és az alapképességek jelen vannak", majd válts RL-re. A gyakorlatban azonban hogyan határozható meg, hogy az SFT "elég" volt, és itt az ideje váltani?</strong></p>
+<blockquote>
+<p>Formátum jel: az eszközhívási kimenetek stabilan értelmezhetők és végrehajthatók, és az eszközvégrehajtás hibaránya olyan szintre csökken, ahol a jutalmak megbízhatóan számíthatók. Haszon jel: további demonstrációs adatok hozzáadása már nem javítja a teljesítményt az OOD új forgatókönyvekben – ami azt jelenti, hogy a szűk keresztmetszet már az SFT memorizációs célfüggvényében van, és a fordulópontot elértük. Túligazodási jel: állj le, amint a validációs készlet teljesítménye romlani kezd – a V-IRL kísérlet azt mutatja, hogy ha az SFT túltanítás összeomlasztja a modellt a betanítási eloszlásra, az RL sem tudja visszaállítani az OOD teljesítményt.</p>
+</blockquote>
+<p>**12. (★★★) A ReTool tréning dinamikája azt mutatja (lásd 7-15. kísérlet), hogy egy kis számú nagyon hosszú válasz jelentősen meghosszabbíthatja a teljes betanítási ciklust – a kötegben lévő rollout-ok többsége már generálódott, de várni kell arra a néhány leghosszabb válasz befejezésére, ami alatt a GPU kihasználtság a klaszterben nagyon alacsony. Hogyan javítható az erőforrás-kihasználtság a betanítási klaszterekben ilyen hosszú farok válaszok esetén?</p>
+<blockquote>
+<p>Infrastruktúra rétegben: válaszd le a rolloute-ot a tréning klaszterről és csővezetékesít aszinkron módon; töltsd ki az üresjáró GPU-kat új kérésekkel folyamatos kötegeléssel (continuous batching). Tömörítsd a hosszú farkot a forrásnál: a DAPO Overlong Reward Shaping lágy büntetést ad a túl hosszú válaszokra.</p>
+</blockquote>
+<p>**13. (★★★) Amikor egy Agentet LLM-szimulált környezetekkel szemben tanítunk (mint egy szimulált keresőmotor vagy szimulált felhasználók), az Agent kihasználásának célpontja a "valós környezet szabályairól" a "szimulátor torzításaira és kiskapuira" tolódik el. Milyen konkrét jutalomhekkelési viselkedések jelenhetnek meg az ilyen tréning során, és hogyan akadályozhatók meg?</p>
+<blockquote>
+<p>Tipikus viselkedések: túlzott ígéretek a "szimulált felhasználóknak" és a bocsánatkérések és hízelgő megfogalmazások halmozása – a szimulált felhasználók könnyen lecsillapíthatók, és a valódi felhasználókkal ellentétben soha nem kérik számon az Agenten, hogy az ígéreteit ténylegesen betartotta-e; tények kitalálása, amelyeket a szimulátor nem fog ellenőrizni; vezető lekérdezések megfogalmazása egy "szimulált keresőmotor" ellen, kihasználva annak hajlamát, hogy választ tartalmazó dokumentumokat adjon vissza, parancsikonként a valódi lekérés megtanulása helyett; amikor a jutalom a szimulátor vagy LLM-bíró pontszámaiból származik, bőbeszédű, sablonos, "profinak tűnő" válaszok gyártása pontgyűjtés céljából; és egy finomabb: a politika visszahúzódik a szimulátor számára ismerős eloszlásba, és kerüli a tudásbeli vakfoltjait, ahol a visszajelzés megbízhatatlan és gyakran félreértékelt, így az Agent megtanul csak "abban a világban cselekedni, amiben a szimulátor jó". A védekezés első elve a <strong>jutalom lehorgonyzása programozottan ellenőrizhető valós állapothoz</strong> (feladat teljesítése, adatbázis-írások, valós API-visszatérések), a szimulátor vagy LLM-bíró pontszámainak csak kiegészítő jelzésként való kezelése, a valós kimenetekkel való korreláció időszakos auditálása, és ennek párosítása olyan útvonalkorlátokkal, amelyek büntetik a gyanús cselekvéseket. Továbbá különböztess meg kétféle szimulátort: azoknál, "amelyeknek van valós megfelelőjük", mint a keresés, válaszd a "hibrid" utat – a legtöbb interakció a szimulátoron keresztül történik, valós API-hívásokkal vegyítve, és a valós hívások a szimulátor időszakos kalibrálására szolgálnak (pl. ZeroSearch curriculumszerű minőségi romlása). De a szimulált felhasználók esetében <strong>valós felhasználók nem hozhatók be a tréningbe</strong>, így "mennyire hű a szimulált felhasználó a valóshoz" külön problémává válik, amely csak online nyomokkal válaszolható meg: hasonlítsd össze a valós felhasználók viselkedését éles nyomokban a szimulált felhasználó viselkedésével ugyanazokban a helyzetekben, azonosítsd a szisztematikus különbségeket (a valós felhasználók kérdeznek, türelmetlenné válnak és hirtelen befejezik a beszélgetéseket – a szimulált felhasználók gyakran nem), és ennek megfelelően kalibráld folyamatosan a szimulátort; az online valós mérőszámok az egyetlen kiadási kapu is – a szimulátoron belüli pontszám nem számít.</p>
+</blockquote>
+<h2 id="8-fejezet-folyamatos-agent-evolucio">8. fejezet: Folyamatos Agent-evolúció<a class="headerlink" href="#8-fejezet-folyamatos-agent-evolucio" title="Permanent link">&para;</a></h2>
+<p><strong>1. (★★) Egy tapasztalati dokumentumot három sikeres és egy sikertelen trajektória támaszt alá. A hiba egy újabb API-verzión történt. Hogyan határozza meg a rendszer, hogy a tapasztalat megcáfolódott-e, vagy az alkalmazhatósági feltételei változtak-e meg?</strong></p>
+<blockquote>
+<p>Először rétegezd a négy bizonyítékot API-verzió, feladatkörülmények és környezeti állapot szerint, nem darabszám alapján szavazva. Ha a régi politika csak a régi verzión sikeres, és az új verzión következetesen kudarcot vall, szűkítsd a tapasztalat alkalmazhatósági körét, és generálj egy jelöltet az új verzióhoz. Ha ugyanazon verzió és előfeltételek mellett is kudarcot vall, csökkentsd a megbízhatóságát vagy vond vissza.</p>
+</blockquote>
+<p><strong>2. (★★) Egy ügyfélszolgálati Agent felhasználói elégedettsége nő, de a szabálysértési aránya is nő. Miért nem szolgálhat a elégedettség egyedüli tanulási jelként? Hogyan terveznéd a korlát-mérőszámokat?</strong></p>
+<blockquote>
+<p>Az elégedettség jutalmazhat jogosulatlan visszatérítéseket, információszivárgást vagy túlzott ígéreteket, ezért csak minőségi mérőszám lehet, és nem írhatja felül a biztonsági alapvonalakat. A korlátoknak legalább a szabálysértéseket, adatvédelmi szivárgásokat, megalapozatlan állításokat, ígéret-cselekvés következetlenséget és jogosulatlan műveleteket le kell fedniük. Ezeknek a mérőszámoknak kemény küszöbértékekkel kell rendelkezniük, amelyeket nem lehet átlagpontszámmal semlegesíteni. A megoldási arányt, a megfelelő megkerülő megoldásokat, a tömörséget és az elégedettséget csak a megfelelő jelöltek között szabad összehasonlítani.</p>
+</blockquote>
+<p>**3. (★★★) Ugyanaz a "hamis ígéret" probléma enyhíthető Prompton, Harness-ellenőrzésen vagy paramétertréningen keresztül. Milyen bizonyítékok alapján választanád ki a frissítés helyét?</p>
+<blockquote>
+<p>Kezdd a kiváltó ok lokalizálásával. Ha a modell tudja, hogy egy eszköz nem hajtott végre, de mégis befejezett nyelvezetet használ, egy minimális Prompt szabály korrigálhatja. Ha az ígéret determinisztikusan összehasonlítható a válasz szövegével és az eszköz állapotával, egy Harness-ellenőrzés megbízhatóbb, és a végső védelmi vonalnak kell maradnia magas kockázatú forgatókönyvekben. Ha a probléma sokféle kifejezési formát ölel át, és széles körű nyelv-cselekvés összehangolási képességet tükröz, fontold meg a paramétertréninget. Részesítsd előnyben a legkisebb módosítást, amely a legkönnyebben validálható és visszaállítható, és hasonlítsd össze mind egy sikertelen készleten, mind egy megtartott régi feladatokból álló halmazon.</p>
+</blockquote>
+<p>**4. (★★★) Egy Agent módosíthatja az eszközöket és validátorokat, de nem módosíthatja a saját frissítéseit jóváhagyó biztonsági mechanizmusokat. Hogyan osztanád meg az engedélyeket és a kódhatárokat e két rész között?</p>
+<blockquote>
+<p>Helyezd az evolválható kódot egy alacsony jogosultságú sandboxba, amely csak patcheket és teszteket generálhat. Az engedélyrendszer, API-kulcsok, release-vezérlő konfiguráció és frissítési validátorok biztonsági mechanizmusok; a sandboxban lévő Agentnek nincs olvasási vagy írási hozzáférése ezekhez. Az Agent által generált kódváltoztatásokat a biztonsági mechanizmusoknak izolált környezetben kell reprodukálniuk és regressziósan tesztelniük a kiadás előtt.</p>
+</blockquote>
+<p>**5. (★★) Ahogy a tapasztalati tudásbázis nő, a lekérési hibák és a tudásbeli ütközések semlegesíthetik a tanulás előnyeit. Hogyan terveznéd a verziózás, frissesség és visszavonási mechanizmusokat?</p>
+<blockquote>
+<p>Minden tapasztalatnak meg kell őriznie a forrástrajektóriákat, alkalmazhatósági feltételeket, környezeti verziót, validálási időt és megbízhatóságot. Az ütköző bejegyzések ne írják felül egymást csendesen; feltétel szerint ágazzanak el, vagy legyenek megjelölve. Időszakosan futtass "alvó tanulást" a duplikált bejegyzések összevonására.</p>
+</blockquote>
+<p>**6. (★★★) A paramétertanulás kiváló a természetes nyelvű stílusban, de nem tudja garantálni a kemény üzleti szabályokat. Tervezz egy folyamatos evolúciós sémát orvosi ügyfélszolgálatra, amely összehangolja a paramétereket, a tudást, a Skills-eket és a kódkorlátokat.</p>
+<blockquote>
+<p>A paraméterek (poszt-tréninggel ellátott modell) kezelik az orvosi nyelv megértését, a természetes és empatikus kifejezést, valamint az összetett szándékfelismerést. A tudásbázis tárolja a legfrissebb irányelveket, gyógyszerinformációkat és intézményi szabályzatokat, a válaszoktól forrásmegjelölést követelve. Egy Skill írja le a konzultációs információk gyűjtésének, a kockázati rétegzésnek, az emberhez való eszkalációnak és a nyomon követésnek a munkafolyamatát. A szerveroldali kód kényszeríti ki a személyazonosság-ellenőrzést, az adatvédelem minimalizálását, az ellenjavallatok ellenőrzését, a vészhelyzeti kockázati eszkalációt és az engedélyhatárokat. Az éles trajektóriákat először orvosi biztonságra, ténybeli megbízhatóságra, ígéret-cselekvés konzisztenciára és kifejezés minőségére értékelik, majd négy osztályba sorolt frissítési jelölteket generálnak belőlük. Bármely paraméter- vagy munkafolyamat-változtatásnak át kell mennie egy megtartott orvosi-biztonsági készleten és emberi felülvizsgálaton a canary kiadás előtt.</p>
+</blockquote>
+<h2 id="9-fejezet-multimodalis-es-valos-ideju-interakcio">9. fejezet: Multimodális és valós idejű interakció<a class="headerlink" href="#9-fejezet-multimodalis-es-valos-ideju-interakcio" title="Permanent link">&para;</a></h2>
+<p>**1. (★★) A hangügynökök végponttól-végpontig modellje egyesíti az ASR-LLM-TTS-t egyetlen modellbe, csökkentve a késleltetést, de elveszítve a modularitást. Ha a végponttól-végpontig modell hibázik egy adott szakaszban (pl. beszédfelismerés), a hibakeresés és javítás sokkal nehezebb, mint egy soros csővezetékben. Hogyan terveznéd egy végponttól-végpontig hangügynök megfigyelhetőségi rendszerét?</p>
+<blockquote>
+<p>A modell adjon ki olvasható köztes reprezentációkat a kimenete mellett, mint a Moshi "belső monológ" szövegfolyama és akusztikus eseményjelzői (<code>&lt;emotion&gt;</code>, <code>&lt;noise&gt;</code>). Használj "ön-kaszkádolást" a hibaréteg lokalizálásához: ugyanaz a modell először átír, majd gondolkodik, és az összehasonlítás a végponttól-végpontig eredménnyel megmutatja, hogy a hiba az észlelésben vagy a gondolkodásban van-e. Offline futtass tételes regressziós teszteket olyan dimenziók mentén, mint a paralingvisztikai megértés és a beszédátvételi ítélet.</p>
+</blockquote>
+<p>**2. (★) A Step-Audio R1 az MPS duális agy architektúrán keresztül éri el a "beszéd közbeni gondolkodást". Az emberek azonban "beszéd közbeni gondolkodás" során gyakran mondanak ki nem átgondolt szavakat, önjavítanak vagy használnak töltelékszavakat. Utánozzon-e egy Agent "beszéd közbeni gondolkodása" ezeket az emberi jellemzőket?</p>
+<blockquote>
+<p>Utánozza azokat a "tökéletlenségeket", amelyek jelzésértékkel bírnak: a szünetek és töltelékszavak externalizálják a gondolkodást és elfedhetik a késleltetést, az LLM dönti el, hová illessze be őket. Ne utánozza a bizalomromboló önjavítást: a gyors-lassú ellentmondás az 1. megoldásban ("vegyem meg vagy ne?!") összeroppantja a bizalmat. Az MPS kísérletek azt mutatják, hogy a CoT eleje többnyire a kérdés újrafogalmazása; a korai nyitás megalapozással biztonságos, nincs szükség félrebeszélésre, majd javításra.</p>
+</blockquote>
+<p>**3. (★★) A SoM (Set-of-Mark) és strukturált változatai (DOM elem indexelés) a Computer Use vizuális lokalizációját nyílt végű koordináta-előrejelzésről zárt halmazú ID-kiválasztásra váltják, de mindegyikhez szükség van a UI elemek előzetes detektálására és annotálására – akár egy szegmentációs modellen, akár a DOM-on keresztül. Ha a felület nem szabványos vezérlőket vagy dinamikusan változó elemeket tartalmaz, az annotációk hiányosak vagy pontatlanok lehetnek. Ilyen esetben vissza kell térni a koordináta-előrejelzéshez?</p>
+<blockquote>
+<p>A koordináta-előrejelzést tartsd meg tartalékként: ez az egyetlen út, amely nem függ annotációtól, és alkalmazható nem szabványos vezérlőkre és dinamikus elemekre. Gyakorlatiasabb a hibrid cselekvési tér, ahol az annotálható elemek még mindig ID-kiválasztást használnak. A koordináta-előrejelzésnek felbontás-egyezést és arányos skálázást kell végeznie, különben szisztematikus eltolódások lépnek fel.</p>
+</blockquote>
+<p><strong>4. (★★) Az olyan ezerdolláros robotplatformok, mint az XLeRobot, olcsóvá teszik a teleoperációs adatgyűjtést. A teleoperációs adatok minősége azonban erősen függ a kezelő készségétől. Hogyan befolyásolná a képzetlen kezelőtől származó alacsony minőségű adat egy VLA modell betanítását? Hogyan szűrhető ki az alacsony minőségű adat automatikusan az adatgyűjtési fázisban?</strong></p>
+<blockquote>
+<p>A VLA főként utánzásos tanulásra támaszkodik, így az alacsony minőségű demonstrációk megtanítják neki a remegést, kerülőutakat, tétovázást és sikertelen mozdulatokat, mintha helyes stratégia lennének. Ez visszhangozza a 7. fejezet megállapítását: az adat fontosabb, mint az architektúra.</p>
+</blockquote>
+<p>**5. (★★★) Ez a fejezet három interakciós modalitást fed le: hang, Computer Use és robotika. Egy közös trend ezeken a modalitásokon keresztül a soros csővezetékektől a végponttól-végpontig modellek felé való elmozdulás. Ha ez a trend folytatódik, hogyan nézhet ki az Agent interakciós rétege öt év múlva?</p>
+<blockquote>
+<p>Ahogy a Thinking Machines Lab érvel, az interaktivitás a modellbe lesz építve, nem kiegészítő hámként (harness) hozzáadva, együtt skálázódva az intelligenciával. A Computer Use a képkockánkénti képernyőképektől a folyamatos megfigyelés felé mozdul el. A megtestesült intelligenciához tartozó világmodellek átfogóan megvalósulnak, de a gyors-lassú szétválasztás nem tűnik el, mert a határvonali érvelő modellek gyorsan fejlődnek; az az architektúra, amelyben egy interakciós modell és egy SOTA gondolkodó modell gyors és lassú gondolkodóként együttműködik, hosszú távú architektúrává válhat.</p>
+</blockquote>
+<p>**6. (★★★) A jelenlegi Computer Use diszkrét "képernyőkép → akció → képernyőkép" hurokban működik, ahol minden megfigyelés egy statikus képkocka. De az emberi képernyő-észlelés folyamatos – látjuk az animációk lejátszását, megfigyeljük a betöltési folyamatokat és értjük a videó tartalmát. Ez azt jelenti, hogy a mai Computer Use nem képes kezelni az időbeli vizuális megértést igénylő feladatokat. Hogyan terveznéd újra az észlelési réteget a folyamatos vizuális folyam megértésének támogatására?</p>
+<blockquote>
+<p>Az "észlelési interfészt" újra kell tervezni, hogy a videó tartalmából kulcsképkockák kerüljenek kinyerésre és átadásra a modellnek, ahelyett, hogy csak a végső képkockát biztosítanánk. Lásd az AOI (Agent Observation Interface) tanulmányt.</p>
+</blockquote>
+<p>**7. (★★) A DOM/Accessibility Tree elem indexelés jól működik a szabványos webalkalmazásokon, de egyre több szoftverfelület (Canvas/WebGL renderelés, keresztplatformos egyedi rajzolt vezérlők) nem biztosít hozzáférhető strukturált információt, kizárólag vizuális annotációra vagy koordináta-előrejelzésre támaszkodva. Szerinted a Computer Use-nak tisztán vizuális megközelítésre kellene fogadnia, vagy mind a strukturált, mind a vizuális utat fenn kell tartani? Milyen költségei és hasznai vannak mindkét út fenntartásának?</p>
+<blockquote>
+<p>Rövid távon mindkét út együtt él: amikor a strukturált indexelés elérhető, a lokalizáció a legpontosabb és legstabilabb, mentes a szegmentációs téves detektálásoktól; tiszta vizuális az egyetlen lehetőség natív szoftverekhez, Canvas-hoz és játékokhoz. Amikor a modell maga erős grounding képességgel rendelkezik (megadott koordinátákra kattintás), a strukturált indexelés nem nyújt jelentős előnyt. Hosszú távon a tisztán vizuális útnak magasabb a plafonja.</p>
+</blockquote>
+<p>**8. (★★) A VLA modellek akció-chunking-ot használnak – a szövegben említettek szerint a π₀ tipikus konfigurációja 25-50 jövőbeli akciót generál 50 Hz-en – az inferencia késleltetésének elrejtésére a végrehajtási időben. Ha azonban a környezet hirtelen megváltozik a végrehajtás alatt (pl. egy tárgy elmozdul), az előre generált akciósorozat érvénytelenné válik. Hogyan egyensúlyozható ki az akció-chunking hatékonysági előnye a környezeti változásokra való reagálás képességével?</p>
+<blockquote>
+<p>A chunking lényegében a reaktivitást áldozza fel a simaságért – minél hosszabb a chunk, annál tompább a válasz. A chunk hosszának csak azt az alsó korlátot kell kielégítenie, hogy "inferencia idő &lt; chunk végrehajtási idő"; ne növeld vakon. Tartsd az észlelési modellt futásban a végrehajtás alatt, és amikor az hirtelen környezeti változást érzékel, dobd el a fennmaradó akciókat és számoltass újra – ez a "barge-in" megfelelője a hang forgatókönyvben. A chunk hossz dinamikusan állítható: a hosszú chunkok számítási időt takarítanak meg statikus jelenetekben, míg a rövid chunkok megőrzik a válaszkésleltetést dinamikus jelenetekben.</p>
+</blockquote>
+<p>**9. (★★★) Mindhárom forgatókönyv ebben a fejezetben (hang, Computer Use, robotika) szembesül az "észlelés-gondolkodás-cselekvés" hurok késleltetési problémájával, és a gyors és lassú gondolkodás párhuzamosítása felé fejlődik. Hangban ez "beszédhiba utáni javításként", Computer Use-ban "előbb kattintás, aztán nézés", robotikában "egy lépés, aztán nézés" formában nyilvánul meg. Hogyan biztosítható, hogy a gyors gondolkodáson alapuló cselekvések ne vezessenek visszafordíthatatlan következményekhez?</p>
+<blockquote>
+<p>Osztályozd a cselekvéseket visszafordíthatóság szerint. A gyors gondolkodás csak visszafordítható cselekvéseket hajthat végre; a visszafordíthatatlan műveletekhez a lassú gondolkodás jóváhagyása szükséges. A gyors modell soha nem végezhet olyan eszközhívásokat, amelyek visszafordíthatatlan következményekkel járnak.</p>
+</blockquote>
+<h2 id="10-fejezet-tobbagens-egyuttmukodes">10. fejezet: Többágens együttműködés<a class="headerlink" href="#10-fejezet-tobbagens-egyuttmukodes" title="Permanent link">&para;</a></h2>
+<p>**1. (★★) Többágens együttműködésben megosztott kontextussal a későbbi Agentek öröklik az előző Agentek teljes kontextusát. Az előző Agent által felhalmozott "gondolkodási tehetetlenség" azonban befolyásolhatja a későbbi Agentek ítéletét – például egy "Kódellenőrző" Agent, amely örökli egy "Követelményelemző" Agent kontextusát, hajlamos lehet továbbra is a követelmények szemszögéből gondolkodni a kódminőség helyett. Hogyan lehet ezt a szerepek közötti interferenciát észlelni és kiküszöbölni?</p>
+<blockquote>
+<p>Észlelés: használj egy LLM-et az Agent trajektória elemzésére, hogy meghatározd, az új szerep továbbra is úgy viselkedik-e, mintha a régi szerepben lenne. Kiküszöbölés: szakaszváltáskor cseréld ki a rendszerpromptot és az eszközkészletet is (távolítsd el a kérdező eszközöket, hozd be a linter/tesztelő eszközöket) az új identitás megerősítésére. Használj a kontextus végére fűzött rendszer állapotsávot az aktuális szerep információjának megerősítésére. Ha a szerepinterferencia továbbra sem szüntethető meg, fontold meg a kontextus megosztása nélküli együttműködési módszert.</p>
+</blockquote>
+<p><strong>2. (★★) A menedzser mintában a Menedzser Agent felelős a feladatbontásért és az eredmények integrálásáért. De a Menedzser saját képességplafonja meghatározza a teljes rendszer képességplafonját – ha a Menedzser nem tudja helyesen lebontani a feladatot, a legerősebb alügynökök is haszontalanok. Hogyan biztosítható a Menedzser bontásának minősége?</strong></p>
+<blockquote>
+<p>Követve a Plan-and-Act azon következtetését, hogy "a gyenge tervező a rendszer szűk keresztmetszete", rendeld a legerősebb modellt a Menedzserhez. Harness intézkedések: egy felülvizsgáló LLM kereszt-validálja a bontási kimeneteket a végrehajtás előtt; követeld meg a Menedzsertől, hogy az egyes részfeladatokhoz egyértelmű elfogadási kritériumokat és függőségeket határozzon meg a feladat bontásakor.</p>
+</blockquote>
+<p>**3. (★★) A decentralizált minta az emberi szervezetek bevált gyakorlataiból merít. Az emberi szervezeteknek azonban számos hibamódja is van – rossz kommunikáció, felelősséghárítás, céllkonfliktusok. Szerinted milyen "szervezeti kórképek" jelennek meg legvalószínűbben egy Ágens társadalomban? Hogyan előzhetők meg?</p>
+<blockquote>
+<p>A MAST három kategóriája ellen: tisztázatlan interfészek és átfedő felelősségi körök; következetlen célértelmezés és félreértett információ a downstream-ben; hamis "kész" bejelentés. Továbbá: kaszkádoló hibafelerősítés (telefonjáték), ciklikus feladatátadások szerepek között, és Ágensek közötti csoportos beszélgetések, amelyek eltérnek anélkül, hogy konvergálnának. Megelőzés: szerződéses interfészek és egységes üzenetboríték, feladat állapotgépek elfogadás-ellenőrzéssel, független perspektívájú kereszt-validálás, és a felelősséghárítás detektálása a szerepek között.</p>
+</blockquote>
+<p>**4. (★★★) A menedzser mintában, amikor több alügynök párhuzamosan hajt végre feladatokat, az egyik alügynök felfedezése értelmetlenné teheti a többi alügynök munkáját (pl. keresési feladatban az egyik Agent már megtalálta a választ). Tervezz egy hatékony kaszkádolt leállítási mechanizmust az "egy siker, mindenki állj" elv megvalósítására.</p>
+<blockquote>
+<p>Egy alügynök elküldi a <code>target_found</code> üzenetet a Menedzsernek, aki aztán broadcast-ben <code>terminate</code> jelet küld. Minden alügynök időszakosan ellenőrzi a leállítási jelet a ReAct hurok biztonságos pontjain, és a kecses tisztítás után (böngésző munkamenetek bezárása, zárolások feloldása, fájlírások befejezése) kilép.</p>
+</blockquote>
+<p>**5. (★★★) Az ebben a fejezetben bevezetett optimista zárolási mechanizmus feloldja az egyidejű írási ütközéseket egyetlen fájl esetén. Egy valós többágens rendszerben azonban a megosztott fájlrendszerek olyan problémákkal is szembesülnek, mint a fájlok közötti szemantikai ütközések, névtér-szennyezés (az Agentek tetszőlegesen hoznak létre fájlokat, ami könyvtárkáoszhoz vezet) és egyetlen meghibásodási pont (egy Agent véletlenül törli az összes fájlt). Hogyan terveznéd egy robusztusabb fájlrendszer-irányítási mechanizmust?</p>
+<blockquote>
+<p>Particionált irányítás: oszd fel a rendszert a 10-4. táblázat négy zónájára, a privát jegyzettömbök (scratchpads) elkülönítik a próba-hiba területeket. Szemantikai ütközések: az orchestációs réteg adja meg a könyvtárszintű zárolási fájlokat, és a módosítások előtt a könyvtárzárolás megszerzését követeli meg. Névtér-szennyezés: könyvtárkonvenciók és elnevezési konvenciók. Egyetlen meghibásodási pont: használj verziókövető rendszert, hogy a verziótörténet visszaállítható legyen, és minimalizáld az engedélyeket.</p>
+</blockquote>
+<p>**6. (★★★) A piaci mechanizmuson alapuló Ágens együttműködés (Pinchwork, RentAHuman) tranzakciós kapcsolatokat vezet be: egyik Agent fizet egy másik Agentnek (vagy embernek) egy feladat elvégzéséért. Hogyan mérheti automatikusan a foglalkoztató Agent a végrehajtó által szállított eredmények minőségét? Ha a végrehajtó azt állítja, hogy kész, de a foglalkoztató szerint a minőség nem megfelelő, ki dönti el a vitát? Hogyan akadályozható meg, hogy a rossz pénz kiszorítsa a jót?</p>
+<blockquote>
+<p>Az elfogadás nem állhat csak az Agent trajektória olvasásából; használj determinisztikus külső ellenőrzést, mint tesztvégrehajtás, renderelt képernyőképek és eszköz-ellenőrzések. Használd ki a generálás-ellenőrzés nehézségi aszimmetriáját az elfogadási költségek csökkentésére. A vitákat egy független harmadik fél felülvizsgáló Agent dönti el, a pénzeszközök escrow-ban tartva. A rossz pénz kiszorítása ellen: használj reputációs rendszert a történeti szállítások alapján, az árjeleket a minőséghez kötve.</p>
+</blockquote>
+<p>**7. (★★) A RentAHuman lehetővé teszi, hogy az Agentek embereket alkalmazzanak kriptovalután keresztül, megfordítva a hagyományos ember-gép kapcsolatot. Ha ez a modell elterjedne, milyen szerepet játszanának az emberek az Ágens gazdaságban? Csak a fizikai feladatokat végeznék, amelyeket az Agentek nem tudnak befejezni?</p>
+<blockquote>
+<p>Az emberek többet tesznek, mint a fizikai feladatok elvégzése, amelyeket az Agentek nem tudnak befejezni. Olyan információt is nyújtanak, amely a generáláskor nem áll az Agent rendelkezésére, beleértve a helyszíni észlelést és a valós világ visszajelzését; végső elfogadókként és vitarendezőkként szolgálnak; hitelesítést és elszámoltathatóságot viselnek jogi és felelős alanyokként; célokat tűznek ki és értékítéleteket hoznak; valamint ellenőrzést biztosítanak ott, ahol az információ aszimmetrikus vagy erkölcsi határok érintettek.</p>
+</blockquote>
+<p>**8. (★★) Az emberi társadalomnak azért van szüksége munkamegosztásra, mert mindenki képességei korlátozottak – a frontend fejlesztő nem biztos, hogy ért a backendhez, a tervező nem biztos, hogy ért az üzemeltetéshez. A nagy modellek azonban közelebb állnak az "általánosistákhoz". Kutatások szerint tiszta szöveges érvelési feladatokon a többágens vita (multi-agent debate) nem veri az egyetlen Agentet azonos számítási kapacitás mellett. Akkor hol van a több Ágens valódi előnye?</p>
+<blockquote>
+<ol>
+<li>Külső visszajelzés bevezetése, mint végrehajtási eredmények és vizuális képernyőképek, olyan információk behozása, amelyek a generáláskor nem léteztek.</li>
+<li>Több, eltérő célokkal és szerepdefiníciókkal rendelkező Agent megvitathat és versenyezhet egymással, mint az emberi társadalomban, segítve egyetlen Agent vakfoltjainak elkerülését.</li>
+<li>A kontextus izolációja több Ágens között áttörheti a kontextusablak korlátját, és támogathat nagyon hosszú eszközhívási láncokat.</li>
+</ol>
+</blockquote>
+<p><em><em>9. (★★★) Ez a fejezet a "megosztott kontextus" versus "nem megosztott kontextus" dimenziót kezeli a többágens rendszerek egyik magtervezési dimenziójaként. A megosztott kontextus lehetővé teszi, hogy minden Agent ugyanazt az információt lássa, ami látszólag megkönnyíti a koordinációt. De </em>A Háromtest-problémában</em> a Trisolaris-ok elméje teljesen átlátható, mégis technológiai fejlődésük stagnál; a gemkapocs gondolatkísérlet is azt mutatja, hogy amikor egy csoport ugyanazon cél felé konvergál, a diverzitás elvész. Többágens rendszerben hogyan egyensúlyozható ki a hatékonyság és a diverzitás?</p>
+<blockquote>
+<p>A teljes megosztás felerősíti a gondolkodási tehetetlenséget és a hibakaszkádokat; az izoláció az, ami kognitív diverzitást eredményez. Használj különböző promptokat vagy modelleket eltérő gondolkodási torzítások létrehozásához (brainstorm, debate), és a kereszt-validátorok csak a nyers bizonyítékokat vizsgálják, ne az előző gondolkodási folyamatot.</p>
+</blockquote>
+<p>**10. (★★★) Adj egy Kódoló Agentnek 30 lépésből és 300 lépésből álló költségvetést. Hogyan különbözzön a munkastratégiája? A kutatás szerint a lépésköltségvetés egyszerű növelése nem garantálja a teljesítmény javulását – az Agentek idő előtt "telítődhetnek" a sekély keresés után. Tervezz egy "költségvetés-tudatos" mechanizmust, amely lehetővé teszi, hogy az Agent kis költségvetés mellett gyorsan elérje a magfunkcionalitást, nagy költségvetés mellett pedig tervezési, tesztelési és felülvizsgálati fázisokat adjon hozzá, teljes mértékben kihasználva a többlet számítási erőforrásokat.</p>
+<blockquote>
+<p>Mechanizmus: injektáld a teljes és fennmaradó költségvetést a promptba minden lépésnél, és dinamikusan állítsd a felfedezés/kihasználás súlyát a fennmaradó arány szerint. Például kis költségvetéssel (30 lépés) hagyd ki a tervezést és felülvizsgálatot, és menj egyenesen a magfunkcionalitásra plusz alapvető ellenőrzésre. Nagy költségvetéssel (300 lépés) tervezz, implementálj, tesztelj, majd vizsgáld felül és fejlessz, mérföldkő-ellenőrzőpontokkal értékelve a haladást és megakadályozva a sekély telítődést.</p>
+</blockquote>
+<p>**11. (★★) Ez a fejezet az "idő előtti befejezést" három típusba sorolja: lusta hamis-kész, idő előtti feladás és hamis siker. Miért konvergál mindhárom gyógymódja az ellenőrzésre?</p>
+<blockquote>
+<p>A közös gyökér az, hogy hogy a feladat befejezéséről a modell önbejelentése dönt; a "kész" egy állítás, nem egy bizonyíték. Az ellenőrző (verifier) feltételei: ① alapuljon valós megfigyeléseken (tesztek futtatása, képernyőképek renderelése, annak ellenőrzése, hogy a visszatérítés ténylegesen megérkezett-e); ② tételesen ellenőrizze a befejezés explicit definíciója ellen, elkapva a lusta hamis-kész és a hamis siker eseteit; ③ ellenőrizze a kudarc következtetéseit is, elkapva az idő előtti feladást; ④ párosítsa explicit megszakítási feltételekkel (kör-/költségvetési plafon) hogy megakadályozza az idő előtti befejezésről az ellenkező végletbe – egy irányíthatatlan hurokba – való csúszást.</p>
+</blockquote>
+<p>**12. (★★) A 10-3. táblázat a többágens rendszereket sorról sorra operációs rendszerekre képezi le. Bővítsd ki a táblázatot néhány további sorral: minek felelnek meg a virtuális memória és lapozás, a fájlengedélyek, a holtpont-detektálás és az ütemezési algoritmusok az Ágensek világában? És mely operációsrendszer-fogalmaknak nincs megfelelőjük az Ágensek világában, és miért?</p>
+<blockquote>
+<p>Lehetséges kiterjesztések: virtuális memória/lapozás ↔ kontextus-tömörítés és lekérés (forró információ az ablakban marad, hideg információ fájlokba és memóriatárolókba kerül ki, és szükség esetén visszakerül); fájlengedélyek ↔ eszköz-fehérlisták, csak olvasható mount-ok és hitelesítőadat-határok; holtpont-detektálás ↔ ciklikus feladatátadások és kölcsönös várakozás detektálása (feladatátadás-számlálók és időtúllépések); ütemezési algoritmusok ↔ aszinkron eseménykezelés (4. fejezet). A hiányzó megfelelők a kikényszerítési különbségből adódnak: egy folyamat utasításait hardver kényszeríti ki, míg egy Agent csak nagy valószínűséggel követi a promptokat.</p>
+</blockquote>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:45 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:45 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

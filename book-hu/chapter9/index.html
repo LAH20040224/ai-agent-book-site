@@ -1,0 +1,2341 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/book-hu/chapter9/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Multimodalitás és valós idejű interakció - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="Multimodalitás és valós idejű interakció">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/book-hu/chapter9/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Multimodalitás és valós idejű interakció">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#multimodalitas-es-valos-ideju-interakcio" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Multimodalitás és valós idejű interakció
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hang-a-legtermeszetesebb-ember-gep-interfesz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hang: A legtermészetesebb ember-gép interfész
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-hangarchitektura-harom-paradigmaja" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A hangarchitektúra három paradigmája
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#paradigma-1-kaszkadolt-csovezetek" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paradigma 1: Kaszkádolt csővezeték
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Paradigma 1: Kaszkádolt csővezeték">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-kaszkadolt-csovezetek-teljes-lancu-streamelese" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A kaszkádolt csővezeték teljes láncú streamelése
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#streaming-hangerzekeles-vad-asr-lecserelese" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Streaming hangérzékelés: VAD + ASR lecserélése
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#paradigma-2-vegponttol-vegpontig-tarto-omnimodalis-modellek-omni" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paradigma 2: Végponttól végpontig tartó omnimodális modellek (Omni)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#paradigma-3-teljes-duplex-interaktiv-modellek" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paradigma 3: Teljes duplex / Interaktív modellek
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kompromisszumok-a-gondolkodasi-architekturakban-a-szetvalasztastol-az-egyesitesig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kompromisszumok a gondolkodási architektúrákban: A szétválasztástól az egyesítésig
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kompromisszumok a gondolkodási architektúrákban: A szétválasztástól az egyesítésig">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-megoldas-gyors-gondolkodas-kitoltokhoz-lassu-gondolkodas-valaszokhoz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. megoldás: Gyors gondolkodás kitöltőkhöz, lassú gondolkodás válaszokhoz
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-megoldas-gyors-gondolkodas-interakciohoz-lassu-gondolkodas-tanacsadashoz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. megoldás: Gyors gondolkodás interakcióhoz, lassú gondolkodás tanácsadáshoz
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-megoldas-a-gondolkodas-es-kifejezes-vegponti-egyesitese-a-step-audio-r1-peldajan-keresztul" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. megoldás: A gondolkodás és kifejezés végponti egyesítése (a Step-Audio R1 példáján keresztül)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-gyors-es-lassu-kozotti-interfesz-mit-lehet-atadni-a-szovegen-tul" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A gyors és lassú közötti interfész: Mit lehet átadni a szövegen túl?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#emberibb-beszedszintezis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emberibb beszédszintézis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#computer-use-grafikus-felulet-automatizalasi-ugynokok" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Computer Use: Grafikus Felület Automatizálási Ügynökök
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Computer Use: Grafikus Felület Automatizálási Ügynökök">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cselekvesi-ter-tervezese" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cselekvési Tér Tervezése
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vizualis-helymeghatarozas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vizuális Helymeghatározás
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#egy-computer-use-ugynok-aki-animaciokat-nezhet-es-hangot-hallhat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Egy Computer Use ügynök, aki animációkat nézhet és hangot hallhat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mobil-az-okoszisztema-akadalyok-kemenyebbek-mint-a-technologia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mobil: Az ökoszisztéma akadályok keményebbek, mint a technológia
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#valos-ideju-teljesitmeny-a-megoldatlan-magkihivas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Valós Idejű Teljesítmény: A Megoldatlan Magkihívás
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#robot-manipulacio-valos-ideju-vezerlestol-a-tanitasig-es-altalanositasig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Robot Manipuláció: Valós idejű vezérléstől a tanításig és általánosításig
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Robot Manipuláció: Valós idejű vezérléstől a tanításig és általánosításig">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-hardver-nem-a-szuk-keresztmetszet-az-algoritmusok-azok" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Hardver Nem a Szűk Keresztmetszet; Az Algoritmusok Azok
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ketretegu-architektura-tervezes-es-vezerles-szetvalasztasa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kétrétegű Architektúra: Tervezés és Vezérlés Szétválasztása
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hosszu-tavu-tervezes-a-vlm-tol-a-specializalt-megtestesult-ervelesi-modellekig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hosszú Távú Tervezés: A VLM-től a Specializált Megtestesült Érvelési Modellekig
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vla-vezerles-a-demonstracios-adatoktol-a-platformokon-ativelo-altalanositasig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLA Vezérlés: A Demonstrációs Adatoktól a Platformokon Átívelő Általánosításig
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sim2real-atvitel-a-szimulacio-es-valosag-kozotti-res" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sim2Real Átvitel: A Szimuláció és Valóság Közötti Rés
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fejezet-osszefoglalo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fejezet Összefoglaló
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#elgondolkodtato-kerdesek" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Elgondolkodtató Kérdések
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/book-hu/chapter9.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/book-hu/chapter9.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="multimodalitas-es-valos-ideju-interakcio">Multimodalitás és valós idejű interakció<a class="headerlink" href="#multimodalitas-es-valos-ideju-interakcio" title="Permanent link">&para;</a></h1>
+<p>Az előző fejezetekben azt vizsgáltuk, hogyan működnek az ügynökök egy szövegalapú világban, kontextuson, eszközökön és kódon keresztül kommunikálva a digitális rendszerekkel. De egy ügynök világa túlmutat a szövegen és az API-kon. Amint meg kell értenie egy kimondott parancsot, meg kell találnia és kattintania kell a megfelelő gombra a képernyőn, vagy egy robotkart kell irányítania egy tárgy megragadásához, új területre lép: a "multimodális valós idejű interakció" területére. Ez az elmozdulás a tiszta szöveges bemenettől és kimenettől a "multimodális érzékelés és valós idejű válaszadás" felé az a döntő lépés, amely az ügynököt a "párbeszédablakon" túlra repíti. A "multimodális" egyszerűen azt jelenti, hogy egyszerre több információformát kezelünk — szöveget, beszédet, képeket, videót és cselekvéseket — ahelyett, hogy csak szöveggel dolgoznánk.</p>
+<p>Először is határozzuk meg e fejezet hatókörét. A statikus képek és dokumentumok értelmezése — egy képernyőkép vizsgálata, egy diagram olvasása, egy PDF feldolgozása — már az előző fejezetek ügynök-munkafolyamatainak természetes részévé vált. A mai multimodális LLM-ek számára ezek az egybemenetes megértési feladatok viszonylag érettek, és nem igényelnek különleges architektúrát. Ez a fejezet egy más problémacsoporttal foglalkozik: három olyan forgatókönyvvel, ahol a <strong>valós idejű korlátok teszik nehézzé a multimodális problémákat</strong> — hangalapú párbeszéd, grafikus felület (GUI) kezelés és robotvezérlés. Ezekben a beállításokban a bemenet folyamatosan érkezik, a kimenetnek pedig szigorú időkeretet kell teljesítenie, ami alapvetően megváltoztatja az architektúrát. A folyamatos vizuális streamek, vagyis a videó valós idejű megértése a cikk írásakor még nyitott probléma az ügynökök számára. Visszatérünk rá, amikor a Computer Use szakasz a képkockánkénti képernyőképek korlátait vizsgálja, majd ismét a fejezet végi kérdésekben. Még egy határvonal: e könyv keretrendszerében a multimodális "generálás" (kép- vagy videógenerálás) csupán egy szokványos eszközhívás, ahogyan azt az 5. fejezet a Multimédiás Generálásról tárgyalta. Az ügynök külső eszközként használja, így nem veti fel az itt tárgyalt valós idejű interakciós kihívásokat, és a fejezet fő vonalán kívül marad.</p>
+<p>A hangalapú interakció, a Computer Use és a robotkezelés három teljesen különböző területnek tűnhet, de mindhárom rendszerében feltűnően hasonló problémákba ütközik: egyszerre több modalitást kell feldolgozniuk, és rendkívül érzékenyek a késleltetésre. Egy kétszekundumosnál hosszabb szünet a hangalapú beszélgetésben nyugtalanná teszi az embereket; ezredmásodperces kilengés a robotvezérlésben ütközést okozhat. Ezek a korlátok együtt mindhárom forgatókönyvet ugyanabba az építészeti irányba terelik: el a "soros csővezetéktől" (mint egy gyári futószalag, ahol az egyik lépésnek be kell fejeződnie, mielőtt a következő elkezdődhet) és a "végponttól végpontig tartó modell" felé (egy egységes modell, amely közvetlenül a bemenettől a kimenetig halad, kiküszöbölve a köztes átadásokat).</p>
+<p>Ez a fejezet a következő vonalak mentén bontakozik ki:</p>
+<ol>
+<li>Először három hangarchitektúra paradigmát használunk keretrendszerként: a kaszkádolt (VAD-ASR-LLM-TTS csővezeték), a végponttól végpontig tartó omnimodális (Omni, egyetlen modell, amely azonban továbbra is a társalgási fordulókra támaszkodik), és a teljes duplex (Moshi és GPT-Live, amelyek egyszerre hallgatnak és beszélnek). Összehasonlítjuk késleltetésüket és kompromisszumaikat aszerint, hogy az egyes paradigmák mennyire lépnek túl a VAD diszkrét fordulókról alkotott feltételezésén. A kaszkádolt szakasz a VAD + ASR lecserélését is tárgyalja streaming hangérzékelésre.</li>
+<li>Ezután megvizsgáljuk, hogy a gondolkodási architektúra hogyan egyezteti össze a "valós idejű válaszadás" és a "mély gondolkodás" közötti konfliktust: az egyszerű gyors-lassú párhuzamosítástól a szétválasztott megközelítésig, ahol egy háttérben futó érvelő modell "stratégaként" működik (GPT-Live delegálás, Pine AI stb.), egészen a Step-Audio R1 "internalizációjáig", ahol a gondolkodás egyetlen modellbe épül, amely "gondolkodva beszél".</li>
+<li>Majd tárgyaljuk, hogy az emberibb beszédszintézis hogyan optimalizálja a végrehajtási réteget.</li>
+<li>Végül kiterjesztjük a perspektívát a Computer Use-re (amely lehetővé teszi a mesterséges intelligencia számára, hogy a számítógép képernyőjét úgy kezelje, mint egy ember) és a robotkezelésre, megfigyelve, hogy ugyanazok a késleltetési és multimodalitási problémák hogyan jelentkeznek ebben a két forgatókönyvben.</li>
+</ol>
+<p>Két további elméleti téma átível ezeken a forgatókönyveken, és külön figyelmet érdemel: a "gondolkodási architektúra" (hogyan működik együtt a gyors és a lassú gondolkodás) és az ebből következő "gyors-lassú interfész" (a "Latens Híd" — mit cserélhetnek egymás között a gyors és lassú modellek a szövegen túl). Bár a hang kontextusában vezetjük be ezeket, a gondolatok nem korlátozódnak arra. A Computer Use és a robotika szakaszok ugyanazzal a kérdéssel találkoznak, hogy mikor érdemes lassú stratégát bevonni, ezért tartsuk észben mindkét témát.</p>
+<h2 id="hang-a-legtermeszetesebb-ember-gep-interfesz">Hang: A legtermészetesebb ember-gép interfész<a class="headerlink" href="#hang-a-legtermeszetesebb-ember-gep-interfesz" title="Permanent link">&para;</a></h2>
+<p>Mielőtt boncolgatnánk egy hangügynök architektúráját, lépjünk hátra egyet, és gondoljuk át a hang értékét önmagában. Az emberek és számítógépek közötti interakció összes módja közül a hang rendelkezik a legnagyobb sávszélességgel, és a legtermészetesebbnek tűnik: a normál beszéd körülbelül négyszer gyorsabb, mint a gépelés, és nem köti le sem a kezet, sem a szemet. Ezért lép elő a hang a másodlagos beviteli módszerből elsődleges felületté sok ember napi munkájában — egész nap egy ügynökkel beszélgetni, ahelyett, hogy szóról szóra gépelnénk.</p>
+<p>Az eszköz szintjén ez az út nagyjából kétféle terméket eredményezett. Az egyik a "hangdiktáló eszközök" (pl. Typeless): valós időben szöveggé alakítják a beszédet, és bármely alkalmazásba betáplálják — lényegében egy billentyűzet-helyettesítő. A másik a "hangügynökök" (pl. Pine, ChatGPT Voice), amelyekkel a felhasználó közvetlenül beszélget és dolgozik: a hang egyszerre bemenet és maga az interakció. Mindkettő legbeszédesebb fejlett használata a bevezetőben említett "suttogó kódolás" — egy kódolási vagy kutatási ügynök irányítása beszéddel: a fejlesztő kimond egy szándékot, megbeszéli az ügynökkel, és az ügynök végrehajtja a kódolást és a kísérleteket. Több mint egy tucat, e könyv szerzői csapatától származó tanulmány pontosan így készült.</p>
+<p>Egy megjegyzés mielőtt belevágnánk: az alább tárgyalt hangarchitektúra mindkét irányt szolgálja — a felhasználó beszél az ügynökhöz (hang mint ember-gép interfész), és az ügynök beszél a külvilághoz a felhasználó nevében (mondjuk, egy tárgyalás céljából indított telefonhívás). Mindkettő mögött ugyanaz a valós idejű hangtechnológia áll. Kezdjük a hangarchitektúra három paradigmájával.</p>
+<h2 id="a-hangarchitektura-harom-paradigmaja">A hangarchitektúra három paradigmája<a class="headerlink" href="#a-hangarchitektura-harom-paradigmaja" title="Permanent link">&para;</a></h2>
+<p>A hangügynökök technikai evolúciójának megértéséhez hasznos keretrendszer az a háromrészes osztályozás, amelyet az OpenAI a GPT-Live 2026-os kiadásakor mutatott be<sup id="fnref:ch9-12"><a class="footnote-ref" href="#fn:ch9-12">1</a></sup>. Ez megfelel annak a három architektúra-generációnak is, amelyen a ChatGPT Voice maga is átesett:</p>
+<ol>
+<li>"Kaszkádolt": Három modell — automatikus beszédfelismerés (ASR), nagy nyelvi modell (LLM) és szöveg-beszéd átalakítás (TTS) — összefűzése egy csővezetékbe, a staféta továbbadásával egyiktől a másikig. A legkorábbi ChatGPT Voice ilyen volt. Lehetővé tette, hogy az emberek először "beszélhessenek" egy frontvonalbeli modellel, de az információk elvesztek a modellek közötti átadás során, és a válaszok lassúak és merevek voltak.</li>
+<li>"Végponttól végpontig tartó omnimodális (Omni)": Egyetlen modell használata, amely közvetlenül "hallgatja a hangot, kigondolja a választ, és kimondja", egyesítve a három szakaszt egyben. Ez alacsonyabb késleltetést eredményez, és megőrzi a nem szöveges információkat, mint a prozódia és az érzelem. Azonban továbbra is feltételezi a "társalgási fordulókat" — a modell megvárja, amíg a felhasználó szünetet tart a beszédben, és a fordulóváltás a csend érzékelésén alapul. Egy rövid szünet vagy háttérzaj félreérthető "befejezett beszédként", ami miatt a modell alkalmatlanul közbevághat. A ChatGPT Advanced Voice Mode ebbe a generációba tartozik; az OpenAI "turn-based voice models"-nek nevezi, míg az iparág gyakrabban "Omni" modellekként hivatkozik rájuk a képességük alapján (pl. Qwen3-Omni). A két név ugyanarra a dologra utal.</li>
+<li>"Teljes duplex / Interaktív": A modell egyszerre hallgat és beszél, párhuzamosan feldolgozva a bemenetet és a kimenetet, másodpercenként többször döntve arról, hogy "beszéljen, hallgasson, álljon meg, szakítson félbe vagy hívjon egy eszközt", teljesen megszüntetve a "társalgási fordulók" feltételezését. A Kyutai Moshi 2024-ben úttörő kutatás volt, az OpenAI GPT-Live 2026-ban pedig 150 millió felhasználóra skálázta.</li>
+</ol>
+<p>Egy szál húzódik végig mindhárom generáción: <strong>hogyan szabaduljunk meg a "társalgási fordulók" feltételezésétől — attól, hogy a VAD (Voice Activity Detection, beszédtevékenység-érzékelés) találgassa, hol kezdődnek és végződnek a fordulók</strong>. A kaszkádolt és az Omni architektúrák is továbbra is a VAD-ra támaszkodnak a fordulók kijelölésében; csak a teljes duplex oldja fel teljesen a fordulók fogalmát. A következő három szakasz e tengely mentén halad. A három paradigma nem egyszerűen arról szól, hogy az újabb megközelítések felváltják a régebbieket; ezek tervezési döntések különböző késleltetési és költségkorlátok mellett, amelyek 2026-ban is együtt élnek a gyártási rendszerekben.</p>
+<p>Továbbá a GPT-Live egy második strukturális változást is bevezetett — a "valós idejű interakció" és a "mély gondolkodás" szétválasztását: amikor keresést vagy komplex érvelést igénylő problémával találkozik, az interakciós modell átadja a feladatot egy háttérben futó frontvonalbeli modellnek (induláskor GPT-5.5), miközben saját maga folytatja a beszélgetést. A "gyors-lassú munkamegosztás" ezen szálát a későbbi "Kompromisszumok a gondolkodási architektúrákban" szakasz tárgyalja részletesen.</p>
+<h2 id="paradigma-1-kaszkadolt-csovezetek">Paradigma 1: Kaszkádolt csővezeték<a class="headerlink" href="#paradigma-1-kaszkadolt-csovezetek" title="Permanent link">&para;</a></h2>
+<p>A kereskedelmi hangasszisztenek túlnyomó többsége — az okoshangszóróktól az ügyfélszolgálati robotokig — egy soros csővezetéken alapul (9-1. ábra): a Beszédtevékenység-érzékelő (VAD) meghatározza, hogy a felhasználó befejezte-e a beszédet → az Automatikus Beszédfelismerő (ASR) szöveggé alakítja a hangot → egy nagy nyelvi modell (LLM) megérti a szándékot és választ generál → a Szöveg-Beszéd átalakító (TTS) hangosítja a választ. Mint egy váltóversenyben, minden szakasznak meg kell várnia, amíg az előző befejeződik, mielőtt elindulhat.</p>
+<p><img alt="9-1. ábra: Hangügynök soros csővezetéke" src="../images/fig9-1.svg" /></p>
+<p>A korai hangasszisztensek egyszerű okból alkalmazták ezt a négyfokozatú soros csővezetéket: egyetlen modell sem tudta egyszerre kezelni a beszédfelismerést, a nyelvi megértést, a gondolkodást és a beszédszintézist. A moduláris architektúra lehetővé tette, hogy az egyes komponenseket egymástól függetlenül fejlesszék és optimalizálják. A modularitás ára azonban a felhalmozott késleltetés — minden szakasznak meg kell várnia az előző befejezését, mielőtt elindulhat.</p>
+<p>"VAD": A csővezeték elején helyezkedik el, és folyamatosan figyeli a hangfolyamot. Kulcsfontosságú tervezési döntése a beszéd végének érzékelése: a rendszerek jellemzően 500-800 ms folyamatos csendküszöböt használnak. Ha a felhasználó több mint fél másodpercre abbahagyja a beszédet, a VAD befejezettnek tekinti a megszólalást. Ez bevezeti a késleltetés első forrását, és nehéz kompromisszumra kényszerít: ha a küszöb túl rövid, egy gondolkodási szünet összetéveszthető a megszólalás végével, ami a mondat idő előtti levágásához vezet; ha túl hosszú, a felhasználónak majdnem egy másodpercet kell várnia a befejezés után, mielőtt választ kap.</p>
+<p>"ASR": A hanghullámformát szöveggé alakítja. Az olyan modellek, mint a Whisper és a SenseVoice, amikor 5 másodperc hangot egy GPU-n telepített kis vagy közepes méretű modellel dolgoznak fel, jellemzően 50-200 ms-ot igényelnek; nagyobb modellek vagy erőforrás-korlátozott telepítések esetén ez 200-500 ms is lehet (a 9-3. kísérlet kontrollcsoportja ebbe a kategóriába esik). A kritikusabb probléma: a VAD várakozás és az ASR átírás teljes ideje alatt a downstream LLM teljesen tétlen — nem kapott semmit, és nem kezdhet el korán gondolkodni.</p>
+<p>"LLM": Inferencia, még jól optimalizálva is, gyakran 100-500 ms első tokenidőt (TTFT) produkál a kontextushossztól függően; az első beszédre alkalmas rövid szegmens dekódolása további időt vesz igénybe. Ha az érvelés engedélyezve van, a modell jellemzően befejezi a belső gondolkodást, mielőtt kiadná az első látható tokent, ami 5-10 másodpercre növelheti a várakozást. Egy hagyományos teljesen soros implementáció szintén megvárja, amíg az LLM befejezi a teljes választ, mielőtt átadná a szöveget a TTS-nek.</p>
+<p>"TTS": A válaszszöveget beszéddé alakítja; egy rövid szegmens szintézise jellemzően 200-500 ms-ot vesz igénybe. A 9-2. ábra egy rövid, érvelés nélküli válaszon szemlélteti a soros késleltetés felhalmozódását: VAD (500-800 ms) + ASR (50-200 ms) + LLM TTFT (100-500 ms) + LLM rövid szegmens generálása (100-300 ms) + TTS (200-500 ms), összesen körülbelül 0,95-2,3 másodperc. Ez csak egy szemléltető tartomány konzisztens mérési konvenció mellett; a tényleges késleltetés függ a bemenet és a válasz hosszától, a modelltől, a hardvertől, a hálózattól és a terheléstől is.</p>
+<p><img alt="9-2. ábra: Késleltetési vízesés: A teljes válaszidő soros felhalmozódása" src="../images/fig9-2.svg" /></p>
+<p>Gyártási környezetben a sorbanállási késleltetés (queuing latency) tovább ront a helyzeten. Ez úgy működik, mint egy étteremben: minél forgalmasabb a konyha, annál hosszabb a várakozás — és a várakozás nem lineárisan nő, hanem az egekbe szökik (9-3. ábra). Amikor egy kérés sor nélkül érkezik, a feldolgozási ideje a sor nélküli, vagy üresjárati késleltetés. De amikor több kérés érkezik egyszerre, a későn érkezőknek sorba kell állniuk.</p>
+<p>Intuitívan, minél magasabb a kihasználtság, annál meredekebben — és nemlineárisan — nő a várakozási idő. A sorbanálláselmélet megadja a közelítő összefüggést (itt intuíció céljára, nincs szükség szigorú levezetésre): Teljes Késleltetés ≈ Üresjárati Késleltetés × 1/(1-Kihasználtság). A kihasználtság a szerver foglaltságának arányát jelenti; például 50%-os kihasználtság azt jelenti, hogy a szerver az idő felében dolgoz fel kéréseket, fele időben tétlen. 50%-os kihasználtságnál a késleltetés megduplázódik; 80%-nál ötszöröse az üresjárati késleltetésnek — ezért nem futhatnak a szerverek huzamosabb ideig magas terhelés alatt.</p>
+<p><img alt="9-3. ábra: Sorbanállási késleltetési görbe" src="../images/fig9-3.svg" /></p>
+<blockquote>
+<p>"9-1. kísérlet ★: Hagyományos hangügynök építése"</p>
+<p>Ez a kísérlet egy teljes valós idejű hangalapú párbeszédrendszert épít, amely lehetővé teszi a felhasználók számára, hogy mikrofonon keresztül hanggal kommunikáljanak egy MI-val. A rendszer front-end/back-end szétválasztott architektúrát használ, valós idejű kommunikációval WebSocketen keresztül.</p>
+<p>A magfolyamat szigorú soros mintát követ: a front-end rögzíti a mikrofonbemenetet, és valós időben elküldi a back-end-nek WebSocketen keresztül. A back-end egy Silero VAD modellt futtat a beszédtevékenység érzékelésére, amely nagyobb pontosságot és jobb zajállóságot kínál a hagyományos hangerő-alapú detektálási módszerekhez képest. Körülbelül 500 ms folyamatos csend érzékelése után a hangszeletet kinyerik a további feldolgozáshoz.</p>
+<p>Az ASR, LLM és TTS szakaszok mindegyike támogatja a rugalmas váltást több szolgáltató között, lehetővé téve a fejlesztők számára, hogy a késleltetés, pontosság és regionális hálózati körülmények alapján válasszák ki az optimális kombinációt.</p>
+<p><strong>9-2. kísérlet ★: Telefonügynök építése a PineClaw Voice API használatával</strong></p>
+<p>A 9-1. kísérlet egy böngészőn belüli hangalapú párbeszédrendszert épített, de sok valós ügynökfeladat tényleges telefonhívásokat igényel — ügyfélszolgálat felhívása számlák egyeztetéséhez, étterem foglalása, rendelések megerősítése. A 4. fejezet a PineClaw Channel mechanizmusán keresztül bemutatta, hogyan csökkentheti egy eseményvezérelt architektúra a telefonos értesítések válaszidejét percről másodpercre. Ez a kísérlet magának a hanghívásnak a felépítésére összpontosít. A <a href="https://pineclaw.com/">PineClaw Voice API</a> (a szerzői csapat által fejlesztett) példáján keresztül az ilyen gyártási minőségű telefonos hang API-k jellemzően a tárcsázás, IVR navigáció (azaz "Érdeklődés esetén nyomja meg az 1-et; a kezelőért nyomja meg a 0-t" telefonmenük), beszélgetés és átírás teljes folyamatát magukba foglalják: az ügynök megadja a telefonszámot, a célt és a kontextusinformációkat, és a hangügynök befejezi a teljes hívást, visszaadva egy strukturált hívásrekordot.</p>
+<p>"Kísérlet célja": Olyan ügynök építése, amely valós telefonhívásokon keresztül képes feladatokat végrehajtani, integrálva a PineClaw Voice-t eszközként a ReAct ciklusba.</p>
+<p>"Technikai megközelítés": A PineClaw Voice Python SDK (<code>pine-voice</code>) használatával az ügynököt egy <code>make_phone_call</code> eszközzel ruházzuk fel. Az ügynök megkapja a felhasználó feladatleírását (pl. "Segíts lefoglalni egy fogászati ellenőrzést holnap délután 3-ra"), és ReAct érvelést használva meghatározza: (1) melyik telefonszámot hívja; (2) a hívás célját és kulcsinformációit; valamint (3) hogyan jelentse az eredményeket a felhasználónak a hívás befejezése után.</p>
+<p>Az ügynök munkafolyamata: A felhasználó azt mondja: "Hívd fel a rendelőt, hogy időpontot foglaljak holnapra" → Az ügynök átgondolja, milyen információkra van szükség (rendelő telefonszáma, időpont, beteg neve) → Ha az információ nem elegendő, pontosítást kér a felhasználótól → Meghívja a <code>make_phone_call</code> eszközt → A PineClaw tárcsázza a számot, beszél a másik féllel, és befejezi a foglalást → Az ügynök megkapja a hívás összefoglalóját és átiratát → Jelenti az eredményt a felhasználónak.</p>
+<p>"Elfogadási kritériumok": Sikeresen lebonyolítani egy teszt-hívást (először saját telefonját hívhatja a kapcsolat ellenőrzéséhez). Az ügynök képes önállóan meghatározni a hívási paramétereket a feladatleírás alapján. A hívás befejezése után helyesen kinyeri a kulcsinformációkat (időpont, visszaigazolási szám stb.) és jelenti a felhasználónak. Hasonlítsa össze a különbséget az API közvetlen használata és az ügynök ReAct ciklusán keresztül történő használata között — az utóbbi képes kezelni a hiányos információjú helyzeteket (pl. telefonszám keresése, ha a felhasználó nem adta meg).</p>
+<p>Ez a kísérlet a hangügynökök egy fontos alkalmazási irányát mutatja be: <strong>az ügynökök nemcsak hangalapú beszélgetést folytathatnak a felhasználókkal, hanem a felhasználó nevében telefonhívásokon keresztül is kapcsolatba léphetnek a külvilággal</strong>. A PineClaw hangügynökét kifejezetten órákig tartó várakozások, telefonmenükben való navigáció és bonyolult tárgyalások kezelésére képezték — képzelje el, hogy egy MI felhívja Ön helyett a szolgáltató ügyfélszolgálatát, és várakozik egy élő ügyintézőre. Pontosan ezek azok a forgatókönyvek, ahol a hagyományos soros hangcsővezetékek nehézségekkel küzdenek.</p>
+</blockquote>
+<h3 id="a-kaszkadolt-csovezetek-teljes-lancu-streamelese">A kaszkádolt csővezeték teljes láncú streamelése<a class="headerlink" href="#a-kaszkadolt-csovezetek-teljes-lancu-streamelese" title="Permanent link">&para;</a></h3>
+<p>A 9-2. ábra egy "teljesen soros" forgatókönyvet feltételez, amelyben minden szakasz befejeződik, mielőtt átadná a stafétát. A gyártási rendszerek általában megőrzik a moduláris VAD-ASR-LLM-TTS felosztást, miközben minden szakaszt arra késztetnek, hogy a lehető legkorábban bocsássa ki a növekményes eredményeket, lerövidítve az időt, amíg a felhasználó meghallja az első szótagot:</p>
+<ul>
+<li>"ASR átírás hallgatás közben": A streaming felismerés folyamatosan bocsát ki ideiglenes átiratokat, amíg a felhasználó beszél, elrejtve a legtöbb felismerési számítást a felhasználó beszéde mögé. A végső szöveget még a forduló vége után is meg kell erősíteni, mert a későbbi kontextus módosíthatja az ideiglenes átiratot.</li>
+<li><strong>Az LLM streameli a kimenetet és szegmentálja a szöveget</strong>: Ahogy a modell generál, a választ központozás vagy szemantika alapján beszédkész darabokra bontja, és az első darabot elküldi a TTS-nek anélkül, hogy megvárná a teljes választ. Ez nem rövidíti le az LLM TTFT-jét, és nem hagyja ki az érvelést; csupán eltávolítja a várakozást a válasz többi részének befejezésére.</li>
+<li>"A TTS növekményesen szintetizál hangot": A TTS akkor indul, amikor megkapja az első szövegdarabot, és hangdarabokat ad vissza, mielőtt a teljes hullámforma elkészülne. Az LLM ezután generálhatja a maradék szöveget, miközben a TTS a következő beszédszakaszokat szintetizálja, és a kliens lejátssza a már megkapott hangot.</li>
+</ul>
+<p>Azonban az, hogy minden szakasz streamel, nem jelenti azt, hogy mindhárom modell egyszerre kezd el dolgozni ugyanazon a fordulón. Egy szabványos, nem spekulatív kaszkádban a függőségek megmaradnak: az ASR dolgozhat, amíg a felhasználó beszél; az LLM csak a forduló vége és az átirat stabilizálódása után generálja a végső választ; a TTS csak azután indul, hogy az LLM kiadta az első beszédkész darabot. A tényleges átfedések a felhasználói beszéd és az ASR átírás között, valamint az LLM válasz többi részének generálása és a TTS szintézis/lejátszás között vannak — nem pedig teljes párhuzamosság az ASR, LLM és TTS között az elejétől a végéig.</p>
+<p>Az agresszívebb rendszerek "preemptív/spekulatív generálást" használnak: elindítják az LLM-et egy kellően stabil részleges átiratból, majd törlik, újraindítják vagy korrigálják a generálást, ha a későbbi átirat megváltozik. A hangot is szintetizálhatják korán, de általában megvárják a forduló megerősítését a lejátszás előtt, hogy az ügynök ne beszéljen bele egy olyan felhasználóba, aki még nem fejezte be. Az olyan keretrendszerek, mint a LiveKit Agents és a Pipecat, támogatják mind a szokásos streaming kaszkádokat, mind ezeket a preemptív stratégiákat. Az, hogy az ASR és az LLM valóban átfedi-e egymást, a részleges átirat-kötelezettségvállalás, érvénytelenítés és visszagörgetés explicit implementálásától függ; ez nem automatikus következménye egy <code>stream</code> opció engedélyezésének.</p>
+<p>A szokásos streaming szintén nem képes kiküszöbölni <strong>a VAD csendvárakozását és magát a forduló ítéletet</strong>. A streaming ASR már fut a várakozás alatt; amit a fordulódetektálás blokkol, az a végső átirat közzététele és a válasz lejátszása. A preemptív generálás elrejtheti ennek a számításnak egy részét, de a rendszernek továbbra is el kell döntenie, hogy mikor biztonságos megszólalni. Ennek a késleltetésnek a további csökkentése az előtételezés és a végponti döntéshozatal javítását igényli.</p>
+<h3 id="streaming-hangerzekeles-vad-asr-lecserelese">Streaming hangérzékelés: VAD + ASR lecserélése<a class="headerlink" href="#streaming-hangerzekeles-vad-asr-lecserelese" title="Permanent link">&para;</a></h3>
+<p>Ez az érzékelési előtét két szakaszból áll: a VAD meghatározza, hogy a felhasználó befejezte-e a beszédet, az ASR pedig szöveggé alakítja a hangot. Egy teljesen soros architektúrában együtt határozzák meg, hogy a downstream csővezeték mikor indul, és milyen bemenetet kap. Egy streaming architektúrában az ASR korábban kezdődik, de a végső szöveg közzététele és a válaszadás időzítése továbbra is a végpont érzékelés korlátai közé esik. A hagyományos VAD + ASR kaszkádnak három alapvető problémája van:</p>
+<ol>
+<li>"Késleltetés felhalmozódása": A VAD-nak 500-800 ms csendet kell várnia, hogy megerősítse a felhasználó befejezését, mert nem képes előre jelezni a jövőt, és csak a "várakozásra" támaszkodhat, hogy megkülönböztesse a "tényleg befejezte" és a "csak gondolkodási szünetet tart" eseteket.</li>
+<li>"Információvesztés": A VAD csak bináris jelet ad ki, például "hang/csend". Az összes akusztikai részlet — érzelemváltozások, hangszín-eltolódások, tétova szünetek és háttérzaj — elveszik. A hibák különösen gyakoriak komplex környezetben: egy kicsit hosszabb szünet összetéveszthető a megszólalás végével, levágva a mondatot; a háttérzaj hamis indítást válthat ki, ami miatt a rendszer akkor is feldolgoz hangot, amikor senki sem beszél; és a rendszer nem biztos, hogy meg tudja különböztetni, hogy a felhasználó "aha" hangja megszakítás-e vagy visszajelzés.</li>
+<li>"Csökkent pontosság": A VAD a folyamatos hangot független szegmensekre vágja, amelyeket egyenként küld az ASR-nek felismerésre, megszakítva a kontextuális folytonosságot. A felismerési hibák jelentősen megnőnek olyan tartalmaknál, amelyek kontextust igényelnek, mint e-mail címek, márkanevek, személynevek és más tulajdonnevek. Például, ha egy felhasználó azt mondja, hogy "john dot smith at gmail dot com", és a "john" és a "smith" különböző szegmensekbe kerül, a "smith" kontextus hiányában félreismerhető "miss"-ként.</li>
+</ol>
+<p>"A streaming hangérzékelési modellek" alapvető megoldást kínálnak. Először is tisztázzuk, mit jelent technikailag a "streaming": az, hogy egy hangmodell képes-e streamelni, attól függ, hogy a "kódolója kauzális vagy darabolt-e" (csak a már megérkezett hangra támaszkodik, soha nincs szüksége a teljes felvételre), és hogy a "dekódolása növekményes-e" (részeredményeket bocsát ki minden egyes kis hangdarab érkezésekor). A Whisper nem képes streamelni — nem a dekódolása miatt, amely amúgy is autoregresszív, hanem mert a kódolójának szüksége van egy teljes hangszegmensre (rögzített 30 másodperc, rövidebb esetén kitöltve), mielőtt elindulhat. Vegyük észre azt is, hogy a streaming felismerés önmagában nem új: a hagyományos streaming ASR-t, amelyet az RNN-T és a streaming Conformer képvisel, már régóta ipari méretekben telepítik — a telefonok élő feliratai és a billentyűzetalkalmazások hangdiktálása pontosan ilyen modelleket használ —, és ennek semmi köze az LLM-ekhez.</p>
+<p>Ez a szakasz egy új útra összpontosít: "LLM-alapú streaming hallási érzékelés" — egy nyílt forráskódú LLM törzs utótanítása, hogy közvetlenül egy folyamatos hangfolyamból állítson elő szemantikai válaszokat, ezzel egyesítve a "felismerést" és a "megértést" egyetlen modellben. Ez a hagyományos streaming ASR fejlesztése, nem a streaming technológia feltalálása: a növekményes felismerés késleltetése továbbra is egyetlen inferencia-lépés idejének nagyságrendjében van (tízestől pár száz milliszekundumig), de a modell már nem VAD által levágott elszigetelt töredékeket lát. Ehelyett a beszélgetés kezdetétől az aktuális pillanatig tartó folyamatos hangfolyamot látja, lehetővé téve a teljes kontextuson alapuló In-Context Learninget, és jelentősen javítva a személyes adatok, technikai kifejezések és egyéni kiejtési minták felismerési pontosságát.</p>
+<p>Egy másik kulcsfontosságú előny, hogy ez az út örökli az LLM-ek világismeretét és józan ész érvelési képességeit — elvégre a törzsmodell hatalmas mennyiségű szöveget látott. Például a modell tudja, hogy az "Apple" után "event" szóval valószínűleg a vállalatra utal, nem a gyümölcsre. Ez a tudásnövelés a felismerési pontosságot olyan nagy értékű információk esetében, mint az összegek, helynevek és márkanevek, messze a hagyományos ASR fölé emeli. Ez az út már rendelkezik telepíthető modellekkel, mint a Fixie Ultravox, amely közvetlenül táplál hangot egy LLM törzsbe, és szöveges és szemantikai tokeneket ad ki. Az ebben a szakaszban használt kísérletek Qwen2-Audio-ja és az Alibaba Qwen2.5-Omni-je is ebbe az audio-natív modellek kategóriájába tartozik.</p>
+<p>A VAD cseréje azonban nem feltétlenül igényel teljes méretű audio LLM használatát. Ha a cél csak az első probléma megoldása — <strong>annak meghatározása, hogy a felhasználó befejezte-e a beszédet</strong> —, van egy könnyebb út: ennek a "fordulóítéletnek" a beágyazása közvetlenül a felismerőbe<sup id="fnref:ch9-11"><a class="footnote-ref" href="#fn:ch9-11">2</a></sup>. A megközelítés: adjunk egy LoRA adaptert egy kis nyílt forráskódú streaming-felismerő modellhez, hogy az átírás közben <strong>a szemantikát és a csendet együttesen mérlegelve</strong> ítélje meg, hogy a mondat teljes gondolatot fejezett-e ki — ez azért szükséges, mert a fordulón belüli szünetek (egy telefonszám felmondása közbeni megtorpanás) gyakran hosszabbak, mint a fordulók közötti hézagok, így a csendküszöb önmagában mindkét irányban csődöt mond. Az érdekesebb megállapítás: amikor a modell folyamatosan ingadozik, hogy átvegye-e a fordulót, a kiváltó ok általában nem az architektúra, hanem "utólagos tudással annotált képzési címkék" — az annotátorok olyan hangot használtak, amely a döntési pont után jelent meg, és amelyet az online modell soha nem láthat. Ha minden címkét újraannotálunk, csak a döntési pillanatban elérhető információt használva, a hamis ingadozás eltűnik. Ez visszaköszön a 7. fejezetből az utótanításról: gyakran az adat kritikusabb, mint az architektúra. Ennek a könnyebb útnak is vannak gyártási szintű implementációi: a Deepgram Flux és az AssemblyAI Universal-Streaming közvetlenül a streaming felismerő modellekbe ágyazza a végpont- és fordulódetektálást, kifejezetten hangügynökök számára tervezve; a nyílt forráskódú oldalon a LiveKit és a Pipecat szemantikus fordulódetektáló modelleket biztosít.</p>
+<p>A modell nemcsak szöveget ad ki, hanem egy sor "speciális markert akusztikai eseményekhez" — ezek a modell tanítása során bevezetett dedikált tokenek. A modell megtanulja automatikusan kiadni őket a megfelelő akusztikai események érzékelésekor. Gyakori típusok:</p>
+<ul>
+<li><code>&lt;speak_start/end&gt;</code>: A beszéd kezdetének és végének jelölése a szemantika és az akusztika átfogó megítélése alapján, nem egyszerű csenddetektálás alapján.</li>
+<li><code>&lt;interrupt&gt;</code>: Megkülönbözteti, hogy a felhasználó valóban meg akar-e szakítani, vagy csak visszajelez, vagy háttérzaj hatása alatt áll.</li>
+<li><code>&lt;emotion:happy/frustrated&gt;</code>: Érzelemjelzők.</li>
+<li><code>&lt;laugh&gt;</code> / <code>&lt;sigh&gt;</code>: Paranyelvi jelek, mint a nevetés és a sóhaj.</li>
+<li><code>&lt;music&gt;</code> / <code>&lt;noise&gt;</code>: Környezeti hangok.</li>
+</ul>
+<p>Ezek a markerek a szöveges tokenekkel együtt egységes eseményfolyamot alkotnak, amely a gondolkodási rétegbe kerül.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Bemeneti hang: &quot;Ööö, tulajdonképpen azt hiszem... nem, várj, hadd gondoljam át újra.&quot;
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Modell kimeneti folyam:
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  &lt;speak_start&gt; Ööö, &lt;emotion:hesitant&gt; tulajdonképpen azt hiszem...
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  &lt;silence:500ms&gt; nem, várj, &lt;emotion:confident&gt; hadd gondoljam át újra &lt;speak_end&gt;
+</code></pre></div>
+<p>Vegyük észre, hogy a modell nemcsak szöveges átiratot ad ki, hanem hangesemény-markereket is (beszéd kezdete/vége, érzelemváltozások, csendes intervallumok). Az ügynök-keretrendszerek kihasználhatják ezeket a markereket természetesebb interakciókhoz — például proaktívan opciókat kínálva, ha a felhasználó tétovázását érzékelik.</p>
+<blockquote>
+<p><strong>9-3. kísérlet ★: Streaming hangérzékelés szimulálása Qwen2-Audio-val</strong></p>
+<p>Először is egy figyelmeztetés a kísérleti tervről: a Qwen2-Audio maga egy nem-streaming modell, amely teljes szegmenseket vesz bemenetként. Ez a kísérlet <strong>darabolt bemenetet használ a streaming feldolgozás szimulálására</strong> — a folyamatos hangfolyamot kis, rögzített hosszúságú darabokra vágja, és minden egyes darabot elküld a modellnek a felhalmozott hangkontextussal együtt. A modell fokozatosan generál szöveges és akusztikus eseménytokeneket (például nevetés, szünetek és egyéb nem verbális jelek), miközben a kísérlet méri a késleltetést az egyes darabok elküldésétől a szöveg megérkezéséig. Ennek a megközelítésnek van egy fontos költsége: a Qwen2-Audio kódolója nem növekményes. Minden alkalommal, amikor a modell egy új darabot dolgoz fel, az összes korábban felhalmozott hangot a nulláról kell újrakódolnia. Ahogy a beszélgetés hosszabbodik, úgy nő az egyes darabok kódolási késleltetése is. Ez a lényegi különbség a "szimulált streaming" és a "valódi streaming" között, amely növekményes vagy kauzális kódolókat használ, hogy csak az újonnan érkezett hangot dolgozza fel. A terv demonstrálja a teljes kontextusú folyamatos érzékelés pontossági előnyeit, de a késleltetési számok csak a darabméretet és az inferencia sebességet tükrözik, nem a valódi streamingre tervezett modell, például a Qwen3-Omni darabolt kódolással rendelkező első csomag késleltetését. Az érdeklődő olvasók megismételhetik a kísérletet egy ilyen modellel. Az alapvonal egy hagyományos VAD + Whisper ASR csővezeték. A kísérlet három forgatókönyvet fed le: normál beszélgetés, hosszú mondatok szünetekkel, és beszélgetés háttérzajjal.</p>
+<p>Eredmények: A darabolt szimulációs séma növekményes felismerési késleltetése szabályozható egy-két száz milliszekundum nagyságrendben (a darab hosszától és a hardvertől függően), míg a hagyományos séma megköveteli a VAD megerősítésének (600 ms) plusz a Whisper inferencia (kb. 200-500 ms a kísérlet konfigurációja szerint) kivárását, összesen 800-1100 ms-ot. A szünetekkel rendelkező forgatókönyvben a VAD az első hosszú szünetet a beszéd végeként értelmezte, két szegmensre vágva a mondatot a különálló felismeréshez. A "大概两点左右" ("két óra körül") félreismerésre került "大概零点左右" ("éjfél körül") formában — a környező kontextustól megfosztva a hasonló hangzású 两 (liǎng, "kettő") 零 (líng, "nulla")-ként hallatszott. A darabolt séma, megtartva a teljes kontextust, helyesen ismerte fel az egész mondatot. A háttérzaj forgatókönyvben a Qwen2-Audio <code>&lt;|noise|&gt;</code> tokeneket ad ki a zaj jelenlétének jelzésére anélkül, hogy megszakítaná a felismerést, míg a hagyományos VAD-ot hamisan kiváltotta a zaj, ami a felismerési folyamat idő előtti elindulásához vezetett.</p>
+</blockquote>
+<h2 id="paradigma-2-vegponttol-vegpontig-tarto-omnimodalis-modellek-omni">Paradigma 2: Végponttól végpontig tartó omnimodális modellek (Omni)<a class="headerlink" href="#paradigma-2-vegponttol-vegpontig-tarto-omnimodalis-modellek-omni" title="Permanent link">&para;</a></h2>
+<p>Nézzünk vissza a kaszkádolt csővezeték egészére: még ha az érzékelési előtétet streaming hangérzékelésre frissítjük is, a hallgatást, gondolkodást és beszédet továbbra is három független modell között osztja szét, amelyeket diszkrét interfész köt össze. Bármilyen szélesre is nő ez az interfész, csak egy marék szemantikus tokent és alkalmanként egy akusztikus markert hordoz; a beszélő érzelme, hangszíne, intonációja, valamint a környezeti háttérhangok vagy zene nagyrészt elvesznek az átadás során. És mivel a három részt külön-külön tanítják és hangolják, nehezen működnek együtt. A végponttól végpontig tartó omnimodális modellek (Omni) más utat választanak — egyetlen modell közvetlenül "hallgatja" a hangot, "kigondolja" a választ, és "kimondja", egyesítve a három részt egyben (9-4. ábra). Elegendő tanítási adattal a modell belső latens tere közvetlenül továbbíthatja ezeket a paranyelvi jeleket a generálási oldalra, csökkentve a késleltetést, miközben olyan módon őrzi meg a prozódiát és az érzelmet, ahogy a szöveg önmagában nem képes. A kompromisszum: a "kaszkádolt csővezetékek" tiszta modulokkal, szegmensenkénti hangolással és jó interpretálhatósággal rendelkeznek; a "végponttól végpontig tartó modellek" alacsonyabb késleltetést és nem szöveges hűséget vásárolnak a nagyobb tanítási adatigény és a gyengébb interpretálhatóság árán.</p>
+<p>Egy dimenziót rendszeresen figyelmen kívül hagynak: a végponttól végpontig tartó modellek fő előnye a "késleltetés"; nem feltétlenül nyernek a "pontosságban". A tanulságos összehasonlítás az "önkaszkád" — ugyanaz a modell először szöveggé alakítja a hangot, majd e szöveg felett végez érvelést. Az, hogy az önkaszkád vagy egyetlen végponttól végpontig tartó menet pontosabb-e, a feladattól függ, és a minta világos: amikor a választ főként a szemantikus tartalom ("mit mondtak") határozza meg, és a köztes szöveg képes hordozni a feladat szempontjából releváns információt, az önkaszkád felveszi a versenyt a végpontival, sőt meg is veri — különösen a gyengébb érzékelésű modellek esetében. Amikor a válasz olyan nem verbális jelzésektől függ, amelyeket a szöveg nehezen képvisel (hangszín, érzelem, környezeti hangok), a végponti megoldás egyértelműen jobb. Még fontosabb, hogy az, hogy melyik oldal nyer, "előre megjósolható a feladat természetéből", nem pedig a "a végponti megoldás fejlettebb" magyarázatra bízható. Ebből egy tervezési elv következik: a teljesítményt általában nem az határozza meg, hogy létezik-e köztes reprezentáció — egy "szűk keresztmetszet" —, hanem az, hogy milyen információt hordoz az a szűk keresztmetszet. Ha a köztes szöveget puszta átiratról paranyelvi markerekkel ellátott strukturált reprezentációra fejlesztjük (érzelem, beszédtempó, környezeti hangok), a végponti modellek pontossági előnye gyakran csökken. Ez ugyanaz az állítás, ami korábban a "Streaming hangérzékelés"-ben elhangzott: az érzékelési rétegnek nem szabad puszta szöveges átiratot kiadnia<sup id="fnref:ch9-13"><a class="footnote-ref" href="#fn:ch9-13">3</a></sup>.</p>
+<p>Bármilyen erős is az Omni, csupán három modellt egyesített egybe, <strong>anélkül, hogy elvetette volna a "társalgási fordulók" feltételezését</strong>: továbbra is a VAD-ra támaszkodik a beszélői jog kiosztásában — elhallgat, amint érzékeli, hogy a felhasználó beszél, és elindul, amint a felhasználó elhallgat. Így a megszokott hiba újra felbukkan: a felhasználó felsorol egy számsort, megtorpan egy pillanatra, és az Omni úgy dönt, hogy befejezte, és közbevág. A korábban leírt streaming hangérzékelés a fordulóítéletet a csend időtartamáról a szemantikus szintre emeli, és nagyban csökkenti az ilyen téves indításokat — de ez még mindig egy lokális javítás a társalgási fordulók keretrendszerén belül, nem magának a társalgási fordulóknak a vége. Hogy "végleg" kiszabaduljunk, abba kell hagynunk a keretrendszeren belüli javítgatást: hagyjuk, hogy a modell egyszerre hallgasson és beszéljen, és maga döntse el, mikor szólaljon meg, merev "kié a szó" kapcsoló nélkül.</p>
+<p><img alt="9-4. ábra: Végponttól végpontig tartó multimodális hangmodell architektúrák összehasonlítása" src="../images/fig9-4.svg" /></p>
+<p>Modellszinten az "OpenAI Realtime API" közel áll a végponti megoldáshoz, mert a modell natívan dolgozza fel a hangot. Az interakció-vezérlés szintjén azonban továbbra is hagyományos VAD-ra támaszkodik, így egy köztes lépés a teljesen végponti rendszer felé. A 2024-es előzetes verzió eredetileg GPT-4o-n futott; amikor az API 2025-ben általánosan elérhetővé vált, átváltott "gpt-realtime"-re, egy dedikált, valós idejű hangra optimalizált modellre, nem a GPT-4o egy módjára. Az API alapértelmezés szerint engedélyezi a szerveroldali VAD-ot, és automatikusan meghatározza, hogy a felhasználó mikor kezdi és fejezi be a beszédet. Támogatja a megszakításokat is: amikor a felhasználó beszélni kezd, az API azonnal leállítja az aktuális hanggenerálást, ahogy az ember természetesen elhallgat, ha félbeszakítják egy személyes beszélgetésben. A gpt-realtime aszinkron függvényhívásokat is bevezet, lehetővé téve a modell számára, hogy tovább beszéljen, amíg az eszközeredményekre vár, ezzel elrejtve az eszköz késleltetését a beszélgetésen belül. Ezek a fejlesztések javítják az élményt, de a VAD keretrendszeren belüli optimalizálások maradnak. A "Gemini Live API" hasonló megközelítést alkalmaz, konfigurálható VAD érzékenységgel, és megszakítás után is megőrzi a már elküldött információkat a beszélgetési koherencia fenntartása érdekében.</p>
+<p>A "Qwen3-Omni" egy Thinker-Talker architektúrát alkalmaz: a gondolkodás (megértés és érvelés) és a kifejezés (hanggenerálás) két specializált modulra bontását, egyesítve a szöveg, kép, hang és videó érzékelését és generálását.</p>
+<p>A képesség magas szinten tartása mellett a számítási költség szabályozása érdekében a Qwen3-Omni az MoE (Mixture of Experts) architektúrát alkalmazza — gondoljunk rá úgy, mint "szakértői csapatok igény szerinti hívására": több kis szakértői hálózatot tartalmaz, és minden inferencia során csak a aktuális feladathoz leginkább releváns néhány aktiválódik, a többi nem vesz részt a számításban. Például beszéd feldolgozásakor főként a beszédhez kapcsolódó szakértők aktiválódnak; képek feldolgozásakor főként a látáshoz kapcsolódó szakértők. Ez lehetővé teszi, hogy a modell nagyon nagy teljes paraméterszámmal rendelkezzen (biztosítva a magas képességet), miközben a tényleges számítás tokenenként nagyon kicsi marad, ezáltal javítva az inferencia áteresztőképességet és csökkentve a sorbanállási késleltetést nagy terhelés alatt.</p>
+<p>Egy fontos megkülönböztetés: az MoE javítja az áteresztőképességet — hogy hány kérést tud kiszolgálni egy számítási egység. Nem határozza meg közvetlenül, hogy milyen gyorsan bocsátható ki az első hangcsomag; az első csomag késleltetése a generálási architektúrától függ. A Qwen3-Omni alacsony első csomag késleltetése a Talker moduljának köszönhető: többkódkönyvű autoregresszióval növekményesen generál hangtokeneket, miközben egy kauzális kodek növekményesen dekódolja ezeket a tokeneket hullámformává. Amint a gondolkodási modul szöveget produkál, a Talker elkezdheti streamelni a beszédet anélkül, hogy megvárná a teljes választ. A hivatalos jelentés szerint az elméleti hidegindítási első csomag késleltetése körülbelül 234 ms. Támogatja a megértést 19 nyelven és a generálást 10 nyelven, és 22-ben vezet a 36 audio-video benchmarkból.</p>
+<p>A "Step-Audio 2" más utat választ: közvetlenül dolgozza fel a nyers hangbemenetet, és szöveges és hang kimenetet is ad, elérve a valódi végponttól végpontig tartó hangalapú beszélgetést. Nemcsak azt képes megérteni, hogy <em>mit</em> mondtak (szemantikus információ), hanem azt is érzékeli, hogy <em>hogyan</em> mondták — paranyelvi információ, például hogy a beszélő érzelme boldog vagy mérges-e, a beszédtempó gyors vagy tétova-e, az intonáció emelkedik vagy süllyed-e — valamint háttér-környezeti hangokat és zenét. Gondolkodáson és megerősítéses tanuláson keresztül generál kifejező válaszokat, és integrál egy RAG mechanizmust és külső eszközöket is (webes keresés, hangkeresés). A Step-Audio 2 tanulmány szerint az általuk javasolt StepEval-Audio-Paralinguistic benchmarkon a paranyelvi megértésben a Step-Audio 2 83,09%-os pontosságot ért el, messze megelőzve a kortárs nyílt forráskódú omnimodális modellt, a Qwen2.5-Omni-t (44,18%), és felülmúlva a GPT-4o Audio-t (43,45%) és a Kimi-Audio-t (49,64%) is.</p>
+<p>A Step-Audio R1 a Step-Audio sorozat következő modellje. A Step-Audio 2 végponttól végpontig tartó hangalapú beszélgetési architektúrájára építve tovább internalizálja a gondolkodási képességeket közvetlenül a hangmodellbe. A kettő egy progresszív evolúciót képvisel ugyanazon a technikai úton.</p>
+<h2 id="paradigma-3-teljes-duplex-interaktiv-modellek">Paradigma 3: Teljes duplex / Interaktív modellek<a class="headerlink" href="#paradigma-3-teljes-duplex-interaktiv-modellek" title="Permanent link">&para;</a></h2>
+<p>A Paradigma 2 három modellt egyesített egybe, de továbbra is ragaszkodott a társalgási fordulók feltételezéséhez — vagy a felhasználó beszél, vagy a modell beszél, a váltási pontot a VAD vagy a szemantika találgatja. Néhány forgatókönyvben egyszerűen nincs hely a "te mondatod, aztán az enyém" számára. A "szimultán tolmácsolás" a klasszikus eset: a tolmács nem vár a teljes mondat befejeződésére, hanem egyszerre hallgat és fogalmaz, minden jelentésegységet lefordít, amint nagyjából kész — a hallgatás és a fordítás mindig átfedi egymást. A "ritmusjátékok, ahol dobolsz a zenére", még extrémebbek: a fülnek egy megszakítás nélküli zenei folyamot kell követnie, a kéznek azonnal el kell találnia minden ütemet, és az elmének előre kell jeleznie a következőt — itt nincs olyan, hogy "forduló", csak egy véget nem érő bemeneti folyam. Az ilyen feladatok gyökerében támadják meg a fordulóalapú modellt: megkövetelik, hogy a hallgatás, gondolkodás és cselekvés egyidejűleg történjen, miközben a fordulóalapú modell teljes előfeltétele az, hogy a hármat külön időrésekbe sorolja. A teljes duplex modell a "VAD kiiktatása" utat logikus végpontjába viszi — egyszerűen elveti a társalgási fordulók feltételezését, és hagyja, hogy a modell "folyamatosan, egyszerre hallgasson és beszéljen".</p>
+<p>A úttörő kutatási munka itt a Kyutai "Moshi" (2024). Két hangfolyamot modellez párhuzamosan (a felhasználó hangját és a modell saját hangját), kiegészítve egy "belső monológ" szövegfolyammal a generált beszéd nyelvi minőségének javítása érdekében. Mivel mindig hallgat, az átfedő beszéd és a megszakítások természetes viselkedéssé válnak, nem igényelnek explicit megszakításdetektálási logikát. A végponttól végpontig tartó késleltetés körülbelül 200 ms, megközelítve az emberi beszélgetés természetes ritmusát.</p>
+<p>2026-ban a "Thinking Machines Lab", amelyet Mira Murati alapított, bemutatott egy új kategóriát, amelyet "Interakciós Modellnek" neveztek<sup id="fnref:ch9-14"><a class="footnote-ref" href="#fn:ch9-14">4</a></sup>, és kifejezetten azzal érveltek, hogy az interaktivitás nem lehet külső hám, mint a modell köré tekert VAD, hanem magába a modellbe kell épülnie. Szavaikkal élve: "ahhoz, hogy az interaktivitás skálázódjon az intelligenciával, a modell részévé kell válnia." Architekturálisan ez "mikro-fordulókban" nyilvánul meg: ahelyett, hogy egy teljes forduló befejeződésére várna, a modell körülbelül 200 ms-os szegmensekben dolgozik — folyamatosan feldolgozva 200 ms bemenetet és generálva 200 ms kimenetet — lehetővé téve, hogy a hang-, video- és szövegfolyamok összefonódjanak és együtt haladjanak. Ez a szemcsézettség szándékos kompromisszum — elég finom ahhoz, hogy a csend, az átfedés és a megszakítás folyamatos folyamként maradjon meg a modell kontextusában, mesterséges fordulóhatárok nélkül; mégis elég durva ahhoz, hogy több modalitást párhuzamosan, darabokban dolgozzon fel, a késleltetést az érzékelhető valós idejű tartományon belül tartva. Mivel az interakció a modellen belül él, azok a viselkedések, amelyeket valaha specializált hámokból kellett összerakni — hallgatás beszéd közben, nézés közbeszólás közben — most egyszerűen a modell munkájának részét képezik, és erősödnek, ahogy a modell fejlődik. Az első modellt, a TML-Interaction-Small-t, mindhárom folyamon együtt tanították a nulláról; amikor észreveszi, hogy a felhasználó hibás kódot ír, vagy valaki belép a képkockába, képes kérés nélkül megszólalni.</p>
+<p>A "lassú gondolkodáshoz" való hozzáállása is reprezentatív. Az interakciós modell maga csak a beszélgetés online tartásáért felelős. Amikor mély érvelést vagy eszközhívásokat igénylő problémával találkozik, átadja a feladatot egy erősebb érvelő modellnek a háttérben — amit átad, az nem egy elszigetelt lekérdezés, hanem a "teljes beszélgetési kontextus". Amíg a háttérmodell érvel, az eredmények növekményesen visszastreamelnek. Az interakciós modell ezután kiválaszt egy olyan pillanatot, amely nem szakítja félbe a felhasználót, hogy természetesen beleszője az eredményt a beszélgetésbe, miközben továbbra is válaszol, megválaszolja a követő kérdéseket, és megtartja a szót. Ily módon az "érvelő modell tervezési, eszköz és ügynök képességeit" nyújtja az "nem gondolkodó modell késleltetésével". A hivatalos jelentés szerint a TML-Interaction-Small (egy 276B paraméteres MoE 12B aktivált paraméterrel) körülbelül 0,40 másodperces váltási késleltetést ér el (a GPT-realtime-2.0 körülbelül 1,18 másodperc), és jelentősen felülmúlja a versenytársakat, amelyek a vizuális proaktivitás benchmarkjain közel nulla pontot érnek el; a cikk írásakor még kutatási előnézeti szakaszban van.</p>
+<p>Ugyanebben az évben az OpenAI "GPT-Live" gyártási méretűvé tette a teljes duplexet, globálisan bevezetve a ChatGPT új alapértelmezett hangmodelljeként. Többé nem diszkrét üzenetváltások sorozataként kezeli a beszélgetést, hanem <strong>folyamatosan dolgozza fel a bemenetet, miközben folyamatosan generálja a kimenetet</strong>. Ezért másodpercenként több interakciós döntést tud hozni: hogy elkezdjen beszélni, tovább hallgasson, szünetet tartson, megszakítson vagy eszközt hívjon. Az eredmény: csendesen vár, amikor a felhasználó gondolkodik, ahelyett, hogy közbevágná, olyan visszajelzéseket használ, mint "mm-hmm" és "értem", hogy jelezze, hallgatja, és olyan feladatokra is képes, mint a valós idejű fordítás, amely egyszerre igényel hallgatást és beszédet.</p>
+<p>A GPT-Live is ugyanazt a gyors és lassú folyamatok szétválasztásának útját követi — <strong>a "valós idejű interakció" és a "mély gondolkodás" szétválasztása</strong>: amikor keresést, érvelést vagy összetettebb ügynöki műveleteket igénylő feladattal találkozik, az interaktív GPT-Live átadja a feladatot egy frontvonalbeli modellnek a háttérben (induláskor GPT-5.5), miközben saját maga folytatja a beszélgetés folyását. Amint a háttérmodell produkál egy eredményt, a GPT-Live beépíti azt a beszélgetésbe. A GPT-Live-1 és a mini verzió a GPT-5.5 Instant-et használja a háttérben, míg a Medium és High szintek a gondolkodásra képes GPT-5.5-öt hívják, lehetővé téve a felhasználók számára, hogy szükség szerint válasszanak a "gyors" és a "mély" között. Ez a "gyors-lassú munkamegosztás" pontosan az a téma, amelyet a következő, "Kompromisszumok a gondolkodási architektúrákban" szakasz fog kibontani.</p>
+<p>Áttekintve e fejezet "VAD lecserélése" narratív fonalát: a VAD csendküszöbök alapján találgatja a fordulóváltási pontot; a streaming érzékelés (lásd a korábbi "Streaming hangérzékelés" szakaszt a Paradigma 1-ben) a váltási ítéletet szemantikus szintre emeli; és a teljes duplex modell teljesen feloldja a "váltás" fogalmát — mindig hallgat, így a "megszakítás" többé nem egy különleges kezelést igénylő esemény, és a belevágás feldolgozási lánca architekturálisan nagyrészt megszűnik. Ez a "VAD lecserélése" narratív fonal végpontja a cikk írásakor.</p>
+<h2 id="kompromisszumok-a-gondolkodasi-architekturakban-a-szetvalasztastol-az-egyesitesig">Kompromisszumok a gondolkodási architektúrákban: A szétválasztástól az egyesítésig<a class="headerlink" href="#kompromisszumok-a-gondolkodasi-architekturakban-a-szetvalasztastol-az-egyesitesig" title="Permanent link">&para;</a></h2>
+<p>A valódi kihívás a <strong>valós idejű válaszadás és a mély gondolkodás közötti feszültség</strong>: a felhasználók ezredmásodperces válaszokat várnak, míg a komplex problémák másodpercekig tartó gondolkodási időt igényelnek. Hogyan tud a modell elég mélyen gondolkodni, miközben alacsonyan tartja a késleltetést? Ez a feszültség nem egyedi a végponti architektúrákban; a kaszkádolt csővezetékek is szembesülnek vele.</p>
+<p>Az alábbi három megoldás nem lineáris fejlődést képvisel. Különböző korlátokhoz tartozó tervezési kompromisszumok, és a gyakorlatban együtt élnek. A helyes választás az alkalmazás késleltetési követelményeitől és a szükséges érvelési mélységtől függ. A kulcsfontosságú különbség: az 1. és 2. megoldás két független modell között osztja meg a munkát, egy gyors és egy lassú között, amelyek párhuzamosan futnak. Nem igényelnek végponti architektúrát, sőt akár egy kaszkádolt csővezeték tetejére is rétegezhetők. Csak a 3. megoldás internalizálja valóban az érvelést a végponti modellen belül.</p>
+<p>2026-ra a "gyors-lassú szétválasztás" útja a frontvonalbeli hangtermékek főáramú választásává vált, és saját nevet kapott. A Thinking Machines Lab "Interakciós Modelleknek" nevezi — egy valós idejű interakciós modell egy aszinkron háttér-érvelő modellhez kapcsolva; az xAI Grok Voice "Think Fast", a Pine AI hangügynöke és az előző szakasz GPT-Live "delegálása" mind ugyanazt a "gyors az előtérben a beszélgetés fenntartása, lassú a háttérben a mély érvelés" utat követik. A szétválasztás választásának, nem pedig "egyetlen mindenható modell tanításának" pragmatikus oka van: a frontvonalbeli érvelő modellek néhány havonta iterálnak, míg a valós idejű interakciós képességek speciális adatokat és tanítási célokat igényelnek. Mindkettőt ugyanabba a modellbe tömöríteni egy mozgó célpont üldözését jelenti, ami potenciálisan felhígítja a legértékesebb érvelési képességet<sup id="fnref:ch9-8"><a class="footnote-ref" href="#fn:ch9-8">5</a></sup>. Ezzel szemben a legerősebb érvelő modellt érintetlenül hagyva a háttérben, és csak egy könnyű interakciós modellt tanítva az előtérben, mindig használhatjuk az aktuális legerősebb "agyat" — pontosan ezért hangsúlyozza a GPT-Live a "fenntartható váltást a legújabb frontvonalbeli modellekre". Az alábbiakban a három megoldást vizsgáljuk az egyre erősebb koordinációs mechanizmusok sorrendjében.</p>
+<h3 id="1-megoldas-gyors-gondolkodas-kitoltokhoz-lassu-gondolkodas-valaszokhoz">1. megoldás: Gyors gondolkodás kitöltőkhöz, lassú gondolkodás válaszokhoz<a class="headerlink" href="#1-megoldas-gyors-gondolkodas-kitoltokhoz-lassu-gondolkodas-valaszokhoz" title="Permanent link">&para;</a></h3>
+<p>A gyors és lassú gondolkodás párhuzamosan fut (9-5. ábra): a gyors gondolkodás 500 ms-on belül egy rövid tartózkodó választ produkál (ahogy az ember először azt mondja: "hadd gondolkozzam"), míg a lassú gondolkodás 5-10 másodpercet tölt a háttérben érveléssel, mielőtt leadná a teljes választ. A lassú gondolkodás mögötti technika a "tesztidő-skálázás" — leegyszerűsítve, hagyjuk, hogy a modell egy kicsit tovább gondolkodjon, mielőtt válaszol: ahelyett, hogy egy lépésben ugrana a válaszra, úgy működik, mint egy ember egy matekfeladaton — vázol egy megközelítést, lépésről lépésre levezet, ellenőrzi az eredményt — több számítást kereskedve jobb válaszért.</p>
+<p><img alt="9-5. ábra: Gyors/Lassú gondolkodási architektúra és megoldások összehasonlítása" src="../images/fig9-5.svg" /></p>
+<p><strong>1. probléma: Túl gondolkodás egyszerű kérdéseken.</strong> A felhasználó megkérdezi: "Milyen nap van ma?" A gyors gondolkodás helyesen válaszol "Szerda" 500 ms-on belül, de a lassú gondolkodás továbbra is lefuttatja a teljes 10 másodperces gondolkodást, majd megismétli a "Szerdát". Ez nemcsak számítási erőforrásokat pazarol, hanem ami még kritikusabb, megzavarja a beszélgetés ritmusát — a felhasználónak már megvan a válasza, és készen áll a továbblépésre, amikor egy ismételt válasz szakítja félbe. <strong>2. probléma: Következetlenség a gyors és lassú között.</strong> A kettő egymástól függetlenül fut párhuzamosan. Ugyanazt a kontextust látják, de az érvelési útjaik teljesen eltérhetnek — a gyors gondolkodás egy feltételezés alapján válaszol, a lassú gondolkodás felfedezi, hogy az a feltételezés hamis, és az ellenkező következtetésre jut. Másodperceken belül a felhasználó hallja, hogy a rendszer ellentmond önmagának, és a bizalom azonnal összeomlik. A kiváltó ok: az 1. megoldás a beszélgetést két független gondolkodási folyamatra bontja ahelyett, hogy egy koherens kognitív tevékenység lenne, a gyors és lassú között nincs koordinációs mechanizmus.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>&lt;user&gt;Ez a terv megfelelő számomra?&lt;/user&gt;
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>&lt;!-- Gyors gondolkodás 0,5 másodperc után --&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>&lt;assistant (gyors gondolkodás)&gt;Ez a terv nagyon megfizethető, ezért javaslom a megvásárlását.&lt;/assistant&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>&lt;user&gt;Rendben, akkor én...&lt;/user&gt;
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>&lt;!-- Lassú gondolkodás 8 másodperc után befejeződik --&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>&lt;assistant (lassú gondolkodás)&gt;Várj, rájöttem, hogy ebből a tervből hiányzik a nemzetközi roaming funkció, amire szükséged van, szóval lehet, hogy nem alkalmas.&lt;/assistant&gt;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>&lt;user&gt;(Dühösen) Szóval ajánlod, hogy vegyem meg, vagy ne?!&lt;/user&gt;
+</code></pre></div>
+<h3 id="2-megoldas-gyors-gondolkodas-interakciohoz-lassu-gondolkodas-tanacsadashoz">2. megoldás: Gyors gondolkodás interakcióhoz, lassú gondolkodás tanácsadáshoz<a class="headerlink" href="#2-megoldas-gyors-gondolkodas-interakciohoz-lassu-gondolkodas-tanacsadashoz" title="Permanent link">&para;</a></h3>
+<p>A 2. megoldás lehetővé teszi, hogy a lassú gondolkodás lássa a gyors gondolkodás kimenetét. Javaslatokat az Ügynök Állapotsoron keresztül ad (a 2. fejezetben bevezetett dinamikus meta-információ-injektáló mechanizmus), ahelyett, hogy közvetlenül a felhasználóhoz beszélne. Az 1. megoldáshoz képest ez a megközelítés két fejlesztést hoz: a lassú gondolkodás aszinkron módon fut a háttérben, és a beszéd szüneteiben folytatja az érvelést; és mivel látja a gyors gondolkodás kimenetét, elkerüli, hogy közvetlenül ellentmondjon neki, és inkább kulisszák mögötti "stratéga"-ként működik. A korábban említett GPT-Live delegálás és Pine AI hangügynök a 2. megoldás gyártási példái — a háttér-érvelő modell egy tömör szöveges csatornán keresztül küldi el következtetéseit az előtér-interakciós modellnek, és az előtérmodell dönti el, mikor és hogyan mutassa be azokat a felhasználónak.</p>
+<p>Ennek a megoldásnak azonban továbbra is vannak alapvető korlátai. <strong>A gyors gondolkodás nem biztos, hogy követi az utasításokat</strong> — a két független érvelési folyamat közötti kommunikáció közvetett és kétértelmű. A gyors gondolkodás félreolvashat egy Ügynök Állapotsor frissítést: azt gondolhatja, hogy "az árat újra kell erősíteni" azt jelenti, hogy "kérdezze meg a felhasználót, hogy ez az ár elfogadható-e", amikor a szándékolt jelentés az volt, hogy "az árat rosszul számolták ki — számolja újra". "Nincs rálátás a köztes érvelésre" — a lassú gondolkodás értékes köztes következtetéseket hozhat a 10 másodperces érvelés során, de a gyors gondolkodás ezek egyikét sem látja; csak a végső státuszfrissítésre várhat. Ha a felhasználó egy másik kérdést tesz fel vagy megszakítja, mielőtt a lassú gondolkodás befejeződne, a gyors gondolkodásnak a saját korlátozott megértése alapján kell válaszolnia. Ez olyan, mintha két ember együtt oldana meg egy problémát, de csak cetliket adogatva kommunikálnának, anélkül, hogy látnák egymás piszkozatait.</p>
+<p>A 2. megoldás egy alapvető elméleti problémával is szembesül: "nem képes elérni a "gondolkodva beszélést"". Amikor az emberek komplex problémával szembesülnek, nem először fogalmazzák meg a teljes választ a fejükben, majd adják elő egyben. Ehelyett szegmensekben gondolkodnak és beszélnek — "Ez egy érdekes kérdés... (gondolkodási szünet) Először is meg kell fontolnunk... (tovább gondolkodik) Másodszor..." A 2. megoldásban a gyors gondolkodás csak kitöltő kifejezéseket tud adni, amíg a lassú gondolkodásra vár, anélkül, hogy az érvelési folyamatot természetesen beleszőné a beszélgetésbe.</p>
+<h3 id="3-megoldas-a-gondolkodas-es-kifejezes-vegponti-egyesitese-a-step-audio-r1-peldajan-keresztul">3. megoldás: A gondolkodás és kifejezés végponti egyesítése (a Step-Audio R1 példáján keresztül)<a class="headerlink" href="#3-megoldas-a-gondolkodas-es-kifejezes-vegponti-egyesitese-a-step-audio-r1-peldajan-keresztul" title="Permanent link">&para;</a></h3>
+<p>Bár a 2. megoldás csökkenti a felhasználó lassú gondolkodásra való várakozásának szükségességét, architekturálisan továbbra is "először gondolkodj, aztán beszélj" — a gondolkodás és a kifejezés két külön folyamat marad, lehetetlenné téve az emberi "gondolkodva beszélés" elérését. Ennek az alapvető korlátnak a áttöréséhez a gondolkodási képességeket közvetlenül a modellbe kell internalizálni.</p>
+<p>A Step-Audio R1 ebben az irányban egy alapvetően különböző megoldást javasol: a gondolkodási képességeket közvetlenül a végponti hangnyelvi modellbe internalizálja, elérve a valódi "gondolkodva beszélést" egy kétagyú architektúrán keresztül. Valójában két kiegészítő mechanizmusból áll, amelyek mindegyike más-más problémát old meg: a "Modality-Grounded Reasoning Distillation (MGRD)" először a "helyes gondolkodást" oldja meg — biztosítva, hogy a modell valóban akusztikus jellemzők alapján érveljen, ne szöveges átiratok alapján; az "MPS Kétagyú Architektúra" (Mind-Paced Speaking) ezután megoldja az "időben történő megszólalást" — lehetővé téve, hogy a gondolkodás és a kifejezés párhuzamosan fusson az alacsony késleltetésű gondolkodva beszéléshez. Az előbbi az utóbbi előfeltétele: csak ha a gondolkodás a hangban gyökerezik, érdemes gondolkodva beszélni. Vegyük sorra mindkettőt.</p>
+<p>"A Szöveges Helyettesítő Érvelés Problémája." Ideális esetben egy hangmodellnek közvetlenül kellene elemeznie az akusztikus jellemzőket (mint a hangmagasság, ritmus és intonáció) a beszélő érzelmének vagy szándékának megértéséhez. A gyakorlatban azonban sok modell egy gyors utat választ: a meglévő hangnyelvi modellek egy ellentmondásos jelenséget mutatnak, ahol a hosszabb gondolkodási láncok rosszabb teljesítményhez vezetnek. A Step-Audio R1 csapata a kiváltó okot a "Szöveges Helyettesítő Érvelésben" azonosította (szöveges információ használata az akusztikus információ "helyettesítésére" az elemzés során): amikor a modell "gondolkodik", valójában szemantikus érvelést végez szöveges átírás alapján, ahelyett, hogy valóban elemezné az akusztikus jellemzőket. Például, amikor egy dal érzelmének megítélését kérik, a modell azt elemzi, hogy "a dalszöveg szomorúságot említ", ahelyett, hogy "a moll hangnemű dallam a süllyedő hangmagasság-kontúrral kombinálva a bánat érzését közvetíti". Ez a modalitás-eltérés a tanítási adatokból ered: a legtöbb hangmodell CoT (Chain-of-Thought) adatát szöveges modellek generálják, amelyek természetüknél fogva egy tiszta szöveges gondolkodási mintát örökölnek.</p>
+<p>"A Modality-Grounded Reasoning Distillation" (MGRD) iteratív önfejlesztéssel kezeli ezt a problémát (9-6. ábra). A név bonyolult, de a magötlet intuitív: válasszuk ki azokat a gondolkodási folyamatokat, amelyek valóban hallgatják a hangot, és ezeken tanítsuk a modellt — megtanítva neki, hogy a fülével elemezzen, mint egy zenetanár, ahelyett, hogy úgy pörgetné a szöveget, mint egy szerkesztő. Három lépés:</p>
+<ol>
+<li>Generáltassuk az aktuális modellel több különböző gondolkodási folyamatot ugyanarra a hangszegmensre, majd tartsuk meg csak azokat, amelyek valóban akusztikus jellemzőkön alapulnak. Hogyan állapítható meg? Ellenőrizzük, hogy a gondolat említ-e konkrét hangparamétereket. Például egy dühös hangbemenet esetén egy szövegalapú gondolat az lenne, hogy "A felhasználó negatív szavakat használt, mint 'túl rossz', ezért dühösnek ítélem" — ez csak a szöveges tartalmat elemzi; egy akusztikus jellemző-alapú gondolat az lenne, hogy "A beszédtempó 40%-kal gyorsabb a normálnál, a hangerő jelentősen magasabb, és a hangmagasság élesebb" — ez valóban "hallgatja" a hangot. Az MGRD az utóbbit választja.</li>
+<li>Tanítsuk újra a modellt ezekkel a magas minőségű érvelési nyomvonalakkal, hogy erősítsük a "füllel gondolkodás" képességét.</li>
+<li>Optimalizáljuk tovább megerősítéses tanuláson keresztül, hogy megakadályozzuk, hogy a modell gyors utakat vegyen a gondolkodási folyamat kihagyásával és a válasz közvetlen kitalálásával.</li>
+</ol>
+<p>Több iteráció után a gondolkodás alapja fokozatosan eltolódik a szöveges absztrakciótól az akusztikus elemzés felé — a modell elkezd összpontosítani arra, hogy "a hangmagasság-kontúr élesen süllyed 1,2 másodpercnél" ahelyett, hogy homályosan kijelentené, hogy "a beszélő boldogtalannak tűnik".</p>
+<p>"Az MPS Kétagyú Architektúra" (Mind-Paced Speaking) az érvelési késleltetés és a beszédkimenet közötti feszültséget kezeli (9-6. ábra). Az emberi agy munkamegosztásából merít inspirációt: a gondolkodásért és a nyelvi produkcióért felelős területek elkülönülnek, és párhuzamosan dolgozhatnak — megfogalmazhatod a következő mondatot, miközben még az előzőt mondod. Az MPS ezt a felosztást két modellel szimulálja: a "Formulation Brain" (Formuláló Agy) folyamatosan érvel és érvelési szegmenseket produkál; amikor az "Articulation Brain" (Artikulációs Agy) kap egy új szegmenst, kombinálja azt a korábbi érvelési szegmensekkel és az eddig generált válasszal, majd beszéddé alakítja.</p>
+<p>A kettő párhuzamosan fut: a Formuláló Agynak nem kell befejeznie az érvelést, mielőtt az Artikulációs Agy elkezd beszélni. Például a Formuláló Agy elkezdi elemezni a felhasználó kérdését t=0 ms-nál, és az első érvelési szegmenst, egy szöveges tokenek sorozatát, t=200 ms-nál produkálja. Az Artikulációs Agy megkapja ezt a szegmenst, kombinálja az eddig generált válasszal, és elkezdi a megfelelő beszédtokenek előállítását t=350 ms-nál. A modulok párhuzamos csővezetékként működnek, lehetővé téve, hogy a felhasználó már 350 ms után hallja az első szótagot.</p>
+<p><img alt="9-6. ábra: Step-Audio R1 MGRD és MPS Kétagyú Architektúra" src="../images/fig9-6.svg" /></p>
+<blockquote>
+<p><strong>9-4. kísérlet ★★★: A Step-Audio R1 használata végponti beszélt érveléshez</strong></p>
+<p>Ez a kísérlet a Step-Audio R1-et használja több konfiguráció összehasonlítására beszélt-érvelési és párbeszédfeladatokon. A modell egy hangkódolóból, egy hangadapterből és egy Qwen2.5 32B dekódolóból áll, és több GPU-s telepítést igényel.</p>
+<p>A kísérlet két feladatot értékel: a "Spoken-MQA" (Beszélt Matek Kérdések) azt teszteli, hogy a modell képes-e többlépcsős matematikai érvelésre egy szóban előadott probléma meghallása után; az "URO-Bench" (Kínai Szóbeli Párbeszéd Benchmark) a nyílt végű párbeszéd minőségét értékeli.</p>
+<p>A tesztkonfigurációk két dimenzióra oszlanak. Az első a "Gondolkodás Időzítése": a teljes "TBS" (Think-Before-Speak) konfiguráció, amely késleltetés-korlátlan kontroll alapvonal, az összes gondolatot a beszéd előtt generálja. A késleltetés csökkentése érdekében az MPS két "gondolkodva beszélő" változatot kínál — "Speak-First" (spkfirst, nulla késleltetés, a beszéd és a gondolkodás egyidejűleg indul) és "Think-First" (thkfirst, vár, amíg a gondolkodó agy produkálja az első szegmenst a beszéd előtt, körülbelül 80 token késleltetéssel). A második dimenzió az "Architektúra": MPS párhuzamos kétagyú architektúrája versus hagyományos egy modelles TBS.</p>
+<p>A 9-1. táblázat összehasonlítja a különböző időzítési és architektúra konfigurációk matematikai pontosságát és párbeszéd pontszámait.</p>
+<p>9-1. táblázat: A Step-Audio R1 beszélt-érvelési konfigurációinak összehasonlítása</p>
+<table>
+<thead>
+<tr>
+<th>Konfiguráció</th>
+<th>Spoken-MQA</th>
+<th>URO-Bench</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Válasz gondolkodás nélkül (Baseline)</td>
+<td>70,6%</td>
+<td>77,4</td>
+</tr>
+<tr>
+<td>MPS Speak-First (Nulla Késleltetés)</td>
+<td>92,8%</td>
+<td>82,5</td>
+</tr>
+<tr>
+<td>MPS Think-First (~80 tok Késleltetés)</td>
+<td>93,9%</td>
+<td>84,8</td>
+</tr>
+<tr>
+<td>Teljes TBS (Nincs Késleltetési Korlát)</td>
+<td>93,0%</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>Egy érdekes megállapítás, hogy a Speak-First minimális hatással van a gondolkodási feladatokra (92,8% közel van a teljes TBS konfiguráció 93,0%-ához). Ennek az az oka, hogy egy "CoT" (Chain-of-Thought) eleje általában csak a probléma tartalmát ismétli meg, és még nem lépett be a valódi érvelésbe. Ezért még ha a modell a beszéddel egyidejűleg kezdi is a gondolkodást, a végső pontosságot alig befolyásolja. Egy másik figyelemre méltó részlet, hogy a Think-First (93,9%) még kissé magasabb is, mint a késleltetés-korlátlan teljes TBS konfiguráció (93,0%). Az egyik lehetséges magyarázat az, hogy a gondolatok szegmensekben történő előállítása és szegmensenkénti beszéddé alakítása lépésenkénti felügyeletként működhet, javítva a teljesítményt; a különbség azonban a hibahatáron belül van, és nem szabad túlértelmezni.
+</p>
+</blockquote>
+<p>A 3. megoldás egyetlen modellbe internalizálja a gondolkodást — a "gondolkodva beszélés" legelegánsabb megvalósítása —, de az ára pontosan a szakasz elején említett "mozgó célpont": egy modellnek kell lennie a legerősebb érvelőnek és egy valós idejű beszélőnek is, és mivel mindkét képesség gyorsan fejlődik, az egyesített útnak újra és újra kell tanulnia, hogy lépést tartson. Ezért alakult ki az iparági megosztottság a cikk írásakor: a frontvonalbeli termékek, amelyek azonnal be akarják építeni a legújabb agyat (GPT-Live, Grok Voice, Pine AI), többnyire a 2. megoldás szétválasztására fogadnak, míg a 3. megoldás azoknak a termékeknek felel meg, amelyek a végső természetességre törekednek, és fel tudják venni a specializált tanítási költséget. Egyik sem váltja fel a másikat; ez egy kompromisszum az érvelő modell becserélhetősége és a szorosabban integrált gondolkodás és beszéd között.</p>
+<h3 id="a-gyors-es-lassu-kozotti-interfesz-mit-lehet-atadni-a-szovegen-tul">A gyors és lassú közötti interfész: Mit lehet átadni a szövegen túl?<a class="headerlink" href="#a-gyors-es-lassu-kozotti-interfesz-mit-lehet-atadni-a-szovegen-tul" title="Permanent link">&para;</a></h3>
+<p>(Ez a kereszt-forgatókönyvi diszkusszió rövid időre eltér a fejezet fő hangközpontúságától.) A 2. megoldás felfed egy figyelmen kívül hagyott tervezési dimenziót: amikor a lassú gondolkodás üzenetet ad át a gyors gondolkodásnak, a "szöveges" csatornát használja (egy javaslatot az állapotsoron keresztül). A szöveg könnyen érthető és hibakereshető, de szűk csatorna — a lassú gondolkodó gazdag köztes állapota néhány mondatba van besűrítve. Tehát a gyors és lassú közötti interfésznek szükségszerűen szövegnek kell lennie?</p>
+<p>A valós idejű játékokban, az egyik leginkább időérzékeny környezetben, egy közvetlenebb megközelítés lehetséges: egy "Latens Híd"<sup id="fnref2:ch9-8"><a class="footnote-ref" href="#fn:ch9-8">5</a></sup>. Fagyasszunk be egy kis modellt, amely a gyors reakciókért felelős (másodpercenként több tucat cselekvést produkál), és egy lassú modellt, amely az érvelésért felelős (másodpercenként egy gondolatot produkál), majd tanítsunk csak egy kis "hidat" néhány tízmillió paraméterrel közöttük. Ez a híd a lassú modell rejtett állapot-következtetéseit közvetlenül néhány "latens tokenbe" vetíti, és beilleszti azokat a gyors modell bemenetébe, hasonlóan ahhoz, ahogy a multimodális modellek vizuális tokeneket illesztenek be. Ez megkerüli a gömbölyű utat az ötlettől a szövegig és vissza egy belső reprezentációhoz. Számos Atari játékban a latens tér csatorna jelentősen felülmúlta a hagyományos szöveges csatornát (+26% és +82% között néhány játékban), miközben csak körülbelül 5 ezredmásodpercet adott hozzá lépésenként, ami elég gyors a valós idejű követelmények teljesítéséhez.</p>
+<p>Ugyanez a munka becsületes határt is húz: <strong>az, hogy a gyors-lassú együttműködés segít-e, attól függ, hogy a feladat szűk keresztmetszete a "nem jut eszébe" vagy a "nem reagál időben"</strong>. A híd csak ott térül meg, ahol a lassú gondolkodó valóban jobb, mint a gyors reaktor (játékok között ez a korreláció akár r≈0,9 is lehet); ahol a feladat pusztán reakciósebesség-verseny, a legfinomabb híd is haszontalan. Az ítélet a játékokon túl is érvényes — előrevetíti azt a kérdést, amellyel a Computer Use később szembesül ebben a fejezetben: mikor érdemes "lassú stratégát" meghívni, és mikor ad az csak késleltetést?</p>
+<p>Akár végponti, akár moduláris, az érzékelési és végrehajtási rétegek minősége továbbra is számít. A végponti modellek architekturális szinten oldják meg a késleltetést, de a két alapvető dolog — pontosan hallani és természetesen beszélni — nem oldódik meg magától, ha az architektúra változik. A pontos hallás a Paradigma 1 streaming hangérzékelésének felel meg; itt a végrehajtási réteg felé fordulunk a természetes beszédért: emberibb beszédszintézis.</p>
+<h2 id="emberibb-beszedszintezis">Emberibb beszédszintézis<a class="headerlink" href="#emberibb-beszedszintezis" title="Permanent link">&para;</a></h2>
+<p>A hagyományos TTS "tökéletessége" pontosan a probléma: a kifogástalanul folyékony, szünetek vagy töltelékszavak nélküli beszéd tagadhatatlanul gépi eredetű. Az emberi beszéd "tökéletlenségei" — szünetek, töltelékszavak ("ööö", "izé", "tudod") és alkalmankénti ismétlés — nem hibák, hanem a gondolkodási folyamat természetes jelei, amelyek azt üzenik a hallgatónak: "gondolkodom" vagy "nem vagyok teljesen biztos". Egy MI azonban gyorsabban tud választ generálni, mint ahogy az a válasz hangosan kimondható, és a kimenete folyékonyan és teljesen érkezik; ha szó szerint szintetizáljuk, a mesterséges jellege nyilvánvalóvá válik.</p>
+<p>"Megoldás": A szünetek helyére és a hangnemre vonatkozó döntések átadása a fő LLM-nek. Az LLM nemcsak szöveget ad ki, hanem vezérlő tokeneket is: <code>[THINKING]</code> egy 1-2 másodperces gondolkodási szünetet és egy töltelékhangot jelez ("ööö..."); <code>[SEARCHING]</code> egy rövidebb szünetet és tétova kifejezéseket jelez ("tudod...", "hogy is mondjam"); <code>[EMO:happy]</code> beállítja a hangszínt és a prozódiát; <code>[SPEED:0.8x]</code> szabályozza a beszédtempót. Csak az LLM tudja, hogy éppen egy összetett kérdésen dolgozik-e, és szünetet kell-e tartania, hogy a felhasználó türelmetlen-e, és gyorsítania kell-e, vagy ez csak csevegés, és élénken kell hangzania.</p>
+<p>Ebben a sémában a TTS multimodális generátorként működik, szöveg + vezérlő tokeneket vesz bemenetként, és hangot ad ki. Normál szöveg esetén normálisan szintetizál beszédet, vezérlő tokenek esetén pedig megfelelő nem nyelvi hangokat generál: a <code>[THINKING]</code> egy elnyújtott "ööö..."-t generál, a <code>[SIGH]</code> egy sóhajt, a <code>[LAUGH:small]</code> egy halk nevetést, a <code>[BREATH]</code> egy belégzési hangot.</p>
+<p>Két implementációs út létezik: az egyik a saját fejlesztésű TTS, natív támogatással a vezérlő tokenekhez (a legrugalmasabb lehetőség, de specializált csapatot igényel); a másik a hangklónozás használata. Készítsünk több tucat referenciaklipet ugyanahhoz a virtuális személyiséghez, lefedve a különböző érzelmeket, tempókat és stílusokat, majd válasszuk ki a legjobban illő klipet minden vezérlőtoken-kombinációhoz egy TTS API (például ElevenLabs vagy Fish Audio) hívásakor. Ez a megközelítés heteken belül telepíthető.</p>
+<blockquote>
+<p><strong>9-5. kísérlet ★★: Vezérlőtoken-vezérelt TTS Fish Audio alapokon</strong></p>
+<p>Használjuk a Fish Audio S1 hangklónozási képességét (csak 3-10 másodperc referenciáshang szükséges a nullszoros klónozáshoz ugyanazzal a hangszínnel). Építsünk egy 24 referenciásklipből álló könyvtárat, lefedve az Érzelem (Semleges/Boldog/Csalódott/Gondolkodó) x Tempó (Normál/Gyors/Lassú) x Stílus (Formális/Közvetlen) kombinációkat, mindegyik körülbelül 5 másodperc hosszú.</p>
+<p>LLM kimeneti példa: <code>[EMO:happy][SPEED:fast]Nagyszerű! A rendelését megerősítettük.[THINKING]Ööö, hadd ellenőrizzem a szállítási időt...[EMO:neutral][SPEED:normal]Holnap délután várhatóan megérkezik.</code></p>
+<p>A végrehajtási réteg elemzi a tokeneket, és hozzárendeli a megfelelő referenciáshanghoz: <code>[EMO:happy][SPEED:fast]</code> a "Boldog+Gyors+Közvetlen" referenciához; <code>[THINKING]</code> a "Gondolkodó+Lassú+Formális" referenciához (szünet ritmussal és tétova hanghordozással); <code>[EMO:neutral][SPEED:normal]</code> a "Semleges+Normál+Formális" referenciához. A Fish Audio biztosítja a konzisztens hangszínt a különböző referenciásklipek között, csak a prozódiát és az érzelmet változtatva.</p>
+<p>Hasonlítsunk össze három konfigurációt: nincs vezérlő token (folyékony, de robotikus és nyilvánvalóan MI által generált), egyetlen referenciásklip (természetes, de érzelmileg monoton), és többreferenciás könyvtár (vidám és gyors információ megerősítésekor, természetes szünetek magyarázatok előtt, és összességében egy emberi ügyfélszolgálati képviselőhöz közeli előadásmód).</p>
+</blockquote>
+<h2 id="computer-use-grafikus-felulet-automatizalasi-ugynokok">Computer Use: Grafikus Felület Automatizálási Ügynökök<a class="headerlink" href="#computer-use-grafikus-felulet-automatizalasi-ugynokok" title="Permanent link">&para;</a></h2>
+<p>Mire mostanra észrevehették, hogy ez a fejezet sokkal több teret szentel a hangnak, mint a következő két forgatókönyvnek. Ez szándékos. A valós idejű multimodális rendszerek közül a hangtechnológia haladt a legmesszebbre, ezért nyújtja a legjobb referenciát. Végigjárta a teljes ívet az eredeti problémától — a soros csővezetékek túlzott késleltetése — a végponti modelleken, a teljes duplex interakción és a gondolkodva beszélésen át a mai viszonylag érett tervekig. Ezért meséltük el a történetét teljes egészében. Ahogy olvassák a Computer Use és a robotika szakaszokat, hasonlítsák össze ezzel a pályával: az egyes területek milyen messzire jutottak, és hol maradtak meg?</p>
+<p>Ez a három forgatókönyv különbözőnek tűnik, de ugyanazokkal a magkihívásokkal néz szembe: valós idejű érzékelés, alacsony késleltetésű döntéshozatal és folyamatos interakció. Ezután a vizuális interakcióra, vagyis a Computer Use-re térünk, kiterjesztve a perspektívát a hallásiról a vizuális modalitásra: mi lenne, ha egy ügynök nemcsak a beszédet értené, hanem "látná" is a képernyőt, és kezelné a grafikus felületet?</p>
+<p>A Computer Use, más néven GUI automatizálás, lehetővé teszi a mesterséges intelligencia számára, hogy úgy használja a szoftvereket, mint egy ember, a képernyő megfigyelésével és az egér és billentyűzet kezelésével — például böngésző megnyitása információk kereséséhez, adatok beírása egy táblázatkezelő alkalmazásba, vagy beállítások módosítása a rendszer beállításaiban. Magja egy "Perceive-Think-Act" (Érzékel-Gondolkodj-Cselekedj) ciklus (9-7. ábra):</p>
+<ol>
+<li>Az ügynök képernyőképet készít az aktuális képernyőről.</li>
+<li>Egy multimodális modell megkapja a képernyőképet és a feladatutasítást, és kiad egy gondolatot és egy konkrét cselekvést.</li>
+<li>A végrehajtási réteg végrehajtja a cselekvést a valós környezetben (egér mozgatása, kattintás, szöveg beírása stb.).</li>
+<li>Megvárja a felület válaszát, újabb képernyőképet készít, és belép a ciklus következő iterációjába.</li>
+</ol>
+<p><img alt="9-7. ábra: Computer Use ügynök Érzékel-Gondolkodj-Cselekedj ciklusa" src="../images/fig9-7.svg" /></p>
+<p>Ebben a ciklusban három kulcsfontosságú tervezési dimenzió van: "Cselekvési Tér" (milyen műveleteket végezhet az ügynök), "Vizuális Helymeghatározás" (hogyan találja meg a cél elemet a képernyőképen), és "Modell Architektúra" (hogyan generálja a helyes cselekvést a képernyőképből).</p>
+<h3 id="cselekvesi-ter-tervezese">Cselekvési Tér Tervezése<a class="headerlink" href="#cselekvesi-ter-tervezese" title="Permanent link">&para;</a></h3>
+<p>Az Anthropic három eszköztípust határoz meg, amelyek teljes interakciós képességet alkotnak (9-8. ábra):</p>
+<p><img alt="9-8. ábra: Computer Use cselekvési tér" src="../images/fig9-8.svg" /></p>
+<p>"GUI Kezelő Eszköz" (<code>computer</code> eszköz): Egérműveletek: mozgatás (<code>mouse_move</code>), bal/jobb/középső kattintás, dupla- vagy háromszoros kattintás, húzás (<code>left_click_drag</code>), és pontosabb lenyomás/elengedés műveletek (<code>left_mouse_down</code> és <code>left_mouse_up</code>). Görgetés (<code>scroll</code>) négy irányt támogat, és kombinálható módosító billentyűkkel. Billentyűzetműveletek: karakterenkénti gépelés (<code>type</code>, 12 ms intervallummal a karakterek között a valódi gépelés szimulálására), billentyűkombinációk (<code>key</code>, pl. <code>Ctrl+C</code>), és billentyű lenyomva tartása (<code>hold_key</code>). Érzékelési műveletek: képernyőkép készítése, kurzorpozíció lekérése (<code>cursor_position</code>), várakozás (<code>wait</code>).</p>
+<p>"Parancsvégrehajtási Eszköz" (bash eszköz): Perzisztens bash terminál munkamenetet biztosít 120 másodperces időkorláttal. Egy őrszöveges karakterláncot használ a parancs befejeződésének érzékelésére, és megtartja a környezeti állapotot több hívás között (pl. egy könyvtárba <code>cd</code> után a következő hívás abban a könyvtárban marad).</p>
+<p>"Fájlszerkesztő Eszköz" (<code>str_replace_editor</code>): Biztonságos szerkesztést tesz lehetővé karakterlánc-illesztésen keresztül, támogatva a megtekintést, létrehozást, cserét, beszúrást és visszavonást. Pontosabb, mint a teljes fájl felülírása, és kisebb a valószínűsége, hogy véletlenül más tartalmat módosít.</p>
+<blockquote>
+<p><strong>9-6. kísérlet ★: Az Anthropic Computer Use Demó futtatása</strong></p>
+<p>A konténer egy teljes Ubuntu asztali környezetet tartalmaz böngészővel, terminállal és más gyakori eszközökkel. A front-end megkapja a feladatutasításokat, a back-end elküldi ezeket az utasításokat és a képernyőképeket a Claude-nak, a modell pedig olyan cselekvéseket ad vissza, mint az egér mozgatása, kattintás és gépelés. A rendszer ezután végrehajtja ezeket a cselekvéseket a virtuális asztalon.</p>
+<p>Kulcsfontosságú megfigyelés: Minden cselekvési ciklus 2-5 másodpercet vesz igénybe, ami a rendszert jelentősen lassabbá teszi egy embernél. Ennek ellenére a gyakori feladatokon jó tervezést mutat, és önállóan ésszerű cselekvési sorozatokra bontja azokat.
+</p>
+</blockquote>
+<h3 id="vizualis-helymeghatarozas">Vizuális Helymeghatározás<a class="headerlink" href="#vizualis-helymeghatarozas" title="Permanent link">&para;</a></h3>
+<p>A ciklus minden iterációjában a modellnek pontosan meg kell találnia a cél elemet a képernyőképen — "Hol van a keresőmező?" "Mik a beküldő gomb koordinátái?" Ez a vizuális helymeghatározás problémája. Jelenleg "két fő megközelítés" létezik: az egyik a lokalizációt "többválasztásos problémává" alakítja — először számokkal annotáljuk a felületi elemeket, a modellnek csak ki kell választania egyet; a másik a "tiszta koordináta előrejelzés" — hagyjuk, hogy a modell "nézze" a képernyőképet, és közvetlenül adjon meg koordinátákat, akár egy ember. A többválasztásos megközelítésnek két implementációs módja van: "tiszta vizuális annotáció" (az eredeti Set-of-Mark, egy szegmentációs modell használatával a képen lévő jelölt régiók szegmentálására) és "strukturált elemindexálás" (DOM/Accessibility Tree, a felület eredeti struktúrájának közvetlen olvasása). A többválasztásos megközelítés közös előnye, hogy a "keresd meg a gombot a képernyőképen és jelezd előre a koordinátáit" nyílt végű problémát egy "válassz egyet a már annotált elemek közül" zárt végű problémává alakítja — ahogy a többválasztásos kérdésekre könnyebb helyesen válaszolni, mint a kitöltendő kérdésekre egy vizsgán, a modellnek csak annyit kell mondania, hogy "kattints [123]-ra" ahelyett, hogy "kattints a kék gombra, körülbelül 200 pixellel a képernyő bal felső sarkától jobbra".</p>
+<p>"Set-of-Mark: Vizuális Annotációs Módszer."</p>
+<p>Az eredeti Set-of-Mark (SoM) a Microsoft Research által 2023-ban javasolt, kezdetben a GPT-4V vizuális helymeghatározási képességeinek felszabadítására. Ez egy "tisztán vizuális" módszer: képszegmentációs modelleket (SAM, SEEM stb.) használ a képernyőképen lévő jelölt régiók automatikus szegmentálására, számozott markert helyez minden régióra, és a modell számokkal ellátott képet lát. A modellnek csak a számot kell jelentenie, a rendszer pedig átalakítja a megfelelő régió középponti koordinátáivá. A teljes folyamat nem igényel DOM-ot vagy belső felületi struktúrát, így egyaránt alkalmazható natív asztali szoftverekre és játékfelületekre — amíg a szegmentációs modell azonosítani tudja a jelölt régiókat.</p>
+<p><strong>Strukturált Elemindexálás: Az SoM-ötlet strukturált implementációja a weben.</strong></p>
+<p>Amikor a felület maga biztosít strukturált információt, az annotáció pontosabb lehet. A modern weboldalak a renderelés előtt meghatároznak egy teljes elemstruktúrát (a DOM fát) és szemantikus szerepeket, amelyek azonosítják a gombokat, beviteli mezőket és más vezérlőket. Az akadálymentesítési fák hasonló információt nyújtanak sok asztali alkalmazáshoz. Ahelyett, hogy egy szegmentációs modellt kérnénk meg, hogy pixel alapján találja ki, melyik régió egy gomb, a rendszer közvetlenül lekérdezheti a felületről a kattintható elemeket. A webes ügynökrendszerek, mint a <code>browser-use</code>, pontosan ezt teszik: felsorolják és számozzák az interaktív elemeket a DOM-ból. Ez az SoM-ötlet strukturált implementációja a web számára (9-9. ábra). A folyamat négy lépésből áll:</p>
+<ol>
+<li>A strukturált reprezentáció (DOM fa) és akadálymentesítési információk lekérése a böngésző hibakereső felületén keresztül (CDP, Chrome DevTools Protocol)</li>
+<li>Automatikusan érzékelni, hogy mely elemek interaktívak (gombok, beviteli mezők, linkek stb.)</li>
+<li>Minden interaktív elemet egyedi azonosítóval annotálni és határoló kereteket rajzolni a képernyőképen</li>
+<li>Egyidejűleg egy szöveges listát generálni, amely leírja az egyes azonosítókhoz tartozó elemet</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Képernyőkép: [A képen a kulcselemek [1], [2], [3], [4] azonosítókkal vannak annotálva]
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Elemek:
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>[1] &lt;input type=&quot;text&quot; placeholder=&quot;Keresés&quot; aria-label=&quot;Keresés&quot; /&gt;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>[2] &lt;button id=&quot;submit-btn&quot; aria-label=&quot;Űrlap beküldése&quot; /&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>[3] &lt;input type=&quot;text&quot; placeholder=&quot;Adja meg a nevét&quot; value=&quot;&quot; /&gt;
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>[4] &lt;a href=&quot;/docs&quot; aria-label=&quot;Dokumentáció&quot; /&gt;
+</code></pre></div>
+<p>A modellnek csak egy azonosítót kell kiadnia, és a rendszer automatikusan rákattint a megfelelő elem középpontjára. Ez a megközelítés nem takarít meg tokeneket, mert minden annotációs adatot el kell küldeni a modellnek, de pontos, stabil lokalizációt biztosít, elkerülve a szegmentációs modellek által bevezethető kihagyásokat és téves pozitívumokat.</p>
+<p><img alt="9-9. ábra: Set-of-Mark vs. Strukturált Elemindexálás (browser-use implementáció)" src="../images/fig9-9.svg" /></p>
+<p>"Tiszta Koordináta Előrejelzés."</p>
+<p>A harmadik út kihagyja az annotációt, és megkéri a modellt, hogy közvetlenül adjon meg koordinátákat. Az olyan rendszerek, mint a "SeeClick" és a Claude computer use, olyan látásmodellekre támaszkodnak, amelyeket GUI képernyőképek és elempozíciók hatalmas adatkészletein tanítottak. Ezek a modellek megtanulják a természetes nyelvű leírásokat (pl. "kattints a beküldő gombra") közvetlenül pontos képernyőkoordinátákra leképezni, vizuális érzékelésre támaszkodva, mint egy emberi felhasználó.</p>
+<p>A koordináta-előrejelzési sémákban a modell koordináta-megértése nagymértékben függ a tanítás során használt felbontástól (9-10. ábra). A Claude-ot XGA (1024×768), WXGA (1280×800) és FWXGA (1366×768) felbontásokon tanították. Ha a bemeneti képernyőkép felbontása nem egyezik, a modell által előrejelzett koordináták szisztematikusan eltolódnak — mintha egy távolságot egy kis térképen mérnénk meg, majd közvetlenül egy nagy térképre alkalmaznánk. Ezért egy kétirányú koordináta-skálázó mechanizmust kell implementálni az eszköz rétegben, és a célfelbontást "a képarány alapján kell kiválasztani", hogy elkerüljük az egyenlőtlen nyújtást, amely torzítja a képet, és ezáltal torzítja a koordináta-ítéletet. Például, ha a tényleges képernyőfelbontás 2560×1440 (16:9), a Claude három támogatott opciója közül a legmegfelelőbb cél az FWXGA (1366×768), amelynek képaránya a legközelebb van a 16:9-hez. A képernyőképet arányosan 1366×768-ra skálázzák és táplálják a modellbe; miután a modell kiadja a kattintási koordinátákat (683, 384), azokat visszafejtik a valós koordinátákra (683×2560/1366, 384×1440/768) ≈ (1280, 720). Ezzel szemben, ha egy 16:9-es képet erőszakosan 4:3-as 1024×768-ra nyújtanak, a kép vízszintesen összenyomódik, ami a modell által előrejelzett koordináták szisztematikus eltolódását okozza.</p>
+<p><img alt="9-10. ábra: Felbontás-illesztés és kétirányú koordináta-skálázás" src="../images/fig9-10.svg" /></p>
+<p>A három út közötti választás a következőképpen foglalható össze: <strong>ha strukturált információ áll rendelkezésre, részesítsük előnyben a DOM/akadálymentesítési fa indexálást</strong> a legpontosabb és legstabilabb lokalizáció érdekében. "Ha nem áll rendelkezésre" — natív asztali szoftverekben, például Photoshop, canvas/WebGL renderelt felületek vagy játékok esetén — <strong>használjunk vizuális annotációt (az eredeti SoM utat) vagy koordináta előrejelzést</strong>. A vizuális annotáció többválasztásos problémává alakítja a lokalizációt, ami barátságosabbá teszi az általános célú modellek számára specializált tanítás nélkül. A koordináta előrejelzés kiküszöböli az annotációs lépést, és közvetlenebb a kifejezetten GUI lokalizációra tanított modellek számára. Mindkét megközelítés továbbra is küzd a kis elemekkel és a sűrű felületekkel.</p>
+<blockquote>
+<p><strong>9-7. kísérlet ★: A browser-use használata automatizált böngészőműveletekhez</strong></p>
+<p>Kombináljuk a Playwright-ot, egy böngésző-automatizálási keretrendszert, egy multimodális modellel, hogy természetes nyelvű utasításokkal vezérelt böngészőműveleteket implementáljunk. Engedélyezzük az SoM vizualizációt, és mentsük el a képernyőképeket annotált határoló keretekkel minden döntés előtt.</p>
+<p>Tesztfeladat "Nyisd meg a Google-t és kérdezd le a San Francisco-i időjárást": A rendszer elindulása után a képernyőkép a Google keresőoldalt mutatja, az összes interaktív elem piros határolókerettel és azonosítószámmal ellátva (címsor <code>[1]</code>, keresőmező <code>[2]</code>, keresőgomb <code>[3]</code>, "Szerencsém van" gomb <code>[4]</code> stb.) → A modell elemzi és rákattint <code>[2]</code>-re (a keresőmező) → A keresőmező fókuszba kerül, és a modell beírja "San Francisco időjárás ma" → A modell rákattint <code>[3]</code>-ra (a keresőgomb) → Az oldal a keresési eredményekre navigál, a következő képernyőkép az időjárás kártyán belüli annotált elemeket mutatja, lehetővé téve a modell számára az olyan információk azonosítását és kinyerését, mint a hőmérséklet és az időjárási körülmények. A teljes folyamat 5 lépést és körülbelül 20 másodpercet vesz igénybe.</p>
+</blockquote>
+<h3 id="egy-computer-use-ugynok-aki-animaciokat-nezhet-es-hangot-hallhat">Egy Computer Use ügynök, aki animációkat nézhet és hangot hallhat<a class="headerlink" href="#egy-computer-use-ugynok-aki-animaciokat-nezhet-es-hangot-hallhat" title="Permanent link">&para;</a></h3>
+<p>Eddig a Computer Use érzékelés egy implicit feltételezésen nyugodott: "a képernyő statikus" — készítsünk egy képernyőképet, gondolkodjunk a következő lépésről, kattintsunk, és készítsük a következő képernyőképet. A valódi képernyők videókat játszanak le, másodpercek alatt eltűnő értesítéseket villantanak fel, és hangot játszanak le értekezletekről. Egy ügynök, aki csak 3-5 másodpercenként nyitja ki a szemét, és nincs füle, vak és süket mindenre, ami két képkocka között történik. Képernyőfelvétel nézése, értekezlethez csatlakozás, hangutasítás követése, egy párbeszédablak elkapása, mielőtt eltűnik — a mindennapi számítógépes munka egész kategóriája gyakorlatilag elérhetetlen a mai Computer Use ügynök számára.</p>
+<p>Amit itt valóban újra kell tervezni, az nem a "cselekvési interfész", hanem az „észlelési interfész”<sup id="fnref:ch9-9"><a class="footnote-ref" href="#fn:ch9-9">6</a></sup>. A magötlet az "észlelés" (folyamatos, adaptív, multimodális) leválasztása a "cselekvésről" (diszkrét), létrehozva egy perceptuális köztes réteget, amely a környezet és bármely polcról beszerezhető Computer Use modell közé ül anélkül, hogy újratanítást igényelne. Nevezzük ezt Ügynök-Számítógép Észlelési Interfésznek (AOI). Három "kapuzott" komponense van: Először is, "képkockák közötti kulcskocka rögzítés" — használjunk egy nagyon olcsó pixel-kaput a szinte változatlan képkockák kihagyására, majd egy kis modellt annak meghatározására, hogy történt-e értelmes változás, rögzítve egy képkockát csak akkor, ha van változás, ami közel nulla költséget eredményez a statikus képernyőkhöz; Másodszor, "hangerő-kapuzott beszédátírás" — csak akkor hívjuk a beszédfelismerést, ha van hang, először adva "füleket" az ügynöknek; Harmadszor, és ami a legkritikusabb, "az észlelések átalakítása perzisztens szöveges leírásokká" — kérjük meg a modellt, hogy egyetlen mondatban írja le a rögzített képkockát (pl. "A felugró ablak éppen azt mondta, hogy a kiadási dátumot április 28-ra módosították"), és <strong>még ha az eredeti kép később el is távolításra kerül a kontextusból, ez a szöveg megmarad a memóriában</strong>, továbbvíve a dinamikus információt szöveges formában.</p>
+<p>A nem intuitív megállapítás az, hogy ami igazán számít, az nem a képkocka kiválasztása, hanem a kiválasztott képkockák átalakítása perzisztens szöveggé, mert a szöveg az a modalitás, amelyet az LLM-ügynökök a legjobban kezelnek. Nyolc modellen keresztül, a 7B paraméteres modellektől a frontvonalbeli rendszerekig, ez a köztes réteg +17 és +48 százalékpont közötti nyereséget biztosított minden újratanítás nélkül, a legnagyobb különbséggel a hangfeladatoknál: az észlelési réteggel az ügynök végre el tudta végezni azokat a hangfeladatokat, amelyek korábban "hallhatók, de nem végrehajthatók" voltak. Azonban nem egy mindenre egyformán jó konfigurációról van szó — néhány újabb modellen a túl sok képkocka token beszúrása kiszorítja az érvelést, és rontja a teljesítményt. Ezért a komponenseket "modellenként kell kiválasztani", nem egyszerre bekapcsolni. Ugyanaz a lecke, mint a Set-of-Mark versus koordináta előrejelzés kompromisszuma: nincs ezüstgolyó az észlelési sémákban; konfigurálni kell őket a modell természetéhez.</p>
+<h3 id="mobil-az-okoszisztema-akadalyok-kemenyebbek-mint-a-technologia">Mobil: Az ökoszisztéma akadályok keményebbek, mint a technológia<a class="headerlink" href="#mobil-az-okoszisztema-akadalyok-kemenyebbek-mint-a-technologia" title="Permanent link">&para;</a></h3>
+<p>A Computer Use a mobileszközökre is kiterjed. A mobil és asztali rendszerek technikailag különböznek: az egérkoordináták és billentyűzetbemenet helyett a mobil cselekvési tér jellemzően a rendszer akadálymentesítési szolgáltatás API-ját (pl. Android <code>AccessibilityService</code>) használja a felületi elemek olvasására és kattintások vagy szövegbevitel kiadására. Az interakció is az egérmutatóról érintési gesztusokra vált, megváltoztatva a koordináták jelentését. Ugyanaz az <code>(x, y)</code> pozíció jelenthet érintést, hosszú lenyomást vagy egy húzás kezdőpontját, ezért a cselekvésnek meg kell adnia a gesztus típusát is. A mobil benchmarkok, mint a 6. fejezetben bemutatott AndroidWorld, ebben a cselekvési térben értékelik az ügynök képességét a valós alkalmazásokban végzett feladatok elvégzésére.</p>
+<p>Azonban ami valóban akadályozza a mobil Computer Use-t, az gyakran nem ezek a technikai különbségek, hanem az ökoszisztéma akadályok. Egyes telefon gyártók megkíséreltek MI asszisztenseket integrálni fogyasztói telefonokba, hogy az asszisztensek automatikusan kezelhessék a mindennapi alkalmazásokat, mint a WeChat, Taobao és Alipay, de gyorsan platformkorlátozásokba ütköztek.</p>
+<p>Ez felfedi a Computer Use egyedi kihívását: "ökoszisztéma akadályok". E korlátozások mögött üzleti modell konfliktus áll. A hagyományos internetes alkalmazások magjának monetizációs logikája a "forgalom és a figyelem": a felhasználók hirdetéseket látnak a hírfolyam görgetése közben, ajánló algoritmusok irányítják őket a termékek keresésekor, és impulzusvásárlásokat hajtanak végre az oldalak böngészése közben. Amikor egy ügynök a felhasználó nevében működik, ez a monetizációs lánc teljesen megkerül: a MI figyelmen kívül hagyja a hirdetéseket, nem végez impulzusvásárlásokat, egyenesen a cél felé halad, befejezi a feladatot, és távozik. Azok számára a platformok számára, amelyek a reklámból és a forgalomból élnek, minden ügynöki művelet aláássa az üzleti modell alapját.</p>
+<p>Ez azt jelenti, hogy a Computer Use nemcsak technikai ellenintézkedésekkel (mint a CAPTCHA) néz szembe, hanem egy "strukturális érdekellentéttel is". Ezt a konfliktust rövid távon nehéz lesz feloldani, és nagyobb akadályt jelent a fogyasztói elterjedésben, mint a tisztán technikai problémák.</p>
+<h3 id="valos-ideju-teljesitmeny-a-megoldatlan-magkihivas">Valós Idejű Teljesítmény: A Megoldatlan Magkihívás<a class="headerlink" href="#valos-ideju-teljesitmeny-a-megoldatlan-magkihivas" title="Permanent link">&para;</a></h3>
+<p>Az "OSWorld", amelynek értékelési módszertanát a 6. fejezet írja le, egy széles körben használt benchmark a Computer Use számára, amely az ügynök képességét teszteli a feladatok elvégzésére valós Ubuntu/Windows/macOS környezetekben, alkalmazásokon átívelően. A korai általános célú modellek csak körülbelül 20%-os sikerességi arányt értek el ezen a benchmarkon. A későbbi specializált modellek és erősebb általános célú modellek folyamatosan emelték a sikerességi arányt, fokozatosan megközelítve az emberi szintű teljesítményt a cikk írásakor. Azonban a sikerességi arány messze van a céltól — a valódi szűk keresztmetszet a "helyesen tudja csinálni?"-ról a "gyorsan tudja csinálni?"-ra tolódott.</p>
+<p>Az "OSWorld-Human" hatékonysági tanulmány elgondolkodtató megállapítást hoz: még ha a feladat végül sikeres is, az ügynöknek észrevehetően több lépésre van szüksége, mint egy embernek, és a lépésenkénti inferencia késleltetés folyamatosan nő a feladat előrehaladtával — minél hosszabb a kontextus, annál lassabban dönt a modell, így a késői lépések gyakran sokkal tovább tartanak, mint a koraiak. Egy olyan dokumentum-formázási módosítás, amely egy embernek több tíz másodpercig tart, egy ügynöknek több percet is igénybe vehet. <strong>Az emberi szintű pontosság nem azonos a gyakorlati használhatósággal; a hatékonyság az igazi szűk keresztmetszet.</strong></p>
+<p>A kiváltó ok visszaköszön a beszéd forgatókönyvből: a soros "képernyőkép-gondolkodj-kattints" ciklusban, még ha minden szakaszt a végsőkig optimalizálunk is, a lépésenkénti késleltetés felhalmozódása elfogadhatatlan marad. A mélyebb probléma az, hogy a mai Computer Use egyáltalán nem tud előre gondolkodni. Ha egy ügynök előre tudná jelezni a következő lépést, miközben az aktuálisat hajtja végre — kitalálná, hova kell következőnek kattintani, amíg az oldal még tölt —, átfedésbe hozhatná a gondolkodást a végrehajtással, és drasztikusan csökkenthetné a teljes késleltetést (ugyanaz a követelmény, mint a gondolkodva beszélés korábban e fejezetben, és a 4. fejezet "folyamatos gondolkodású" aszinkron ügynöke, itt gondolkodva operálásként újrafogalmazva).</p>
+<p>A beszéddoménnel ellentétben jelenleg nincs szisztematikus megoldás a Computer Use saját valós idejű teljesítményének javítására — gyorsabbá tenni a "képernyőkép-gondolkodj-kattints" ciklust —, és az továbbra is egy diszkrét, képkockánkénti képernyőkép-ciklusban ragadt. Azonban egy kerülő út már bizonyítottan hatékony, a gyors-lassú szétválasztást használva, amely újra és újra megjelenik ebben a fejezetben: mivel nehéz egy lassú Computer Use ügynököt gyorsabbá tenni, "ne várakoztassuk a felhasználót". Használjunk két modellt párhuzamosan: egy gyors modellt a beszédhez és egy lassú modellt a számítógép-kezeléshez<sup id="fnref:ch9-10"><a class="footnote-ref" href="#fn:ch9-10">7</a></sup>. A gyors modell kezeli a valós idejű hangalapú beszélgetést, míg a csúcskategóriás VLM lépésről lépésre működik a böngészőben. A kettő csak egy minimális "egyszerű szöveges szerződésen" keresztül kommunikál: minden alkalommal, amikor a lassú ügynök végrehajt egy műveletet, frissít egy gördülő állapot-összefoglalót ("Kitöltöm az űrlapot, még szükség van a születési dátumára"). A gyors ügynök ezt használja a felhasználó valós idejű megválaszolására, és továbbítja a felhasználó által szóban adott új információkat a lassú ügynöknek. Kritikus, hogy <strong>a gyors ügynök soha ne mondja, hogy "kész", amíg az állapot-összefoglaló meg nem erősíti a befejezést</strong>. Ez a "telefonon beszélni, miközben hagyja, hogy a számítógép magától működjön" forgatókönyv. Kísérletekben ez a szétválasztás körülbelül 15-ször gyorsabbá tette a hangválaszokat, mint egyetlen, egyszerre operáló és beszélő modell (medián késleltetés 0,58 másodperc vs. 8,64 másodperc), a feladat sikerességi arányának csökkenése nélkül. A gyors és lassú közötti szöveges csatorna eltávolításával a siker nullára csökken — a felhasználók által szóban adott kulcsinformációk többé nem érik el a böngészőt. Ez ugyanaz az ötlet, mint a korábbi Latens Híd és a gondolkodva beszélés a beszéd forgatókönyvben: amikor az egyik komponens eredendően lassú, hagyjon egy gyorsat kitölteni a felhasználó várakozási idejét — és ez az "egyszerű szöveges szerződés" alapvetően a 2. fejezetben bevezetett Ügynök Állapotsor koncepció. Magának a Computer Use ciklusnak a felgyorsítása lehet a következő fontos kutatási irány, de a lassúság elrejtése a gyors-lassú szétválasztás mögött már most is működőképes válasz.</p>
+<h2 id="robot-manipulacio-valos-ideju-vezerlestol-a-tanitasig-es-altalanositasig">Robot Manipuláció: Valós idejű vezérléstől a tanításig és általánosításig<a class="headerlink" href="#robot-manipulacio-valos-ideju-vezerlestol-a-tanitasig-es-altalanositasig" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>"Olvasási megjegyzés": Ez a szakasz a robotvezérlést tárgyalja. A 9-10. kísérlet egy szimulációból valóságba történő átviteli módszert mutat be — a <strong>szimulációs tanítási rész (3-4. lépések) csak egy GPU szerverrel elvégezhető</strong>; azonban a teljes csővezeték végponttól végpontig történő reprodukálásához (beleértve a valós telepítési lépéseket is) valódi hardverre, például SO100 robotkarra van szükség. Ha jelenleg nem érdeklik a robotika iránt, kihagyhatja ezt a szakaszt; nem befolyásolja a többi fejezet olvasását.</p>
+</blockquote>
+<p>A hangügynökök a hallási modalitásban küzdenek a késleltetéssel; a Computer Use a vizuális modalitásban teszi ugyanezt. Amikor egy ügynöknek egy robotot kell irányítania a fizikai világban, a késleltetés és a multimodalitás még keményebben harap — a cselekvések visszafordíthatatlan következményekkel járnak, és egyetlen ütközés károsíthatja a tárgyat vagy magát a robotot. Ez a szakasz először bemutatja, hogyan szelídítik meg a robotok a valós idejű vezérlési problémát egy kétrétegű architektúrával és cselekvés-darabolással, majd rátér a ma előttük álló nehezebb problémára — a tanításra és általánosításra: honnan származnak az adatok, és hogyan váltanak át a modellek feladatok és platformok között.</p>
+<h3 id="a-hardver-nem-a-szuk-keresztmetszet-az-algoritmusok-azok">A Hardver Nem a Szűk Keresztmetszet; Az Algoritmusok Azok<a class="headerlink" href="#a-hardver-nem-a-szuk-keresztmetszet-az-algoritmusok-azok" title="Permanent link">&para;</a></h3>
+<p>Miért nem terjedtek el a robotok széles körben nyitott végű, általános célú környezetekben? A szűk keresztmetszet a hardver vagy az algoritmusok? Az XLeRobot projekt egy meggyőző ellenpéldát szolgáltat: amikor egy ember VR headseten keresztül távirányítja, egy 1000 dollárnál olcsóbb kétkarú kerekes robot már számos háztartási feladatot képes simán elvégezni. A Unitree robotok ügyes kezeket igénylő, összetettebb háztartási feladatokat is képesek kezelni, ha ember irányítja őket. A távirányítás késleltetése körülbelül 100-200 ms, közel a fizikai interakcióhoz szükséges válaszidőhöz. A mai alacsony költségű platformokon az érzékelő felbontás, a működtető pontosság és a vezérlési frekvencia — ahányszor másodpercenként a robot frissíti a cselekvési parancsokat — már elegendő a gyakorlati feladatokhoz. Az alacsonyabb vezérlési frekvenciák kevésbé folyékony mozgást és nagyobb kilengést vagy eltérést eredményeznek a célpályától.</p>
+<p>Ennek az állításnak világos határt kell szabni: a távirányítási példa csak azt mutatja be, hogy a meglévő olcsó hardver, emberi intelligenciával kombinálva, elegendő az <strong>elsősorban vizuális visszacsatolásra támaszkodó háztartási manipulációs feladatokhoz</strong>. Nem jelenti azt, hogy a hardver minden tekintetben megfelelő. A tapintási érzékelés hiánya, valamint az ügyes kezek költsége és megbízhatósága jól ismert korlátozások maradnak. Azoknál a feladatoknál, amelyek nagymértékben függnek a precíz erőszabályozástól és a tapintási visszacsatolástól, a hardver valóban szűk keresztmetszet lehet. A "hardver nem a szűk keresztmetszet" állítás ezért csak az ebben a szakaszban tárgyalt feladatok osztályára korlátozódik.</p>
+<p>Ezeknél a feladatoknál a valódi hiányosság az algoritmikus rétegben van, amelyet a következő két alszakasz fejt ki.</p>
+<blockquote>
+<p>"9-8. kísérlet ★: XLeRobot távirányítási élmény"</p>
+<p>Az XLeRobot több távirányítási módszert támogat, beleértve a billentyűzetet, Xbox kontrollert, Nintendo Switch Joy-Con-t és VR headsetet. Kézzel irányítsuk a robotot, amint tárgyakat vesz fel és helyez el, vagy felületeket töröl le, és figyeljük meg a válasz késleltetését, a mozgás pontosságát és a feladat-végrehajtás minőségét. Ez a gyakorlati tapasztalat intuitív megértést épít a hardver képességeiről: emberi irányítás alatt a robot a vártnál tágabb feladatkört képes ellátni, ami arra utal, hogy az algoritmusok, nem a hardver jelentik a jelenlegi szűk keresztmetszetet.<sup id="fnref:ch9-1"><a class="footnote-ref" href="#fn:ch9-1">8</a></sup></p>
+</blockquote>
+<h3 id="ketretegu-architektura-tervezes-es-vezerles-szetvalasztasa">Kétrétegű Architektúra: Tervezés és Vezérlés Szétválasztása<a class="headerlink" href="#ketretegu-architektura-tervezes-es-vezerles-szetvalasztasa" title="Permanent link">&para;</a></h3>
+<p>A robotoknak két különböző időskálán kell döntéseket hozniuk az összetett háztartási feladatok elvégzéséhez. Az első réteg a lassabb "hosszú távú tervezés": egy magas szintű utasítás, például "takarítsd ki a konyhát" lebontása részcélok sorozatára (pakold le a pultot, töltsd be a mosogatógépet, töröld le a felületeket). Ez megköveteli a környezeti szemantika megértését, a feladatfüggőségek feletti érvelést és a többlépcsős cselekvési sorozatok tervezését — hasonlóan ahhoz, ahogy egy ember gondolkodik arról, hogy "mit csináljak először és mit azután" a kezdés előtt. A második réteg a gyorsabb "VLA vezérlés" (Vision-Language-Action modell): minden egyes konkrét művelet végrehajtása ("sétálj a mosogatóhoz", "vedd fel a rongyot", "töröld le a pultot"), folyamatosan vezérlőjeleket adva az aktuális vizuális bemenet és nyelvi utasítás alapján a sima és összefüggő robotmozgás biztosításához.</p>
+<p>Ez a kétrétegű architektúra hatékonyan osztja szét a felelősségeket: a hosszú távú tervezés kezeli a "mit csináljunk", míg a VLA vezérlés kezeli a "hogyan csináljuk". A lassú magas szintű döntéshozatal és a gyors alacsony szintű végrehajtás kombinációja szorosan párhuzamba állítható a korábban a beszédnél leírt gyors-lassú architektúrával: mindkettő komplex érvelést és valós idejű válaszadást rendel különböző modulokhoz. A tervezés/vezérlés felosztás azonban a lassú mély érvelés versus a gyors valós idejű válaszadásnak felel meg, nem pedig az MPS Formuláló Agya és Artikulációs Agya közötti gondolkodás/kifejezés felosztásnak a 3. megoldásban. Az MPS a gondolkodást választja el a beszédtől; a robotika architektúra a globális tervezést választja el a valós idejű végrehajtástól. A két architektúra tehát a munkát különböző dimenziók mentén osztja fel.</p>
+<p>A valós idejű korlátok nem tűntek el; leszorultak a VLA vezérlési rétegbe, ahol a "Cselekvés Darabolás" (Action Chunking) segít enyhíteni őket (lásd a "VLA Vezérlés" alszakaszt alább). A modell egyetlen inferencia során egy rövid jövőbeli cselekvéssorozatot generál, és a vezérlő szál nagy frekvencián játssza le őket, amortizálva az inferencia késleltetését a teljes sorozat végrehajtása alatt. Ez elkerülhetetlen kompromisszumot teremt a simaság és a reagálóképesség között: a hosszabb darabok szétterítik a késleltetést több cselekvésre, és simább mozgást eredményeznek, de a modell ezalatt nem kap új vizuális bemenetet, így lassabban reagál a hirtelen változásokra, például ha egy tárgyat elmozdítanak, vagy egy kéz elzárja az utat. A kétrétegű architektúra nem szünteti meg ezt a feszültséget; csupán áthelyezi.</p>
+<p>A fejezet fókusza most eltolódik: a robotikában a valós idejű feszültséget részben enyhítette a kétrétegű szétválasztás és a cselekvés darabolás, míg a "tanítás és általánosítás" — hogyan szerezzünk elég demonstrációs adatot, és hogyan általánosítsanak a modellek feladatok és platformok között — vált a központi aggodalommá. A következő alszakaszok a 6. fejezet szimulációs környezeteinek és a 7. fejezet megerősítéses tanulásának témáit terjesztik ki a fizikai világba.</p>
+<p>Ez az új kihívás elsősorban a VLA vezérlési rétegre hárul. Gondoljunk a VLA-ra mint "VLM + cselekvési kimenet": a "VLM" (Vision-Language Model — egy nagy modell, amely képeket és szövegeket is ért) kezeli az érzékelést és az érvelést, míg a VLA-nak cselekednie is kell — és a cselekvés az, ahol a valódi nehézség van. Ma a VLA vezérlési réteget elsősorban utánzó tanítás (imitation learning), vagyis "viselkedés klónozás" (behavior cloning) útján tanítják, amely emberi demonstrációk nagy gyűjteményeit használva tanulja meg az észlelések cselekvésekre való leképezését. Az OpenVLA, RT-2 és π₀ mind ebbe a kategóriába tartoznak. A megerősítéses tanulás (reinforcement learning) újabban jelent meg kiegészítő technikaként. Bár az RL-lel tanított VLA-k jól teljesíthetnek egyedi feladatokon, gyakran gyengén általánosítanak. Például a 7. fejezetben szereplő SimpleVLA-RL erős egyfeladatos eredményeket jelent a LIBERO-n, de minden feladathoz külön van tanítva, nem pedig egy egységes modellként, amely nullszorosan általánosít az összes feladaton. Ez az egy tanítási futtatás feladatonként minta azt jelenti, hogy minden új feladathoz friss adatgyűjtés és újratanítás szükséges.</p>
+<p>A következő két szakasz a hosszú távú tervezés és a VLA vezérlés specifikus technikai megoldásaiba merül el.</p>
+<h3 id="hosszu-tavu-tervezes-a-vlm-tol-a-specializalt-megtestesult-ervelesi-modellekig">Hosszú Távú Tervezés: A VLM-től a Specializált Megtestesült Érvelési Modellekig<a class="headerlink" href="#hosszu-tavu-tervezes-a-vlm-tol-a-specializalt-megtestesult-ervelesi-modellekig" title="Permanent link">&para;</a></h3>
+<p>Az általános célú VLM-ek már rendelkeznek elfogadható megtestesült érvelési (embodied reasoning) képességekkel. A Google DeepMind "Gemini Robotics-ER 1.5" kifejezetten a Megtestesült Érvelésre van optimalizálva (a fizikai világban lévő tárgyak pozíciójának, mozgásának és ok-okozati összefüggéseinek megértése). 62,8%-os átlagot ér el 15 akadémiai benchmarkon (Point-Bench, RefSpatial, RoboSpatial, BLINK stb.), felülmúlva a GPT-4o-t (60,6%) és a Gemini 2.5 Pro-t (59,3%). A fő előnyök közé tartozik: fejlett térbeli megértés és tárgy lokalizáció, időbeli érvelés (cselekvések következményeinek előrejelzése, mint "mi történik, ha meglököm ezt a csészét"), feladatsorrendezés (magas szintű utasítások lebontása kisebb lépésekre), valamint natív támogatás a gondolkodási mechanizmusokhoz és eszközhívásokhoz.<sup id="fnref:ch9-2"><a class="footnote-ref" href="#fn:ch9-2">9</a></sup></p>
+<blockquote>
+<p><strong>9-9. kísérlet ★★: A Gemini Robotics-ER 1.5 használata az XLeRobot autonóm navigáció irányításához</strong></p>
+<p>Használjuk a RoboCrew könyvtárat a Gemini Robotics-ER 1.5-tel mint hosszú távú tervező modellel, szögskála annotációkat helyezve a kamera képeire. A rendszer csak három egyszerű eszközt biztosít: mozogj előre, fordulj balra, fordulj jobbra. A "találd meg a konyhát és menj oda" feladatot kapva a modell 0,5-1 Hz-en hoz döntéseket. Azonosít vizuális jellemzőket, mint folyosók, ajtók, bútorok; arra következtet, hogy a konyha lehet balra, és elfordul; majd meglát egy hűtőszekrényt előtte, és továbbmegy. A rendszer kiterjeszthető hangvezérléssel is, egy ébresztőszóval új feladatok indítására. Ez a kísérlet felfedi a VLM-ek korlátait a hosszú távú tervezésben: térbeli érvelésük és feladatbontásuk már erős, de robusztusságuk komplex környezetekben és konzisztenciájuk több érvelési lépésen át még fejlesztésre szorul.<sup id="fnref:ch9-3"><a class="footnote-ref" href="#fn:ch9-3">10</a></sup></p>
+</blockquote>
+<h3 id="vla-vezerles-a-demonstracios-adatoktol-a-platformokon-ativelo-altalanositasig">VLA Vezérlés: A Demonstrációs Adatoktól a Platformokon Átívelő Általánosításig<a class="headerlink" href="#vla-vezerles-a-demonstracios-adatoktol-a-platformokon-ativelo-altalanositasig" title="Permanent link">&para;</a></h3>
+<p>A kétrétegű architektúra végrehajtási rétegében három reprezentatív modell — RT-2, OpenVLA és π₀ — mind a VLA vezérlésre összpontosít, azaz robotcselekvések valós idejű kiadására kamera képek és nyelvi utasítások alapján (9-11. ábra). Két különböző megközelítést követnek a cselekvés reprezentációjában: diszkrét cselekvési tokenek és folytonos pályagenerálás.</p>
+<p><img alt="9-11. ábra: VLA Architektúra (Vision-Language-Action)" src="../images/fig9-11.svg" /></p>
+<p><strong>RT-2 és OpenVLA: A Diszkrét Cselekvési Token Út.</strong></p>
+<p>Az "RT-2" volt az úttörő ezen az úton: közvetlenül finomhangol egy nagyméretű látás-nyelvi modellt, a robot folytonos cselekvéseit tokenekké diszkretizálva, és autoregresszíven, egyenként adva ki őket, mint a szöveggenerálásnál. Kihasználja az előtanított modell általánosítási képességét a nullszoros átvitel javítására új tárgyakra és utasításokra. Az "OpenVLA" az RT-2 cselekvés-reprezentációs sémáját követi, egyesítve a nyelvi modellt és a látás kódolót egyetlen architektúrában. Képeket és szöveges utasításokat vesz bemenetként, és cselekvési tokeneket ad ki. A tanítás két szakaszban történik: először előtanítás a nagyméretű, platformokon átívelő Open X-Embodiment adatkészleten (amely több mint 20 robotplatform valós manipulációs demonstrációit fedi le) az általános manipulációs tudás megtanulására (a "megfogás" és "elhelyezés" akcióminták közösek a különböző robotoknál); másodszor, finomhangolás egy kis mennyiségű adattal egy adott platformhoz. Mivel cselekvés-reprezentációik hasonlóak, a gyakorlati különbség, amelyet itt hangsúlyoznunk kell, a nyitottságban és a mérnöki döntésekben rejlik: az RT-2 és tanítási adatai a Google belső anyagai, míg az OpenVLA teljesen nyílt forráskódú — egy nyílt forráskódú törzsmodell (Llama 2 plusz egy látás kódoló) nyilvános adatkészletekkel párosítva, így az OpenVLA verem reprodukálható és bővíthető a szélesebb közösség által.</p>
+<p><strong>Cselekvés Darabolás: Univerzális Frekvenciakompenzációs Technika a VLA Doménben.</strong></p>
+<p>Mivel a nagymodell inferencia lassú, a VLA-k sokkal alacsonyabb frekvencián futtatnak inferenciát, mint a hagyományos robotvezérlők működnek. A hagyományos vezérlés jellemzően 50-1000 Hz-en fut, míg a VLA inferencia általában csak körülbelül 1-10 Hz-en fut — egy egy-három nagyságrend közötti különbség. Az eredeti OpenVLA jól illusztrálja ezt a problémát: csak egy cselekvést ad ki inferenciánként, körülbelül 6 Hz-en, egy lépéses autoregresszív előrejelzést használva, és rángatózó mozgása az egyik legkritizáltabb hiányossága. A "Cselekvés Darabolás" egy általános technika ennek a különbségnek az áthidalására. Először az ACT (Zhao et al., 2023) javasolta, később a π₀, OpenVLA-OFT és mások átvették: a modell minden egyes inferencia során egy rövid jövőbeli cselekvéssorozatot generál egyetlen cselekvés helyett. Egy tipikus π₀ konfigurációban például a modell egy 0,5-1 másodperces darabot generál, amely 25-50 cselekvést tartalmaz 50 Hz-es vezérlési frekvencián. A vezérlő szál ezeket a cselekvéseket egymás után, nagy frekvencián hajtja végre, miközben a modell aszinkron módon, a háttérben generálja a következő adagot. Amíg az inferencia befejeződik, mielőtt az aktuális cselekvési adag végrehajtása befejeződne, a robot folyamatos, sima mozgást tud fenntartani — hasonlóan ahhoz, ahogy a videó pufferelés megakadályozza a lejátszás akadozását a tartalom előzetes betöltésével.</p>
+<p>"π₀: A Folytonos Pályagenerálás Útja."</p>
+<p>A valódi megosztottság a cselekvés reprezentációjában nem az RT-2 és az OpenVLA között van, hanem a "diszkrét tokenek és a folytonos pályagenerálás" között. A "π₀" az utóbbi utat követi: ahelyett, hogy diszkrét cselekvési tokeneket jósolna egyenként, flow matching-et használ, egy folytonos generálási módszert, amely a diffúziós modellekhez kapcsolódik: véletlenszerű zajjal kezd, és iteratívan "zajtalanítja" azt egy sima, folytonos cselekvési pályává. Ez a reprezentáció természetesen párosul a cselekvés darabolással, és jobban teljesít olyan feladatokon, mint az ügyes manipuláció, amelyek precíz, folyékony mozgást igényelnek. Hasonlatként: a diszkrét token megközelítés olyan, mintha parancsokat, mint "5 fok balra" és "3 cm előre", egyenként választanánk ki egy menüből. A folytonos pályagenerálás inkább olyan, mintha egy művész az egész görbét felvázolná, majd vonásról vonásra finomítaná.</p>
+<h3 id="sim2real-atvitel-a-szimulacio-es-valosag-kozotti-res">Sim2Real Átvitel: A Szimuláció és Valóság Közötti Rés<a class="headerlink" href="#sim2real-atvitel-a-szimulacio-es-valosag-kozotti-res" title="Permanent link">&para;</a></h3>
+<p>A 6. fejezet szimulációs szakasza már elmagyarázta, honnan származik a szimuláció-valóság (sim-to-real) rés, és hogyan küzd ellene a domén randomizáció, így nem ismételjük meg itt. Röviden: a szimuláció soha nem képes tökéletesen reprodukálni a valós fizikát, vizuális elemeket és hardvert, ezért a tanítás széles tartományban randomizálja ezeket a paramétereket, kényszerítve a politikát, hogy megtanuljon egy, ezekre a változatokra robusztus reprezentációt (9-12. ábra). A következőkben azt nézzük meg, hogy ez az elv hogyan valósul meg egy valódi robotkaron.</p>
+<p><img alt="9-12. ábra: Sim2Real rés és Domén Randomizáció" src="../images/fig9-12.svg" /></p>
+<p>Ez a megközelítés számos figyelemre méltó sikert produkált. Az OpenAI Dactyl projektje elérte a kocka kézben történő átforgatását, és egy későbbi munka az Automatikus Domén Randomizációt (ADR) használva egy Rubik-kockát oldott meg egy kézzel. Az ETH Zürich ANYmal négylábúja robusztus járást mutatott be nehéz külső terepen, például havon és kavicson.</p>
+<p>Amit ez a fejezet hozzáad, az a két mérnöki lépés, amelyet nem lehet kihagyni a domén randomizáció valódi robotra vitelénél. Az első a "randomizációs tartomány kalibrálása": a tartományt nem lehet tippre beállítani. Túl szűk, és kihagyja a valós változatosságot; túl széles, és a tanítás nehezebbé válik, és egy szuboptimális politikát eredményez, amely "mindent kezel, semmit sem sajátít el". A gyakorlatban a kulcsparaméterek (súrlódási együttható, motor válaszkésleltetés) eloszlását először a valós adatokból "mérik és kalibrálják", és ezen a tartományon belül mintavételeznek; ha a szimulációban tanított politika teljesítménye észrevehetően csökken a valódi roboton, a tartományt lépésről lépésre szélesítik, amíg a sim-to-real rés elfogadhatóvá nem válik. A második a "vizuális illesztés": a kamera pozíciójának pontos kalibrálása a szimuláció és a valóság között (környezeti illesztés), és valós háttérképek véletlenszerű beillesztése a szimulált renderbe (zöldvászon háttércsere), hogy a szimuláció a lehető legjobban hasonlítson arra, amit a valódi robot lát. A 9-10. kísérlet mindkét lépést bemutatja.</p>
+<blockquote>
+<p><strong>9-10. kísérlet ★★★: Nullszoros RGB Sim2Real Robotos Megfogás</strong></p>
+<p>A LeRobot + ManiSkill szimulátor használatával, csak RGB kamera képekkel tanítva (mélységérzékelők vagy erőérzékelők nélkül), majd nullszoros telepítéssel (további hangolás nélkül) közvetlenül egy valódi SO100 robotkarra. A folyamat öt lépésből áll:</p>
+<ol>
+<li>"Környezeti Illesztés": A kamera pozíciók beállítása a szimulációban és a valós környezetben, vizuális átfedéssel ellenőrizve, hogy a két oldal képei illeszkednek.</li>
+<li>"Háttércsere (Zöldvászon)": A valós környezetből rögzített háttérképek véletlenszerű kivágása és ráhelyezése a szimulációs renderre, így a szimulációs háttér közelebb kerül a valósághoz.</li>
+<li>"Domén Randomizáció": Olyan paraméterek randomizálása, mint a robot színe, a tárgy textúrája, a fényviszonyok és a kamera látómezeje.</li>
+<li>"RL Tanítás": Tanítás a PPO algoritmussal egy masszívan párhuzamosított szimulációs környezetben, amíg a sikerességi arány a szimulációban meghaladja a 90%-ot.</li>
+<li>"Valós Telepítés": A megfogási feladat sikeres elvégzése a valódi roboton, nullszoros módon.</li>
+</ol>
+<p>Kulcsfontosságú sikertényezők: precíz környezeti illesztés, vizuális domén randomizáció és fizikai paraméter randomizáció; mindhárom nélkülözhetetlen. Korlát: Amikor a valódi tárgyak alakja, mérete vagy anyaga kívül esik a tanítási eloszláson, a sikerességi arány jelentősen csökken.<sup id="fnref:ch9-6"><a class="footnote-ref" href="#fn:ch9-6">11</a></sup></p>
+<p><img alt="9-13. ábra: 9-10. kísérlet Nullszoros RGB Sim2Real Csővezeték" src="../images/fig9-13.svg" />
+</p>
+</blockquote>
+<h2 id="fejezet-osszefoglalo">Fejezet Összefoglaló<a class="headerlink" href="#fejezet-osszefoglalo" title="Permanent link">&para;</a></h2>
+<p>A felszínen a három forgatókönyv aligha lehetne különbözőbb, mégis a késleltetés és a multimodalitás kettős akadálya mindegyiket árnyékolja. A hangügynökök a soros csővezetékektől a végponti és teljes duplex rendszerekig, valamint a különálló gyors és lassú gondolkodástól a gondolkodva beszélésig fejlődtek. A Computer Use most megközelíti az emberi pontosságot az olyan benchmarkokon, mint az OSWorld, de sokkal több lépést igényel, mint egy ember, és minden lépés tovább tart a feladat előrehaladtával — egy hatékonysági rés, amelyre még nincs szisztematikus megoldás. A vizuálisan vezérelt manipulációs feladatokat végző robotok esetében a szűk keresztmetszet a hardverről a VLA vezérlési réteg azon képességére tevődött át, hogy általánosítson a feladatok között (a tapintási érzékelés és az ügyes kezek továbbra is megoldatlan hardverkorlátok). A következő fejezet a több ügynök közötti együttműködésre tér át — egy más dimenziójú kihívásra.</p>
+<h2 id="elgondolkodtato-kerdesek">Elgondolkodtató Kérdések<a class="headerlink" href="#elgondolkodtato-kerdesek" title="Permanent link">&para;</a></h2>
+<ol>
+<li>★★ A hangügynökök végponti modellje egyetlen modellbe olvasztja az ASR-LLM-TTS-t, csökkentve a késleltetést, de elveszítve a modularitást. Ha a végponti modell egy adott szakaszban hibázik (pl. beszédfelismerés), a hibakeresés és javítás sokkal nehezebb, mint egy soros csővezetékben. Hogyan tervezne megfigyelhetőségi rendszert egy végponti hangügynök számára?</li>
+<li>★ A Step-Audio R1 az MPS kétagyú architektúrán keresztül éri el a "gondolkodva beszélést". Az emberek azonban, amikor "gondolkodva beszélnek", gyakran mondanak dolgokat, mielőtt teljesen átgondolták volna, önjavítanak, vagy töltelékszavakat használnak. Egy ügynök "gondolkodva beszélésének" utánoznia kellene ezeket az emberi jellemzőket?</li>
+<li>★★ Az SoM (Set-of-Mark) és strukturált változatai (DOM elem indexálás) a Computer Use vizuális lokalizációját nyílt végű koordináta előrejelzésről zárt halmazú azonosító kiválasztásra alakítják át, de mindegyik megköveteli a felületi elemek előzetes érzékelését és annotálását — akár egy szegmentációs modellen, akár a DOM-on keresztül. Ha a felület nem szabványos vezérlőket vagy dinamikusan változó elemeket tartalmaz, az annotációk hiányosak vagy pontatlanok lehetnek. Ilyen esetben vissza kellene térnünk a koordináta előrejelzéshez?</li>
+<li>★★ Az olyan ezer dolláros robotplatformok, mint az XLeRobot, olcsóvá teszik a távirányításos adatgyűjtést. Azonban a távirányításos adatok minősége nagyban függ a kezelő képzettségétől. Hogyan befolyásolná egy képzetlen kezelő alacsony minőségű adata egy VLA modell tanítását? Hogyan lehet az alacsony minőségű adatokat automatikusan kiszűrni az adatgyűjtési fázisban?</li>
+<li>★★★ Ez a fejezet három interakciós modalitást fed le: hang, Computer Use és robotika. Ezekben a modalitásokban közös tendencia a soros csővezetékektől a végponti modellek felé való fejlődés. Ha ez a tendencia folytatódik, hogyan nézhet ki az ügynök interakciós rétege öt év múlva?</li>
+<li>★★★ A jelenlegi Computer Use egy diszkrét "képernyőkép → cselekvés → képernyőkép" ciklusban működik, ahol minden megfigyelés egy statikus képkocka. De az emberi képernyő-észlelés folyamatos — látjuk az animációk lejátszódását, megfigyeljük a betöltési folyamatot, és megértjük a videótartalmat. Ez azt jelenti, hogy a mai Computer Use nem képes kezelni az időbeli vizuális megértést igénylő feladatokat. Hogyan tervezné újra az észlelési réteget a folyamatos vizuális streamek megértésének támogatására?</li>
+<li>★★ A DOM/Accessibility Tree elemindexálás jól működik a szabványos webalkalmazásokon, de egyre több szoftverfelület (Canvas/WebGL renderelés, platformokon átívelő egyedi rajzolt vezérlők) nem biztosít hozzáférhető strukturált információt, kizárólag vizuális annotációra vagy koordináta előrejelzésre támaszkodva. Ön szerint a Computer Use-nek a tisztán vizuális megközelítésre kellene fogadnia, vagy mind a strukturált, mind a vizuális utat fenn kellene tartania? Mik a költségei és előnyei mindkét út fenntartásának?</li>
+<li>★★ A VLA modellek cselekvés darabolást használnak — a szövegben említettek szerint π₀ tipikus konfigurációja 25-50 jövőbeli cselekvést generál 50 Hz-en — az inferencia késleltetésének a végrehajtási időn belüli elrejtésére. Ha azonban a környezet hirtelen megváltozik a végrehajtás alatt (pl. egy tárgyat elmozdítanak), az előre generált cselekvési sorozat érvénytelenné válik. Hogyan lehet egyensúlyt teremteni a cselekvés darabolás hatékonysági előnye és a környezeti változásokra való reagálóképesség igénye között?</li>
+<li>★★★ A fejezet mindhárom forgatókönyve (hang, Computer Use, robotika) szembesül az "észlelés-gondolkodás-cselekvés" ciklus késleltetési problémájával, és a párhuzamosított gyors és lassú gondolkodás felé fejlődik. A hangban ez a "javítás a félrebeszélés után"; a Computer Use-ben a "kattints először, aztán nézz"; a robotikában a "tegyél egy lépést, aztán nézz" formában nyilvánul meg. Hogyan biztosítható, hogy ezek a gyors gondolkodáson alapuló cselekvések ne vezessenek visszafordíthatatlan következményekhez?</li>
+</ol>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:ch9-12">
+<p>OpenAI. <em>Introducing GPT-Live.</em> 2026-07-08. https://openai.com/index/introducing-gpt-live/. A "Kaszkádolt / Fordulóalapú / Teljes Duplex" háromrészes osztályozás ebben a szakaszban ebből a cikkből származik, amely a ChatGPT Voice evolúciójának három generációját foglalja össze; a szövegben szereplő "Végponttól végpontig tartó Omnimmodális (Omni)" megfelel az ő "turn-based voice models" kategóriájának.&#160;<a class="footnote-backref" href="#fnref:ch9-12" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-11">
+<p>A fordulóítélet felismerőbe ágyazásának diagnózisa és az utólagos címkék problémája megtalálható Bojie Li és Noah Shi. <em>The Trade-off Was in the Labels: Causal Supervision for Turn-Aware Streaming ASR.</em> 2026 (megjelenés alatt).&#160;<a class="footnote-backref" href="#fnref:ch9-11" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-13">
+<p>A kaszkád és a végponti megoldás pontossági előnyeinek teljes keresztmodális méréséért, valamint annak előrejelzéséért, hogy az irány a feladat természetétől függ (hogy a köztes reprezentáció kellően hordozza-e a feladatinformációt), lásd Bojie Li és Noah Shi. <em>The Cascade Gap: When and Why Self-Cascades Help Multimodal Agents.</em> 2026 (megjelenés alatt).&#160;<a class="footnote-backref" href="#fnref:ch9-13" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-14">
+<p>Thinking Machines Lab, "Interaction Models: A Scalable Approach to Human-AI Collaboration," 2026-05. https://thinkingmachines.ai/blog/interaction-models/&#160;<a class="footnote-backref" href="#fnref:ch9-14" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-8">
+<p>A két fagyasztott modell közötti latens tér híd tanításának és a "mikor érdemes lassú stratégát meghívni" teljes elemzése megtalálható Bojie Li és Noah Shi. <em>The Latent Bridge: A Continuous Slow-Fast Channel for Real-Time Game Agents.</em> arXiv:2606.24470, 2026.&#160;<a class="footnote-backref" href="#fnref:ch9-8" title="Jump back to footnote 5 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:ch9-8" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-9">
+<p>A három komponens — kapuzott kulcskockák, igény szerinti átírás, képkockák narrálása perzisztens szöveggé — teljes mechanizmusáért és modellenkénti ablációjáért lásd Bojie Li és Noah Shi. <em>Agent-Computer Observation Interfaces Enable Dynamic Computer Use.</em> arXiv:2606.29472, 2026.&#160;<a class="footnote-backref" href="#fnref:ch9-9" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-10">
+<p>A beszéd-operáció gyors-lassú szétválasztásának és az "egyszerű szöveges szerződésnek" a teljes terve megtalálható Bojie Li és Noah Shi. <em>Talking While Acting: Real-Time Voice for Slow Computer-Use Agents.</em> 2026 (megjelenés alatt).&#160;<a class="footnote-backref" href="#fnref:ch9-10" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-1">
+<p>XLeRobot, "Teleop Documentation." https://xlerobot.readthedocs.io/en/latest/software/getting_started/XLeRobot_teleop.html&#160;<a class="footnote-backref" href="#fnref:ch9-1" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-2">
+<p>Google DeepMind, "Gemini Robotics-ER 1.5." https://deepmind.google/models/gemini-robotics/gemini-robotics-er/&#160;<a class="footnote-backref" href="#fnref:ch9-2" title="Jump back to footnote 9 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-3">
+<p>XLeRobot, "LLM Agent Control." https://xlerobot.readthedocs.io/en/latest/software/getting_started/LLM_agent.html&#160;<a class="footnote-backref" href="#fnref:ch9-3" title="Jump back to footnote 10 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ch9-6">
+<p>LeRobot, "Sim2Real Tutorial". https://github.com/StoneT2000/lerobot-sim2real/blob/main/docs/zero_shot_rgb_sim2real.md&#160;<a class="footnote-backref" href="#fnref:ch9-6" title="Jump back to footnote 11 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:45 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:45 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
