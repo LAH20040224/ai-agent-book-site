@@ -1,0 +1,2206 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/chapter5/paper-to-video/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Experiment 5-5: Paper Lecture Video / 实验 5-5：论文讲解视频的自动生成 ★★ - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="Experiment 5-5: Paper Lecture Video / 实验 5-5：论文讲解视频的自动生成 ★★">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/chapter5/paper-to-video/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Experiment 5-5: Paper Lecture Video / 实验 5-5：论文讲解视频的自动生成 ★★">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#experiment-5-5-paper-lecture-video-5-5" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Experiment 5-5: Paper Lecture Video / 实验 5-5：论文讲解视频的自动生成 ★★
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#english" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        English
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="English">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#canonical-manuscript-campaign" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical manuscript campaign
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#legacy-quick-demo-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Legacy quick-demo pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sample outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adapt-extend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adapt / extend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        中文
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="中文">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        概述
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        正式实验活动
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        旧版快速演示流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        运行命令
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        预期输出示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        如何适配 / 扩展
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        局限
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes / 说明
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/chapter5/paper-to-video/README.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/chapter5/paper-to-video/README.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="experiment-5-5-paper-lecture-video-5-5">Experiment 5-5: Paper Lecture Video / 实验 5-5：论文讲解视频的自动生成 ★★<a class="headerlink" href="#experiment-5-5-paper-lecture-video-5-5" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Companion lab for <em>AI Agents in Depth</em>, Chapter 5 — spoken narration per slide, TTS, ffmpeg page-synced lecture video.<br />
+《深入理解 AI Agent》第 5 章：每页口语讲解词 + TTS + ffmpeg 逐页同步合成带旁白的讲解视频。</p>
+</blockquote>
+<p>← <a href="../">Chapter 5 index / 返回第 5 章目录</a></p>
+<hr />
+<h2 id="english">English<a class="headerlink" href="#english" title="Permanent link">&para;</a></h2>
+<h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
+<p>On top of “paper → PPT”, the Agent generates <strong>spoken lecture scripts</strong> per slide (guiding narration, not bullet recitation), calls <strong>TTS</strong> for audio, then uses <strong>ffmpeg</strong> to <strong>mux each slide PNG with its audio</strong> into a narrated video.</p>
+<h3 id="canonical-manuscript-campaign">Canonical manuscript campaign<a class="headerlink" href="#canonical-manuscript-campaign" title="Permanent link">&para;</a></h3>
+<p><code>campaign.py</code> is the formal Experiment 5-5 runner. It consumes twelve real
+Slidev screenshots and source from the pinned Experiment 5-4 paper run, calls
+Kimi K3 for narration, independently checks every narration against the actual
+slide pixels with Qwen-VL-Max, synthesizes every accepted page with Fish Audio
+S1, and produces a 5–15 minute H.264/AAC video. It checkpoints every provider
+call so an interrupted run resumes without replacing missing pages with
+silence or generated placeholders.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>campaign.py<span class="w"> </span>--output<span class="w"> </span>validation/runs/my-real-run<span class="w"> </span>--workers<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<p>The formal gate requires 12 distinct rendered pages, live receipts for all
+three providers, per-page A/V drift at most 0.2 seconds, final-duration drift at
+most 0.75 seconds, and a 300–900 second final video. <code>experiment_protocol.json</code>
+pins the source pages, models, thresholds, and authorized voice manifest.</p>
+<p>The completed canonical run is
+<a href="validation/runs/exp5-5-kimi-fish-qwen-20260730-v1/manifest.json"><code>validation/runs/exp5-5-kimi-fish-qwen-20260730-v1/manifest.json</code></a>
+(SHA-256 <code>93bb69a916a76d12de56270928971f6e39f47755214f7a135817d7effd8b3f09</code>).
+All formal gates passed. The H.264/AAC result is 513.010 seconds (8.55
+minutes), summed page audio is 512.913 seconds, and the maximum measured page
+drift is 0.024 seconds. The rejected real malformed-JSON response for page 12
+is retained beside the successful retry instead of being hidden.</p>
+<p>The <code>demo.py</code> flow below is retained as a fast teaching/compatibility path. Its
+built-in five-page PIL deck and offline silent audio do <strong>not</strong> satisfy the
+formal manuscript campaign.</p>
+<h3 id="legacy-quick-demo-pipeline">Legacy quick-demo pipeline<a class="headerlink" href="#legacy-quick-demo-pipeline" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Paper bullets (built-in sample)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>   │  PIL render
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>   ▼
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Per-page PNG slides ──► gpt-5.6-luna spoken script ──► OpenAI tts-1 → mp3
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>   │                                                        │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>   └──────────────── ffmpeg: each PNG + that page&#39;s audio ──┘
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>                              │  (page duration = audio duration)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>                              ▼
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>                     ffmpeg concat
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>                              ▼
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>                     output/lecture.mp4
+</code></pre></div>
+<ul>
+<li><strong>Self-contained</strong>; does not depend on experiment 5-4: built-in <em>Attention Is All You Need</em> outline rendered to 5 slide PNGs via PIL (or replace with 5-4 Slidev screenshots).</li>
+<li>Scripts from <code>gpt-5.6-luna</code>; audio from OpenAI <code>tts-1</code> (<code>voice=alloy</code>).</li>
+<li>Video via ffmpeg: one mp4 segment per page with duration = that page’s audio, then concat → <strong>display time matches speech exactly</strong>.</li>
+</ul>
+<h3 id="run">Run<a class="headerlink" href="#run" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From the repository root: use the shared Chapter 5 environment</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.12<span class="w"> </span>--extra<span class="w"> </span>ch5
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Activate it before changing directories:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># macOS/Linux:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Windows PowerShell: .\.venv\Scripts\Activate.ps1</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Windows cmd: .venv\Scripts\activate.bat</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># pip fallback when uv is not installed:</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># python -m pip install -e &quot;.[ch5]&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nb">cd</span><span class="w"> </span>chapter5/paper-to-video
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Single-project compatibility path, still supported during migration:</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># python -m pip install -r requirements.txt</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>cp<span class="w"> </span>env.example<span class="w"> </span>.env<span class="w">                  </span><span class="c1"># OPENAI_API_KEY (or OPENROUTER_API_KEY for script fallback; TTS degrades offline)</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>python<span class="w"> </span>demo.py<span class="w">                       </span><span class="c1"># full 5-page lecture video</span>
+</code></pre></div>
+<p>Common flags (<code>python demo.py --help</code> for all):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--check<span class="w">     </span><span class="c1"># env check: ffmpeg/ffprobe/fonts/config; no API</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--quick<span class="w">     </span><span class="c1"># smoke: page 1 only (same as --limit 1)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--limit<span class="w"> </span><span class="m">2</span><span class="w">   </span><span class="c1"># first 2 pages only</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--offline<span class="w">   </span><span class="c1"># no API: silent placeholder audio; validates ffmpeg pipeline</span>
+</code></pre></div>
+<p>Full flags:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--slides FILE</code></td>
+<td>Slide content JSON (<code>[{title, subtitle, bullets}, ...]</code>); replaces built-in sample</td>
+</tr>
+<tr>
+<td><code>--script FILE</code></td>
+<td>Ready narration JSON (list of strings, one per page); <strong>skips LLM script gen</strong></td>
+</tr>
+<tr>
+<td><code>-o, --output FILE</code></td>
+<td>Final video path (default <code>output/lecture.mp4</code>)</td>
+</tr>
+<tr>
+<td><code>--tts-provider {openai,offline}</code></td>
+<td>TTS provider; <code>offline</code> = ffmpeg silent placeholder (no API)</td>
+</tr>
+<tr>
+<td><code>--offline</code></td>
+<td>Fully offline: same as <code>--tts-provider offline</code> + bullet placeholder scripts (zero API)</td>
+</tr>
+<tr>
+<td><code>--text-model / --tts-model / --tts-voice</code></td>
+<td>Override model/voice (defaults from same-named env vars)</td>
+</tr>
+<tr>
+<td><code>--limit N / --quick / --check</code></td>
+<td>First N pages / page 1 only / check only</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Offline validation</strong>: <code>--offline</code> needs no key or network; uses <code>ffmpeg anullsrc</code> with duration estimated from script length—runs “render → estimate duration → per-page mux → concat” to verify <strong>per-page time alignment</strong> (silent placeholders, not real voice).</p>
+</blockquote>
+<p>Artifacts:</p>
+<ul>
+<li><code>output/slides/slide_*.png</code> — slides</li>
+<li><code>output/audio/audio_*.mp3</code> — per-page audio</li>
+<li><code>output/segments/seg_*.mp4</code> — per-page segments</li>
+<li><code>output/narration.json</code> — scripts + audio durations</li>
+<li><code>output/lecture.mp4</code> — final video</li>
+</ul>
+<p>Probe metadata:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-show_format<span class="w"> </span>-show_streams<span class="w"> </span>output/lecture.mp4
+</code></pre></div>
+<h3 id="sample-outputs">Sample outputs<a class="headerlink" href="#sample-outputs" title="Permanent link">&para;</a></h3>
+<p>Built-in 5-page <em>Attention Is All You Need</em> full run (real artifacts):</p>
+<ul>
+<li><code>output/lecture.mp4</code>: ~<strong>2.8 MB</strong>, <strong>166.97s</strong> (≈2m 47s), <strong>1280×720</strong>, <strong>H.264</strong> + <strong>AAC</strong>.</li>
+<li><code>output/audio/audio_01.mp3 … audio_05.mp3</code>: ~<strong>28.6s / 33.3s / 37.2s / 37.9s / 29.9s</strong> (sum ≈166.9s = video duration).</li>
+<li><code>output/narration.json</code>: e.g. page 1 spoken intro about “Attention Is All You Need” and attention without recurrence/convolutions.</li>
+</ul>
+<p>Logs print per-page “slide → script → audio duration”; end summary compares total audio duration to final video (should match closely).</p>
+<h3 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>ffmpeg / ffprobe</strong> (validated on 8.x). macOS: <code>brew install ffmpeg</code>.</li>
+<li><strong>Python</strong>: root <code>ch5</code> extra (<code>openai</code>, <code>Pillow</code>, <code>python-dotenv</code>) or the compatibility <code>requirements.txt</code> path.</li>
+<li><strong>CJK fonts</strong>: script falls back over common macOS fonts (PingFang / STHeiti / Hiragino / Arial Unicode).</li>
+<li><strong>Env</strong>: <code>OPENAI_API_KEY</code> for official OpenAI; without it, <code>OPENROUTER_API_KEY</code> can fall back for scripts (TTS not on OpenRouter → offline silent). See <code>env.example</code>.</li>
+</ul>
+<h3 id="adapt-extend">Adapt / extend<a class="headerlink" href="#adapt-extend" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Model / provider</strong> (env or CLI; no code change):</li>
+<li><code>TEXT_MODEL</code> / <code>--text-model</code> (default <code>gpt-5.6-luna</code>).</li>
+<li><code>TTS_MODEL</code> / <code>TTS_VOICE</code> (or <code>--tts-model</code> / <code>--tts-voice</code>; default <code>tts-1</code> / <code>alloy</code>; voices e.g. <code>nova</code> / <code>shimmer</code> / <code>echo</code>).</li>
+<li><code>--tts-provider offline</code> for local validation.</li>
+<li><code>OPENAI_BASE_URL</code> + matching <code>OPENAI_API_KEY</code> for compatible endpoints.</li>
+<li><strong>Input</strong>: <code>--slides my.json</code> or edit <code>SLIDES</code> in <code>demo.py</code>; with real PDF, use 5-4 “paper → PPT” then feed bullets/screenshots here.</li>
+<li><strong>Own scripts</strong>: <code>--script narr.json</code> (string list) skips LLM and goes TTS → mux.</li>
+<li><strong>Longer video</strong>: more <code>SLIDES</code> pages or longer scripts (often 5–15 min).</li>
+<li><strong>Fast tuning</strong>: <code>--quick</code> / <code>--limit N</code> before full runs.</li>
+</ul>
+<h3 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Script + TTS call real OpenAI APIs (<code>TEXT_MODEL</code>, <code>TTS_MODEL</code>) and <strong>bill</strong>; full 5 pages ≈ 2–3 min video. Prefer <code>--check</code> then <code>--quick</code>.</li>
+<li>Slides are static PIL (no animation/transitions); non-macOS may need <code>FONT_CANDIDATES</code> tweaks.</li>
+<li>Page duration = audio only; no silence pads or BGM. For richer layout/transitions, prefer 5-4 Slidev screenshots as input.</li>
+</ul>
+<hr />
+<h2 id="_1">中文<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h3 id="_2">概述<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>在“论文 → PPT”的基础上，Agent 为每一页幻灯片生成<strong>口语化讲解词</strong>（引导性叙述，
+而非逐条复述要点），调用 <strong>TTS</strong> 合成语音，再用 <strong>ffmpeg</strong> 把 PPT 截图与音频
+<strong>逐页同步合成</strong>为一段带旁白的讲解视频。</p>
+<h3 id="_3">正式实验活动<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p><code>campaign.py</code> 是实验 5-5 的正式运行器：它读取实验 5-4 固定真实论文活动中的 12 张
+Slidev 截图与源码，用 Kimi K3 生成讲解词，再让 Qwen-VL-Max 对照真实页面像素逐页独立
+审核；通过后调用 Fish Audio S1 合成每页语音，最终用 ffmpeg 生成 5–15 分钟的 H.264/AAC
+视频。所有供应商调用都可续跑缓存；中断后不会用静音或占位内容冒充缺失页面。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python<span class="w"> </span>campaign.py<span class="w"> </span>--output<span class="w"> </span>validation/runs/my-real-run<span class="w"> </span>--workers<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<p>正式门禁要求：12 张互不相同的真实渲染页、三个真实供应商的完整收据、逐页音画误差不超过
+0.2 秒、总时长误差不超过 0.75 秒、最终视频时长 300–900 秒。固定来源页、模型、阈值与
+授权音色清单记录在 <code>experiment_protocol.json</code>。</p>
+<p>已完成的正式证据是
+<a href="validation/runs/exp5-5-kimi-fish-qwen-20260730-v1/manifest.json"><code>validation/runs/exp5-5-kimi-fish-qwen-20260730-v1/manifest.json</code></a>
+（SHA-256 <code>93bb69a916a76d12de56270928971f6e39f47755214f7a135817d7effd8b3f09</code>）。
+所有门禁均通过；H.264/AAC 成片长 513.010 秒（8.55 分钟），逐页音频合计
+512.913 秒，最大逐页漂移 0.024 秒。第 12 页真实供应商返回的非法 JSON
+作为失败尝试与成功重试一并保留，没有被隐藏。</p>
+<p>下述 <code>demo.py</code> 流程保留为快速教学/兼容入口。其内置 5 页 PIL 幻灯片和离线静音模式
+<strong>不满足</strong>正式实验门禁。</p>
+<h3 id="_4">旧版快速演示流程<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>论文要点(内置示例)
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>   │  PIL 渲染
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>   ▼
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>每页 PNG 幻灯片 ──► gpt-5.6-luna 生成口语化讲解词 ──► OpenAI tts-1 合成 mp3
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>   │                                                        │
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>   └──────────────── ffmpeg：每页 PNG + 该页音频 ───────────┘
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>                              │  (每页时长 = 该页音频时长)
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>                              ▼
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>                     ffmpeg concat 拼接
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>                              ▼
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>                     output/lecture.mp4
+</code></pre></div>
+<ul>
+<li>本项目<strong>自包含</strong>，不依赖实验 5-4：内置一份《Attention Is All You Need》的论文要点，
+  用 PIL 直接渲染出 5 页幻灯片 PNG（也可替换为 5-4 的 Slidev 截图）。</li>
+<li>讲解词由 <code>gpt-5.6-luna</code> 生成；语音由 OpenAI <code>tts-1</code>（<code>voice=alloy</code>）合成。</li>
+<li>视频由 <code>ffmpeg</code> 合成：每页做一段 mp4，段时长等于该页音频时长，最后 concat 拼接，
+  因此<strong>每页展示时间与语音时长精确匹配</strong>。</li>
+</ul>
+<h3 id="_5">运行命令<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 在仓库根目录使用统一的第 5 章环境</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.12<span class="w"> </span>--extra<span class="w"> </span>ch5
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># 切换目录前先激活环境：</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># macOS/Linux：</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Windows PowerShell：.\.venv\Scripts\Activate.ps1</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Windows cmd：.venv\Scripts\activate.bat</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># 未安装 uv 时可用 pip 兜底：</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># python -m pip install -e &quot;.[ch5]&quot;</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="nb">cd</span><span class="w"> </span>chapter5/paper-to-video
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># 迁移期间仍支持单项目兼容路径：</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># python -m pip install -r requirements.txt</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>cp<span class="w"> </span>env.example<span class="w"> </span>.env<span class="w">                  </span><span class="c1"># 填入 OPENAI_API_KEY（未配置时设 OPENROUTER_API_KEY 兜底讲解词，TTS 降级为离线占位）</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>python<span class="w"> </span>demo.py<span class="w">                       </span><span class="c1"># 生成全部 5 页的完整讲解视频</span>
+</code></pre></div>
+<p>常用参数（<code>python demo.py --help</code> 查看全部）：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--check<span class="w">     </span><span class="c1"># 环境自检：检查 ffmpeg/ffprobe/字体/配置，不调用任何 API</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--quick<span class="w">     </span><span class="c1"># 快速冒烟：只跑第 1 页（等价 --limit 1），省时省钱</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--limit<span class="w"> </span><span class="m">2</span><span class="w">   </span><span class="c1"># 只处理前 2 页</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--offline<span class="w">   </span><span class="c1"># 无需 API：占位静音音轨，验证整条 ffmpeg 合成流水线</span>
+</code></pre></div>
+<p>完整参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--slides FILE</code></td>
+<td>幻灯片内容 JSON（<code>[{title, subtitle, bullets}, ...]</code>），替换内置示例</td>
+</tr>
+<tr>
+<td><code>--script FILE</code></td>
+<td>现成讲解词 JSON（字符串列表，每页一段），提供后<strong>跳过 LLM 生成</strong></td>
+</tr>
+<tr>
+<td><code>-o, --output FILE</code></td>
+<td>最终视频输出路径（默认 <code>output/lecture.mp4</code>）</td>
+</tr>
+<tr>
+<td><code>--tts-provider {openai,offline}</code></td>
+<td>TTS 供应商；<code>offline</code> 用 ffmpeg 生成占位静音音轨（无需 API）</td>
+</tr>
+<tr>
+<td><code>--offline</code></td>
+<td>完全离线：等价 <code>--tts-provider offline</code>，并用要点占位讲解词（零 API 调用）</td>
+</tr>
+<tr>
+<td><code>--text-model / --tts-model / --tts-voice</code></td>
+<td>覆盖模型/音色（默认取同名环境变量）</td>
+</tr>
+<tr>
+<td><code>--limit N / --quick / --check</code></td>
+<td>只跑前 N 页 / 只跑第 1 页 / 仅自检</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>离线验证</strong>：<code>--offline</code> 不需要任何 API Key 或网络，用 <code>ffmpeg anullsrc</code> 按讲解词字数
+估算时长合成静音占位音轨，跑通「渲染 → 估时 → 逐页合成 → concat 拼接」全链路，
+专门用于验证 ffmpeg 的<strong>逐页时长对齐</strong>是否正确（音轨为静音占位，非真实配音）。</p>
+</blockquote>
+<p>产物：
+- <code>output/slides/slide_*.png</code>   每页幻灯片
+- <code>output/audio/audio_*.mp3</code>    每页讲解音频
+- <code>output/segments/seg_*.mp4</code>   每页分段视频
+- <code>output/narration.json</code>       每页讲解词与音频时长清单
+- <code>output/lecture.mp4</code>          最终讲解视频</p>
+<p>查看视频元信息：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-show_format<span class="w"> </span>-show_streams<span class="w"> </span>output/lecture.mp4
+</code></pre></div>
+<h3 id="_6">预期输出示例<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>以内置的 5 页《Attention Is All You Need》为例，一次完整运行的真实产物：</p>
+<ul>
+<li><code>output/lecture.mp4</code>：约 <strong>2.8 MB</strong>，时长 <strong>166.97s</strong>（≈2 分 47 秒），
+  分辨率 <strong>1280×720</strong>，视频 <strong>H.264</strong> + 音频 <strong>AAC</strong>。</li>
+<li><code>output/audio/audio_01.mp3 … audio_05.mp3</code>：每页一段旁白，
+  单页时长约 <strong>28.6s / 33.3s / 37.2s / 37.9s / 29.9s</strong>（总计 ≈166.9s，与视频时长一致）。</li>
+<li><code>output/narration.json</code>：每页的口语化讲解词与音频时长清单，例如第 1 页：</li>
+</ul>
+<blockquote>
+<p>今天，我们将一起探讨一个改变了自然语言处理领域的重要研究——"Attention Is All You Need"……
+它完全依赖于注意力机制，摒弃了传统的循环和卷积结构。</p>
+</blockquote>
+<p>运行日志会逐页打印「幻灯片 → 讲解词 → 音频时长」，末尾汇总各页音频总时长与最终视频时长
+（二者应基本一致，说明每页展示时间与语音精确对齐）。</p>
+<h3 id="_7">依赖<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>ffmpeg / ffprobe</strong>：命令行工具（本项目用 8.x 验证）。macOS 可 <code>brew install ffmpeg</code>。</li>
+<li><strong>Python 包</strong>：根目录 <code>ch5</code> extra（<code>openai</code>、<code>Pillow</code>、<code>python-dotenv</code>），或兼容 <code>requirements.txt</code> 路径。</li>
+<li><strong>中文字体</strong>：渲染幻灯片需系统中文字体，脚本已按 macOS 常见字体
+  （PingFang / STHeiti / Hiragino / Arial Unicode）自动回退。</li>
+<li><strong>环境变量</strong>：需 <code>OPENAI_API_KEY</code>（走官方 OpenAI）；未配置时可用 <code>OPENROUTER_API_KEY</code> 兜底讲解词生成（此时 TTS 因不在 OpenRouter 上而降级为离线静音占位）。可选项见 <code>env.example</code>。</li>
+</ul>
+<h3 id="_8">如何适配 / 扩展<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>换模型 / 换供应商</strong>：环境变量或命令行均可，无需改代码：</li>
+<li><code>TEXT_MODEL</code> / <code>--text-model</code>：讲解词生成模型（默认 <code>gpt-5.6-luna</code>，可换其它）。</li>
+<li><code>TTS_MODEL</code> / <code>TTS_VOICE</code>（或 <code>--tts-model</code> / <code>--tts-voice</code>）：语音模型与音色
+    （默认 <code>tts-1</code> / <code>alloy</code>，音色可选 <code>nova</code> / <code>shimmer</code> / <code>echo</code> 等）。</li>
+<li><code>--tts-provider offline</code>：切到离线占位音轨（不产生任何 API 调用），用于本地验证。</li>
+<li><code>OPENAI_BASE_URL</code>：指向任何<strong>兼容 OpenAI 协议</strong>的自定义端点（自建网关、代理或
+    第三方供应商）；配合对应的 <code>OPENAI_API_KEY</code> 即可切换后端。</li>
+<li><strong>换输入（换论文 / PDF）</strong>：用 <code>--slides my.json</code> 传入外部幻灯片内容，或直接编辑
+  <code>demo.py</code> 中的 <code>SLIDES</code> 列表（标题 / 副标题 / 要点）；若已有真实 PDF，可先用 5-4 的
+  「论文 → PPT」流程产出要点或 Slidev 截图，再喂给本脚本，其余流程不变。</li>
+<li><strong>自带讲解词</strong>：用 <code>--script narr.json</code>（每页一段的字符串列表）跳过 LLM 生成，
+  直接进入「TTS → 合成」，便于人工润色脚本后重跑。</li>
+<li><strong>更长视频</strong>：增加 <code>SLIDES</code> 页数或加长每页讲解词即可（单次 5~15 分钟）。</li>
+<li><strong>快速调参</strong>：先用 <code>--quick</code> / <code>--limit N</code> 只渲染少量页，确认音色/风格满意后再跑全量。</li>
+</ul>
+<h3 id="_9">局限<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<ul>
+<li>讲解词与 TTS 都会产生真实的 OpenAI API 调用（<code>TEXT_MODEL</code> 与 <code>TTS_MODEL</code>），会<strong>计费</strong>；
+  全量 5 页约生成 2~3 分钟视频。建议先 <code>--check</code> 自检、再 <code>--quick</code> 冒烟。</li>
+<li>幻灯片为 PIL 纯静态渲染（无动画/转场），中文字体依赖系统字体，非 macOS 需自行调整
+  <code>FONT_CANDIDATES</code>。</li>
+<li>每页时长严格等于该页音频时长，不做静音停顿或背景音乐；如需更精细的排版与转场，
+  建议改用 5-4 的 Slidev 截图作为输入。</li>
+</ul>
+<hr />
+<h2 id="notes">Notes / 说明<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Use <code>--check</code> / <code>--offline</code> before spending API budget. / 花钱前先 <code>--check</code> / <code>--offline</code>。</li>
+<li>Commands/code/paths/env vars are identical in both language sections. / 命令、代码、路径与环境变量在中英文两侧保持一致。</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:47 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:47 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

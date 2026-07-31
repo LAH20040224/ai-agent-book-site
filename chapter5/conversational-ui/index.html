@@ -1,0 +1,2433 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/chapter5/conversational-ui/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Experiment 5-11: Conversational UI Customization / 实验 5-11：对话式界面定制系统（★★） - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="Experiment 5-11: Conversational UI Customization / 实验 5-11：对话式界面定制系统（★★）">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/chapter5/conversational-ui/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Experiment 5-11: Conversational UI Customization / 实验 5-11：对话式界面定制系统（★★）">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#experiment-5-11-conversational-ui-customization-5-11" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Experiment 5-11: Conversational UI Customization / 实验 5-11：对话式界面定制系统（★★）
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#english" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        English
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="English">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture-brief" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture (brief)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hot-reload-hmr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hot reload (HMR)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#directory-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to run">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) Environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-auto-verify-loop-no-browser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) Auto-verify loop (no browser)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-manual-real-hmr-optional-needs-browser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) Manual real HMR (optional; needs browser)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification-and-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification and limits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-run-output-excerpt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real run output (excerpt)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adapt-extend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adapt / extend
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        中文
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="中文">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        概述
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        目的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        原理 / 架构（简述）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hmr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        关于热加载（HMR）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        目录结构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        运行方式
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="运行方式">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) 准备环境
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) 自动验证闭环（无需浏览器）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-hmr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) 手动体验真实 HMR（可选，需要浏览器）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        验证方式与局限
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        真实运行输出（节选）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        环境变量
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        如何适配 / 扩展
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes / 说明
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/chapter5/conversational-ui/README.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/chapter5/conversational-ui/README.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="experiment-5-11-conversational-ui-customization-5-11">Experiment 5-11: Conversational UI Customization / 实验 5-11：对话式界面定制系统（★★）<a class="headerlink" href="#experiment-5-11-conversational-ui-customization-5-11" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Companion lab for <em>AI Agents in Depth</em>, Chapter 5 — NL UI requests (color/font/copy/layout); Agent edits React source; Vite HMR applies live.<br />
+《深入理解 AI Agent》第 5 章：自然语言提 UI 定制需求，Agent 改 React 源码，Vite HMR 即时生效。</p>
+</blockquote>
+<p>← <a href="../">Chapter 5 index / 返回第 5 章目录</a></p>
+<hr />
+<h2 id="english">English<a class="headerlink" href="#english" title="Permanent link">&para;</a></h2>
+<h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
+<p>Users describe UI customizations in <strong>natural language</strong> (color / font / copy / layout / component placement). The Agent <strong>locates and edits front-end source</strong>; dev-mode <strong>HMR</strong> applies changes instantly, with multi-turn iteration.</p>
+<h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h3>
+<p>Turn a one-size-fits-all front end into a conversationally customizable UI:</p>
+<ul>
+<li>Base chatbot = <strong>React (Vite) front end + FastAPI back end</strong>;</li>
+<li>Both run in dev mode: Vite <strong>HMR</strong>, uvicorn <strong>--reload</strong>;</li>
+<li>User says “make the send button blue / monospace font / title = XXX”;
+  Agent (OpenAI, default <code>gpt-5.6-luna</code>; if no <code>OPENAI_API_KEY</code>, set <code>OPENROUTER_API_KEY</code> for OpenRouter) reads the request → edits files under <code>frontend/src</code>;</li>
+<li>HMR picks up changes without a full page reload.</li>
+</ul>
+<h3 id="architecture-brief">Architecture (brief)<a class="headerlink" href="#architecture-brief" title="Permanent link">&para;</a></h3>
+<p>Four parts:</p>
+<ul>
+<li><strong><code>agent.py</code> (customize Agent)</strong>: core. NL requirement + current editable sources → OpenAI; function-calling <code>apply_edits</code> returns full rewritten file contents. Only whitelist files (<code>src/App.jsx</code>, <code>src/theme.css</code>); path checks after return. Produces rewrites <strong>without writing disk</strong> (for diff display + verification).</li>
+<li><strong><code>baseline/src/</code></strong>: factory snapshot of front-end sources. Each <code>demo.py</code> run restores from here so runs are reproducible and isolated—also the baseline for diffs.</li>
+<li><strong><code>frontend/</code> (React + Vite)</strong>: what gets customized. Agent edits <code>src/*</code>; Vite <strong>HMR</strong> in dev; <code>vite build</code> checks “did not break the app”.</li>
+<li><strong><code>backend/</code> (FastAPI)</strong>: minimal chatbot (<code>/api/chat</code>) so the UI can actually chat; default <strong>echo</strong> mode (no key); <code>--model</code> switches to <strong>real LLM chat</strong>; CLI via <code>python main.py --help</code>; <code>--reload</code> demos backend HMR. Not part of UI customize—supporting actor only.</li>
+</ul>
+<p>One line: <strong>Agent reads request → edits front-end source → assert change applied + build still works</strong>; <code>baseline</code> for reproducibility; <code>backend</code> for real chat.</p>
+<h3 id="hot-reload-hmr">Hot reload (HMR)<a class="headerlink" href="#hot-reload-hmr" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Front end</strong>: <code>npm run dev</code> Vite HMR. Agent edits <code>src/*.jsx</code> or <code>src/theme.css</code> → partial hot replace, state kept.</li>
+<li><strong>Back end</strong>: <code>uvicorn main:app --reload</code> restarts on <code>.py</code> changes.</li>
+<li>Customization targets front-end sources; visual effect is front-end HMR.</li>
+</ul>
+<h3 id="directory-layout">Directory layout<a class="headerlink" href="#directory-layout" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>conversational-ui/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── frontend/                 # React + Vite chatbot UI
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── src/App.jsx           #   UI + copy (Agent: copy/components)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   ├── src/theme.css         #   colors/fonts/layout (Agent: styles)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ├── src/main.jsx
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   ├── index.html
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   ├── vite.config.js        #   HMR + /api proxy to backend
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └── package.json
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>├── backend/
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ├── main.py               # FastAPI (/api/chat)
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   └── requirements.txt
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>├── baseline/src/             # initial snapshot (restored before each demo)
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>├── agent.py                  # NL → OpenAI rewrite sources
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>├── demo.py                   # e2e demo + auto verify (NL→code→assert→build)
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>├── requirements.txt          # backend + Agent deps
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>├── env.example
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>└── .gitignore                # node_modules / dist / .env ignored
+</code></pre></div>
+<h3 id="how-to-run">How to run<a class="headerlink" href="#how-to-run" title="Permanent link">&para;</a></h3>
+<h4 id="1-environment">1) Environment<a class="headerlink" href="#1-environment" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From the repository root: Python deps (Agent + backend)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.12<span class="w"> </span>--extra<span class="w"> </span>ch5
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Activate it before changing directories:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># macOS/Linux:</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Windows PowerShell: .\.venv\Scripts\Activate.ps1</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Windows cmd: .venv\Scripts\activate.bat</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># pip fallback when uv is not installed:</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># python -m pip install -e &quot;.[ch5]&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nb">cd</span><span class="w"> </span>chapter5/conversational-ui
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Single-project compatibility path, still supported during migration:</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># python -m pip install -r requirements.txt</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Front-end deps (first npm install can be slow)</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="nb">cd</span><span class="w"> </span>frontend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>npm<span class="w"> </span>install<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># OpenAI key</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>cp<span class="w"> </span>env.example<span class="w"> </span>.env<span class="w">   </span><span class="c1"># OPENAI_API_KEY (or OPENROUTER_API_KEY fallback)</span>
+</code></pre></div>
+<h4 id="2-auto-verify-loop-no-browser">2) Auto-verify loop (no browser)<a class="headerlink" href="#2-auto-verify-loop-no-browser" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python<span class="w"> </span>demo.py<span class="w">            </span><span class="c1"># all 3 customize rounds + full verify</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--quick<span class="w">    </span><span class="c1"># round 1 only (smoke)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--rounds<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="c1"># first 2 rounds</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--no-build<span class="w"> </span><span class="c1"># skip vite build (assert apply only; faster)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>python<span class="w"> </span>demo.py<span class="w"> </span>-h
+</code></pre></div>
+<p><code>demo.py</code> runs 3 NL customize rounds: real OpenAI rewrite → print diff → re-read sources and assert → <code>vite build</code>. First round may be slow (<code>npm install</code> / first build); use <code>--quick</code> or <code>--no-build</code>.</p>
+<h4 id="3-manual-real-hmr-optional-needs-browser">3) Manual real HMR (optional; needs browser)<a class="headerlink" href="#3-manual-real-hmr-optional-needs-browser" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Terminal A: backend (hot reload). Either:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">cd</span><span class="w"> </span>backend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>python<span class="w"> </span>main.py<span class="w"> </span>--reload<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1">#   or: cd backend &amp;&amp; uvicorn main:app --reload --port 8000</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">#   real LLM chat (not echo): add --model gpt-5.6-luna (needs OPENAI_API_KEY or OPENROUTER_API_KEY)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Terminal B: front end (HMR)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">cd</span><span class="w"> </span>frontend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>dev
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># open http://localhost:5173</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Terminal C: one customize request; watch the browser update</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import agent,pathlib; c,m=agent.build_client_and_model(); \</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s2">r=agent.customize(c,m,pathlib.Path(&#39;frontend&#39;),&#39;把发送按钮改成橙色&#39;); \</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s2">[pathlib.Path(&#39;frontend&#39;,f[&#39;path&#39;]).write_text(f[&#39;content&#39;]) for f in r[&#39;files&#39;]]&quot;</span>
+</code></pre></div>
+<p>Backend CLI (<code>cd backend &amp;&amp; python main.py --help</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--host</code></td>
+<td>Bind address (<code>0.0.0.0</code> for external)</td>
+<td><code>127.0.0.1</code></td>
+</tr>
+<tr>
+<td><code>--port</code></td>
+<td>Port (front end proxies <code>/api</code> here)</td>
+<td><code>8000</code></td>
+</tr>
+<tr>
+<td><code>--reload</code> / <code>--no-reload</code></td>
+<td>Backend hot reload</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>--model NAME</code></td>
+<td>Real LLM chat; omit = echo (<code>CHAT_MODEL</code> env also works)</td>
+<td>none (echo)</td>
+</tr>
+<tr>
+<td><code>--log-level</code></td>
+<td>uvicorn log level</td>
+<td><code>info</code></td>
+</tr>
+<tr>
+<td><code>--print-config</code></td>
+<td>Print effective config JSON and exit (no listen)</td>
+<td>off</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Echo vs LLM does not affect the UI customize loop—customize acts on <strong>front-end sources</strong>. LLM mode reuses <code>OPENAI_API_KEY</code> / <code>OPENAI_BASE_URL</code> from <code>agent.py</code>; missing key or call failure falls back to a placeholder reply (never invents).</p>
+</blockquote>
+<h3 id="verification-and-limits">Verification and limits<a class="headerlink" href="#verification-and-limits" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>This demo auto-verifies</strong>: NL → code change <strong>applied correctly</strong> and <strong>build not broken</strong>.</li>
+<li>Source asserts: e.g. blue <code>#2563eb</code> appears; monospace appears; new title string appears.</li>
+<li>After each round <code>vite build</code> must succeed.</li>
+<li><strong>This demo does not verify</strong>: real in-browser HMR <strong>visual</strong> refresh (no Playwright/browser here)—use step 3 manually.</li>
+<li>Agent may only rewrite whitelist files (<code>src/App.jsx</code>, <code>src/theme.css</code>); full-file rewrite is more stable than scattered patches on small files.</li>
+</ul>
+<h3 id="real-run-output-excerpt">Real run output (excerpt)<a class="headerlink" href="#real-run-output-excerpt" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>第 1 轮 NL 定制需求：把发送按钮和用户消息气泡的主题色从绿色改成蓝色，用 #2563eb 这个蓝。
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>[改动文件] src/theme.css
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  - --color-primary: #16a34a;   /* 初始为绿色 */
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  + --color-primary: #2563eb;   /* 改为蓝色 */
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>断言：源码中出现蓝色值 #2563eb -&gt; 通过 ✅
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>构建结果：通过 ✅
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>第 2 轮 NL 定制需求：把整个界面的字体换成等宽字体（monospace）。
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>[改动文件] src/theme.css
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  - --font-family: system-ui, &quot;PingFang SC&quot;, ... sans-serif;
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  + --font-family: monospace;
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>断言：源码中出现 monospace 等宽字体 -&gt; 通过 ✅
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>构建结果：通过 ✅
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>第 3 轮 NL 定制需求：把顶部的标题文案改成&quot;我的专属客服&quot;。
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>[改动文件] src/App.jsx
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>  - const HEADER_TITLE = &quot;智能助手&quot;;
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>  + const HEADER_TITLE = &quot;我的专属客服&quot;;
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>断言：源码中出现新标题文案&quot;我的专属客服&quot; -&gt; 通过 ✅
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>构建结果：通过 ✅
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>多轮定制总结：全部通过 ✅
+</code></pre></div>
+<h3 id="environment-variables">Environment variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OPENAI_API_KEY</code></td>
+<td>One of required; this lab reads it (<code>OPENROUTER_API_KEY</code> fallback)</td>
+</tr>
+<tr>
+<td><code>OPENAI_BASE_URL</code></td>
+<td>Optional OpenAI-compatible endpoint</td>
+</tr>
+<tr>
+<td><code>MODEL</code></td>
+<td>Optional; default <code>gpt-5.6-luna</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="adapt-extend">Adapt / extend<a class="headerlink" href="#adapt-extend" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Model / provider</strong>: standard OpenAI SDK; set <code>OPENAI_BASE_URL</code> + <code>MODEL</code> + <code>OPENAI_API_KEY</code>, e.g. Kimi / ARK / local vLLM / Ollama.</li>
+<li><strong>Editable surface</strong>: default whitelist <code>src/App.jsx</code>, <code>src/theme.css</code>—edit <code>EDITABLE_FILES</code> in <code>agent.py</code> (larger = more flexible, more risk).</li>
+<li><strong>New verify rounds</strong>: append <code>{"requirement": ..., "verify": ...}</code> to <code>ROUNDS</code> in <code>demo.py</code>.</li>
+<li><strong>Own UI</strong>: replace <code>frontend/src/*</code> and update whitelist + <code>baseline/</code>.</li>
+<li><strong>Own backend / real LLM chat</strong>: <code>/api/chat</code> is echo by default; <code>--model &lt;name&gt;</code> or <code>CHAT_MODEL</code> for real chat; customize <code>_llm_reply</code> / <code>chat</code> for business logic.</li>
+</ul>
+<hr />
+<h2 id="_1">中文<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h3 id="_2">概述<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>用户用<strong>自然语言</strong>提出 UI 定制需求（颜色 / 字体 / 文案 / 布局 / 组件位置），
+Agent 自主<strong>定位并修改前端源码</strong>，开发模式下的<strong>热加载（HMR）</strong>让改动即时生效，
+支持多轮迭代定制。</p>
+<h3 id="_3">目的<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>把"一刀切"的标准前端，变成"千人千面"的可对话定制界面：</p>
+<ul>
+<li>基础 chatbot 应用 = <strong>React(Vite) 前端 + FastAPI 后端</strong>；</li>
+<li>前后端都跑在开发模式：前端 Vite <strong>HMR</strong>、后端 uvicorn <strong>--reload</strong>；</li>
+<li>用户说"把发送按钮改成蓝色 / 换成等宽字体 / 标题改成 XXX"，
+  Agent（OpenAI，默认 <code>gpt-5.6-luna</code>；未配置 <code>OPENAI_API_KEY</code> 时设 <code>OPENROUTER_API_KEY</code> 自动改走 OpenRouter）读懂需求 → 改 <code>frontend/src</code> 里的源码文件；</li>
+<li>热加载检测到文件变化，浏览器无需整页刷新即可看到界面变化。</li>
+</ul>
+<h3 id="_4">原理 / 架构（简述）<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>整个系统由四部分组成，各司其职：</p>
+<ul>
+<li><strong><code>agent.py</code>（定制 Agent）</strong>：核心。把一条自然语言需求 + 当前可编辑源码喂给 OpenAI，
+  用 function calling 的 <code>apply_edits</code> 工具让模型返回"改写后的文件全文"。
+  只暴露白名单文件（<code>src/App.jsx</code>、<code>src/theme.css</code>）给模型，并在返回后校验路径，
+  防止模型改错/新增文件。它只产出改写方案，<strong>不落盘</strong>（便于展示 diff 与验证）。</li>
+<li><strong><code>baseline/src/</code>（基线快照）</strong>：前端源码的"出厂原样"。<code>demo.py</code> 每轮开始前把它
+  拷回 <code>frontend/src</code>，保证多次运行结果可重复、互不污染——这也是 Agent 改动与
+  原始界面做 diff 的对照基准。</li>
+<li><strong><code>frontend/</code>（React + Vite 前端）</strong>：被定制的对象。Agent 改的就是这里的 <code>src/*</code>；
+  开发模式下 Vite <strong>HMR</strong> 让改动即时可见，<code>vite build</code> 用于验证"改动没破坏应用"。</li>
+<li><strong><code>backend/</code>（FastAPI 后端）</strong>：最小 chatbot 服务（<code>/api/chat</code>），为前端提供可对话的载体；
+  默认 <strong>echo 回声</strong>模式（开箱即用、无需任何 Key），也可用 <code>--model</code> 一键切到<strong>真实 LLM 对话</strong>；
+  自带命令行入口（<code>python main.py --help</code>），<code>--reload</code> 演示"后端热加载"。它不参与 UI 定制，
+  是让整套界面能真实跑起来的配角。</li>
+</ul>
+<p>一句话：<strong>Agent 读需求 → 改前端源码 → 断言改动生效 + 构建不破坏</strong>，
+<code>baseline</code> 保证可重复，<code>backend</code> 让界面能真实对话。</p>
+<h3 id="hmr">关于热加载（HMR）<a class="headerlink" href="#hmr" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>前端</strong>：<code>npm run dev</code> 启动的 Vite dev server 自带 HMR。Agent 一改 <code>src/*.jsx</code>
+  或 <code>src/theme.css</code>，浏览器局部热替换、保留应用状态，界面即时更新。</li>
+<li><strong>后端</strong>：<code>uvicorn main:app --reload</code> 监听 <code>.py</code> 变化自动重启。</li>
+<li>本实验的定制主要作用于前端源码，所以视觉效果靠前端 HMR 体现。</li>
+</ul>
+<h3 id="_5">目录结构<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>conversational-ui/
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>├── frontend/                 # React + Vite 前端（基础 chatbot 界面）
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>│   ├── src/App.jsx           #   界面与 UI 文案（Agent 改&quot;文案/组件&quot;）
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>│   ├── src/theme.css         #   颜色/字体/布局样式（Agent 改&quot;样式&quot;）
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>│   ├── src/main.jsx
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>│   ├── index.html
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>│   ├── vite.config.js        #   开启 HMR + /api 代理到后端
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>│   └── package.json
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>├── backend/
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>│   ├── main.py               # FastAPI 后端（/api/chat）
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>│   └── requirements.txt
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>├── baseline/src/             # 前端源码初始快照（demo 每次运行前恢复，保证可重复）
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>├── agent.py                  # 定制 Agent：NL 需求 → 用 OpenAI 改写源码
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>├── demo.py                   # 端到端演示 + 自动验证（NL→代码→断言→构建）
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>├── requirements.txt          # 后端 + Agent 依赖
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>├── env.example
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>└── .gitignore                # node_modules / dist / .env 均已忽略
+</code></pre></div>
+<h3 id="_6">运行方式<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<h4 id="1">1) 准备环境<a class="headerlink" href="#1" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 在仓库根目录安装 Python 依赖（Agent + 后端）</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.12<span class="w"> </span>--extra<span class="w"> </span>ch5
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># 切换目录前先激活环境：</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># macOS/Linux：</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Windows PowerShell：.\.venv\Scripts\Activate.ps1</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Windows cmd：.venv\Scripts\activate.bat</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># 未安装 uv 时可用 pip 兜底：</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># python -m pip install -e &quot;.[ch5]&quot;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nb">cd</span><span class="w"> </span>chapter5/conversational-ui
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># 迁移期间仍支持单项目兼容路径：</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># python -m pip install -r requirements.txt</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1"># 前端依赖（首次 npm install 较慢属正常）</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="nb">cd</span><span class="w"> </span>frontend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>npm<span class="w"> </span>install<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="c1"># 配置 OpenAI Key</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>cp<span class="w"> </span>env.example<span class="w"> </span>.env<span class="w">   </span><span class="c1"># 然后填入 OPENAI_API_KEY（或设 OPENROUTER_API_KEY 兜底）</span>
+</code></pre></div>
+<h4 id="2">2) 自动验证闭环（无需浏览器）<a class="headerlink" href="#2" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python<span class="w"> </span>demo.py<span class="w">            </span><span class="c1"># 跑全部 3 轮定制并做完整验证</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--quick<span class="w">    </span><span class="c1"># 只跑第 1 轮（省时，用于快速冒烟）</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--rounds<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="c1"># 只跑前 2 轮</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--no-build<span class="w"> </span><span class="c1"># 跳过 vite build（仅验证&quot;改动被正确应用&quot;，更快）</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>python<span class="w"> </span>demo.py<span class="w"> </span>-h<span class="w">         </span><span class="c1"># 查看全部参数</span>
+</code></pre></div>
+<p><code>demo.py</code> 会连续跑 3 轮自然语言定制，每轮：
+调用真实 OpenAI 改写源码 → 打印改动 diff → 读回源码断言"改动符合需求" →
+<code>vite build</code> 验证"没破坏应用"。首轮较慢多因 <code>npm install</code> 或首次构建，
+想快速验证可用 <code>--quick</code> 或 <code>--no-build</code>。</p>
+<h4 id="3-hmr">3) 手动体验真实 HMR（可选，需要浏览器）<a class="headerlink" href="#3-hmr" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># 终端 A：后端（热加载）。两种启动方式行为一致，任选其一：</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">cd</span><span class="w"> </span>backend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>python<span class="w"> </span>main.py<span class="w"> </span>--reload<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w">          </span><span class="c1"># 本文件自带命令行入口</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1">#   或： cd backend &amp;&amp; uvicorn main:app --reload --port 8000   # 书中示例写法</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1">#   想让运行起来的 chatbot 真会说话（而非回声）：加 --model gpt-5.6-luna（需 OPENAI_API_KEY 或 OPENROUTER_API_KEY）</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># 终端 B：前端（HMR）</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nb">cd</span><span class="w"> </span>frontend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>dev
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># 打开 http://localhost:5173</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># 终端 C：跑一条定制需求，回到浏览器即可看到界面即时变化</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import agent,pathlib; c,m=agent.build_client_and_model(); \</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="s2">r=agent.customize(c,m,pathlib.Path(&#39;frontend&#39;),&#39;把发送按钮改成橙色&#39;); \</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="s2">[pathlib.Path(&#39;frontend&#39;,f[&#39;path&#39;]).write_text(f[&#39;content&#39;]) for f in r[&#39;files&#39;]]&quot;</span>
+</code></pre></div>
+<p>后端命令行参数（<code>cd backend &amp;&amp; python main.py --help</code>）：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>默认</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--host</code></td>
+<td>监听地址（对外可用 <code>0.0.0.0</code>）</td>
+<td><code>127.0.0.1</code></td>
+</tr>
+<tr>
+<td><code>--port</code></td>
+<td>监听端口（前端把 <code>/api</code> 代理到此端口）</td>
+<td><code>8000</code></td>
+</tr>
+<tr>
+<td><code>--reload</code> / <code>--no-reload</code></td>
+<td>是否开启后端热加载</td>
+<td>开启</td>
+</tr>
+<tr>
+<td><code>--model NAME</code></td>
+<td>指定模型名，切到真实 LLM 对话；缺省为 echo 回声模式（也可用环境变量 <code>CHAT_MODEL</code>）</td>
+<td>无（echo）</td>
+</tr>
+<tr>
+<td><code>--log-level</code></td>
+<td>uvicorn 日志/输出级别</td>
+<td><code>info</code></td>
+</tr>
+<tr>
+<td><code>--print-config</code></td>
+<td>只打印生效配置(JSON)后退出，不监听端口（便于无端口环境下校验）</td>
+<td>关</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>echo 与 LLM 两种模式都不影响 UI 定制闭环——定制作用于<strong>前端源码</strong>，后端只是让界面能真实对话的载体。
+LLM 模式复用与 <code>agent.py</code> 相同的 <code>OPENAI_API_KEY</code> / <code>OPENAI_BASE_URL</code> 配置；缺 Key 或调用失败会自动回退占位提示，绝不编造回复。</p>
+</blockquote>
+<h3 id="_7">验证方式与局限<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>本 demo 自动验证的是</strong>：自然语言 → 代码修改被<strong>正确应用</strong>且<strong>不破坏构建</strong>的闭环。</li>
+<li>读回源码断言：如"改成蓝色 #2563eb"→ 源码里确实出现该色值；
+    "换成等宽字体"→ 出现 <code>monospace</code>；"标题改成 XXX"→ 出现该文案。</li>
+<li>每轮改动后 <code>vite build</code> 必须编译通过，证明改动没破坏应用。</li>
+<li><strong>本 demo 不做的</strong>：真实浏览器内 HMR 的<strong>视觉</strong>即时刷新。
+  本机无 Playwright/浏览器，无法自动截图验证视觉效果——
+  这部分需手动 <code>npm run dev</code> + 打开浏览器查看（见上文第 3 步）。</li>
+<li>Agent 只被允许改写白名单文件（<code>src/App.jsx</code>、<code>src/theme.css</code>），
+  降低改错文件的风险；改写采用"整文件重写"，对小文件比零散替换更稳。</li>
+</ul>
+<h3 id="_8">真实运行输出（节选）<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>第 1 轮 NL 定制需求：把发送按钮和用户消息气泡的主题色从绿色改成蓝色，用 #2563eb 这个蓝。
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>[改动文件] src/theme.css
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  - --color-primary: #16a34a;   /* 初始为绿色 */
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  + --color-primary: #2563eb;   /* 改为蓝色 */
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>断言：源码中出现蓝色值 #2563eb -&gt; 通过 ✅
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>构建结果：通过 ✅
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>第 2 轮 NL 定制需求：把整个界面的字体换成等宽字体（monospace）。
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>[改动文件] src/theme.css
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  - --font-family: system-ui, &quot;PingFang SC&quot;, ... sans-serif;
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  + --font-family: monospace;
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>断言：源码中出现 monospace 等宽字体 -&gt; 通过 ✅
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>构建结果：通过 ✅
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>第 3 轮 NL 定制需求：把顶部的标题文案改成&quot;我的专属客服&quot;。
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>[改动文件] src/App.jsx
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>  - const HEADER_TITLE = &quot;智能助手&quot;;
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>  + const HEADER_TITLE = &quot;我的专属客服&quot;;
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>断言：源码中出现新标题文案&quot;我的专属客服&quot; -&gt; 通过 ✅
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>构建结果：通过 ✅
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>多轮定制总结：全部通过 ✅
+</code></pre></div>
+<h3 id="_9">环境变量<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OPENAI_API_KEY</code></td>
+<td>必填其一，本实验读取此项（未配置时用 <code>OPENROUTER_API_KEY</code> 兜底）</td>
+</tr>
+<tr>
+<td><code>OPENAI_BASE_URL</code></td>
+<td>可选，切换到兼容 OpenAI 协议的服务端点</td>
+</tr>
+<tr>
+<td><code>MODEL</code></td>
+<td>可选，默认 <code>gpt-5.6-luna</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="_10">如何适配 / 扩展<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>换模型 / 换供应商</strong>：Agent 走标准 OpenAI SDK，任何"兼容 OpenAI 协议"的服务都能接。
+  只需在 <code>.env</code> 或环境变量里设置 <code>OPENAI_BASE_URL</code> + <code>MODEL</code> + 对应的 <code>OPENAI_API_KEY</code>，
+  代码无需改动。例如：</li>
+<li>Kimi / Moonshot：<code>OPENAI_BASE_URL=https://api.moonshot.cn/v1</code>、<code>MODEL=kimi-k3</code>；</li>
+<li>火山方舟(ARK)：<code>OPENAI_BASE_URL=https://ark.cn-beijing.volces.com/api/v3</code>、<code>MODEL=&lt;endpoint-id&gt;</code>；</li>
+<li>本地 vLLM / Ollama 等：把 <code>OPENAI_BASE_URL</code> 指向本地端点即可。</li>
+<li><strong>扩展可定制范围</strong>：默认只允许改 <code>src/App.jsx</code>、<code>src/theme.css</code>。想让 Agent 能改更多文件，
+  在 <code>agent.py</code> 的 <code>EDITABLE_FILES</code> 白名单里增删路径即可（白名单越大越灵活，但改错风险也越大）。</li>
+<li><strong>新增验证轮次</strong>：在 <code>demo.py</code> 的 <code>ROUNDS</code> 里追加 <code>{"requirement": ..., "verify": ...}</code>，
+  即可把自己的定制需求纳入自动断言闭环。</li>
+<li><strong>接前端</strong>：<code>frontend/</code> 是标准 Vite 工程，<code>npm run dev</code> 起 HMR、<code>npm run build</code> 出静态产物。
+  想接自己的界面，替换 <code>src/*</code> 并同步更新白名单与 <code>baseline/</code> 快照即可。</li>
+<li><strong>接后端 / 真实 LLM 对话</strong>：<code>backend/main.py</code> 的 <code>/api/chat</code> 默认是回声式占位回复，
+  加 <code>--model &lt;模型名&gt;</code>（或设 <code>CHAT_MODEL</code>）即可切到真实 LLM 对话（复用上面的 <code>OPENAI_*</code> 配置）变成真实客服；
+  想换成自定义业务逻辑，改写 <code>_llm_reply</code> 或 <code>chat</code> 里的返回即可。</li>
+</ul>
+<hr />
+<h2 id="notes">Notes / 说明<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>demo.py --quick</code> / <code>--no-build</code> for cheap smoke; step 3 for real HMR. / 冒烟用 <code>--quick</code>/<code>--no-build</code>；真实 HMR 见手动第 3 步。</li>
+<li>Commands/code/paths/env vars are identical in both language sections. / 命令、代码、路径与环境变量在中英文两侧保持一致。</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:47 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:47 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
