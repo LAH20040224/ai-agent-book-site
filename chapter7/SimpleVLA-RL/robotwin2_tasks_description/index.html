@@ -1,0 +1,2835 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/chapter7/SimpleVLA-RL/robotwin2_tasks_description/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>RoboTwin 2.0 Tasks: Experimental Setup - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="RoboTwin 2.0 Tasks: Experimental Setup">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/chapter7/SimpleVLA-RL/robotwin2_tasks_description/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RoboTwin 2.0 Tasks: Experimental Setup">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#robotwin-20-tasks-experimental-setup" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              RoboTwin 2.0 Tasks: Experimental Setup
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Characteristics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-1-beat_block_hammer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1: beat_block_hammer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Task 1: beat_block_hammer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task Description
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scene-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scene Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scene Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hammer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hammer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Block
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success Criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expert-demonstration-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expert Demonstration Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#challenges-learning-opportunities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Challenges &amp; Learning Opportunities
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-2-move_can_pot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2: move_can_pot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Task 2: move_can_pot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-description_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task Description
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scene-setup_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scene Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scene Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pot-kitchen-pot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pot (Kitchen Pot)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#can-sauce-can" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can (Sauce Can)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#success-criteria_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success Criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expert-demonstration-strategy_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expert Demonstration Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#challenges-learning-opportunities_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Challenges &amp; Learning Opportunities
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-randomization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Randomization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Randomization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose-of-randomization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose of Randomization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#beat_block_hammer-randomization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        beat_block_hammer Randomization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="beat_block_hammer Randomization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#block-position-fully-randomized" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Block Position (Fully Randomized)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hammer-position-fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hammer Position (Fixed)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#move_can_pot-randomization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        move_can_pot Randomization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="move_can_pot Randomization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pot-randomization-partial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pot Randomization (Partial)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#can-randomization-full" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can Randomization (Full)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#randomization-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Randomization Process
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#impact-on-rl-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Impact on RL Training
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#language-instruction-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Language Instruction System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Language Instruction System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#instruction-generation-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instruction Generation Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#beat_block_hammer-instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        beat_block_hammer Instructions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#move_can_pot-instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        move_can_pot Instructions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#episode-level-instruction-assignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Episode-Level Instruction Assignment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instruction-system-benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instruction System Benefits
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#training-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Training Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Training Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dataset-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dataset Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rollout-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollout Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#success-rate-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success Rate Targets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computational-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Computational Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-experimental-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Experimental Insights
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/chapter7/SimpleVLA-RL/robotwin2_tasks_description.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/chapter7/SimpleVLA-RL/robotwin2_tasks_description.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="robotwin-20-tasks-experimental-setup">RoboTwin 2.0 Tasks: Experimental Setup<a class="headerlink" href="#robotwin-20-tasks-experimental-setup" title="Permanent link">&para;</a></h1>
+<p><strong>Tasks Used in Experiments</strong>: <code>beat_block_hammer</code> and <code>move_can_pot</code></p>
+<p><strong>Based on</strong>: <a href="https://arxiv.org/pdf/2509.09674">SimpleVLA-RL: Scaling VLA Training via Reinforcement Learning</a> (2025)</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ol>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#task-1-beat_block_hammer">Task 1: beat_block_hammer</a></li>
+<li><a href="#task-2-move_can_pot">Task 2: move_can_pot</a></li>
+<li><a href="#environment-randomization">Environment Randomization</a></li>
+<li><a href="#language-instruction-system">Language Instruction System</a></li>
+<li><a href="#training-configuration">Training Configuration</a></li>
+</ol>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Both tasks are part of the RoboTwin 2.0 benchmark, designed for dual-arm manipulation with realistic physics simulation using SAPIEN. These tasks test different manipulation capabilities:</p>
+<ul>
+<li><strong>beat_block_hammer</strong>: Tool use and contact-based manipulation</li>
+<li><strong>move_can_pot</strong>: Pick-and-place with spatial reasoning</li>
+</ul>
+<h3 id="common-characteristics">Common Characteristics<a class="headerlink" href="#common-characteristics" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Simulator</strong></td>
+<td>SAPIEN (CPU-based physics)</td>
+</tr>
+<tr>
+<td><strong>Robot Platform</strong></td>
+<td>ALOHA (dual-arm, 7 DOF per arm)</td>
+</tr>
+<tr>
+<td><strong>Action Space</strong></td>
+<td>14-dimensional continuous (7 DOF × 2 arms)</td>
+</tr>
+<tr>
+<td><strong>Observation</strong></td>
+<td>RGB images (3 cameras) + Proprioception (14-dim joint states)</td>
+</tr>
+<tr>
+<td><strong>Camera Views</strong></td>
+<td>Head camera + Left wrist + Right wrist (224×224×3 each)</td>
+</tr>
+<tr>
+<td><strong>Max Environment Steps</strong></td>
+<td>200 steps per episode</td>
+</tr>
+<tr>
+<td><strong>Action Chunking</strong></td>
+<td>25 action chunks per VLA inference</td>
+</tr>
+<tr>
+<td><strong>VLA Calls per Episode</strong></td>
+<td>~8 (200 ÷ 25)</td>
+</tr>
+<tr>
+<td><strong>Traj Mini-Batch Size</strong></td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="task-1-beat_block_hammer">Task 1: beat_block_hammer<a class="headerlink" href="#task-1-beat_block_hammer" title="Permanent link">&para;</a></h2>
+<h3 id="task-description">Task Description<a class="headerlink" href="#task-description" title="Permanent link">&para;</a></h3>
+<p><strong>Objective</strong>: Use the robot arm to grasp a hammer and strike a block on the table.</p>
+<p><strong>Natural Language Description</strong>: "There is a hammer and a block on the table, use the arm to grab the hammer and beat the block"</p>
+<h3 id="scene-setup">Scene Setup<a class="headerlink" href="#scene-setup" title="Permanent link">&para;</a></h3>
+<p>The environment contains two objects on a table:</p>
+<h4 id="hammer">Hammer<a class="headerlink" href="#hammer" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Model</strong>: Standard hammer (model ID: 020_hammer)</li>
+<li><strong>Initial Position</strong>: Fixed location at table center</li>
+<li>X-coordinate: 0 meters (table center)</li>
+<li>Y-coordinate: -0.06 meters (slightly back from center)</li>
+<li>Z-coordinate: 0.783 meters (on table surface)</li>
+<li><strong>Orientation</strong>: Fixed (slightly angled)</li>
+<li><strong>Physical Properties</strong>: Very light mass (0.001 kg) for easy manipulation</li>
+<li><strong>Functional Points</strong>: </li>
+<li>Point 0: Hammer head (for striking)</li>
+<li>Base point: Handle (for grasping)</li>
+</ul>
+<h4 id="block">Block<a class="headerlink" href="#block" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Model</strong>: Static red cube (doesn't move when hit)</li>
+<li><strong>Size</strong>: 2.5 cm × 2.5 cm × 2.5 cm</li>
+<li><strong>Initial Position</strong>: <strong>Randomized</strong> (see randomization section)</li>
+<li><strong>Color</strong>: Red (for visibility)</li>
+<li><strong>Physical Properties</strong>: Static (fixed to table, doesn't react to physics)</li>
+<li><strong>Functional Points</strong>:</li>
+<li>Point 0: Block center</li>
+<li>Point 1: Block top surface (target for hammer)</li>
+</ul>
+<h3 id="success-criteria">Success Criteria<a class="headerlink" href="#success-criteria" title="Permanent link">&para;</a></h3>
+<p>The task is considered successful when <strong>ALL</strong> of the following conditions are met:</p>
+<ol>
+<li><strong>Position Accuracy</strong>: The hammer head is within 2 cm of the block position (in X-Y plane)</li>
+<li>Measured as Euclidean distance in horizontal plane</li>
+<li>
+<p>Tolerance: ±2 cm in both X and Y directions</p>
+</li>
+<li>
+<p><strong>Contact Detection</strong>: The hammer and block are in physical contact</p>
+</li>
+<li>Verified through SAPIEN's collision detection system</li>
+<li>Must be simultaneous with position accuracy</li>
+</ol>
+<p><strong>Mathematical Formulation</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Success = (|hammer_x - block_x| &lt; 0.02 m) AND 
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>          (|hammer_y - block_y| &lt; 0.02 m) AND 
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>          (hammer_contacts_block = True)
+</code></pre></div></p>
+<h3 id="expert-demonstration-strategy">Expert Demonstration Strategy<a class="headerlink" href="#expert-demonstration-strategy" title="Permanent link">&para;</a></h3>
+<p>Human demonstrations follow a four-step procedure:</p>
+<p><strong>Step 1: Arm Selection</strong>
+- Automatically select arm based on block position
+- If block X-coordinate &lt; 0: use left arm
+- If block X-coordinate ≥ 0: use right arm
+- This creates symmetric training data for both arms</p>
+<p><strong>Step 2: Grasp Hammer</strong>
+- Approach hammer from 12 cm away (pre-grasp phase)
+- Move gripper to handle position
+- Close gripper at 1 cm distance (secure grasp)
+- Gripper fully closes around handle</p>
+<p><strong>Step 3: Lift Hammer</strong>
+- Raise hammer 7 cm upward (Z-axis displacement)
+- Creates clearance from table surface
+- Prepares for striking motion</p>
+<p><strong>Step 4: Strike Block</strong>
+- Move hammer toward block's top surface
+- Approach from 6 cm above (pre-placement phase)
+- Lower hammer until contact with block
+- Maintain closed gripper throughout strike
+- Stop when contact is detected</p>
+<h3 id="challenges-learning-opportunities">Challenges &amp; Learning Opportunities<a class="headerlink" href="#challenges-learning-opportunities" title="Permanent link">&para;</a></h3>
+<p><strong>Key Challenges</strong>:
+1. <strong>Spatial Reasoning</strong>: Block position varies significantly (50×20 cm range)
+2. <strong>Tool Use</strong>: Must use hammer as extension of arm, not direct manipulation
+3. <strong>Contact Control</strong>: Requires precise positioning for contact detection
+4. <strong>Arm Coordination</strong>: Single-arm task but must avoid self-collision</p>
+<p><strong>RL Discovery Potential</strong>:
+- SFT model learns: grasp → lift → move → strike (following demonstrations)
+- RL may discover: more efficient striking trajectories, improved contact timing
+- Demonstrates RL's ability to refine precision and timing in tool-use scenarios</p>
+<hr />
+<h2 id="task-2-move_can_pot">Task 2: move_can_pot<a class="headerlink" href="#task-2-move_can_pot" title="Permanent link">&para;</a></h2>
+<h3 id="task-description_1">Task Description<a class="headerlink" href="#task-description_1" title="Permanent link">&para;</a></h3>
+<p><strong>Objective</strong>: Pick up a can from the table and place it beside a pot.</p>
+<p><strong>Natural Language Description</strong>: "There is a can and a pot on the table, use one arm to pick up the can and move it to beside the pot"</p>
+<h3 id="scene-setup_1">Scene Setup<a class="headerlink" href="#scene-setup_1" title="Permanent link">&para;</a></h3>
+<p>The environment contains two objects on a table:</p>
+<h4 id="pot-kitchen-pot">Pot (Kitchen Pot)<a class="headerlink" href="#pot-kitchen-pot" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Model</strong>: Kitchen pot with handles (model family: 060_kitchenpot)</li>
+<li><strong>Model Variants</strong>: 7 different pot models (IDs 0-6)</li>
+<li>Different sizes, shapes, colors</li>
+<li>Randomly selected each episode</li>
+<li><strong>Initial Position</strong>: Near table center</li>
+<li>X-coordinate: 0 meters (center)</li>
+<li>Y-coordinate: 0 meters (center)</li>
+<li>Z-coordinate: On table surface</li>
+<li><strong>Orientation</strong>: Random rotation ±22.5° around vertical axis</li>
+<li><strong>Physical Properties</strong>: Normal mass, can be moved if pushed hard</li>
+<li><strong>Functional Points</strong>: Center point for distance measurement</li>
+</ul>
+<h4 id="can-sauce-can">Can (Sauce Can)<a class="headerlink" href="#can-sauce-can" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Model</strong>: Cylindrical sauce can (model family: 105_sauce-can)</li>
+<li><strong>Model Variants</strong>: 5 different can models (IDs: 0, 2, 4, 5, 6)</li>
+<li>Different labels, sizes</li>
+<li>Randomly selected from subset</li>
+<li><strong>Initial Position</strong>: <strong>Randomized</strong> (see randomization section)</li>
+<li><strong>Orientation</strong>: Random rotation around vertical axis</li>
+<li><strong>Physical Properties</strong>: Standard mass, cylindrical shape</li>
+<li><strong>Functional Points</strong>: Center point and top surface</li>
+</ul>
+<h3 id="success-criteria_1">Success Criteria<a class="headerlink" href="#success-criteria_1" title="Permanent link">&para;</a></h3>
+<p>The task is considered successful when <strong>ALL</strong> of the following conditions are met:</p>
+<ol>
+<li><strong>Horizontal Distance</strong>: Can is 18 cm (±20 cm tolerance) from pot horizontally</li>
+<li>Measured on the correct side (left arm → left of pot, right arm → right of pot)</li>
+<li>
+<p>Must be on the correct side: cannot be on opposite side of pot</p>
+</li>
+<li>
+<p><strong>Lateral Alignment</strong>: Can Y-position is within 3.5 cm of pot Y-position</p>
+</li>
+<li>
+<p>Ensures can is "beside" pot, not in front or behind</p>
+</li>
+<li>
+<p><strong>Can Orientation (Upright)</strong>:</p>
+</li>
+<li>X-axis rotation: 90° ± 15° (upright, not tilted forward/backward)</li>
+<li>Y-axis rotation: 0° ± 15° (upright, not tilted left/right)</li>
+<li>
+<p>Can must maintain stable upright position</p>
+</li>
+<li>
+<p><strong>On Table Surface</strong>: Can Z-position ≤ original pot height + 0.1 cm</p>
+</li>
+<li>
+<p>Ensures can is resting on table, not floating or dropped</p>
+</li>
+<li>
+<p><strong>Released</strong>: Both robot grippers are open</p>
+</li>
+<li>Confirms can has been released successfully</li>
+<li>Not being held by robot</li>
+</ol>
+<p><strong>Mathematical Formulation</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Success = (0 &lt; |can_x - pot_x| &lt; 0.2 m) AND          # Distance tolerance
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>          (|can_y - pot_y| &lt; 0.035 m) AND             # Lateral alignment
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>          (|can_rotation_x - 90°| &lt; 15°) AND          # Upright X
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>          (|can_rotation_y - 0°| &lt; 15°) AND           # Upright Y
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>          (can_z ≤ table_surface + 0.001 m) AND       # On surface
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>          (can_on_correct_side = True) AND            # Correct side of pot
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>          (left_gripper_open = True) AND              # Released
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>          (right_gripper_open = True)                 # Released
+</code></pre></div></p>
+<h3 id="expert-demonstration-strategy_1">Expert Demonstration Strategy<a class="headerlink" href="#expert-demonstration-strategy_1" title="Permanent link">&para;</a></h3>
+<p>Human demonstrations follow a five-step procedure:</p>
+<p><strong>Step 1: Arm Selection</strong>
+- Automatically select arm based on can position
+- If can X-coordinate &gt; 0: use right arm
+- If can X-coordinate ≤ 0: use left arm
+- This determines which side of pot to place can</p>
+<p><strong>Step 2: Grasp Can</strong>
+- Approach can from 5 cm away (pre-grasp phase)
+- Move gripper to can center
+- Close gripper around can body
+- Secure cylindrical grasp</p>
+<p><strong>Step 3: Lift and Retract</strong>
+- Move 10 cm backward (away from pot, Y-axis: -0.1 m)
+- Simultaneously lift 10 cm upward (Z-axis: +0.1 m)
+- Creates clearance from pot and other obstacles
+- Prevents collision during transport</p>
+<p><strong>Step 4: Transport to Target</strong>
+- Calculate target position beside pot:
+  - If left arm: target_x = pot_x - 0.18 m (18 cm to left)
+  - If right arm: target_x = pot_x + 0.18 m (18 cm to right)
+  - target_y = pot_y (same lateral position)
+  - target_z = table_surface
+- Move gripper with can to target position
+- Maintain upright orientation throughout</p>
+<p><strong>Step 5: Place Can</strong>
+- Approach target from 5 cm above (pre-placement phase)
+- Lower can smoothly to table surface
+- Ensure stable contact with table
+- Open gripper to release can
+- Retract gripper away from can</p>
+<h3 id="challenges-learning-opportunities_1">Challenges &amp; Learning Opportunities<a class="headerlink" href="#challenges-learning-opportunities_1" title="Permanent link">&para;</a></h3>
+<p><strong>Key Challenges</strong>:
+1. <strong>Spatial Reasoning</strong>: Understanding "beside" relationship (specific distance)
+2. <strong>Dual Randomization</strong>: Both pot and can positions/models vary
+3. <strong>Orientation Maintenance</strong>: Must keep can upright throughout manipulation
+4. <strong>Precision Placement</strong>: Tight tolerance on final can orientation (±15°)
+5. <strong>Side Selection</strong>: Must place on correct side based on arm used</p>
+<p><strong>RL Discovery Potential - "Pushcut" Phenomenon Observed</strong>:
+- SFT learns: grasp → lift high → move → lower carefully (grasp-move-place strategy)
+- <strong>RL discovers: PUSH the can directly to target position</strong> (pushcut strategy)
+- This is a novel behavior NOT present in any demonstration data
+- Pushcut strategy is faster and more robust than the demonstrated approach
+- Paper Section 6.1: "the RL-trained model instead learns to accomplish the task by simply pushing Object A into position"
+- Demonstrates emergence of completely new manipulation strategies through RL exploration</p>
+<hr />
+<h2 id="environment-randomization">Environment Randomization<a class="headerlink" href="#environment-randomization" title="Permanent link">&para;</a></h2>
+<h3 id="purpose-of-randomization">Purpose of Randomization<a class="headerlink" href="#purpose-of-randomization" title="Permanent link">&para;</a></h3>
+<p>Randomization serves multiple purposes in robot learning:</p>
+<ol>
+<li><strong>Prevent Overfitting</strong>: Ensures policy learns general strategies, not memorizing specific positions</li>
+<li><strong>Improve Generalization</strong>: Policy must work across diverse configurations</li>
+<li><strong>Test Robustness</strong>: Validates policy can handle variability</li>
+<li><strong>Enable Transfer</strong>: Prepares policy for real-world deployment where exact positions cannot be controlled</li>
+</ol>
+<h3 id="beat_block_hammer-randomization">beat_block_hammer Randomization<a class="headerlink" href="#beat_block_hammer-randomization" title="Permanent link">&para;</a></h3>
+<h4 id="block-position-fully-randomized">Block Position (Fully Randomized)<a class="headerlink" href="#block-position-fully-randomized" title="Permanent link">&para;</a></h4>
+<p>The block position is randomly sampled each episode:</p>
+<p><strong>X-Coordinate (Left-Right)</strong>:
+- Range: -0.25 to +0.25 meters (50 cm span)
+- Distribution: Uniform random
+- Constraints: Must not be too close to center (|x| ≥ 0.05 m)
+- Purpose: Tests both left and right arm capabilities</p>
+<p><strong>Y-Coordinate (Front-Back)</strong>:
+- Range: -0.05 to +0.15 meters (20 cm span)
+- Distribution: Uniform random
+- Constraints: None specific
+- Purpose: Tests depth perception and reaching</p>
+<p><strong>Z-Coordinate (Height)</strong>:
+- Fixed: 0.76 meters (on table surface)
+- No variation: Block always at same height</p>
+<p><strong>Orientation (Rotation)</strong>:
+- Rotation around Z-axis: 0 to 0.5 radians (0° to ~29°)
+- Distribution: Uniform random
+- Purpose: Tests rotational invariance
+- Note: Block is square, so rotation matters less</p>
+<p><strong>Additional Constraints</strong>:
+- Block must be at least 5 cm from table center (|x| ≥ 0.05)
+- Block must be at least 0.1 cm from origin (x² + y² ≥ 0.001)
+- These prevent trivial configurations</p>
+<p><strong>Prohibited Areas</strong>:
+- 10 cm padding around hammer position
+- 5 cm padding around block position
+- Robot must plan path avoiding these zones</p>
+<h4 id="hammer-position-fixed">Hammer Position (Fixed)<a class="headerlink" href="#hammer-position-fixed" title="Permanent link">&para;</a></h4>
+<p>The hammer position is <strong>not randomized</strong>:
+- Always at same position: [0, -0.06, 0.783] meters
+- Fixed orientation
+- Rationale: Simplifies task to focus on block positioning challenge</p>
+<p><strong>Randomization Summary for beat_block_hammer</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Total Randomized Parameters: 3
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>- Block X: 50 cm range
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>- Block Y: 20 cm range  
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>- Block Rotation: ~29° range
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Configuration Space: ~50 × 20 × 29 = 29,000 possible discrete configurations
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>Continuous Space: Infinite (continuous sampling)
+</code></pre></div></p>
+<h3 id="move_can_pot-randomization">move_can_pot Randomization<a class="headerlink" href="#move_can_pot-randomization" title="Permanent link">&para;</a></h3>
+<h4 id="pot-randomization-partial">Pot Randomization (Partial)<a class="headerlink" href="#pot-randomization-partial" title="Permanent link">&para;</a></h4>
+<p><strong>Model Variant</strong>:
+- Randomly select from 7 pot models (IDs 0-6)
+- Different visual appearances (colors, sizes, shapes)
+- Tests visual generalization</p>
+<p><strong>Position</strong>:
+- X-coordinate: 0 meters (fixed at center)
+- Y-coordinate: 0 meters (fixed at center)
+- Z-coordinate: On table surface (fixed)</p>
+<p><strong>Orientation</strong>:
+- Rotation around Z-axis: ±22.5° (±π/8 radians)
+- Distribution: Uniform random
+- Purpose: Tests rotation invariance for target reference</p>
+<h4 id="can-randomization-full">Can Randomization (Full)<a class="headerlink" href="#can-randomization-full" title="Permanent link">&para;</a></h4>
+<p><strong>Model Variant</strong>:
+- Randomly select from 5 can models (IDs: 0, 2, 4, 5, 6)
+- Different labels and appearances
+- Note: IDs 1 and 3 are excluded (possibly unstable or problematic)</p>
+<p><strong>Position</strong>:
+- X-coordinate: -0.3 to +0.3 meters (60 cm span)
+  - Constraint: |x| ≥ 0.2 m (must not be too close to center)
+  - Prevents can from being directly in front of robot
+- Y-coordinate: +0.05 to +0.15 meters (10 cm span, front of table)
+  - Always on front side of table
+  - Easier for robot to reach
+- Z-coordinate: On table surface (computed based on can model)</p>
+<p><strong>Orientation</strong>:
+- Rotation around Z-axis: ±45° (±π/4 radians)
+- Distribution: Uniform random
+- Purpose: Tests grasping from different angles</p>
+<p><strong>Spatial Constraints</strong>:
+- Can must be at least 30 cm from pot center
+  - Formula: (can_x - pot_x)² + (can_y - pot_y)² ≥ 0.09 m²
+  - Prevents can from starting too close to target
+- If constraint violated, resample position</p>
+<p><strong>Prohibited Areas</strong>:
+- 3 cm padding around pot position
+- 10 cm padding around can position
+- 15 cm × 20 cm zone on approach side of pot (arm-dependent)
+  - If left arm: zone extends 15 cm to left of pot
+  - If right arm: zone extends 15 cm to right of pot
+  - Prevents trivial straight-line motions</p>
+<p><strong>Randomization Summary for move_can_pot</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Total Randomized Parameters: 7
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>- Pot Model: 7 variants
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>- Pot Rotation: ±22.5°
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>- Can Model: 5 variants
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>- Can X: 60 cm range (with constraints)
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>- Can Y: 10 cm range
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>- Can Rotation: ±45°
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Configuration Space: 7 × 45° × 5 × 60 × 10 × 90° ≈ 8.5M possible discrete configurations
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Continuous Space: Infinite (continuous sampling)
+</code></pre></div></p>
+<h3 id="randomization-process">Randomization Process<a class="headerlink" href="#randomization-process" title="Permanent link">&para;</a></h3>
+<p>Each episode follows this randomization procedure:</p>
+<p><strong>Episode Start</strong>:
+1. Sample all random parameters from their respective distributions
+2. Check spatial constraints (distance requirements, prohibited zones)
+3. If constraints violated: resample violating parameters
+4. Repeat until valid configuration found
+5. Initialize SAPIEN scene with sampled configuration
+6. Generate task instruction (random selection from template bank)
+7. Compute initial observation (RGB images + proprioception)
+8. Begin episode execution</p>
+<p><strong>Key Design Principles</strong>:
+- <strong>Constraint Validation</strong>: Ensures physically feasible configurations
+- <strong>Iterative Sampling</strong>: Rejection sampling until valid
+- <strong>Symmetric Design</strong>: Equal probability for left/right arm usage
+- <strong>Difficulty Calibration</strong>: Constraints prevent too-easy or impossible scenarios</p>
+<h3 id="impact-on-rl-training">Impact on RL Training<a class="headerlink" href="#impact-on-rl-training" title="Permanent link">&para;</a></h3>
+<p><strong>Dynamic Sampling Interaction</strong>:
+- Randomization creates natural difficulty distribution
+- Dynamic Sampling (paper Section 3.3) further filters:
+  - Excludes episodes where all 8 samples succeed (too easy)
+  - Excludes episodes where all 8 samples fail (too hard)
+  - Keeps only episodes with mixed outcomes (learnable)
+- Combined effect: RL focuses on appropriate difficulty frontier</p>
+<p><strong>Curriculum Learning Effect</strong>:
+- Early training: High failure rate, mostly hard configurations kept
+- Mid training: More mixed outcomes, broader configuration range
+- Late training: High success rate, need new challenging configurations
+- This naturally implements curriculum without manual intervention</p>
+<hr />
+<h2 id="language-instruction-system">Language Instruction System<a class="headerlink" href="#language-instruction-system" title="Permanent link">&para;</a></h2>
+<h3 id="instruction-generation-pipeline">Instruction Generation Pipeline<a class="headerlink" href="#instruction-generation-pipeline" title="Permanent link">&para;</a></h3>
+<p>Both tasks use a sophisticated language instruction system to test generalization:</p>
+<p><strong>Template-Based Generation</strong>:
+1. Define full task description (detailed)
+2. Specify instruction preferences (word count, style)
+3. Define object schema (placeholders for specific objects)
+4. Use LLM to generate diverse paraphrases
+5. Manually curate into "seen" and "unseen" sets</p>
+<p><strong>Schema Placeholders</strong>:
+- <code>{A}</code>: Primary object (hammer in task 1, pot in task 2)
+- <code>{B}</code>: Secondary object (can in task 2)
+- <code>{a}</code>: Arm designation (left or right)</p>
+<h3 id="beat_block_hammer-instructions">beat_block_hammer Instructions<a class="headerlink" href="#beat_block_hammer-instructions" title="Permanent link">&para;</a></h3>
+<p><strong>Full Description</strong>: "there is a hammer and a block on the table, use the arm to grab the hammer and beat the block"</p>
+<p><strong>Schema</strong>: 
+- <code>{A}</code> → hammer identifier (e.g., "020_hammer/base0")
+- <code>{a}</code> → arm used (e.g., "left" or "right")</p>
+<p><strong>Instruction Preferences</strong>:
+- Word count: ≤10 words
+- Must mention: grasping action, striking action
+- Can mention: arm designation (optional)</p>
+<p><strong>Seen Instructions (50+ variants)</strong>:
+Examples used during training:
+- "Pick {A} and strike the block."
+- "Lift {A} using {a} to hit the block."
+- "Grab {A} with {a} and beat the block."
+- "Use {A} to hammer the block."
+- "Take {A} and smash the block."
+- "Hold {A} and pound the block."</p>
+<p><strong>Unseen Instructions (10 variants)</strong>:
+Examples reserved for evaluation:
+- "Grab {A} and beat the block."
+- "Use {a} to pick up {A}."
+- "Grab {A} and strike the block."
+- "Use {a} to grab {A} then beat block"</p>
+<p><strong>Instruction Diversity</strong>:
+- Verbs: grab, pick, lift, take, hold, use, employ
+- Actions: beat, strike, hit, hammer, pound, smash
+- Styles: imperative, sequential, compound sentences
+- Tests: synonym understanding, sentence structure variations</p>
+<h3 id="move_can_pot-instructions">move_can_pot Instructions<a class="headerlink" href="#move_can_pot-instructions" title="Permanent link">&para;</a></h3>
+<p><strong>Full Description</strong>: "there is a can and a pot on the table, use one arm to pick up the can and move it to beside the pot"</p>
+<p><strong>Schema</strong>:
+- <code>{A}</code> → pot identifier (e.g., "060_kitchenpot/base3")
+- <code>{B}</code> → can identifier (e.g., "105_sauce-can/base2")
+- <code>{a}</code> → arm used (e.g., "left" or "right")</p>
+<p><strong>Instruction Preferences</strong>:
+- Word count: ≤10 words
+- Must mention: picking action, placement location
+- Must specify: relative position to pot</p>
+<p><strong>Seen Instructions (50+ variants)</strong>:
+Examples used during training:
+- "Use {a} to grab {B} and move it next to {A}"
+- "Pick {B} up with {a} then place near {A}"
+- "Grab {B} with {a} and set it near {A}"
+- "Lift {B} and move it near {A}"
+- "Take {B} to {A} using {a}"
+- "Set {B} right next to {A}"</p>
+<p><strong>Unseen Instructions (10 variants)</strong>:
+Examples reserved for evaluation:
+- "Pick up {B} and move it near {A}"
+- "Grab {B} and set it beside {A}"
+- "Use {a} to pick up {B}, move it near {A}"
+- "Grab {B} and place it beside {A}"</p>
+<p><strong>Instruction Diversity</strong>:
+- Verbs: grab, pick, lift, take, move, transfer, relocate
+- Spatial terms: near, beside, next to, by, close to
+- Styles: with/without arm mention, sequential vs compound
+- Tests: spatial relationship understanding, action sequence parsing</p>
+<h3 id="episode-level-instruction-assignment">Episode-Level Instruction Assignment<a class="headerlink" href="#episode-level-instruction-assignment" title="Permanent link">&para;</a></h3>
+<p><strong>During Training</strong> (Seen Instructions):
+- Each rollout: randomly select one instruction from seen set
+- 50+ instructions → low probability of repeating same instruction
+- Each instruction has equal selection probability
+- Ensures model doesn't overfit to specific phrasings</p>
+<p><strong>During Validation</strong> (Mixed):
+- IID validation: use seen instructions (same distribution as training)
+- OOD validation: use unseen instructions (test generalization)
+- Both sets used to measure different aspects of performance</p>
+<p><strong>Runtime Substitution</strong>:
+When instruction is selected, placeholders are replaced:
+- <code>{A}</code> → actual object identifier from episode
+- <code>{B}</code> → actual object identifier from episode<br />
+- <code>{a}</code> → "left" or "right" based on arm selection algorithm</p>
+<p><strong>Example Runtime Process</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Template: &quot;Use {a} to grab {B} and move it next to {A}&quot;
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Episode Configuration:
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>- Pot model: 060_kitchenpot/base3
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>- Can model: 105_sauce-can/base5
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>- Can X-position: +0.22 (right side)
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>- Selected arm: right
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Final Instruction: &quot;Use right to grab 105_sauce-can/base5 and move it next to 060_kitchenpot/base3&quot;
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>Simplified for VLA: &quot;Use right arm to grab the sauce can and move it next to the kitchen pot&quot;
+</code></pre></div></p>
+<h3 id="instruction-system-benefits">Instruction System Benefits<a class="headerlink" href="#instruction-system-benefits" title="Permanent link">&para;</a></h3>
+<p><strong>For Training</strong>:
+1. <strong>Language Generalization</strong>: 50+ variants prevent language overfitting
+2. <strong>Robustness</strong>: Model must understand task concept, not memorize phrases
+3. <strong>Diversity</strong>: Different instruction styles cover various language patterns
+4. <strong>Grounding</strong>: Schema system links language to specific objects in scene</p>
+<p><strong>For Evaluation</strong>:
+1. <strong>Unseen Instructions</strong>: Tests true language understanding
+2. <strong>IID vs OOD</strong>: Measures both in-distribution and out-of-distribution performance
+3. <strong>Zero-Shot Transfer</strong>: Unseen instructions never appeared in training
+4. <strong>Generalization Metric</strong>: Success rate on unseen instructions indicates robustness</p>
+<hr />
+<h2 id="training-configuration">Training Configuration<a class="headerlink" href="#training-configuration" title="Permanent link">&para;</a></h2>
+<h3 id="dataset-configuration">Dataset Configuration<a class="headerlink" href="#dataset-configuration" title="Permanent link">&para;</a></h3>
+<p><strong>Training Data Source</strong>:
+- Pre-collected feasible seeds: 1000 per task
+- Seeds validated through simulation to ensure solvability
+- Stored in: <code>verl/utils/envs/robotwin2/seeds/robotwin2_train_seeds.json</code></p>
+<p><strong>Validation Data</strong>:
+- IID Validation: 128 seeds from training distribution
+- OOD Validation: 128 seeds from held-out distribution
+- Total validation: 256 episodes per task</p>
+<p><strong>Data Loading</strong>:
+- Batch size: 64 task instances per training step
+- Samples per task: 8 (for GRPO grouping)
+- Total rollouts per step: 512 (64 × 8)
+- Shuffle: Enabled (random task ordering each epoch)</p>
+<h3 id="rollout-configuration">Rollout Configuration<a class="headerlink" href="#rollout-configuration" title="Permanent link">&para;</a></h3>
+<p><strong>Action Space</strong>:
+- Continuous 14-dimensional actions
+- 7 DOF per arm (position + orientation + gripper)
+- Action normalization: [-1, 1] range
+- Denormalization statistics: Task-specific (learned from demonstrations)</p>
+<p><strong>Action Chunking</strong>:
+- Chunks per VLA inference: 25
+- Action tokens per chunk: 14 (one per dimension)
+- Total tokens per inference: 350 (25 × 14)
+- VLA calls per episode: ~8 (200 steps ÷ 25)</p>
+<p><strong>Rollout Parameters</strong>:
+- Temperature: 1.6 (Higher Rollout Temperature - paper enhancement)
+- Sampling: Enabled (do_sample=True)
+- Max environment steps: 200
+- Micro-batch size: 1 (sequential processing)
+- Episode timeout: 200 steps = success or failure</p>
+<h3 id="success-rate-targets">Success Rate Targets<a class="headerlink" href="#success-rate-targets" title="Permanent link">&para;</a></h3>
+<p>Based on paper results and dynamic sampling:</p>
+<p><strong>beat_block_hammer</strong>:
+- Initial SFT performance: ~25-35% (estimated)
+- Target after 300 steps: ~50-70% (paper-level)
+- Dynamic sampling keeps: 10-90% success rate episodes
+- Expected at convergence: ~60-80% success</p>
+<p><strong>move_can_pot</strong>:
+- Initial SFT performance: ~20-30% (estimated)
+- Target after 300 steps: ~45-65% (paper-level)
+- Dynamic sampling keeps: 10-90% success rate episodes
+- Expected at convergence: ~55-75% success</p>
+<p><strong>Training Progress Indicators</strong>:
+- Epoch 0-5: Mostly failures, learning basic grasping
+- Epoch 5-10: Increasing success, learning task structure
+- Epoch 10-15: Rapid improvement, discovering strategies
+- Epoch 15-20: Convergence, refining precision
+- Beyond 20: Marginal gains, potential overfitting</p>
+<h3 id="computational-requirements">Computational Requirements<a class="headerlink" href="#computational-requirements" title="Permanent link">&para;</a></h3>
+<p><strong>Per Training Step</strong> (~20 minutes):
+- Rollout phase: ~18 minutes (87.8% of time)
+  - Environment initialization: ~2 minutes
+  - VLA inference: ~2 minutes (8 calls × 300ms × 512 rollouts / 8 GPUs)
+  - Physics simulation: ~14 minutes (25 steps × 60ms × 512 rollouts / 8 GPUs)
+- PPO update phase: ~2.4 minutes (11.8% of time)
+- Overhead: ~0.2 minutes (0.4% of time)</p>
+<p><strong>Full Training</strong> (300 steps as per paper):
+- Total time: ~300 steps × 20 minutes = 6000 minutes ≈ 100 hours ≈ 4.3 days
+- GPU usage: 8 × A100 GPUs (or equivalent)
+- Total rollouts: 300 × 512 = 153,600 episodes
+- Total VLA inferences: ~153,600 × 8 = ~1.2M forward passes
+- Total environment steps: ~153,600 × 100 = ~15M physics steps (average)</p>
+<p><strong>Resource Distribution</strong>:
+- GPU compute: ~20% utilization (during VLA inference only)
+- CPU compute: ~80% utilization (physics simulation dominates)
+- GPU memory: ~6 GB per GPU (FSDP sharding)
+- System memory: ~64 GB (environment states, buffers)</p>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<h3 id="task-comparison">Task Comparison<a class="headerlink" href="#task-comparison" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>beat_block_hammer</th>
+<th>move_can_pot</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Skill Type</strong></td>
+<td>Tool use + Contact</td>
+<td>Pick &amp; Place + Spatial</td>
+</tr>
+<tr>
+<td><strong>Complexity</strong></td>
+<td>Medium</td>
+<td>Medium-High</td>
+</tr>
+<tr>
+<td><strong>Randomization</strong></td>
+<td>1 object (block)</td>
+<td>2 objects (pot + can)</td>
+</tr>
+<tr>
+<td><strong>Success Tolerance</strong></td>
+<td>Tight (±2 cm)</td>
+<td>Moderate (±20 cm horizontal)</td>
+</tr>
+<tr>
+<td><strong>Key Challenge</strong></td>
+<td>Precise contact</td>
+<td>Spatial reasoning</td>
+</tr>
+<tr>
+<td><strong>Expected Success</strong></td>
+<td>60-80% after RL</td>
+<td>55-75% after RL</td>
+</tr>
+<tr>
+<td><strong>Novel Behaviors</strong></td>
+<td>"Pushcut" (push vs lift)</td>
+<td>Efficient low trajectories</td>
+</tr>
+</tbody>
+</table>
+<h3 id="key-experimental-insights">Key Experimental Insights<a class="headerlink" href="#key-experimental-insights" title="Permanent link">&para;</a></h3>
+<p><strong>Why These Tasks?</strong>
+1. <strong>Diverse Skills</strong>: Test different manipulation capabilities (tool use vs spatial reasoning)
+2. <strong>Realistic Complexity</strong>: Neither too easy nor impossible, appropriate for RL learning
+3. <strong>Measurable Success</strong>: Clear binary success criteria, no ambiguity
+4. <strong>Rich Randomization</strong>: Sufficient variability to test generalization
+5. <strong>Dual-Arm Platform</strong>: Tests coordination and arm selection logic</p>
+<p><strong>What RL Learns</strong>:
+1. <strong>Beyond Demonstrations</strong>: Discovers strategies not in expert data ("pushcut")
+2. <strong>Robustness</strong>: Handles high variability through 153k diverse rollouts
+3. <strong>Efficiency</strong>: Finds shorter, more direct paths than demonstrations
+4. <strong>Generalization</strong>: Works on unseen instructions and configurations
+5. <strong>Exploration</strong>: Higher temperature (1.6) enables diverse strategy discovery</p>
+<p><strong>Expected Outcomes</strong>:
+- Both tasks show improvement with RL over SFT baseline
+- "Pushcut" phenomenon may emerge in beat_block_hammer
+- move_can_pot benefits from optimized trajectories
+- Success rates reach 60-75% range after 300 training steps
+- Unseen instructions show strong generalization (within 5-10% of seen)</p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:47 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:47 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../../extras/lang-switcher.js"></script>
+      
+        <script src="../../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

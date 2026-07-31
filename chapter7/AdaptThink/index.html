@@ -1,0 +1,2844 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/chapter7/AdaptThink/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Experiment 7-10 reproduction anchor - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="Experiment 7-10 reproduction anchor">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/chapter7/AdaptThink/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Experiment 7-10 reproduction anchor">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#experiment-7-10-reproduction-anchor" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Experiment 7-10 reproduction anchor
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#english" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        English
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/chapter7/AdaptThink/README.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/chapter7/AdaptThink/README.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="experiment-7-10-reproduction-anchor">Experiment 7-10 reproduction anchor<a class="headerlink" href="#experiment-7-10-reproduction-anchor" title="Permanent link">&para;</a></h1>
+<p>This directory is the book-owned explanation. Executable training code is the external <a href="https://github.com/bojieli/AdaptThink"><code>bojieli/AdaptThink</code></a> checkout at <code>chapter7/AdaptThink-original</code>, verified in the current workspace at commit <code>0033ad172dd53ac64004b763477407014f21b838</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/bojieli/AdaptThink.git<span class="w"> </span>chapter7/AdaptThink-original
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>git<span class="w"> </span>-C<span class="w"> </span>chapter7/AdaptThink-original<span class="w"> </span>checkout<span class="w"> </span>--detach<span class="w"> </span>0033ad172dd53ac64004b763477407014f21b838
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">cd</span><span class="w"> </span>chapter7/AdaptThink-original
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>bash<span class="w"> </span>scripts/preprocess_dataset.sh
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>bash<span class="w"> </span>scripts/run_adapt_think_1.5b_deepscaler_16k_delta0.05_btz128_lr2e-6.sh
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>bash<span class="w"> </span>scripts/run_eval_verl_hf.sh
+</code></pre></div>
+<p>These commands identify the upstream workflow; they were not run during the documentation audit.</p>
+<h2 id="english">English<a class="headerlink" href="#english" title="Permanent link">&para;</a></h2>
+<h1 id="adaptthink-teaching-reasoning-models-when-to-think">AdaptThink: Teaching Reasoning Models When to Think<a class="headerlink" href="#adaptthink-teaching-reasoning-models-when-to-think" title="Permanent link">&para;</a></h1>
+<h2 id="table-of-contents">📋 Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="#project-overview">Project Overview</a></li>
+<li><a href="#core-principles">Core Principles</a></li>
+<li><a href="#research-motivation">Research Motivation</a></li>
+<li><a href="#method-design">Method Design</a></li>
+<li><a href="#experiment-setup">Experiment Setup</a></li>
+<li><a href="#model-and-data">Model and Data</a></li>
+<li><a href="#training-configuration">Training Configuration</a></li>
+<li><a href="#experimental-results-analysis">Experimental Results Analysis</a></li>
+<li><a href="#overall-performance">Overall Performance</a></li>
+<li><a href="#training-process-analysis">Training Process Analysis</a></li>
+<li><a href="#adaptive-behavior-across-difficulties">Adaptive Behavior Across Difficulties</a></li>
+<li><a href="#efficiency-vs-accuracy-trade-off">Efficiency vs. Accuracy Trade-off</a></li>
+<li><a href="#operation-guide">Operation Guide</a></li>
+<li><a href="#key-findings">Key Findings</a></li>
+<li><a href="#reference-resources">Reference Resources</a></li>
+</ul>
+<hr />
+<h2 id="project-overview">Project Overview<a class="headerlink" href="#project-overview" title="Permanent link">&para;</a></h2>
+<p><strong>AdaptThink</strong> is an innovative reinforcement learning algorithm designed to teach Large Reasoning Models (LRMs) to <strong>adaptively choose their reasoning mode</strong> based on problem difficulty.</p>
+<h3 id="background-problem">Background Problem<a class="headerlink" href="#background-problem" title="Permanent link">&para;</a></h3>
+<p>Current reasoning models (e.g., OpenAI o1, DeepSeek-R1) engage in prolonged "thinking" when processing problems. While this deep reasoning improves performance on complex tasks, it also introduces significant issues:</p>
+<ul>
+<li><strong>High inference cost</strong>: Long thinking chains lead to substantially increased token consumption</li>
+<li><strong>High latency</strong>: Even simple problems require lengthy thinking processes</li>
+<li><strong>Inefficiency</strong>: Many simple problems do not require complex reasoning</li>
+</ul>
+<h3 id="core-innovation">Core Innovation<a class="headerlink" href="#core-innovation" title="Permanent link">&para;</a></h3>
+<p>AdaptThink enables models to intelligently switch between two modes:</p>
+<ul>
+<li><strong>Thinking mode</strong>: Generates detailed thinking chains (<code>&lt;think&gt;...&lt;/think&gt;</code>) to solve complex problems</li>
+<li><strong>NoThinking mode</strong>: Skips the thinking process and directly generates answers for simple problems</li>
+</ul>
+<p>This adaptive mechanism <strong>significantly reduces inference cost while further improving overall accuracy</strong>.</p>
+<hr />
+<h2 id="core-principles">Core Principles<a class="headerlink" href="#core-principles" title="Permanent link">&para;</a></h2>
+<h3 id="research-motivation">Research Motivation<a class="headerlink" href="#research-motivation" title="Permanent link">&para;</a></h3>
+<p>The paper first identifies a key phenomenon through experimentation:</p>
+<blockquote>
+<p><strong>For relatively simple problems (below high school competition level), the NoThinking mode performs comparably to or even better than the Thinking mode, while significantly reducing token usage. The advantage of Thinking only becomes apparent when problems are sufficiently difficult.</strong></p>
+</blockquote>
+<p>This finding motivates the core research question:</p>
+<p><strong>Can we enable models to autonomously learn to select the optimal reasoning mode based on problem difficulty?</strong></p>
+<h3 id="method-design">Method Design<a class="headerlink" href="#method-design" title="Permanent link">&para;</a></h3>
+<p>AdaptThink achieves adaptive reasoning through two core components:</p>
+<h4 id="1-constrained-optimization">1. Constrained Optimization<a class="headerlink" href="#1-constrained-optimization" title="Permanent link">&para;</a></h4>
+<div class="arithmatex">\[\max_{\theta} \mathbb{E}_{x \sim \mathcal{D}, y \sim \pi_\theta(y|x)} [r(x,y)] \quad \text{s.t.} \quad \mathbb{E}_{x \sim \mathcal{D}, y \sim \pi_\theta(y|x)} [r(x,y)] \geq \mathbb{E}_{x \sim \mathcal{D}, y \sim \pi_{\text{ref}}(y|x)} [r(x,y)] - \delta\]</div>
+<p>Where:
+- <span class="arithmatex">\(r(x,y)\)</span> is the reward function (based on answer accuracy)
+- <span class="arithmatex">\(\pi_{\text{ref}}\)</span> is the reference model (original reasoning model)
+- <span class="arithmatex">\(\delta\)</span> is the allowable performance degradation (set to 0.05 in this experiment)</p>
+<p><strong>Core idea</strong>: Maximize reward while ensuring overall performance does not fall below the reference model (allowing a slight degradation <span class="arithmatex">\(\delta\)</span>). The separate sampling strategy below exposes the model to both Thinking and NoThinking responses; the constrained objective shown here does not itself include a KL-divergence or token-cost term.</p>
+<h4 id="2-importance-sampling-strategy">2. Importance Sampling Strategy<a class="headerlink" href="#2-importance-sampling-strategy" title="Permanent link">&para;</a></h4>
+<p>During training, to balance Thinking and NoThinking samples:</p>
+<ul>
+<li><strong>Cold start phase</strong>: The model tends to use Thinking (its pre-training behavior)</li>
+<li><strong>Sampling strategy</strong>: Importance sampling is introduced to ensure both Thinking and NoThinking samples are present during training</li>
+<li><strong>Exploration vs. exploitation</strong>: The model continuously explores both modes throughout training</li>
+</ul>
+<p>Implementation: For each problem, both Thinking and NoThinking responses are sampled, and sampling weights are dynamically adjusted based on their performance.</p>
+<h4 id="3-nothinking-implementation">3. NoThinking Implementation<a class="headerlink" href="#3-nothinking-implementation" title="Permanent link">&para;</a></h4>
+<p>Implemented by adding an empty think tag to the input prompt:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>User: [Problem]
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Assistant: &lt;think&gt;&lt;/think&gt;[Direct Answer]
+</code></pre></div>
+<p>This concise implementation leverages the model's pre-trained knowledge, allowing it to understand the semantics of "skipping thinking."</p>
+<hr />
+<h2 id="experiment-setup">Experiment Setup<a class="headerlink" href="#experiment-setup" title="Permanent link">&para;</a></h2>
+<h3 id="model-and-data">Model and Data<a class="headerlink" href="#model-and-data" title="Permanent link">&para;</a></h3>
+<h4 id="base-model">Base Model<a class="headerlink" href="#base-model" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>DeepSeek-R1-Distill-Qwen-1.5B</strong> (this experiment)</li>
+<li>DeepSeek-R1-Distill-Qwen-7B (comparison experiment in the paper)</li>
+</ul>
+<h4 id="training-dataset">Training Dataset<a class="headerlink" href="#training-dataset" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>DeepScaler</strong>: 40,000 math problems covering multiple difficulty levels from elementary school to high school competitions</li>
+</ul>
+<h4 id="evaluation-datasets">Evaluation Datasets<a class="headerlink" href="#evaluation-datasets" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>GSM8K</strong>: Elementary school math problems</li>
+<li><strong>MATH500</strong>: Competition-level math problems (Levels 1-5)</li>
+<li><strong>AIME2024</strong>: American high school math competition (hardest)</li>
+</ul>
+<h3 id="training-configuration">Training Configuration<a class="headerlink" href="#training-configuration" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Context length</td>
+<td>16K tokens</td>
+</tr>
+<tr>
+<td>Batch size</td>
+<td>128</td>
+</tr>
+<tr>
+<td>Learning rate</td>
+<td>2e-6</td>
+</tr>
+<tr>
+<td>Training epochs</td>
+<td>1 epoch (314 steps)</td>
+</tr>
+<tr>
+<td>δ (performance tolerance)</td>
+<td>0.05</td>
+</tr>
+<tr>
+<td>Hardware configuration</td>
+<td>1 × 8×H800 node</td>
+</tr>
+<tr>
+<td>Training duration</td>
+<td>~32 hours</td>
+</tr>
+<tr>
+<td>Checkpoint selection</td>
+<td>Step 300</td>
+</tr>
+</tbody>
+</table>
+<h4 id="reference-model-pre-sampling">Reference Model Pre-sampling<a class="headerlink" href="#reference-model-pre-sampling" title="Permanent link">&para;</a></h4>
+<p>Pre-sampling of the reference model is required before training to evaluate instance-level accuracy:
+- 16 responses sampled per training problem
+- Accuracy calculated per problem as a difficulty metric
+- Used for importance sampling weight calculation</p>
+<hr />
+<h2 id="experimental-results-analysis">Experimental Results Analysis<a class="headerlink" href="#experimental-results-analysis" title="Permanent link">&para;</a></h2>
+<h3 id="overall-performance">Overall Performance<a class="headerlink" href="#overall-performance" title="Permanent link">&para;</a></h3>
+<p>Based on WandB monitoring data from this experiment (1.5B model, δ=0.05): https://wandb.ai/bojieli-pine-ai/adapt_think_verl/</p>
+<h4 id="core-metrics-comparison">Core Metrics Comparison<a class="headerlink" href="#core-metrics-comparison" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Accuracy (score)</th>
+<th>Response Length Change</th>
+<th>NoThinking Ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GSM8K</td>
+<td>Stable at <strong>~0.82</strong></td>
+<td>1600 → ~500 (-69%)</td>
+<td><strong>~85%</strong></td>
+</tr>
+<tr>
+<td>MATH500</td>
+<td><strong>0.82 → 0.83-0.85</strong></td>
+<td>5000 → ~1800 (-64%)</td>
+<td><strong>~80%</strong></td>
+</tr>
+<tr>
+<td>AIME2024</td>
+<td>Fluctuates at <strong>0.28-0.32</strong></td>
+<td>12000 → ~9000 (-25%)</td>
+<td><strong>~55%</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Results</strong>:
+- ✅ <strong>Accuracy improvement</strong>: MATH500 accuracy increased from 0.82 to 0.83-0.85; GSM8K and AIME remained stable
+- ✅ <strong>Significant efficiency gains</strong>: MATH500 reduced by 64%, GSM8K by 69%, AIME by 25%
+- ✅ <strong>Intelligent adaptation</strong>: 85% NoThinking for simple problems, 80% for medium, 55% for difficult — perfect difficulty awareness</p>
+<h3 id="training-process-analysis">Training Process Analysis<a class="headerlink" href="#training-process-analysis" title="Permanent link">&para;</a></h3>
+<h4 id="1-evolution-of-response-length">1. Evolution of Response Length<a class="headerlink" href="#1-evolution-of-response-length" title="Permanent link">&para;</a></h4>
+<p>From the WandB chart <code>response_length/mean</code> and response lengths for each dataset, a clear three-phase pattern emerges:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Initial Phase (Step 0-50):
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  - Overall average response length: ~5,500 tokens
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  - MATH500: ~5,000 tokens (almost all Thinking)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  - GSM8K: ~1,600 tokens (almost all Thinking)
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  - AIME: ~12,000 tokens (long thinking chains for complex problems)
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  - Model continues pre-training behavior, thinking on all problems
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Transition Phase (Step 50-150):
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  - Overall drops sharply to ~4,000 tokens
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  - is_nothinking ratio begins to rise (from 0 → 0.5+)
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  - NoThinking accuracy emerges rapidly (MATH500: 0 → 0.8)
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  - Critical period for the model to learn to distinguish problem difficulty
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>Stable Phase (Step 150-300):
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>  - Overall stabilizes at ~3,000-3,500 tokens
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>  - MATH500: drops to ~1,800 tokens (80% NoThinking)
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>  - GSM8K: drops to ~500 tokens (85% NoThinking)
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>  - AIME: drops to ~9,000 tokens (55% NoThinking)
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>  - Adaptive behavior fully formed, accuracy continues to improve
+</code></pre></div>
+<p><strong>Key Observation</strong>: The reduction in response length across datasets perfectly matches their difficulty!</p>
+<h4 id="2-evolution-of-accuracy-and-emergence-of-nothinking-capability">2. Evolution of Accuracy and Emergence of NoThinking Capability<a class="headerlink" href="#2-evolution-of-accuracy-and-emergence-of-nothinking-capability" title="Permanent link">&para;</a></h4>
+<p><strong>GSM8K (Simple Math)</strong>:
+- <strong>score/mean</strong>: Stable at ~0.82 throughout
+- <strong>nothinking_acc</strong>: Rapidly rises from 0 to <strong>0.88-0.90</strong> around Step 150
+- <strong>is_nothinking</strong>: Stabilizes at <strong>~85%</strong>
+- <strong>Key Finding</strong>: The model successfully learns to skip thinking on 85% of GSM8K problems</p>
+<p><strong>MATH500 (Medium Math)</strong>:
+- <strong>score/mean</strong>: Improves from 0.82 to <strong>0.83-0.85</strong>
+- <strong>thinking_acc</strong>: Stable between 0.5-0.65 (difficult problems selected by the model)
+- <strong>nothinking_acc</strong>: Emerges rapidly around Step 150, jumping from 0 to <strong>0.8-0.85</strong> (simple problems selected by the model)
+- <strong>is_nothinking</strong>: Stabilizes at <strong>~80%</strong>
+- <strong>Key Finding</strong>: The model learns to identify 80% of MATH500 problems where thinking can be skipped</p>
+<p><strong>AIME2024 (Hard Math)</strong>:
+- <strong>score/mean</strong>: Fluctuates upward from 0.28-0.30 to a maximum of <strong>0.32</strong> (~14% improvement)
+- <strong>thinking_acc</strong>: Fluctuates significantly between 0.3-0.7
+- <strong>nothinking_acc</strong>: Gradually improves from 0.3 to 0.4-0.6
+- <strong>is_nothinking</strong>: Only <strong>~55%</strong>, significantly lower than for simple problems
+- <strong>Key Finding</strong>: The model remains cautious on difficult problems, using Thinking more often</p>
+<h4 id="21-emergence-phenomenon-of-nothinking-capability">2.1 Emergence Phenomenon of NoThinking Capability<a class="headerlink" href="#21-emergence-phenomenon-of-nothinking-capability" title="Permanent link">&para;</a></h4>
+<p>From the chart <code>nothinking_acc/mean</code>, a surprising phenomenon is clearly observable:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Step 0-150:   nothinking_acc ≈ 0 or undefined (almost no NoThinking samples)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Step 150:     Sharp inflection point
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Step 150-300: nothinking_acc ≈ 0.8-0.85 (MATH500), 0.88-0.90 (GSM8K)
+</code></pre></div>
+<p>This <strong>sudden emergence</strong> suggests:
+- The model is not simply learning "when to skip thinking"
+- It is genuinely learning the ability to "solve simple problems without thinking"
+- This represents a high-level meta-learning capability</p>
+<h4 id="3-emergence-of-adaptive-behavior">3. Emergence of Adaptive Behavior<a class="headerlink" href="#3-emergence-of-adaptive-behavior" title="Permanent link">&para;</a></h4>
+<p>From the <code>is_nothinking/mean</code> metric, clear stratification of adaptive behavior across datasets is visible:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>GSM8K:            ~85% NoThinking  ← Simple problems (elementary math)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>MATH500:          ~80% NoThinking  ← Medium difficulty (high school math)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>AIME2024:         ~55% NoThinking  ← Difficult problems (competition level)
+</code></pre></div>
+<p><strong>Timeline of Adaptive Pattern Evolution</strong> (using MATH500 as an example):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Step 0-100:   is_nothinking ≈ 0-0.1 (almost never uses NoThinking)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Step 100-150: is_nothinking rises rapidly 0.1 → 0.6
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Step 150:     Critical inflection point, is_nothinking jumps to 0.8
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Step 150-300: is_nothinking stabilizes at 0.78-0.82
+</code></pre></div>
+<p>This indicates the model has successfully learned to <strong>dynamically select reasoning mode based on problem difficulty</strong>, and this ability emerges suddenly around the middle of training (Step 150)!</p>
+<h4 id="4-training-stability-and-key-metrics">4. Training Stability and Key Metrics<a class="headerlink" href="#4-training-stability-and-key-metrics" title="Permanent link">&para;</a></h4>
+<p>From the <code>adapt_think</code> series of metrics, the stability of the training process can be observed:</p>
+<p><strong>Reward Evolution</strong>:
+- <strong>thinking_reward/mean</strong>: Gradually rises from negative values to near 0 or positive
+- <strong>reward/mean</strong>: Overall reward rises steadily with no obvious collapse
+- <strong>nothinking_reward</strong>: Fluctuates more but trends upward, indicating NoThinking is gradually being optimized</p>
+<p><strong>Token Probability</strong>:
+- <strong>first_eot_token_probs/mean</strong>: Rises from ~0.2 to <strong>0.6-0.8</strong>
+  - This indicates the model becomes increasingly "confident" in choosing when to end thinking
+  - High probability means decisions are clear, not random</p>
+<p><strong>Thinking Chain Length Optimization</strong> (adapt_think/thinking_response_length):
+- Drops from ~9,000 tokens to <strong>~4,500-5,000 tokens</strong>
+- Even when using Thinking, thinking chains become more concise and efficient
+- <strong>Dual optimization</strong>: Reducing Thinking usage + optimizing Thinking itself</p>
+<p><strong>Overall Response Length Trend</strong> (response_length):
+- <strong>mean</strong>: 5,500 → 3,000 (-45%)
+- <strong>min</strong>: Stable at 50-150 (shortest responses)
+- <strong>max</strong>: Remains at 16,000-17,000 (limited by max_tokens configuration)- <strong>clip_ratio</strong>: decreased from 0.1 to <strong>0.02</strong> (rarely hits the length limit)</p>
+<h3 id="adaptive-behavior-across-difficulties">Adaptive Behavior Across Difficulties<a class="headerlink" href="#adaptive-behavior-across-difficulties" title="Permanent link">&para;</a></h3>
+<h4 id="math500-difficulty-analysis-from-the-paper">MATH500 Difficulty Analysis (from the paper)<a class="headerlink" href="#math500-difficulty-analysis-from-the-paper" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Difficulty Level</th>
+<th>NoThinking Ratio</th>
+<th>Accuracy Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Level 1</td>
+<td>95%</td>
+<td>+3%</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td>88%</td>
+<td>+2%</td>
+</tr>
+<tr>
+<td>Level 3</td>
+<td>72%</td>
+<td>+1%</td>
+</tr>
+<tr>
+<td>Level 4</td>
+<td>45%</td>
+<td>No change</td>
+</tr>
+<tr>
+<td>Level 5</td>
+<td>28%</td>
+<td>No change</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Observations</strong>:
+1. <strong>Perfect difficulty awareness</strong>: The NoThinking ratio decreases as difficulty increases
+2. <strong>Efficiency-quality balance</strong>: NoThinking is used boldly for simple problems, while Thinking is retained cautiously for difficult ones
+3. <strong>Performance maintained</strong>: Good accuracy levels are preserved across all problem types</p>
+<h3 id="efficiency-vs-accuracy-trade-off">Efficiency vs. Accuracy Trade-off<a class="headerlink" href="#efficiency-vs-accuracy-trade-off" title="Permanent link">&para;</a></h3>
+<h4 id="impact-of-the-parameter">Impact of the δ Parameter<a class="headerlink" href="#impact-of-the-parameter" title="Permanent link">&para;</a></h4>
+<p>The paper compares the effects of different δ values:</p>
+<table>
+<thead>
+<tr>
+<th>δ Value</th>
+<th>NoThinking Ratio</th>
+<th>Response Length Reduction</th>
+<th>Accuracy Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Lowest</td>
+<td>Small</td>
+<td>Slight improvement</td>
+</tr>
+<tr>
+<td>0.01</td>
+<td>Medium</td>
+<td>~40%</td>
+<td>Slight improvement</td>
+</tr>
+<tr>
+<td>0.02</td>
+<td>High</td>
+<td>~50%</td>
+<td>No change</td>
+</tr>
+<tr>
+<td><strong>0.05</strong></td>
+<td><strong>~80%</strong></td>
+<td><strong>~53%</strong></td>
+<td><strong>+2.4%</strong></td>
+</tr>
+<tr>
+<td>0.075</td>
+<td>Higher</td>
+<td>~60%</td>
+<td>Possible decrease</td>
+</tr>
+<tr>
+<td>0.1</td>
+<td>Highest</td>
+<td>Largest</td>
+<td>Slight decrease</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rationale for choosing δ=0.05 in this experiment</strong>:
+- ✅ Achieves the best balance between efficiency and accuracy
+- ✅ Clear accuracy improvement (+2.4%)
+- ✅ Significant response length reduction (53%)
+- ✅ Clear adaptive behavior (80% NoThinking on simple problems)</p>
+<hr />
+<h2 id="operation-guide">Operation Guide<a class="headerlink" href="#operation-guide" title="Permanent link">&para;</a></h2>
+<h3 id="environment-setup">Environment Setup<a class="headerlink" href="#environment-setup" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Create environment</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>adapt_think<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.13
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>conda<span class="w"> </span>activate<span class="w"> </span>adapt_think
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Install dependencies</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">cd</span><span class="w"> </span>chapter7/AdaptThink-original
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>pip<span class="w"> </span>install<span class="w"> </span>flash-attn<span class="w"> </span>--no-build-isolation
+</code></pre></div>
+<h3 id="data-preparation">Data Preparation<a class="headerlink" href="#data-preparation" title="Permanent link">&para;</a></h3>
+<h4 id="1-pre-sampling-reference-responses">1. Pre-sampling Reference Responses<a class="headerlink" href="#1-pre-sampling-reference-responses" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Start vLLM server</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vllm<span class="w"> </span>serve<span class="w"> </span>deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--served_model_name<span class="w"> </span>DeepSeek-R1-Distill-Qwen-1.5B<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--tensor_parallel_size<span class="w"> </span><span class="m">4</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Sample 16 responses</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>python<span class="w"> </span>src/presampling_ref_responses.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>--K<span class="w"> </span><span class="m">16</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span>--dataset_path<span class="w"> </span>./data/train/deepscaler.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>--model_name<span class="w"> </span>DeepSeek-R1-Distill-Qwen-1.5B<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>--max_tokens<span class="w"> </span><span class="m">16384</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Post-process to get instance-level accuracy</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>python<span class="w"> </span>src/postprocess_ref_results.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">  </span>--input_path<span class="w"> </span>./data/train/ref_presampling/DeepSeek-R1-Distill-Qwen-1.5B_deepscaler_n0_K16_len16384.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">  </span>--output_path<span class="w"> </span>./data/train/ref_results/DeepSeek-R1-Distill-Qwen-1.5B_deepscaler_K16_len16384.json
+</code></pre></div>
+<p><strong>Note</strong>: Pre-processed results are already provided in <code>./data/train/ref_results</code> and can be used directly.</p>
+<h4 id="2-preprocess-dataset">2. Preprocess Dataset<a class="headerlink" href="#2-preprocess-dataset" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>bash<span class="w"> </span>scripts/preprocess_dataset.sh
+</code></pre></div>
+<h3 id="training">Training<a class="headerlink" href="#training" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># 1.5B model, single node</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>bash<span class="w"> </span>scripts/run_adapt_think_1.5b_deepscaler_16k_delta0.05_btz128_lr2e-6.sh
+</code></pre></div>
+<p><strong>Training Monitoring</strong>:
+- VeRL automatically logs training metrics to WandB
+- Test set is automatically evaluated every <code>trainer.test_freq</code> steps
+- Key monitoring metrics:
+  - <code>val-aux/gsm8k/score/mean</code>: GSM8K accuracy
+  - <code>val-aux/math/score/mean</code>: MATH500 accuracy
+  - <code>response_length/mean</code>: Average response length
+  - <code>adapt_think/is_nothinking/mean</code>: NoThinking ratio
+  - <code>adapt_think/thinking_response_length/mean</code>: Chain-of-thought length</p>
+<h3 id="evaluation">Evaluation<a class="headerlink" href="#evaluation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Convert checkpoint to HF format</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>bash<span class="w"> </span>scripts/convert_to_hf.sh
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Run evaluation</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>bash<span class="w"> </span>scripts/run_eval_verl_hf.sh
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Or directly evaluate a published HF model</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>bash<span class="w"> </span>scripts/run_eval_hf.sh
+</code></pre></div>
+<hr />
+<h2 id="key-findings">Key Findings<a class="headerlink" href="#key-findings" title="Permanent link">&para;</a></h2>
+<h3 id="1-effectiveness-of-nothinking">1. Effectiveness of NoThinking<a class="headerlink" href="#1-effectiveness-of-nothinking" title="Permanent link">&para;</a></h3>
+<p><strong>Key Finding</strong>: The model successfully learns to identify which problems can skip the thinking process.</p>
+<p><strong>Observations</strong>:
+- On problems where the model chooses NoThinking (mainly simple problems), accuracy remains high
+- This indicates that the model's "intuition" (pre-trained knowledge) is sufficient for these problems
+- Adaptive selection avoids unnecessary computational overhead</p>
+<h3 id="2-emergence-of-adaptive-behavior">2. Emergence of Adaptive Behavior<a class="headerlink" href="#2-emergence-of-adaptive-behavior" title="Permanent link">&para;</a></h3>
+<p>The model automatically learns the mapping between difficulty and reasoning mode without explicit difficulty labels:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Simple problems (GSM8K):     &quot;Simple arithmetic&quot;       → NoThinking (85%)
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Medium problems (MATH500):   &quot;High school math&quot;       → NoThinking (80%)
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Difficult problems (AIME):   &quot;Competition-level problems&quot;     → Mixed use (55%)
+</code></pre></div>
+<h3 id="3-win-win-in-efficiency-and-performance">3. Win-Win in Efficiency and Performance<a class="headerlink" href="#3-win-win-in-efficiency-and-performance" title="Permanent link">&para;</a></h3>
+<p>Conventional wisdom suggests efficiency and performance are a trade-off, but AdaptThink achieves a win-win:</p>
+<ul>
+<li><strong>Significant efficiency gains</strong>:</li>
+<li>GSM8K: Response length reduced by <strong>69%</strong> (1600 → 500)</li>
+<li>MATH500: Response length reduced by <strong>64%</strong> (5000 → 1800)</li>
+<li>AIME: Response length reduced by <strong>25%</strong> (12000 → 9000)</li>
+<li>
+<p>Overall: Average response length reduced by <strong>45%</strong> (5500 → 3000)</p>
+</li>
+<li>
+<p><strong>Performance maintained or improved</strong>:</p>
+</li>
+<li>MATH500: Overall accuracy improved <strong>0.82 → 0.83-0.85</strong></li>
+<li>GSM8K: Overall accuracy remained stable <strong>~0.82</strong></li>
+<li>
+<p>AIME: Overall accuracy improved to <strong>0.32</strong> (from 0.28 baseline)</p>
+</li>
+<li>
+<p><strong>Reasons</strong>:</p>
+</li>
+<li>Targeted use of reasoning resources, quick decisions on simple problems</li>
+<li>Thinking itself becomes more concise (from 9K → 5K tokens)</li>
+<li>Avoids error accumulation from overthinking</li>
+</ul>
+<h3 id="4-training-stability-and-key-inflection-point">4. Training Stability and Key Inflection Point<a class="headerlink" href="#4-training-stability-and-key-inflection-point" title="Permanent link">&para;</a></h3>
+<p>WandB charts show the training process is very stable, with a clear <strong>key inflection point</strong>:</p>
+<p><strong>Step 150 - Inflection point for capability emergence</strong>:
+- ✅ <strong>is_nothinking</strong> jumps from ~0.5 to ~0.8
+- ✅ <strong>nothinking_acc</strong> jumps from near 0 to 0.8-0.9
+- ✅ <strong>Response length</strong> begins to decrease rapidly
+- ✅ <strong>first_eot_token_probs</strong> increases significantly (more confident decisions)</p>
+<p><strong>Training stability metrics</strong>:
+- Reward curve (reward/mean): Steady increase, no collapse
+- Accuracy (acc/mean): Continuous improvement, no oscillation
+- KL divergence: Remains within a reasonable range
+- Gradients: No abnormal explosion or vanishing</p>
+<p><strong>Key Observation</strong>:
+- The constrained optimization objective effectively prevents performance degradation
+- The importance sampling strategy ensures balanced exploration of Thinking/NoThinking
+- The capability emergence at Step 150 resembles a "phase transition" phenomenon in LLM training</p>
+<hr />
+<h2 id="comparison-with-existing-methods">Comparison with Existing Methods<a class="headerlink" href="#comparison-with-existing-methods" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Core Idea</th>
+<th>Response Length Reduction</th>
+<th>Accuracy Change</th>
+<th>Adaptivity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Baseline Model</strong></td>
+<td>Think on all problems</td>
+<td>0%</td>
+<td>-</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>Length Reward</strong></td>
+<td>Add length penalty in RL</td>
+<td>~30%</td>
+<td>No change/decrease</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>DPO (Short Preference)</strong></td>
+<td>Alignment preferring short responses</td>
+<td>~35%</td>
+<td>No change</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>Model Merging</strong></td>
+<td>Fusion of reasoning/non-reasoning models</td>
+<td>~25%</td>
+<td>No change</td>
+<td>Partial</td>
+</tr>
+<tr>
+<td><strong>AdaptThink</strong></td>
+<td>Adaptive mode selection</td>
+<td><strong>45-69%</strong></td>
+<td><strong>+2-10%</strong></td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Specific data for this experiment (1.5B, δ=0.05)</strong>:
+- GSM8K: Response length ↓69%, 85% of problems use NoThinking
+- MATH500: Response length ↓64%, accuracy improved 0.82 → 0.83-0.85, 80% of problems use NoThinking
+- AIME: Response length ↓25%, accuracy 0.28-0.32, 55% of problems use NoThinking</p>
+<p><strong>Unique Advantages of AdaptThink</strong>:
+- ✅ <strong>The only method that simultaneously improves efficiency and accuracy</strong>
+- ✅ <strong>True adaptivity</strong>: Dynamically decides based on problem difficulty (55%-85% NoThinking gradient)
+- ✅ <strong>Dual optimization</strong>: Reduces Thinking usage + optimizes Thinking itself
+- ✅ <strong>Capability emergence</strong>: A clear qualitative leap occurs in the middle of training
+- ✅ <strong>No additional model needed</strong>: A single model can achieve mixed reasoning</p>
+<hr />
+<h2 id="experimental-environment-and-cost">Experimental Environment and Cost<a class="headerlink" href="#experimental-environment-and-cost" title="Permanent link">&para;</a></h2>
+<h3 id="hardware-requirements">Hardware Requirements<a class="headerlink" href="#hardware-requirements" title="Permanent link">&para;</a></h3>
+<p><strong>Training</strong>:
+- 1.5B model: 1 × 8×H800 node (~32 hours)
+- 7B model: 4 × 8×H800 nodes (~28 hours)</p>
+<p><strong>Inference</strong>:
+- Can use a single GPU (depending on model size)
+- vLLM for accelerated inference</p>
+<h3 id="computational-cost-estimate">Computational Cost Estimate<a class="headerlink" href="#computational-cost-estimate" title="Permanent link">&para;</a></h3>
+<p>Using the 1.5B model as an example:
+- <strong>Training cost</strong>: 8×H800 × 32 hours
+- <strong>Inference cost savings</strong>:
+  - Overall: 45% token reduction → ~1.8x inference speedup
+  - GSM8K: 69% token reduction → ~3.2x inference speedup
+  - MATH500: 64% token reduction → ~2.8x inference speedup
+- <strong>ROI</strong>: In large-scale inference scenarios, the training cost can be quickly recovered (especially in scenarios with a high proportion of simple problems)</p>
+<hr />
+<h2 id="limitations-and-future-directions">Limitations and Future Directions<a class="headerlink" href="#limitations-and-future-directions" title="Permanent link">&para;</a></h2>
+<h3 id="current-limitations">Current Limitations<a class="headerlink" href="#current-limitations" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Domain limitation</strong>: Primarily validated on math tasks; other domains require further testing</li>
+<li><strong>δ tuning</strong>: Different tasks may require different δ values</li>
+<li><strong>Cold start</strong>: Requires pre-sampling of a reference model, adding preparation cost</li>
+<li><strong>Interpretability</strong>: How the model judges difficulty remains a black box</li>
+</ol>
+<h3 id="future-directions">Future Directions<a class="headerlink" href="#future-directions" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Multi-level reasoning</strong>: Not just a binary Thinking/NoThinking choice, but multiple levels like "shallow thinking" and "deep thinking"</li>
+<li><strong>Online adaptation</strong>: Dynamically adjust reasoning depth based on real-time feedback</li>
+<li><strong>Cross-domain generalization</strong>: Validate on more tasks like code, reasoning, creative writing</li>
+<li><strong>User control</strong>: Allow users to specify reasoning depth preferences</li>
+</ol>
+<hr />
+<h2 id="reference-resources">Reference Resources<a class="headerlink" href="#reference-resources" title="Permanent link">&para;</a></h2>
+<h3 id="paper-and-code">Paper and Code<a class="headerlink" href="#paper-and-code" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Paper</strong>: <a href="https://arxiv.org/abs/2505.13417">AdaptThink: LLM Can Learn When to Think</a></li>
+<li><strong>Code</strong>: <a href="https://github.com/THU-KEG/AdaptThink">GitHub - THU-KEG/AdaptThink</a></li>
+<li><strong>Model</strong>: <a href="https://huggingface.co/collections/THU-KEG/adaptthink-682a1059aa9f5102c4fa0470">HuggingFace Collection</a></li>
+</ul>
+<h3 id="related-work">Related Work<a class="headerlink" href="#related-work" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>DeepSeek-R1</strong>: Base reasoning model</li>
+<li><strong>VeRL</strong>: RL training framework</li>
+<li><strong>vLLM</strong>: Efficient inference engine</li>
+</ul>
+<hr />
+<h2 id="citation">Citation<a class="headerlink" href="#citation" title="Permanent link">&para;</a></h2>
+<p>If you find this work helpful, please cite:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nc">@article</span><span class="p">{</span><span class="nl">zhang2025adapt_think</span><span class="p">,</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="na">title</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{AdaptThink: LLM Can Learn When to Think}</span><span class="p">,</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="na">author</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Jiajie Zhang and Nianyi Lin and Lei Hou and Ling Feng and Juanzi Li}</span><span class="p">,</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="na">journal</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{arXiv preprint arXiv:2505.13417}</span><span class="p">,</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span><span class="na">url</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{https://arxiv.org/abs/2505.13417}</span><span class="p">,</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span><span class="na">year</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{2025}</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="acknowledgements">Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permanent link">&para;</a></h2>
+<p>This experiment is based on the AdaptThink project by the THU-KEG team at Tsinghua University. We thank the team for open-sourcing the code and models.</p>
+<p><strong>Experiment Log</strong>: This README is written based on wandb experiment results (1.5B model, δ=0.05, step 300), demonstrating the performance and effects of AdaptThink in actual training.</p>
+<hr />
+<h2 id="_1">中文<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h1 id="adaptthink">AdaptThink: 让推理模型学会何时思考<a class="headerlink" href="#adaptthink" title="Permanent link">&para;</a></h1>
+<h2 id="_2">📋 目录<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="#项目简介">项目简介</a></li>
+<li><a href="#核心原理">核心原理</a></li>
+<li><a href="#研究动机">研究动机</a></li>
+<li><a href="#方法设计">方法设计</a></li>
+<li><a href="#实验设置">实验设置</a></li>
+<li><a href="#模型与数据">模型与数据</a></li>
+<li><a href="#训练配置">训练配置</a></li>
+<li><a href="#实验结果分析">实验结果分析</a></li>
+<li><a href="#整体性能表现">整体性能表现</a></li>
+<li><a href="#训练过程分析">训练过程分析</a></li>
+<li><a href="#不同难度的自适应行为">不同难度的自适应行为</a></li>
+<li><a href="#效率与准确率的权衡">效率与准确率的权衡</a></li>
+<li><a href="#操作指南">操作指南</a></li>
+<li><a href="#关键发现">关键发现</a></li>
+<li><a href="#参考资源">参考资源</a></li>
+</ul>
+<hr />
+<h2 id="_3">项目简介<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><strong>AdaptThink</strong> 是一种创新的强化学习算法，旨在教会大型推理模型（Large Reasoning Models, LRMs）根据问题难度<strong>自适应选择推理模式</strong>。</p>
+<h3 id="_4">背景问题<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>当前的推理模型（如 OpenAI o1、DeepSeek-R1）在处理问题时会进行长时间的"思考"（Thinking），这种深度推理虽然提升了复杂任务的表现，但也带来了显著问题：</p>
+<ul>
+<li><strong>高推理成本</strong>：长思考链导致 token 消耗大幅增加</li>
+<li><strong>高延迟</strong>：即使简单问题也需要冗长的思考过程</li>
+<li><strong>效率低下</strong>：许多简单问题并不需要复杂推理</li>
+</ul>
+<h3 id="_5">核心创新<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>AdaptThink 让模型学会在两种模式间智能切换：</p>
+<ul>
+<li><strong>Thinking 模式</strong>：生成详细的思考链（<code>&lt;think&gt;...&lt;/think&gt;</code>）来解决复杂问题</li>
+<li><strong>NoThinking 模式</strong>：跳过思考过程，直接生成答案来处理简单问题</li>
+</ul>
+<p>这种自适应机制在<strong>大幅降低推理成本的同时，进一步提升了整体准确率</strong>。</p>
+<hr />
+<h2 id="_6">核心原理<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<h3 id="_7">研究动机<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>论文首先通过实验发现了一个关键现象：</p>
+<blockquote>
+<p><strong>对于相对简单的问题（高中竞赛级别以下），NoThinking 模式的性能与 Thinking 模式相当甚至更优，同时显著减少了 token 使用量。只有当问题足够困难时，Thinking 的优势才会显现。</strong></p>
+</blockquote>
+<p>这一发现启发了核心研究问题：</p>
+<p><strong>能否让模型自主学习根据问题难度选择最优的推理模式？</strong></p>
+<h3 id="_8">方法设计<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>AdaptThink 通过两个核心组件实现自适应推理：</p>
+<h4 id="1-constrained-optimization_1">1. 约束优化目标（Constrained Optimization）<a class="headerlink" href="#1-constrained-optimization_1" title="Permanent link">&para;</a></h4>
+<div class="arithmatex">\[\max_{\theta} \mathbb{E}_{x \sim \mathcal{D}, y \sim \pi_\theta(y|x)} [r(x,y)] \quad \text{s.t.} \quad \mathbb{E}_{x \sim \mathcal{D}, y \sim \pi_\theta(y|x)} [r(x,y)] \geq \mathbb{E}_{x \sim \mathcal{D}, y \sim \pi_{\text{ref}}(y|x)} [r(x,y)] - \delta\]</div>
+<p>其中：
+- <span class="arithmatex">\(r(x,y)\)</span> 是奖励函数（基于答案准确性）
+- <span class="arithmatex">\(\pi_{\text{ref}}\)</span> 是参考模型（原始推理模型）
+- <span class="arithmatex">\(\delta\)</span> 是允许的性能降幅（本实验设为 0.05）</p>
+<p><strong>核心思想</strong>：在保证整体性能不低于参考模型（允许轻微降幅 <span class="arithmatex">\(\delta\)</span>）的前提下，最大化奖励。由于 NoThinking 的 token 数更少，KL 散度项会鼓励模型在可能的情况下选择 NoThinking。</p>
+<h4 id="2-importance-sampling">2. 重要性采样策略（Importance Sampling）<a class="headerlink" href="#2-importance-sampling" title="Permanent link">&para;</a></h4>
+<p>在训练过程中，为了平衡 Thinking 和 NoThinking 样本：</p>
+<ul>
+<li><strong>冷启动阶段</strong>：模型倾向于使用 Thinking（因为这是其预训练行为）</li>
+<li><strong>采样策略</strong>：引入重要性采样，确保训练过程中既有 Thinking 也有 NoThinking 样本</li>
+<li><strong>探索与利用</strong>：让模型在整个训练过程中持续探索两种模式</li>
+</ul>
+<p>具体实现：对每个问题，同时采样 Thinking 和 NoThinking 响应，并根据其性能动态调整采样权重。</p>
+<h4 id="3-nothinking">3. NoThinking 实现<a class="headerlink" href="#3-nothinking" title="Permanent link">&para;</a></h4>
+<p>通过在输入提示中添加空的 think 标签来实现：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>User: [问题]
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Assistant: &lt;think&gt;&lt;/think&gt;[直接答案]
+</code></pre></div>
+<p>这种简洁的实现方式利用了模型的预训练知识，让模型理解"跳过思考"的语义。</p>
+<hr />
+<h2 id="_9">实验设置<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
+<h3 id="_10">模型与数据<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h4 id="_11">基座模型<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>DeepSeek-R1-Distill-Qwen-1.5B</strong>（本次实验）</li>
+<li>DeepSeek-R1-Distill-Qwen-7B（论文中的对比实验）</li>
+</ul>
+<h4 id="_12">训练数据集<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>DeepScaler</strong>：40,000 个数学问题，涵盖从小学到高中竞赛的多个难度级别</li>
+</ul>
+<h4 id="_13">评估数据集<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>GSM8K</strong>：小学数学问题</li>
+<li><strong>MATH500</strong>：竞赛级数学问题（分为 Level 1-5）</li>
+<li><strong>AIME2024</strong>：美国高中数学竞赛（最难）</li>
+</ul>
+<h3 id="_14">训练配置<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>上下文长度</td>
+<td>16K tokens</td>
+</tr>
+<tr>
+<td>批次大小</td>
+<td>128</td>
+</tr>
+<tr>
+<td>学习率</td>
+<td>2e-6</td>
+</tr>
+<tr>
+<td>训练轮数</td>
+<td>1 epoch (314 steps)</td>
+</tr>
+<tr>
+<td>δ（性能容忍度）</td>
+<td>0.05</td>
+</tr>
+<tr>
+<td>硬件配置</td>
+<td>1 × 8×H800 节点</td>
+</tr>
+<tr>
+<td>训练时长</td>
+<td>~32 小时</td>
+</tr>
+<tr>
+<td>检查点选择</td>
+<td>Step 300</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_15">参考模型预采样<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h4>
+<p>训练前需要对参考模型进行预采样以评估实例级准确率：
+- 每个训练问题采样 16 个响应
+- 计算每个问题的准确率作为难度指标
+- 用于重要性采样的权重计算</p>
+<hr />
+<h2 id="_16">实验结果分析<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h2>
+<h3 id="_17">整体性能表现<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<p>根据本次实验（1.5B 模型，δ=0.05）的 WandB 监控数据：https://wandb.ai/bojieli-pine-ai/adapt_think_verl/</p>
+<h4 id="_18">核心指标对比<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>数据集</th>
+<th>准确率 (score)</th>
+<th>响应长度变化</th>
+<th>NoThinking 比例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GSM8K</td>
+<td>稳定在 <strong>~0.82</strong></td>
+<td>1600 → ~500 (-69%)</td>
+<td><strong>~85%</strong></td>
+</tr>
+<tr>
+<td>MATH500</td>
+<td><strong>0.82 → 0.83-0.85</strong></td>
+<td>5000 → ~1800 (-64%)</td>
+<td><strong>~80%</strong></td>
+</tr>
+<tr>
+<td>AIME2024</td>
+<td>波动在 <strong>0.28-0.32</strong></td>
+<td>12000 → ~9000 (-25%)</td>
+<td><strong>~55%</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键成果</strong>：
+- ✅ <strong>准确率提升</strong>：MATH500 准确率从 0.82 提升至 0.83-0.85；GSM8K 和 AIME 保持稳定
+- ✅ <strong>效率大幅提升</strong>：MATH500 降低 64%、GSM8K 降低 69%、AIME 降低 25%
+- ✅ <strong>智能自适应</strong>：简单问题 85% NoThinking，中等 80%，困难 55%，完美的难度感知</p>
+<h3 id="_19">训练过程分析<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<h4 id="1">1. 响应长度的演变<a class="headerlink" href="#1" title="Permanent link">&para;</a></h4>
+<p>从 WandB 图表 <code>response_length/mean</code> 和各数据集的响应长度可以观察到清晰的三阶段模式：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>初始阶段 (Step 0-50):
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  - 整体平均响应长度：~5,500 tokens
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  - MATH500: ~5,000 tokens (几乎全部 Thinking)
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  - GSM8K: ~1,600 tokens (几乎全部 Thinking)
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  - AIME: ~12,000 tokens (复杂问题的长思考链)
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>  - 模型延续预训练行为，对所有问题都进行思考
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>过渡阶段 (Step 50-150):
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>  - 整体急剧下降至 ~4,000 tokens
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>  - is_nothinking 比例开始上升（从 0 → 0.5+）
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>  - NoThinking 准确率快速涌现（MATH500: 0 → 0.8）
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>  - 模型学习区分问题难度的关键时期
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>稳定阶段 (Step 150-300):
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>  - 整体稳定在 ~3,000-3,500 tokens
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>  - MATH500: 降至 ~1,800 tokens (80% NoThinking)
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>  - GSM8K: 降至 ~500 tokens (85% NoThinking)
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>  - AIME: 降至 ~9,000 tokens (55% NoThinking)
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>  - 自适应行为完全形成，准确率持续提升
+</code></pre></div>
+<p><strong>关键观察</strong>：不同数据集的响应长度降低幅度与其难度完美匹配！</p>
+<h4 id="2-nothinking">2. 准确率的演变与 NoThinking 能力涌现<a class="headerlink" href="#2-nothinking" title="Permanent link">&para;</a></h4>
+<p><strong>GSM8K（简单数学）</strong>：
+- <strong>score/mean</strong>：全程稳定在 ~0.82
+- <strong>nothinking_acc</strong>：在 Step 150 左右从 0 快速上升至 <strong>0.88-0.90</strong>
+- <strong>is_nothinking</strong>：最终稳定在 <strong>~85%</strong>
+- <strong>关键发现</strong>：模型成功学会在 85% 的 GSM8K 题目上跳过思考</p>
+<p><strong>MATH500（中等数学）</strong>：
+- <strong>score/mean</strong>：从 0.82 提升至 <strong>0.83-0.85</strong>
+- <strong>thinking_acc</strong>：稳定在 0.5-0.65 之间（模型选择的困难题目）
+- <strong>nothinking_acc</strong>：在 Step 150 时快速涌现，从 0 跃升至 <strong>0.8-0.85</strong>（模型选择的简单题目）
+- <strong>is_nothinking</strong>：稳定在 <strong>~80%</strong>
+- <strong>关键发现</strong>：模型学会识别 80% 的 MATH500 题目可以跳过思考</p>
+<p><strong>AIME2024（困难数学）</strong>：
+- <strong>score/mean</strong>：从 0.28-0.30 波动上升至最高 <strong>0.32</strong>（提升 ~14%）
+- <strong>thinking_acc</strong>：在 0.3-0.7 之间波动较大
+- <strong>nothinking_acc</strong>：从 0.3 逐渐提升至 0.4-0.6
+- <strong>is_nothinking</strong>：仅为 <strong>~55%</strong>，显著低于简单问题
+- <strong>关键发现</strong>：模型对困难问题保持谨慎，更多使用 Thinking</p>
+<h4 id="21-nothinking">2.1 NoThinking 能力的涌现现象<a class="headerlink" href="#21-nothinking" title="Permanent link">&para;</a></h4>
+<p>从图表 <code>nothinking_acc/mean</code> 可以清晰观察到一个令人惊讶的现象：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Step 0-150:   nothinking_acc ≈ 0 或未定义（几乎没有 NoThinking 样本）
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Step 150:     急剧上升的拐点
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Step 150-300: nothinking_acc ≈ 0.8-0.85 (MATH500), 0.88-0.90 (GSM8K)
+</code></pre></div>
+<p>这种<strong>突然涌现</strong>（emergence）表明：
+- 模型不是简单地学习"何时跳过思考"
+- 而是真正学会了"不思考也能解决简单问题"的能力
+- 这是一种高层次的元学习（meta-learning）能力</p>
+<h4 id="3">3. 自适应行为的涌现<a class="headerlink" href="#3" title="Permanent link">&para;</a></h4>
+<p>从 <code>is_nothinking/mean</code> 指标可以看到不同数据集上的自适应行为清晰分层：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>GSM8K:            ~85% NoThinking  ← 简单问题（小学数学）
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>MATH500:          ~80% NoThinking  ← 中等难度（高中数学）
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>AIME2024:         ~55% NoThinking  ← 困难问题（竞赛级）
+</code></pre></div>
+<p><strong>自适应模式的演变时间线</strong>（以 MATH500 为例）：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Step 0-100:   is_nothinking ≈ 0-0.1 (几乎不使用 NoThinking)
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Step 100-150: is_nothinking 快速上升 0.1 → 0.6
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Step 150:     关键拐点，is_nothinking 跃升至 0.8
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Step 150-300: is_nothinking 稳定在 0.78-0.82
+</code></pre></div>
+<p>这表明模型成功学会了<strong>根据问题难度动态选择推理模式</strong>，并且这种能力在训练中期（Step 150）突然涌现！</p>
+<h4 id="4">4. 训练稳定性与关键指标<a class="headerlink" href="#4" title="Permanent link">&para;</a></h4>
+<p>从 <code>adapt_think</code> 系列指标可以观察到训练过程的稳定性：</p>
+<p><strong>奖励演变</strong>：
+- <strong>thinking_reward/mean</strong>：从负值逐渐上升至接近 0 或正值
+- <strong>reward/mean</strong>：整体奖励稳定上升，无明显崩溃
+- <strong>nothinking_reward</strong>：波动较大但整体向上，表明 NoThinking 逐渐被优化</p>
+<p><strong>Token 概率</strong>：
+- <strong>first_eot_token_probs/mean</strong>：从 ~0.2 上升至 <strong>0.6-0.8</strong>
+  - 这表明模型越来越"自信"地选择何时结束思考
+  - 高概率意味着决策明确，不是随机选择</p>
+<p><strong>思考链长度优化</strong>（adapt_think/thinking_response_length）：
+- 从 ~9,000 tokens 降至 <strong>~4,500-5,000 tokens</strong>
+- 即使在使用 Thinking 时，思考链也变得更简洁高效
+- <strong>双重优化</strong>：减少 Thinking 使用 + 优化 Thinking 本身</p>
+<p><strong>响应长度的整体趋势</strong>（response_length）：
+- <strong>mean</strong>：5,500 → 3,000 (-45%)
+- <strong>min</strong>：稳定在 50-150（最短响应）
+- <strong>max</strong>：保持在 16,000-17,000（受限于 max_tokens 配置）
+- <strong>clip_ratio</strong>：从 0.1 降至 <strong>0.02</strong>（极少触碰长度上限）</p>
+<h3 id="_20">不同难度的自适应行为<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<h4 id="math500">MATH500 分难度分析（来自论文）<a class="headerlink" href="#math500" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>难度级别</th>
+<th>NoThinking 比例</th>
+<th>准确率变化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Level 1</td>
+<td>95%</td>
+<td>+3%</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td>88%</td>
+<td>+2%</td>
+</tr>
+<tr>
+<td>Level 3</td>
+<td>72%</td>
+<td>+1%</td>
+</tr>
+<tr>
+<td>Level 4</td>
+<td>45%</td>
+<td>持平</td>
+</tr>
+<tr>
+<td>Level 5</td>
+<td>28%</td>
+<td>持平</td>
+</tr>
+</tbody>
+</table>
+<p><strong>观察</strong>：
+1. <strong>完美的难度感知</strong>：NoThinking 比例随难度增加而递减
+2. <strong>效率与质量平衡</strong>：简单问题大胆使用 NoThinking，困难问题谨慎保留 Thinking
+3. <strong>性能保持</strong>：在各类问题上都维持了良好的准确率水平</p>
+<h3 id="_21">效率与准确率的权衡<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
+<h4 id="_22">δ 参数的影响<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h4>
+<p>论文对比了不同 δ 值的效果：</p>
+<table>
+<thead>
+<tr>
+<th>δ 值</th>
+<th>NoThinking 比例</th>
+<th>响应长度降低</th>
+<th>准确率变化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>最低</td>
+<td>较小</td>
+<td>小幅提升</td>
+</tr>
+<tr>
+<td>0.01</td>
+<td>中等</td>
+<td>~40%</td>
+<td>小幅提升</td>
+</tr>
+<tr>
+<td>0.02</td>
+<td>较高</td>
+<td>~50%</td>
+<td>持平</td>
+</tr>
+<tr>
+<td><strong>0.05</strong></td>
+<td><strong>~80%</strong></td>
+<td><strong>~53%</strong></td>
+<td><strong>+2.4%</strong></td>
+</tr>
+<tr>
+<td>0.075</td>
+<td>更高</td>
+<td>~60%</td>
+<td>可能下降</td>
+</tr>
+<tr>
+<td>0.1</td>
+<td>最高</td>
+<td>最大</td>
+<td>轻微下降</td>
+</tr>
+</tbody>
+</table>
+<p><strong>本次实验选择 δ=0.05 的理由</strong>：
+- ✅ 在效率和准确率间取得最佳平衡
+- ✅ 准确率提升明显（+2.4%）
+- ✅ 响应长度降低显著（53%）
+- ✅ 自适应行为清晰（80% NoThinking 在简单问题上）</p>
+<hr />
+<h2 id="_23">操作指南<a class="headerlink" href="#_23" title="Permanent link">&para;</a></h2>
+<h3 id="_24">环境配置<a class="headerlink" href="#_24" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># 创建环境</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>adapt_think<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.13
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>conda<span class="w"> </span>activate<span class="w"> </span>adapt_think
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># 安装依赖</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="nb">cd</span><span class="w"> </span>chapter7/AdaptThink-original
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>pip<span class="w"> </span>install<span class="w"> </span>flash-attn<span class="w"> </span>--no-build-isolation
+</code></pre></div>
+<h3 id="_25">数据准备<a class="headerlink" href="#_25" title="Permanent link">&para;</a></h3>
+<h4 id="1_1">1. 预采样参考响应<a class="headerlink" href="#1_1" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># 启动 vLLM 服务器</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>vllm<span class="w"> </span>serve<span class="w"> </span>deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span>--served_model_name<span class="w"> </span>DeepSeek-R1-Distill-Qwen-1.5B<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span>--tensor_parallel_size<span class="w"> </span><span class="m">4</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="c1"># 采样 16 个响应</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>python<span class="w"> </span>src/presampling_ref_responses.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="w">  </span>--K<span class="w"> </span><span class="m">16</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="w">  </span>--dataset_path<span class="w"> </span>./data/train/deepscaler.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="w">  </span>--model_name<span class="w"> </span>DeepSeek-R1-Distill-Qwen-1.5B<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="w">  </span>--max_tokens<span class="w"> </span><span class="m">16384</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="c1"># 后处理得到实例级准确率</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>python<span class="w"> </span>src/postprocess_ref_results.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a><span class="w">  </span>--input_path<span class="w"> </span>./data/train/ref_presampling/DeepSeek-R1-Distill-Qwen-1.5B_deepscaler_n0_K16_len16384.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a><span class="w">  </span>--output_path<span class="w"> </span>./data/train/ref_results/DeepSeek-R1-Distill-Qwen-1.5B_deepscaler_K16_len16384.json
+</code></pre></div>
+<p><strong>注意</strong>：项目已提供预处理好的结果在 <code>./data/train/ref_results</code>，可直接使用。</p>
+<h4 id="2">2. 预处理数据集<a class="headerlink" href="#2" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>bash<span class="w"> </span>scripts/preprocess_dataset.sh
+</code></pre></div>
+<h3 id="_26">训练<a class="headerlink" href="#_26" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># 1.5B 模型，单节点</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>bash<span class="w"> </span>scripts/run_adapt_think_1.5b_deepscaler_16k_delta0.05_btz128_lr2e-6.sh
+</code></pre></div>
+<p><strong>训练监控</strong>：
+- VeRL 会自动在 WandB 上记录训练指标
+- 每 <code>trainer.test_freq</code> 步自动评估测试集
+- 关键监控指标：
+  - <code>val-aux/gsm8k/score/mean</code>：GSM8K 准确率
+  - <code>val-aux/math/score/mean</code>：MATH500 准确率
+  - <code>response_length/mean</code>：平均响应长度
+  - <code>adapt_think/is_nothinking/mean</code>：NoThinking 比例
+  - <code>adapt_think/thinking_response_length/mean</code>：思考链长度</p>
+<h3 id="_27">评估<a class="headerlink" href="#_27" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># 转换检查点为 HF 格式</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>bash<span class="w"> </span>scripts/convert_to_hf.sh
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># 运行评估</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>bash<span class="w"> </span>scripts/run_eval_verl_hf.sh
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># 或直接评估已发布的 HF 模型</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>bash<span class="w"> </span>scripts/run_eval_hf.sh
+</code></pre></div>
+<hr />
+<h2 id="_28">关键发现<a class="headerlink" href="#_28" title="Permanent link">&para;</a></h2>
+<h3 id="1-nothinking">1. NoThinking 的有效性<a class="headerlink" href="#1-nothinking" title="Permanent link">&para;</a></h3>
+<p><strong>关键发现</strong>：模型成功学会了识别哪些问题可以跳过思考过程。</p>
+<p><strong>观察</strong>：
+- 在模型选择 NoThinking 的题目上（主要是简单问题），准确率保持在较高水平
+- 这表明模型的"直觉"（预训练知识）对于这些题目已经足够
+- 自适应选择避免了不必要的计算开销</p>
+<h3 id="2_1">2. 自适应行为的涌现<a class="headerlink" href="#2_1" title="Permanent link">&para;</a></h3>
+<p>模型能够自动学习到难度与推理模式的映射关系，无需显式的难度标注：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>简单问题 (GSM8K):     &quot;简单算术&quot;       → NoThinking (85%)
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>中等问题 (MATH500):   &quot;高中数学&quot;       → NoThinking (80%)
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>困难问题 (AIME):      &quot;竞赛级问题&quot;     → 混合使用 (55%)
+</code></pre></div>
+<h3 id="3_1">3. 效率与性能的双赢<a class="headerlink" href="#3_1" title="Permanent link">&para;</a></h3>
+<p>传统观念认为效率和性能是权衡关系，但 AdaptThink 实现了双赢：</p>
+<ul>
+<li><strong>效率大幅提升</strong>：</li>
+<li>GSM8K: 响应长度降低 <strong>69%</strong> (1600 → 500)</li>
+<li>MATH500: 响应长度降低 <strong>64%</strong> (5000 → 1800)</li>
+<li>AIME: 响应长度降低 <strong>25%</strong> (12000 → 9000)</li>
+<li>
+<p>整体: 平均响应长度降低 <strong>45%</strong> (5500 → 3000)</p>
+</li>
+<li>
+<p><strong>性能持平或提升</strong>：</p>
+</li>
+<li>MATH500: 整体准确率提升 <strong>0.82 → 0.83-0.85</strong></li>
+<li>GSM8K: 整体准确率保持稳定 <strong>~0.82</strong></li>
+<li>
+<p>AIME: 整体准确率提升至 <strong>0.32</strong>（从 0.28 基线）</p>
+</li>
+<li>
+<p><strong>原因</strong>：</p>
+</li>
+<li>针对性使用推理资源，简单问题快速决策</li>
+<li>Thinking 本身也变得更简洁（从 9K → 5K tokens）</li>
+<li>避免过度思考导致的错误累积</li>
+</ul>
+<h3 id="4_1">4. 训练稳定性与关键拐点<a class="headerlink" href="#4_1" title="Permanent link">&para;</a></h3>
+<p>从 WandB 图表可以观察到训练过程非常稳定，并且存在一个明显的<strong>关键拐点</strong>：</p>
+<p><strong>Step 150 - 能力涌现的拐点</strong>：
+- ✅ <strong>is_nothinking</strong> 从 ~0.5 跃升至 ~0.8
+- ✅ <strong>nothinking_acc</strong> 从接近 0 跃升至 0.8-0.9
+- ✅ <strong>响应长度</strong>开始快速下降
+- ✅ <strong>first_eot_token_probs</strong> 显著提升（决策更自信）</p>
+<p><strong>训练稳定性指标</strong>：
+- 奖励曲线（reward/mean）：平稳上升，无崩溃
+- 准确率（acc/mean）：持续改进，无震荡
+- KL 散度：保持在合理范围
+- 梯度：无异常爆炸或消失</p>
+<p><strong>关键观察</strong>：
+- 约束优化目标有效防止了性能下降
+- 重要性采样策略确保了 Thinking/NoThinking 的平衡探索
+- Step 150 的能力涌现类似于 LLM 训练中的"相变"现象</p>
+<hr />
+<h2 id="_29">与现有方法的对比<a class="headerlink" href="#_29" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>核心思路</th>
+<th>响应长度降低</th>
+<th>准确率变化</th>
+<th>自适应性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>基线模型</strong></td>
+<td>所有问题都思考</td>
+<td>0%</td>
+<td>-</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>Length Reward</strong></td>
+<td>RL 中加入长度惩罚</td>
+<td>~30%</td>
+<td>持平/下降</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>DPO (短偏好)</strong></td>
+<td>偏好短响应的对齐</td>
+<td>~35%</td>
+<td>持平</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>模型合并</strong></td>
+<td>推理/非推理模型融合</td>
+<td>~25%</td>
+<td>持平</td>
+<td>部分</td>
+</tr>
+<tr>
+<td><strong>AdaptThink</strong></td>
+<td>自适应模式选择</td>
+<td><strong>45-69%</strong></td>
+<td><strong>+2-10%</strong></td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<p><strong>本次实验（1.5B, δ=0.05）的具体数据</strong>：
+- GSM8K: 响应长度 ↓69%, 85% 题目使用 NoThinking
+- MATH500: 响应长度 ↓64%, 准确率提升 0.82 → 0.83-0.85, 80% 题目使用 NoThinking
+- AIME: 响应长度 ↓25%, 准确率 0.28-0.32, 55% 题目使用 NoThinking</p>
+<p><strong>AdaptThink 的独特优势</strong>：
+- ✅ <strong>唯一同时提升效率和准确率的方法</strong>
+- ✅ <strong>真正的自适应</strong>：根据问题难度动态决策（55%-85% NoThinking 梯度）
+- ✅ <strong>双重优化</strong>：减少 Thinking 使用 + 优化 Thinking 本身
+- ✅ <strong>能力涌现</strong>：在训练中期出现明显的质的飞跃
+- ✅ <strong>无需额外模型</strong>：单一模型即可实现混合推理</p>
+<hr />
+<h2 id="_30">实验环境与成本<a class="headerlink" href="#_30" title="Permanent link">&para;</a></h2>
+<h3 id="_31">硬件需求<a class="headerlink" href="#_31" title="Permanent link">&para;</a></h3>
+<p><strong>训练</strong>：
+- 1.5B 模型：1 × 8×H800 节点（~32 小时）
+- 7B 模型：4 × 8×H800 节点（~28 小时）</p>
+<p><strong>推理</strong>：
+- 可使用单张 GPU（根据模型大小）
+- vLLM 加速推理</p>
+<h3 id="_32">计算成本估算<a class="headerlink" href="#_32" title="Permanent link">&para;</a></h3>
+<p>以 1.5B 模型为例：
+- <strong>训练成本</strong>：8×H800 × 32小时
+- <strong>推理成本节省</strong>：
+  - 整体：45% token 降低 → 约 1.8 倍推理加速
+  - GSM8K：69% token 降低 → 约 3.2 倍推理加速
+  - MATH500：64% token 降低 → 约 2.8 倍推理加速
+- <strong>ROI</strong>：在大规模推理场景下，训练成本可快速收回（尤其是简单问题占比高的场景）</p>
+<hr />
+<h2 id="_33">局限性与未来方向<a class="headerlink" href="#_33" title="Permanent link">&para;</a></h2>
+<h3 id="_34">当前局限<a class="headerlink" href="#_34" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>领域限制</strong>：主要在数学任务上验证，其他领域需进一步测试</li>
+<li><strong>δ 调优</strong>：不同任务可能需要不同的 δ 值</li>
+<li><strong>冷启动</strong>：需要参考模型的预采样，增加了准备成本</li>
+<li><strong>可解释性</strong>：模型如何判断难度仍是黑盒</li>
+</ol>
+<h3 id="_35">未来方向<a class="headerlink" href="#_35" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>多级推理</strong>：不只是 Thinking/NoThinking 二选一，可以有"浅层思考"、"深度思考"等多级</li>
+<li><strong>在线适应</strong>：根据实时反馈动态调整推理深度</li>
+<li><strong>跨领域泛化</strong>：在代码、推理、创意写作等更多任务上验证</li>
+<li><strong>用户可控</strong>：允许用户指定推理深度偏好</li>
+</ol>
+<hr />
+<h2 id="_36">参考资源<a class="headerlink" href="#_36" title="Permanent link">&para;</a></h2>
+<h3 id="_37">论文与代码<a class="headerlink" href="#_37" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>论文</strong>：<a href="https://arxiv.org/abs/2505.13417">AdaptThink: LLM Can Learn When to Think</a></li>
+<li><strong>代码</strong>：<a href="https://github.com/THU-KEG/AdaptThink">GitHub - THU-KEG/AdaptThink</a></li>
+<li><strong>模型</strong>：<a href="https://huggingface.co/collections/THU-KEG/adaptthink-682a1059aa9f5102c4fa0470">HuggingFace Collection</a></li>
+</ul>
+<h3 id="_38">相关工作<a class="headerlink" href="#_38" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>DeepSeek-R1</strong>：基座推理模型</li>
+<li><strong>VeRL</strong>：RL 训练框架</li>
+<li><strong>vLLM</strong>：高效推理引擎</li>
+</ul>
+<hr />
+<h2 id="_39">引用<a class="headerlink" href="#_39" title="Permanent link">&para;</a></h2>
+<p>如果您觉得这项工作有帮助，请引用：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nc">@article</span><span class="p">{</span><span class="nl">zhang2025adapt_think</span><span class="p">,</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">  </span><span class="na">title</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{AdaptThink: LLM Can Learn When to Think}</span><span class="p">,</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span><span class="na">author</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Jiajie Zhang and Nianyi Lin and Lei Hou and Ling Feng and Juanzi Li}</span><span class="p">,</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">  </span><span class="na">journal</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{arXiv preprint arXiv:2505.13417}</span><span class="p">,</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">  </span><span class="na">url</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{https://arxiv.org/abs/2505.13417}</span><span class="p">,</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">  </span><span class="na">year</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{2025}</span>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="_40">致谢<a class="headerlink" href="#_40" title="Permanent link">&para;</a></h2>
+<p>本实验基于清华大学 THU-KEG 团队的 AdaptThink 项目，感谢团队开源的代码和模型。</p>
+<p><strong>实验记录</strong>：本 README 基于 wandb 实验结果（1.5B 模型，δ=0.05，step 300）撰写，展示了 AdaptThink 在实际训练中的表现和效果。</p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:47 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:47 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1961 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/chapter4/async-agent/agent_framework_design/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Agent framework design - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="Agent framework design">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/chapter4/async-agent/agent_framework_design/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Agent framework design">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#flux-an-event-driven-framework-for-asynchronous-agentic-workflows" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Agent framework design
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#flux-an-event-driven-framework-for-asynchronous-agentic-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flux: An Event-Driven Framework for Asynchronous Agentic Workflows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Flux: An Event-Driven Framework for Asynchronous Agentic Workflows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introduction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-core-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Core Concepts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-agent-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Agent Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-event-processing-and-llm-interaction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Event Processing and LLM Interaction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Event Processing and LLM Interaction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-event-processing-mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Event Processing Mechanisms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-tool-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Tool Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-inter-agent-communication-actor-model-within-amp-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Inter-Agent Communication (Actor Model within AMP Session)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-state-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. State Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-streaming-and-communication-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Streaming and Communication Protocol
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-developer-experience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Developer Experience
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#11-conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/chapter4/async-agent/agent_framework_design.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/chapter4/async-agent/agent_framework_design.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+  <h1>Agent framework design</h1>
+
+<h2 id="flux-an-event-driven-framework-for-asynchronous-agentic-workflows">Flux: An Event-Driven Framework for Asynchronous Agentic Workflows<a class="headerlink" href="#flux-an-event-driven-framework-for-asynchronous-agentic-workflows" title="Permanent link">&para;</a></h2>
+<p><strong>Abstract:</strong> Flux is a software framework designed for building asynchronous and event-driven AI agents, with a strong emphasis on <strong>enabling low-code development</strong>. Drawing an analogy to a real human, Flux treats agents as entities whose state and understanding evolve based on their accumulating memory. Flux aims to empower users, <strong>including those with limited programming experience</strong>, to define complex agentic workflows primarily through <strong>declarative configuration</strong>, minimizing the need for writing extensive code. It supports persistent, per-user long-term memory, modular agent invocation, and seamless tool integration. Communication adheres to the Agent Messaging Protocol (AMP). Key features include asynchronous execution, optional synchronous tools, interrupt handling, streaming outputs, and a developer experience focused on ease of use and configuration over complex coding.</p>
+<h3 id="1-introduction">1. Introduction<a class="headerlink" href="#1-introduction" title="Permanent link">&para;</a></h3>
+<p>Modern AI applications require agents capable of complex, stateful, and collaborative interactions. Flux addresses this need with an asynchronous, event-driven architecture inspired by human cognition and OS principles. Crucially, Flux is designed to <strong>democratize agent development</strong>. Instead of requiring deep programming expertise, it focuses on allowing developers to define agent behavior, logic, and workflows through <strong>intuitive configuration files and well-defined prompts</strong>. The goal is to provide a robust platform where the core complexity of asynchronous processing, state management, and communication is handled by the framework, freeing developers to concentrate on the agent's specific goals and capabilities.</p>
+<p>Flux models an agent like a human, processing inputs, thinking internally, acting externally, and handling interruptions, all recorded in its memory. It supports both rollout-specific working memory (trajectory) and user-specific long-term memory. By leveraging LLMs for decision-making based on this memory and providing a <strong>configuration-driven approach</strong> to defining agents and tools, Flux facilitates the creation of sophisticated agents without demanding extensive coding skills, making agentic AI development more accessible.</p>
+<h3 id="2-core-concepts">2. Core Concepts<a class="headerlink" href="#2-core-concepts" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Agent:</strong> An agent is an autonomous computational entity, analogous to a real human expert or assistant. It possesses a defined set of capabilities (tools/skills), operates based on internal logic (primarily LLM-driven decision-making informed by its memory), and interacts with its environment through events within the scope of an <strong>AMP Session</strong>. An agent's understanding and state within a specific rollout are derived from its accumulated <strong>trajectory</strong>. It can also access and modify <strong>User Long-Term Memory</strong> to inform its behavior based on past interactions with a specific user. Each agent definition serves as a blueprint.</li>
+<li><strong>Rollout:</strong> A rollout represents a specific, running instance of an agent executing its defined logic within the context of an <strong>AMP Session</strong>. It is typically initiated by an event within that session (e.g., a user message, an agent invocation). Each rollout maintains its own independent <strong>trajectory</strong> and lifecycle state. Importantly, a single AMP Session can contain multiple participants (users and agents), and thus may involve multiple concurrent Flux Rollouts (one for each active agent participant in the session).</li>
+<li><strong>Event:</strong> The fundamental unit representing any occurrence relevant to a rollout, forming the building blocks of the agent's <strong>trajectory</strong>. All interactions, internal processing steps, and external stimuli within the rollout's scope are captured as events, appended chronologically to the rollout's trajectory. Drawing inspiration from OS process states and signals, events are categorized as Inputs, Interrupts, Thinking, and Actions:<ul>
+<li><strong>Inputs:</strong> Events originating externally to the agent's rollout, akin to sensory perception within the session.<ul>
+<li><code>user.input</code>: Messages or actions from a specific human user <em>within the current AMP session</em>.</li>
+<li><code>agent.input</code>: Messages or results received from another invoked agent rollout <em>within the same AMP session</em>.</li>
+<li><code>tool.result</code>: Data returned from a completed tool execution (sync or async), including results from memory access tools.</li>
+<li><code>external.trigger</code>: Events from outside systems integrated with the framework (e.g., API webhook, database change, new social media post), potentially associated with the session or a user.</li>
+</ul>
+</li>
+<li><strong>Interrupts:</strong> Events that signal a need to alter or halt the current flow of execution within the rollout, often requiring immediate attention.<ul>
+<li><code>supervisor.instruction</code>: Commands from an administrative system or human supervisor pertaining to this rollout or session.</li>
+<li><code>user.interrupt</code>: User actions (from a specific user in the session) like clicking a 'stop' button or explicitly cancelling an operation related to this rollout.</li>
+<li><code>timer.trigger</code>: An event fired by a previously set timer associated with this rollout.</li>
+</ul>
+</li>
+<li><strong>Thinking:</strong> Events representing the agent's internal cognitive processes or state changes within the rollout.<ul>
+<li><code>agent.thought</code>: Internal reasoning steps, intermediate conclusions, or state changes logged by the agent for transparency or future context within its trajectory.</li>
+</ul>
+</li>
+<li><strong>Actions:</strong> Events representing the agent's decisions to interact with or affect the external world (including other participants in the session or external systems) or schedule future events for this rollout.<ul>
+<li><code>agent.output</code>: Messages or data prepared to be sent to a specific user (or all users) <em>within the current AMP session</em> (mediated via a tool call adhering to AMP).</li>
+<li><code>agent.escalation</code>: A request sent to a supervisor system regarding this rollout or session.</li>
+<li><code>tool.request</code>: An invocation request for an external tool, which might include tools for accessing/updating <strong>User Long-Term Memory</strong>.</li>
+<li><code>agent.invocation</code>: A request to create and start a new rollout for another agent <em>within the same AMP session</em>, initiating collaboration.</li>
+<li><code>agent.response</code>: A message sent back to the agent rollout that invoked the current one <em>within the same AMP session</em>.</li>
+<li><code>agent.interrupt</code>: A signal sent to interrupt another specific agent rollout <em>within the same AMP session</em>.</li>
+<li><code>timer.set</code>: An instruction to the framework to schedule a <code>timer.trigger</code> event for the future for this specific rollout.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Trajectory:</strong> The complete, time-ordered, immutable sequence of all events (Inputs, Interrupts, Thinking, and Actions) associated with a <em>specific rollout</em>. This <strong>is</strong> the agent's working memory for that rollout. It provides the primary context required by the LLM to understand the rollout's immediate history, its own past reasoning and actions <em>within that rollout</em>, and make informed decisions about the next thinking steps or actions for that rollout.</li>
+<li><strong>User Long-Term Memory:</strong> A persistent, key-value store associated with a unique user ID. This memory exists <em>across</em> different rollouts (AMP Sessions) involving that user. It's designed to hold relatively stable information like user preferences, summarized past interactions, contact details, or accumulated knowledge about the user relevant for personalization and continuity. Agents access and modify this memory explicitly via designated <strong>Actions</strong> (e.g., specific <code>tool.request</code> events). This is distinct from the rollout-specific trajectory.</li>
+<li><strong>Rollout Business State:</strong> (Optional) A developer-defined state representing the current logical phase or status of the rollout from the perspective of the agent's business logic (e.g., <code>needs_clarification</code>, <code>processing_request</code>, <code>waiting_for_payment</code>, <code>request_completed</code>). This is distinct from the framework's internal rollout lifecycle state (<code>running</code>, <code>waiting</code>) and complements the trajectory by providing a high-level summary of the rollout's progress according to the developer's intended workflow.</li>
+<li><strong>Workflow:</strong> A definition specifying the entry point agent and potential interactions. In Flux, workflows can be:<ul>
+<li><strong>Emergent (Low-Code Default):</strong> Driven primarily by the LLM's decisions based on memory and available tools. This approach typically requires <strong>minimal explicit workflow configuration</strong>, relying on the LLM's reasoning capabilities guided by prompts.</li>
+<li><strong>State-Guided (Optional/Advanced):</strong> Influenced by developer-defined <strong>Rollout Business States</strong>. This offers more explicit control for complex scenarios but requires more configuration.</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-architecture">3. Architecture<a class="headerlink" href="#3-architecture" title="Permanent link">&para;</a></h3>
+<p>Flux employs a modular architecture centered around asynchronous event processing within the context of AMP Sessions:</p>
+<ul>
+<li><strong>Rollout Manager:</strong> Responsible for creating, tracking, and terminating agent rollouts, associating them with their corresponding AMP Session and participant ID. It assigns unique IDs to rollouts and manages their lifecycle state.</li>
+<li><strong>Event Queue (per Rollout):</strong> Each active rollout has an associated event queue where incoming events (Inputs, Interrupts) relevant to that agent's role in the session are placed.</li>
+<li><strong>Agent Runtime:</strong> The core execution engine for a single rollout. It comprises:<ul>
+<li><strong>Event Processor:</strong> Dequeues events, appends them to the rollout's trajectory, and determines if an LLM invocation is needed.</li>
+<li><strong>LLM Invoker:</strong><ul>
+<li>Formats the rollout's current trajectory into the structure expected by the configured LLM. Optionally includes the current <strong>Rollout Business State</strong>. May also optionally include relevant excerpts from <strong>User Long-Term Memory</strong> (retrieved via a previous Action or potentially through automatic framework injection based on configuration).</li>
+<li>Constructs the final prompt using the agent's system prompt, the formatted trajectory, and the user prompt template.</li>
+<li>Invokes the configured LLM API.</li>
+<li>Parses the LLM's response (Thinking/Action events), handling streaming for incremental processing.</li>
+</ul>
+</li>
+<li><strong>Tool Executor:</strong><ul>
+<li>Receives Action events (<code>tool.request</code>, <code>agent.invocation</code>, <code>agent.output</code>, <code>update_rollout_state</code>, etc.).</li>
+<li>Manages the execution of these actions, interacting with external tools, other agents within the session, the Communication Layer, potentially a <strong>Long-Term Memory Service</strong>, and updating the <strong>Rollout Business State</strong> if requested.</li>
+<li>Handles async/sync execution logic and cancellation.</li>
+<li>Generates corresponding Input events (<code>tool.result</code>, <code>agent.input</code>, <code>timer.trigger</code>) and places them back into the appropriate rollout's Event Queue.</li>
+</ul>
+</li>
+<li><strong>Communication Layer:</strong> Handles external communication via the AMP specification for the session. Translates incoming AMP messages/requests (addressed to the agent this rollout represents) into Flux Input/Interrupt events for the rollout. Translates agent Action events (<code>agent.output</code>) into outgoing AMP messages/streams targeted at the correct participants within the session. Manages SSE connections.</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-agent-definition">4. Agent Definition<a class="headerlink" href="#4-agent-definition" title="Permanent link">&para;</a></h3>
+<p>Agents are defined declaratively, primarily through <strong>configuration files (e.g., YAML, JSON)</strong>, aligning with the low-code philosophy. An agent definition typically includes:</p>
+<ul>
+<li><strong>Identifier:</strong> Unique name/ID.</li>
+<li><strong>System Prompt:</strong> Defines persona, goals, constraints. <strong>A key area for defining agent logic without code.</strong></li>
+<li><strong>User Prompt Template:</strong> Structures the prompt, potentially including placeholders for Rollout Business State. <strong>Another key configuration point.</strong></li>
+<li><strong>Model Configuration:</strong> LLM choice and parameters (simple configuration).</li>
+<li><strong>Tool Registry:</strong> Lists available tools/agents. Referencing existing tools/agents is a simple configuration entry. Defining <em>new</em> tools may require code, but the framework provides clear interfaces and registration mechanisms to simplify this.<ul>
+<li>Standard external tools.</li>
+<li>Memory tools (access/update can be explicit tool calls or potentially configured implicit actions, offering flexibility).</li>
+<li>References to other registered Flux agents.</li>
+<li>(Optional) Action for updating Rollout Business State (<code>update_rollout_state</code>).</li>
+</ul>
+</li>
+<li><strong>State Machine Definition (Advanced/Optional):</strong> For agents requiring very specific, complex state management, developers <em>can</em> define explicit states and transitions. <strong>This is not required for typical agents</strong>, where state can be managed implicitly through the trajectory or LLM reasoning.</li>
+<li><strong>Context Inheritance Policy (Advanced/Optional):</strong> Configuration for how much context is passed to invoked agents. <strong>Simple defaults are provided</strong>, and explicit configuration is only needed for specialized use cases.</li>
+<li><strong>Workflow Specification (Optional):</strong> Can define entry points. More complex workflow logic is often better embedded within the system prompt or handled via the optional state mechanism, rather than requiring complex external workflow definitions.</li>
+</ul>
+<p><strong>Core agent logic often resides within the prompts and the LLM's inherent capabilities, configured declaratively, rather than in complex code within the framework.</strong></p>
+<h3 id="5-event-processing-and-llm-interaction">5. Event Processing and LLM Interaction<a class="headerlink" href="#5-event-processing-and-llm-interaction" title="Permanent link">&para;</a></h3>
+<p>The core loop for an active rollout:</p>
+<ol>
+<li><strong>Event Dequeue:</strong> Get the next event for this rollout.</li>
+<li><strong>Memory Update:</strong> Append the event to the trajectory.</li>
+<li><strong>LLM Trigger Check:</strong> Decide if LLM processing is needed.</li>
+<li><strong>Context Formatting:</strong> Translate trajectory into LLM format. Include the current <strong>Rollout Business State</strong> if defined. Optionally include retrieved <strong>User Long-Term Memory</strong> data (via explicit tool result or automatic injection).</li>
+<li><strong>LLM Invocation:</strong> Send context and prompts to the LLM.</li>
+<li><strong>Response Parsing &amp; Streaming:</strong> Parse LLM response into Thinking/Action events.</li>
+<li><strong>Thinking/Action Generation &amp; Internal State Update:</strong> Add generated Thinking and Action events to the trajectory. If the LLM generated an <code>update_rollout_state</code> action, the Agent Runtime immediately processes it here, updating the rollout's current business state field.</li>
+<li><strong>Dispatch Actions to Executor:</strong> Send all other generated Action events (those requiring interaction with external tools, other agents, the communication layer, timers, etc. – e.g., <code>tool.request</code>, <code>agent.invocation</code>, <code>agent.output</code>, <code>timer.set</code>) to the Tool Executor for handling.</li>
+<li><strong>Loop/Wait:</strong> Wait for the next event.</li>
+</ol>
+<h4 id="51-event-processing-mechanisms">5.1 Event Processing Mechanisms<a class="headerlink" href="#51-event-processing-mechanisms" title="Permanent link">&para;</a></h4>
+<p>Flux supports two dynamic event processing strategies for handling events in a rollout. The framework automatically selects the appropriate mechanism based on the urgency of the incoming event:</p>
+<ol>
+<li>
+<p><strong>Cancellation-Based Processing:</strong> When an urgent event arrives (e.g., user interrupts, high-priority inputs), the framework immediately stops the current LLM thinking or any synchronous tool call. All queued events in the pending queue along with the new urgent event are immediately appended to the trajectory. The LLM is then invoked with the complete updated trajectory to process all accumulated events together. This approach ensures that urgent, potentially invalidating events receive immediate attention and the agent can make decisions with the most critical, up-to-date information.</p>
+</li>
+<li>
+<p><strong>Queued Processing:</strong> When a non-urgent event arrives, it is queued at the end of the pending queue without interrupting ongoing processing. When any tool call (synchronous or asynchronous) of the agent completes and returns a <code>tool.result</code> event, the framework checks the pending queue before invoking the LLM. If there are pending events, all events in the pending queue are immediately moved to the end of the trajectory, and then the LLM is invoked to process the updated trajectory. This approach allows the agent to complete ongoing operations while efficiently batching non-urgent events, balancing responsiveness with computational efficiency.</p>
+</li>
+</ol>
+<p><strong>Urgency Determination:</strong> The framework classifies events based on their type and context:
+- <strong>Urgent events:</strong> User interrupts (<code>user.interrupt</code>), supervisor instructions (<code>supervisor.instruction</code>), explicit agent interrupts (<code>agent.interrupt</code>), and time-critical external triggers marked as urgent.
+- <strong>Non-urgent events:</strong> Regular user inputs (<code>user.input</code>), agent messages (<code>agent.input</code>), tool results (<code>tool.result</code>), timer triggers (<code>timer.trigger</code>), and standard external triggers.</p>
+<p>This dynamic selection ensures optimal responsiveness for critical events while maintaining efficiency for routine operations.</p>
+<h3 id="6-tool-execution">6. Tool Execution<a class="headerlink" href="#6-tool-execution" title="Permanent link">&para;</a></h3>
+<p>Tools are fundamental.</p>
+<ul>
+<li><strong>Definition:</strong> Tools have a clear definition structure (name, description, parameters). Defining <em>new</em> tools involves implementing a defined interface, but <em>using</em> existing tools is purely configuration.</li>
+<li><strong>Invocation:</strong> Triggered by LLM via <code>tool.request</code> action based on prompt and available tools.</li>
+<li><strong>Memory Tools:</strong> Framework aims to provide flexible options (explicit call vs. implicit action) configurable by the developer.</li>
+<li><strong>Execution:</strong> Asynchronous/synchronous handling is managed by the framework, abstracted from the developer defining the agent.</li>
+<li><strong>Results:</strong> Fed back as events, handled by the framework.</li>
+<li><strong>Cancellation:</strong> Framework provides the mechanism.</li>
+</ul>
+<h3 id="7-inter-agent-communication-actor-model-within-amp-session">7. Inter-Agent Communication (Actor Model within AMP Session)<a class="headerlink" href="#7-inter-agent-communication-actor-model-within-amp-session" title="Permanent link">&para;</a></h3>
+<p>Flux implements actor model principles constrained within an AMP Session:</p>
+<ul>
+<li><strong>Invocation:</strong> <code>Agent A</code> (Rollout A) invokes <code>Agent B</code> by generating an <code>agent.invocation</code> action. The Rollout Manager creates Rollout B for Agent B <em>within the same AMP Session</em>. Rollout B's initial event is the invocation details from Rollout A.</li>
+<li><strong>Communication:</strong> Rollout B can send results/messages back to Rollout A using <code>agent.response</code> actions, which arrive as <code>agent.input</code> events at Rollout A. Rollout B can also send messages directly to users in the session via <code>agent.output</code> actions, handled by the Communication Layer. All communication is asynchronous and potentially streaming via AMP.</li>
+<li><strong>Context Sharing:</strong> Simple defaults are provided. Explicit configuration of context sharing is an advanced option.</li>
+</ul>
+<h3 id="8-state-management">8. State Management<a class="headerlink" href="#8-state-management" title="Permanent link">&para;</a></h3>
+<p>Flux manages state layers, abstracting complexity:</p>
+<ul>
+<li><strong>Framework Rollout State:</strong> Internal framework state.</li>
+<li><strong>Trajectory:</strong> Automatically maintained log.</li>
+<li><strong>User Long-Term Memory:</strong> Accessed via configured tools or actions.</li>
+<li><strong>Developer-Defined Rollout Business State (Optional):</strong> A straightforward key-value state field developers can optionally use and manage via configuration and LLM actions for more explicit control when needed.</li>
+<li><strong>LLM Context:</strong> Assembled automatically by the framework based on configuration and state.</li>
+</ul>
+<h3 id="9-streaming-and-communication-protocol">9. Streaming and Communication Protocol<a class="headerlink" href="#9-streaming-and-communication-protocol" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>AMP Adherence:</strong> Handled by the framework's Communication Layer.</li>
+<li><strong>Input/Output Mapping:</strong> Handled by the framework.</li>
+<li><strong>Streaming LLM Output:</strong> Handled by the framework.</li>
+</ul>
+<h3 id="10-developer-experience">10. Developer Experience<a class="headerlink" href="#10-developer-experience" title="Permanent link">&para;</a></h3>
+<p>Flux is fundamentally designed for <strong>ease of use and low-code agent development</strong>: </p>
+<ul>
+<li><strong>Declarative First:</strong> The primary way to define agents, their logic (via prompts), tool usage, and basic workflows is through <strong>declarative configuration files</strong> (e.g., YAML, JSON), not procedural code.</li>
+<li><strong>Abstraction:</strong> The complexities of asynchronous execution, event loops, state persistence, AMP communication, and streaming are <strong>handled internally by the framework</strong>, allowing developers to focus on <em>what</em> the agent should do, not <em>how</em> the underlying machinery works.</li>
+<li><strong>Configuration over Code:</strong> Core agent behavior, personality, and decision-making logic are primarily defined in system prompts and by selecting available tools in the configuration.</li>
+<li><strong>Simplified Tooling:</strong> While new tools require some code, the framework provides clear interfaces. A library of pre-built common tools (including memory access) further reduces the need for coding.</li>
+<li><strong>Emergent Workflows:</strong> Simple agents can often function effectively by letting the LLM decide the next steps based on the trajectory and available tools, requiring minimal explicit workflow definition.</li>
+<li><strong>Optional Complexity:</strong> Features like explicit Rollout Business States and detailed Context Inheritance policies are available for advanced users needing fine-grained control, but are <strong>not required</strong> for basic agent development.</li>
+<li><strong>Observability:</strong> Clear logging and tracing mechanisms are provided to understand agent behavior without needing to debug complex framework internals.</li>
+<li><strong>(Future) Visual Tools:</strong> The declarative nature of Flux lends itself well to potential future development of GUI or visual flowcharting tools for defining agents and workflows, further enhancing accessibility.</li>
+</ul>
+<h3 id="11-conclusion">11. Conclusion<a class="headerlink" href="#11-conclusion" title="Permanent link">&para;</a></h3>
+<p>Flux offers a robust, event-driven architecture designed for building sophisticated asynchronous AI agents while prioritizing <strong>low-code development and accessibility</strong>. By abstracting framework complexities and enabling agent definition primarily through <strong>declarative configuration and prompting</strong>, Flux empowers a wider range of developers, including those with limited coding experience, to create powerful agentic solutions. Its support for multiple memory types, modularity, adherence to AMP, and focus on a simplified developer experience makes it a strong foundation for building the next generation of collaborative and stateful AI applications.</p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:47 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:47 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../../extras/lang-switcher.js"></script>
+      
+        <script src="../../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

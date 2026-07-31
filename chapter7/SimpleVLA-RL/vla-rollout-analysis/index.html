@@ -1,0 +1,3609 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/chapter7/SimpleVLA-RL/vla-rollout-analysis/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>VLA Rollout Process Analysis - GPU Utilization Patterns - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="VLA Rollout Process Analysis - GPU Utilization Patterns">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/chapter7/SimpleVLA-RL/vla-rollout-analysis/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="VLA Rollout Process Analysis - GPU Utilization Patterns">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#vla-rollout-process-analysis-gpu-utilization-patterns" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              VLA Rollout Process Analysis - GPU Utilization Patterns
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#distributed-system-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distributed System Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollout-pipeline-phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollout Pipeline Phases
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rollout Pipeline Phases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-environment-initialization-cpu-bound-gpus-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: Environment Initialization (CPU-Bound) 🔴 GPUs ~0%
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-observation-processing-mixed-cpugpu-gpus-30-50" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Observation Processing (Mixed CPU/GPU) 🟡 GPUs ~30-50%
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-vla-inference-gpu-bound-gpus-100" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: VLA Inference (GPU-Bound) 🟢 GPUs ~100%
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 3: VLA Inference (GPU-Bound) 🟢 GPUs ~100%">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#detailed-vla-model-forward-pass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detailed VLA Model Forward Pass
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-action-execution-cpu-bound-gpus-0-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4: Action Execution (CPU-Bound) 🔴 GPUs ~0-10%
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-5-cleanup-video-saving-cpu-bound-gpus-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5: Cleanup &amp; Video Saving (CPU-Bound) 🔴 GPUs ~0%
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-gpu-utilization-is-unbalanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why GPU Utilization is Unbalanced
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why GPU Utilization is Unbalanced">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#root-causes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root Causes:
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Root Causes:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-sequential-phases-within-each-rollout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Sequential Phases Within Each Rollout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-ray-distributed-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Ray Distributed Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-micro-batch-size-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Micro-Batch Size = 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-action-chunking-amplifies-cpu-bottleneck" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Action Chunking Amplifies CPU Bottleneck
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-environment-initialization-serialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Environment Initialization Serialization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expected-gpu-usage-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected GPU Usage Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Expected GPU Usage Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-1-all-gpus-at-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 1: All GPUs at 0%
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-2-all-gpus-at-100" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 2: All GPUs at 100%
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-3-unbalanced-some-30-others-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 3: Unbalanced (some 30%, others 0%)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-bottleneck-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Bottleneck Analysis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Bottleneck Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#timing-breakdown-per-rollout-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timing Breakdown (per rollout step):
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#over-full-rollout-200-steps-for-beat_block_hammer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Over full rollout (200 steps for beat_block_hammer):
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-action-execution-is-the-bottleneck" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Action Execution is the Bottleneck:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optimization-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optimization Recommendations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Optimization Recommendations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#important-note-from-paper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚠️ Important Note from Paper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-high-impact-optimizations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Additional High-Impact Optimizations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Additional High-Impact Optimizations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-reduce-action-chunking-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Reduce Action Chunking (Experimental)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-increase-micro-batch-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Increase Micro-Batch Size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-async-rollout-with-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Async Rollout with Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-use-gpu-accelerated-simulator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Use GPU-Accelerated Simulator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-distributed-rollout-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Distributed Rollout Workers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-and-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring and Debugging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring and Debugging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommended-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Tools:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-metrics-to-track" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Metrics to Track:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-vla-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding VLA Concepts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding VLA Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-pushcut" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is "Pushcut"?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What is &#34;Pushcut&#34;?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Discovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-move_can_pot-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: move_can_pot Task
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-pushcut-works-better" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why "Pushcut" Works Better
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#broader-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Broader Implications
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-vla-inference-steps-work-with-environment-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How VLA Inference Steps Work with Environment Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How VLA Inference Steps Work with Environment Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#react-pattern-single-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ReAct Pattern (Single-Step)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vla-pattern-action-chunking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLA Pattern (Action Chunking)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detailed-execution-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detailed Execution Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visual-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visual Timeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-differences-react-vs-vla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Differences: ReAct vs VLA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-vla-uses-action-chunking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why VLA Uses Action Chunking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitations-of-action-chunking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitations of Action Chunking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparison-to-other-approaches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison to Other Approaches
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implications-for-your-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implications for Your Training
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-world-deployment-what-happens-during-vla-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-World Deployment: What Happens During VLA Inference?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Real-World Deployment: What Happens During VLA Inference?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#answer-the-robot-continues-moving" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Answer: The Robot Continues Moving!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#control-frequencies-explained" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control Frequencies Explained
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-world-execution-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-World Execution Timeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simulation-vs-real-world-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simulation vs Real-World Differences
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#control-frequency-trade-offs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control Frequency Trade-offs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-deployment-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practical Deployment Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-if-vla-is-too-slow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What if VLA is Too Slow?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summary-real-world-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Real-World Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conclusion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-insight-from-paper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Insight from Paper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terminology-clarification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terminology Clarification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actual-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actual Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendations-priority-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendations Priority Order
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/chapter7/SimpleVLA-RL/vla-rollout-analysis.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/chapter7/SimpleVLA-RL/vla-rollout-analysis.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="vla-rollout-process-analysis-gpu-utilization-patterns">VLA Rollout Process Analysis - GPU Utilization Patterns<a class="headerlink" href="#vla-rollout-process-analysis-gpu-utilization-patterns" title="Permanent link">&para;</a></h1>
+<p><strong>Based on</strong>: <a href="https://arxiv.org/pdf/2509.09674">SimpleVLA-RL: Scaling VLA Training via Reinforcement Learning</a> (2025)</p>
+<h2 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
+<h3 id="distributed-system-components">Distributed System Components<a class="headerlink" href="#distributed-system-components" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Ray Framework</strong>: Orchestrates distributed training across 8 GPUs</li>
+<li><strong>Actor-Critic PPO</strong>: Separate workers for ActorRollout, Critic, and RefPolicy</li>
+<li><strong>Resource Pool</strong>: All roles share the same GPU pool (global_pool_id)</li>
+<li><strong>Configuration</strong>: 8 GPUs on 1 node, micro_batch_size=1, action_chunks_len=25</li>
+</ul>
+<h2 id="rollout-pipeline-phases">Rollout Pipeline Phases<a class="headerlink" href="#rollout-pipeline-phases" title="Permanent link">&para;</a></h2>
+<p>The rollout process alternates between <strong>GPU-intensive</strong> and <strong>CPU-intensive</strong> phases, causing the observed utilization patterns.</p>
+<h3 id="phase-1-environment-initialization-cpu-bound-gpus-0">Phase 1: Environment Initialization (CPU-Bound) 🔴 <strong>GPUs ~0%</strong><a class="headerlink" href="#phase-1-environment-initialization-cpu-bound-gpus-0" title="Permanent link">&para;</a></h3>
+<p><strong>Location</strong>: <code>rob_rollout.py:623-646</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create environment wrappers for each task</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">env_wrappers</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">wrapper</span> <span class="o">=</span> <span class="n">RobotwinEnvWrapper</span><span class="p">(</span><span class="n">task_name</span><span class="p">,</span> <span class="n">tr_id</span><span class="p">,</span> <span class="n">tr_seed</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">env_wrappers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wrapper</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Initialize environments in parallel using ThreadPoolExecutor</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">init_futures</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="k">for</span> <span class="n">wrapper</span> <span class="ow">in</span> <span class="n">env_wrappers</span><span class="p">:</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">future</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_thread_pool</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">wrapper</span><span class="o">.</span><span class="n">initialize</span><span class="p">)</span>  <span class="c1"># CPU-bound</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">init_futures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">future</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>What happens</strong>:
+- Creates SAPIEN physics environments for RoboTwin 2.0 tasks
+- Loads robot models, scene assets, camera configurations
+- Sets up task-specific initial states and randomizations
+- Uses <code>threading.Lock</code> to serialize Robotwin initialization
+- <strong>Duration</strong>: 5-15 seconds per batch</p>
+<p><strong>Why GPUs are idle</strong>:
+- Environment setup is pure CPU work (YAML parsing, scene construction)
+- SAPIEN physics engine runs on CPU (MuJoCo/EGL rendering)
+- No neural network operations occur during this phase</p>
+<hr />
+<h3 id="phase-2-observation-processing-mixed-cpugpu-gpus-30-50">Phase 2: Observation Processing (Mixed CPU/GPU) 🟡 <strong>GPUs ~30-50%</strong><a class="headerlink" href="#phase-2-observation-processing-mixed-cpugpu-gpus-30-50" title="Permanent link">&para;</a></h3>
+<p><strong>Location</strong>: <code>rob_rollout.py:649-678</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Collect initial observations from all environments</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">wrapper</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">env_wrappers</span><span class="p">):</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">obs</span> <span class="o">=</span> <span class="n">wrapper</span><span class="o">.</span><span class="n">get_obs</span><span class="p">()</span>  <span class="c1"># CPU: Get image + proprio from environment</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">obs</span> <span class="o">=</span> <span class="n">encode_obs</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>    <span class="c1"># CPU: Minimal processing</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_obs_to_input</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span>  <span class="c1"># CPU: Format conversion</span>
+</code></pre></div>
+<p><strong>What happens</strong>:
+- Retrieves RGB images (224x224x3) from head_camera, left_wrist, right_wrist
+- Extracts proprioceptive state (14-dim joint positions)
+- Converts NumPy arrays to PIL Images
+- <strong>Duration</strong>: 100-300ms per batch</p>
+<p><strong>Why GPU usage is low</strong>:
+- Data is still on CPU (NumPy/PIL)
+- GPU only used if batching operations trigger early transfers
+- Main bottleneck: retrieving rendered images from SAPIEN</p>
+<hr />
+<h3 id="phase-3-vla-inference-gpu-bound-gpus-100">Phase 3: VLA Inference (GPU-Bound) 🟢 <strong>GPUs ~100%</strong><a class="headerlink" href="#phase-3-vla-inference-gpu-bound-gpus-100" title="Permanent link">&para;</a></h3>
+<p><strong>Location</strong>: <code>rob_rollout.py:690-708</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Prepare inputs for VLA model</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">vla_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_input</span><span class="p">(</span><span class="n">current_inputs</span><span class="p">,</span> <span class="n">current_task_descriptions</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Process images, tokenize text, prepare proprio</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># → Transfers data to GPU, pads sequences, applies center crop</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Generate actions from VLA model  </span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">vla_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_one_step</span><span class="p">(</span><span class="n">vla_input</span><span class="p">)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># → Runs full VLA forward pass:</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">#    1. Vision encoder (DINOv2/SigLIP): extract image features</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1">#    2. Projector: map vision to language space  </span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1">#    3. LLM (Llama-7B): generate action tokens</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1">#    4. Action decoder: convert tokens to continuous actions</span>
+</code></pre></div>
+<h4 id="detailed-vla-model-forward-pass">Detailed VLA Model Forward Pass<a class="headerlink" href="#detailed-vla-model-forward-pass" title="Permanent link">&para;</a></h4>
+<p><strong>3.1 Input Processing</strong> (<code>rob_rollout.py:509-600</code>):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">process_input</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">task_descriptions</span><span class="p">):</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">)):</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        <span class="c1"># Image preprocessing</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">input_data</span><span class="p">[</span><span class="s2">&quot;full_image&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">&quot;RGB&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">center_crop</span><span class="p">:</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>            <span class="n">image</span> <span class="o">=</span> <span class="n">center_crop_image</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>  <span class="c1"># TensorFlow ops on CPU</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        <span class="c1"># Tokenization</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;In: What action should the robot take to </span><span class="si">{</span><span class="n">task_description</span><span class="si">}</span><span class="s2">?</span><span class="se">\n</span><span class="s2">Out:&quot;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        <span class="n">batch_feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>  <span class="c1"># HuggingFace processor</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        <span class="c1"># Multi-view images</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        <span class="n">pixel_values_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">batch_feature</span><span class="p">[</span><span class="s2">&quot;pixel_values&quot;</span><span class="p">]]</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        <span class="c1"># Add wrist camera images if using multiple views</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>        <span class="c1"># Proprioception normalization</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>        <span class="n">proprio</span> <span class="o">=</span> <span class="n">normalize_proprio</span><span class="p">(</span><span class="n">proprio</span><span class="p">,</span> <span class="n">norm_stats</span><span class="p">)</span>  <span class="c1"># CPU</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    <span class="c1"># Transfer to GPU and pad</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>    <span class="n">batchdata</span><span class="p">[</span><span class="s2">&quot;input_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pad_sequence</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>    <span class="n">batchdata</span><span class="p">[</span><span class="s2">&quot;pixel_values&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>    <span class="n">batchdata</span><span class="p">[</span><span class="s2">&quot;proprio&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+</code></pre></div></p>
+<p><strong>3.2 VLA Generation</strong> (<code>rob_rollout.py:930-983</code>):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">_generate_one_step_oft</span><span class="p">(</span><span class="n">prompts</span><span class="p">):</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">autocast</span><span class="p">(</span><span class="n">device_type</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">bfloat16</span><span class="p">):</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>        <span class="n">actions</span><span class="p">,</span> <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">generate_action_verl</span><span class="p">(</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>            <span class="n">input_ids</span><span class="o">=</span><span class="n">idx</span><span class="p">,</span>              <span class="c1"># (batch, seq_len) e.g., (8, 64)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>            <span class="n">pixel_values</span><span class="o">=</span><span class="n">pixel_values</span><span class="p">,</span>  <span class="c1"># (batch, num_images*patches, dim)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>            <span class="n">proprio</span><span class="o">=</span><span class="n">proprio</span><span class="p">,</span>            <span class="c1"># (batch, 14) for RoboTwin</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>            <span class="n">attention_mask</span><span class="o">=</span><span class="n">attention_mask</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>            <span class="n">temperature</span><span class="o">=</span><span class="mf">1.6</span><span class="p">,</span>  <span class="c1"># Higher Rollout Temperature (Paper Section 3.3)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>                             <span class="c1"># Increased from 1.0 to 1.6 for exploration</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>                             <span class="c1"># One of three key enhancements in SimpleVLA-RL</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>            <span class="n">unnorm_key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">unnorm_key</span>  <span class="c1"># For action denormalization</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        <span class="p">)</span>
+</code></pre></div></p>
+<p><strong>VLA Model Architecture</strong> (from <code>modeling_prismatic.py</code>):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>OpenVLA-OFT Model:
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>├── Vision Backbone (PrismaticVisionBackbone)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>│   ├── Primary Featurizer (SigLIP-400M): 224x224 → 256 patches × 1152 dim
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>│   └── [Optional] Fused Featurizer (DINOv2): 224x224 → 256 patches × 768 dim
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>│   → Output: (batch, num_images*256, 1920) for fused backbone
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>│
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>├── Projector (nn.Linear + LayerNorm)
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>│   └── Maps vision features: 1920 → 4096 (Llama hidden dim)
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>│
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>├── [Optional] Proprio Projector (ProprioProjector)
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>│   └── Maps proprio: 14 → 4096 via MLP (fc1 → GELU → fc2)
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>│
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>├── Language Model (Llama-7B)
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>│   ├── Input: concatenate [vision_embeddings, proprio_embedding, text_embeddings]
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>│   ├── Autoregressive generation with temperature sampling
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>│   └── Output: action tokens (14 tokens per action chunk)
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>│
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>└── Action Decoder
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    ├── Token IDs → Discretized bins (256 bins per dimension)
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    ├── Bin centers → Normalized actions [-1, 1]
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>    └── Denormalization using task statistics → Raw actions
+</code></pre></div></p>
+<p><strong>Computation Breakdown</strong>:
+1. <strong>Vision Encoding</strong>: ~40% of GPU time
+   - SigLIP: 400M params, attention over 256 patches
+   - DINOv2: Additional 300M params if using fused backbone
+   - Forward pass: 6 transformer blocks + pooling</p>
+<ol>
+<li><strong>LLM Generation</strong>: ~50% of GPU time</li>
+<li>Llama-7B: 7B parameters</li>
+<li>Generates 14×25=350 tokens for 25-chunk actions</li>
+<li>Each token requires full attention over previous tokens</li>
+<li>
+<p>With <code>do_sample=True</code> and <code>temperature=1.6</code></p>
+</li>
+<li>
+<p><strong>Projection Layers</strong>: ~10% of GPU time</p>
+</li>
+<li>Linear projections: relatively fast</li>
+</ol>
+<p><strong>Key Configuration</strong>:
+- <code>action_token_len=14</code>: Each action is 14 tokens (7 DOF × 2 arms)
+- <code>action_chunks_len=25</code>: Generates 25 future actions per step
+- <code>temperature=1.6</code>: <strong>Higher Rollout Temperature</strong> (Paper Section 3.3)
+  - Increased from standard 1.0 to 1.6 for diverse trajectory generation
+  - One of three key exploration enhancements in SimpleVLA-RL
+  - Achieves ~15% improvement over baseline (Figure 3c)
+  - Widely used in recent LLM RL work (Liu et al., 2025c; An et al., 2025)
+- <code>gpu_memory_utilization=0.9</code>: Uses 90% of GPU memory</p>
+<p><strong>Why all GPUs are busy</strong>:
+- Batch size = 8 (one per GPU with FSDP)
+- Full model forward + autoregressive sampling
+- bfloat16 mixed precision
+- <strong>Duration</strong>: 200-500ms per step (depends on model size and action length)</p>
+<hr />
+<h3 id="phase-4-action-execution-cpu-bound-gpus-0-10">Phase 4: Action Execution (CPU-Bound) 🔴 <strong>GPUs ~0-10%</strong><a class="headerlink" href="#phase-4-action-execution-cpu-bound-gpus-0-10" title="Permanent link">&para;</a></h3>
+<p><strong>Location</strong>: <code>rob_rollout.py:711-741</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Execute actions in parallel across all active environments</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">step_futures</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">active_indices</span><span class="p">:</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">future</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_thread_pool</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>        <span class="n">env_wrappers</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">step</span><span class="p">,</span>  <span class="c1"># CPU-bound physics simulation</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>        <span class="n">actions</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>              <span class="c1"># 25 action chunks</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="p">)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="n">step_futures</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">idx</span><span class="p">,</span> <span class="n">future</span><span class="p">))</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Wait for all environments to finish stepping</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">step_futures</span><span class="p">:</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="n">obs</span><span class="p">,</span> <span class="n">done</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="c1"># Each env executes 25 steps of physics simulation</span>
+</code></pre></div>
+<p><strong>What happens in <code>env_wrapper.step()</code></strong> (<code>rob_rollout.py:299-326</code>):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>  <span class="c1"># action shape: (25, 14)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>  <span class="c1"># Thread-safe execution</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>  <span class="c1"># 25 iterations</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">take_action</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>  <span class="c1"># SAPIEN physics step</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>            <span class="c1"># - Update robot joint positions</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>            <span class="c1"># - Simulate physics contacts and dynamics</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>            <span class="c1"># - Render cameras (RGB images)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>            <span class="c1"># - Check collision and success conditions</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>        <span class="n">done</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">eval_success</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>        <span class="n">obs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_obs</span><span class="p">()</span>  <span class="c1"># Get new observation</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">finish_step</span> <span class="o">+=</span> <span class="n">action</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div></p>
+<p><strong>SAPIEN Physics Execution</strong>:
+- <strong>Per-step operations</strong> (×25 for action chunks):
+  - Joint PD controller: computes torques
+  - Forward dynamics: updates positions/velocities
+  - Collision detection: broadphase + narrowphase
+  - Contact solver: computes contact forces
+  - Rendering: generates RGB images from cameras</p>
+<ul>
+<li><strong>Parallelism</strong>: </li>
+<li><code>ThreadPoolExecutor(max_workers=16)</code> handles up to 16 envs concurrently</li>
+<li>But each env runs serially (SAPIEN is not GPU-accelerated)</li>
+<li>Thread lock ensures thread safety for RoboTwin</li>
+</ul>
+<p><strong>Why GPUs are mostly idle</strong>:
+- SAPIEN/MuJoCo physics runs entirely on CPU
+- EGL rendering uses CPU (OpenGL software rasterization)
+- Only occasional GPU usage if rendering uses GPU (minimal)
+- <strong>Duration</strong>: 500-2000ms per batch (dominates rollout time!)</p>
+<hr />
+<h3 id="phase-5-cleanup-video-saving-cpu-bound-gpus-0">Phase 5: Cleanup &amp; Video Saving (CPU-Bound) 🔴 <strong>GPUs ~0%</strong><a class="headerlink" href="#phase-5-cleanup-video-saving-cpu-bound-gpus-0" title="Permanent link">&para;</a></h3>
+<p><strong>Location</strong>: <code>rob_rollout.py:746-770</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Close all environments</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">cleanup_futures</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">for</span> <span class="n">wrapper</span> <span class="ow">in</span> <span class="n">env_wrappers</span><span class="p">:</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">future</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_thread_pool</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">wrapper</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="n">cleanup_futures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">future</span><span class="p">)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>  <span class="c1"># Clear GPU memory</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>              <span class="c1"># Python garbage collection</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Save validation videos</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="k">if</span> <span class="n">is_valid</span><span class="p">:</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    <span class="k">for</span> <span class="n">task_file</span><span class="p">,</span> <span class="n">images</span> <span class="ow">in</span> <span class="n">valid_video</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>        <span class="n">save_rollout_video</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>  <span class="c1"># CPU: encode video</span>
+</code></pre></div>
+<p><strong>What happens</strong>:
+- Close SAPIEN scenes and release resources
+- Write video files (H.264 encoding on CPU)
+- Synchronize threads
+- <strong>Duration</strong>: 1-3 seconds per batch</p>
+<hr />
+<h2 id="why-gpu-utilization-is-unbalanced">Why GPU Utilization is Unbalanced<a class="headerlink" href="#why-gpu-utilization-is-unbalanced" title="Permanent link">&para;</a></h2>
+<h3 id="root-causes">Root Causes:<a class="headerlink" href="#root-causes" title="Permanent link">&para;</a></h3>
+<h4 id="1-sequential-phases-within-each-rollout">1. <strong>Sequential Phases Within Each Rollout</strong><a class="headerlink" href="#1-sequential-phases-within-each-rollout" title="Permanent link">&para;</a></h4>
+<p>The rollout loop alternates between GPU and CPU work:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Initialize Envs (CPU) → Get Obs (CPU) → VLA Inference (GPU) 
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>→ Execute Actions (CPU) → Get Obs (CPU) → VLA Inference (GPU) → ...
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>→ Cleanup (CPU)
+</code></pre></div>
+- During CPU phases, GPUs are idle
+- During GPU phases, CPUs are idle
+- <strong>Imbalance ratio</strong>: ~70% CPU time, ~30% GPU time per rollout</p>
+<h4 id="2-ray-distributed-execution">2. <strong>Ray Distributed Execution</strong><a class="headerlink" href="#2-ray-distributed-execution" title="Permanent link">&para;</a></h4>
+<p>From <code>main_ppo.py:159-173</code>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">role_worker_mapping</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="n">Role</span><span class="o">.</span><span class="n">ActorRollout</span><span class="p">:</span> <span class="n">ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">RobActorRolloutRefWorker</span><span class="p">),</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="n">Role</span><span class="o">.</span><span class="n">Critic</span><span class="p">:</span> <span class="n">ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">CriticWorker</span><span class="p">),</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">Role</span><span class="o">.</span><span class="n">RefPolicy</span><span class="p">:</span> <span class="n">ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">RobActorRolloutRefWorker</span><span class="p">)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="p">}</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="n">resource_pool_spec</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    <span class="n">global_pool_id</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># 8 GPUs on 1 node</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="p">}</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>    <span class="n">Role</span><span class="o">.</span><span class="n">ActorRollout</span><span class="p">:</span> <span class="n">global_pool_id</span><span class="p">,</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>    <span class="n">Role</span><span class="o">.</span><span class="n">Critic</span><span class="p">:</span> <span class="n">global_pool_id</span><span class="p">,</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="n">Role</span><span class="o">.</span><span class="n">RefPolicy</span><span class="p">:</span> <span class="n">global_pool_id</span><span class="p">,</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="p">}</span>
+</code></pre></div></p>
+<ul>
+<li><strong>All roles share the same GPU pool</strong></li>
+<li>Ray schedules tasks dynamically:</li>
+<li>Some GPUs may be running rollout (Phase 3: 100% GPU)</li>
+<li>Other GPUs may be idle waiting for envs to finish (Phase 4: 0% GPU)</li>
+<li>
+<p>Critic training may be running on some GPUs (intermittent 100%)</p>
+</li>
+<li>
+<p><strong>Synchronization barriers</strong>:</p>
+</li>
+<li>PPO requires collecting full batches before training</li>
+<li>Some workers finish rollout early and wait for others</li>
+<li>This causes the "some GPUs at 0%, others at 100%" pattern</li>
+</ul>
+<h4 id="3-micro-batch-size-1">3. <strong>Micro-Batch Size = 1</strong><a class="headerlink" href="#3-micro-batch-size-1" title="Permanent link">&para;</a></h4>
+<p>From <code>run_openvla_oft_rl_twin2.sh:65</code>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>actor_rollout_ref.rollout.micro_batch_size<span class="o">=</span><span class="m">1</span>
+</code></pre></div></p>
+<ul>
+<li>Each GPU processes <strong>only 1 environment at a time</strong></li>
+<li>No pipelining between CPU and GPU work</li>
+<li>If using <code>micro_batch_size=4</code>, could overlap:</li>
+<li>GPU: Process batch 1 inference</li>
+<li>CPU: Execute batch 2 actions</li>
+<li>But current config doesn't allow this</li>
+</ul>
+<h4 id="4-action-chunking-amplifies-cpu-bottleneck">4. <strong>Action Chunking Amplifies CPU Bottleneck</strong><a class="headerlink" href="#4-action-chunking-amplifies-cpu-bottleneck" title="Permanent link">&para;</a></h4>
+<p>From config:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>actor_rollout_ref.model.action_chunks_len<span class="o">=</span><span class="m">25</span>
+</code></pre></div></p>
+<ul>
+<li>VLA generates 25 actions in one inference (GPU: ~300ms)</li>
+<li>Then environment executes all 25 steps serially (CPU: ~1500ms)</li>
+<li><strong>5× longer CPU execution than GPU inference!</strong></li>
+<li>During those 1500ms, GPU is completely idle</li>
+</ul>
+<h4 id="5-environment-initialization-serialization">5. <strong>Environment Initialization Serialization</strong><a class="headerlink" href="#5-environment-initialization-serialization" title="Permanent link">&para;</a></h4>
+<p>From <code>rob_rollout.py:75</code>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">_ENV_INIT_LOCK</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="k">with</span> <span class="n">_ENV_INIT_LOCK</span><span class="p">:</span>  <span class="c1"># Serialize initialization!</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">get_robotwin2_task</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">setup_demo</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</code></pre></div></p>
+<ul>
+<li><strong>All environments initialize serially</strong> (not parallel!)</li>
+<li>Even though ThreadPoolExecutor has 16 workers</li>
+<li>This is to prevent SAPIEN resource conflicts</li>
+<li>Causes initial ~0% GPU phase to be very long</li>
+</ul>
+<hr />
+<h2 id="expected-gpu-usage-patterns">Expected GPU Usage Patterns<a class="headerlink" href="#expected-gpu-usage-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="pattern-1-all-gpus-at-0">Pattern 1: All GPUs at 0%<a class="headerlink" href="#pattern-1-all-gpus-at-0" title="Permanent link">&para;</a></h3>
+<p><strong>When</strong>: 
+- Batch initialization (beginning of epoch)
+- Action execution phase (most of the time)
+- Environment cleanup</p>
+<p><strong>Duration</strong>: 60-70% of rollout time</p>
+<h3 id="pattern-2-all-gpus-at-100">Pattern 2: All GPUs at 100%<a class="headerlink" href="#pattern-2-all-gpus-at-100" title="Permanent link">&para;</a></h3>
+<p><strong>When</strong>: 
+- VLA inference phase
+- All workers are synchronized at inference</p>
+<p><strong>Duration</strong>: 20-30% of rollout time</p>
+<h3 id="pattern-3-unbalanced-some-30-others-0">Pattern 3: Unbalanced (some 30%, others 0%)<a class="headerlink" href="#pattern-3-unbalanced-some-30-others-0" title="Permanent link">&para;</a></h3>
+<p><strong>When</strong>:
+- Workers finish inference at different times
+- Some workers finish rollout early, waiting for stragglers
+- Critic training starts while some rollouts still running
+- Ray resource contention between ActorRollout/Critic/RefPolicy</p>
+<p><strong>Duration</strong>: 10-20% of time (transition periods)</p>
+<hr />
+<h2 id="performance-bottleneck-analysis">Performance Bottleneck Analysis<a class="headerlink" href="#performance-bottleneck-analysis" title="Permanent link">&para;</a></h2>
+<h3 id="timing-breakdown-per-rollout-step">Timing Breakdown (per rollout step):<a class="headerlink" href="#timing-breakdown-per-rollout-step" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>1. Get observation:        ~50ms   (CPU)
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>2. Process input:          ~100ms  (CPU → GPU transfer)
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>3. VLA inference:          ~300ms  (GPU) ← Only GPU-intensive part!
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>4. Execute 25 actions:     ~1500ms (CPU) ← BOTTLENECK!
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>5. Get new observation:    ~50ms   (CPU)
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>-------------------------------------------
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>Total per step:            ~2000ms
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>GPU utilization:           15% (300ms / 2000ms)
+</code></pre></div>
+<h3 id="over-full-rollout-200-steps-for-beat_block_hammer">Over full rollout (200 steps for beat_block_hammer):<a class="headerlink" href="#over-full-rollout-200-steps-for-beat_block_hammer" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Total steps: 200 / 25 = 8 VLA inferences
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Total time: ~16 seconds
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>GPU active time: ~2.4 seconds (15%)
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>CPU active time: ~13.6 seconds (85%)
+</code></pre></div>
+<h3 id="why-action-execution-is-the-bottleneck">Why Action Execution is the Bottleneck:<a class="headerlink" href="#why-action-execution-is-the-bottleneck" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>SAPIEN physics is single-threaded</strong> per environment</li>
+<li><strong>No GPU acceleration</strong> for physics simulation</li>
+<li><strong>25 serial steps</strong> per VLA inference</li>
+<li><strong>Rendering overhead</strong>: 3 cameras (head + 2 wrists) × 25 steps</li>
+</ol>
+<hr />
+<h2 id="optimization-recommendations">Optimization Recommendations<a class="headerlink" href="#optimization-recommendations" title="Permanent link">&para;</a></h2>
+<h3 id="important-note-from-paper">⚠️ Important Note from Paper<a class="headerlink" href="#important-note-from-paper" title="Permanent link">&para;</a></h3>
+<p>The SimpleVLA-RL paper already implements <strong>three critical optimizations</strong> that significantly improve performance:</p>
+<ol>
+<li><strong>Higher Rollout Temperature (1.6)</strong>: Already in your config! <code>temperature=1.6</code></li>
+<li><strong>Dynamic Sampling</strong>: Already in your config! <code>accuracy_lower_bound=0.1, accuracy_upper_bound=0.9</code></li>
+<li><strong>Clip Higher</strong>: Already in your config! <code>clip_ratio_high=0.28</code></li>
+</ol>
+<p>These three enhancements achieve <strong>~30% improvement</strong> over baseline. Before adding more optimizations, ensure these are working correctly by monitoring:
+- Dynamic sampling retention rate (~70-80% is good)
+- Policy exploration metrics (<code>actor/entropy</code>)
+- Success rate improvements over training</p>
+<h3 id="additional-high-impact-optimizations">🚀 Additional High-Impact Optimizations<a class="headerlink" href="#additional-high-impact-optimizations" title="Permanent link">&para;</a></h3>
+<p>Beyond what the paper already implements:</p>
+<h4 id="1-reduce-action-chunking-experimental">1. Reduce Action Chunking (Experimental)<a class="headerlink" href="#1-reduce-action-chunking-experimental" title="Permanent link">&para;</a></h4>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Current (Paper setting)</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nv">action_chunks_len</span><span class="o">=</span><span class="m">25</span><span class="w">  </span><span class="c1"># GPU idle for 1500ms</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Proposed (Trade-off)</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="nv">action_chunks_len</span><span class="o">=</span><span class="m">10</span><span class="w">  </span><span class="c1"># GPU idle for 600ms</span>
+</code></pre></div>
+<strong>Trade-off</strong>: More frequent VLA calls improves GPU utilization but:
+- May reduce planning horizon for the policy
+- Paper uses 25 chunks - changing this may affect performance
+- <strong>Recommendation</strong>: Only try if rollout speed is critical bottleneck</p>
+<h4 id="2-increase-micro-batch-size">2. Increase Micro-Batch Size<a class="headerlink" href="#2-increase-micro-batch-size" title="Permanent link">&para;</a></h4>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Current</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nv">micro_batch_size</span><span class="o">=</span><span class="m">1</span><span class="w">  </span><span class="c1"># No pipelining</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Proposed  </span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nv">micro_batch_size</span><span class="o">=</span><span class="m">4</span><span class="w">  </span><span class="c1"># Process 4 envs per GPU</span>
+</code></pre></div>
+<strong>Benefit</strong>: Can overlap CPU/GPU work across different batches</p>
+<h4 id="3-async-rollout-with-pipeline">3. Async Rollout with Pipeline<a class="headerlink" href="#3-async-rollout-with-pipeline" title="Permanent link">&para;</a></h4>
+<p>Modify <code>_generate_minibatch_robotwin</code> to:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Pseudocode</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_observations</span><span class="p">())</span>  <span class="c1"># Batch 0</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="c1"># GPU: Inference on batch i</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>    <span class="n">vla_output</span> <span class="o">=</span> <span class="n">vla_inference</span><span class="p">(</span><span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">())</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>    <span class="c1"># CPU (parallel): Execute batch i-1 actions + collect batch i+1 obs</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>    <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">():</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>        <span class="n">execute_actions</span><span class="p">(</span><span class="n">vla_output</span><span class="p">)</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>        <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_observations</span><span class="p">())</span>
+</code></pre></div>
+<strong>Benefit</strong>: Hide CPU latency behind GPU work</p>
+<h4 id="4-use-gpu-accelerated-simulator">4. Use GPU-Accelerated Simulator<a class="headerlink" href="#4-use-gpu-accelerated-simulator" title="Permanent link">&para;</a></h4>
+<p>Consider replacing SAPIEN with:
+- <strong>Isaac Gym/Isaac Sim</strong>: GPU-accelerated physics
+- <strong>MuJoCo XLA</strong>: TPU/GPU support
+<strong>Benefit</strong>: 10-100× faster physics simulation</p>
+<h4 id="5-distributed-rollout-workers">5. Distributed Rollout Workers<a class="headerlink" href="#5-distributed-rollout-workers" title="Permanent link">&para;</a></h4>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Current: All roles share 8 GPUs</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="n">Role</span><span class="o">.</span><span class="n">ActorRollout</span><span class="p">:</span> <span class="n">global_pool_id</span><span class="p">,</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="n">Role</span><span class="o">.</span><span class="n">Critic</span><span class="p">:</span> <span class="n">global_pool_id</span><span class="p">,</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    <span class="n">Role</span><span class="o">.</span><span class="n">RefPolicy</span><span class="p">:</span> <span class="n">global_pool_id</span><span class="p">,</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="p">}</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="c1"># Proposed: Dedicated resources</span>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="n">resource_pool_spec</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>    <span class="s1">&#39;rollout_pool&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># 4 GPUs for rollout</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>    <span class="s1">&#39;train_pool&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1</span><span class="p">,</span>    <span class="c1"># 4 GPUs for critic/ref</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="p">}</span>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>    <span class="n">Role</span><span class="o">.</span><span class="n">ActorRollout</span><span class="p">:</span> <span class="s1">&#39;rollout_pool&#39;</span><span class="p">,</span>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>    <span class="n">Role</span><span class="o">.</span><span class="n">Critic</span><span class="p">:</span> <span class="s1">&#39;train_pool&#39;</span><span class="p">,</span>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>    <span class="n">Role</span><span class="o">.</span><span class="n">RefPolicy</span><span class="p">:</span> <span class="s1">&#39;train_pool&#39;</span><span class="p">,</span>
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a><span class="p">}</span>
+</code></pre></div>
+<strong>Benefit</strong>: Eliminate resource contention</p>
+<hr />
+<h2 id="monitoring-and-debugging">Monitoring and Debugging<a class="headerlink" href="#monitoring-and-debugging" title="Permanent link">&para;</a></h2>
+<h3 id="recommended-tools">Recommended Tools:<a class="headerlink" href="#recommended-tools" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Real-time GPU monitoring</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>nvidia-smi<span class="w"> </span>dmon<span class="w"> </span>-s<span class="w"> </span>u<span class="w"> </span>-d<span class="w"> </span><span class="m">1</span><span class="w">  </span><span class="c1"># Update every 1 second</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Detailed profiling</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>pip<span class="w"> </span>install<span class="w"> </span>py-spy
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>py-spy<span class="w"> </span>record<span class="w"> </span>-o<span class="w"> </span>profile.svg<span class="w"> </span>--<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>verl.trainer.main_ppo<span class="w"> </span>...
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="c1"># Ray dashboard</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="c1"># Access at http://localhost:8265 to see task scheduling</span>
+</code></pre></div>
+<h3 id="key-metrics-to-track">Key Metrics to Track:<a class="headerlink" href="#key-metrics-to-track" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>GPU Utilization %</strong> per device</li>
+<li><strong>GPU Memory Usage</strong> (should be ~90% during inference)</li>
+<li><strong>Ray Task Queue Length</strong> (indicates scheduling bottlenecks)</li>
+<li><strong>Env Step Time</strong> vs <strong>VLA Inference Time</strong> ratio</li>
+<li><strong>Samples per Second</strong> (throughput metric)</li>
+</ol>
+<hr />
+<h2 id="understanding-vla-concepts">Understanding VLA Concepts<a class="headerlink" href="#understanding-vla-concepts" title="Permanent link">&para;</a></h2>
+<h3 id="what-is-pushcut">What is "Pushcut"?<a class="headerlink" href="#what-is-pushcut" title="Permanent link">&para;</a></h3>
+<p><strong>Pushcut</strong> is a novel manipulation strategy discovered by the RL-trained VLA policy that was <strong>never demonstrated in the training data</strong>. This phenomenon is described in the SimpleVLA-RL paper (Section 6.1) and represents a key finding about RL's ability to discover optimal behaviors beyond imitation.</p>
+<p><strong>Where pushcut was observed</strong>:
+- ✅ <strong>move_can_pot task</strong>: Pushing can instead of grasping and lifting
+- ✅ <strong>place_a2b_left/right task</strong>: Pushing Object A instead of pick-and-place</p>
+<h4 id="the-discovery">The Discovery<a class="headerlink" href="#the-discovery" title="Permanent link">&para;</a></h4>
+<p><strong>Before RL (SFT Model)</strong>:
+- Trained only on human demonstrations
+- Learned strategy: <strong>Grasp → Lift → Move → Place</strong>
+- Standard pick-and-place approach mimicking human behavior
+- Always lifts objects vertically before horizontal motion</p>
+<p><strong>After RL Training (in applicable tasks)</strong>:
+- Discovered strategy: <strong>Grasp → Push/Slide horizontally</strong>
+- Instead of lifting objects, the robot keeps the gripper low
+- Pushes or drags objects across the table surface toward the target
+- More like sliding a chess piece than picking it up</p>
+<h4 id="example-move_can_pot-task">Example: move_can_pot Task<a class="headerlink" href="#example-move_can_pot-task" title="Permanent link">&para;</a></h4>
+<p><strong>SFT Strategy</strong> (from demonstrations):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>1. Approach can
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>2. Grasp can with gripper
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>3. Lift can upward (clear the table)
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>4. Move can horizontally toward target position beside pot
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>5. Lower can carefully to table surface
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>6. Release gripper and complete placement
+</code></pre></div></p>
+<p><strong>RL "Pushcut" Strategy</strong> (discovered):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>1. Approach can
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>2. Grasp can (or just make contact)
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>3. Push/slide can horizontally toward target (staying low)
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>4. Drag can across table surface beside pot
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>5. Success achieved through pushing motion
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>6. No vertical lift required! (faster and more robust)
+</code></pre></div></p>
+<p><strong>Note on beat_block_hammer Task</strong>: The pushcut phenomenon was <strong>NOT</strong> observed in the hammer task. The hammer task still requires grasping and striking motions due to the nature of tool use.</p>
+<h4 id="why-pushcut-works-better">Why "Pushcut" Works Better<a class="headerlink" href="#why-pushcut-works-better" title="Permanent link">&para;</a></h4>
+<p><strong>Advantages</strong>:
+1. <strong>Faster Execution</strong>: Fewer vertical motions, more direct path
+2. <strong>More Robust</strong>: Less precise positioning required
+3. <strong>Energy Efficient</strong>: No need to lift against gravity
+4. <strong>Collision Safe</strong>: Staying close to table reduces risk of hitting obstacles
+5. <strong>Natural Contact</strong>: Pushing naturally maintains contact with objects</p>
+<p><strong>Physics Insight</strong>:
+- Friction with table provides stability during push
+- Continuous contact reduces uncertainty
+- Less reliance on precise gripper control
+- More forgiving of position errors</p>
+<h4 id="why-this-matters">Why This Matters<a class="headerlink" href="#why-this-matters" title="Permanent link">&para;</a></h4>
+<p><strong>1. Emergence of Novel Behaviors</strong>:
+- RL discovers strategies humans didn't demonstrate
+- Goes beyond imitation learning limitations
+- Shows true understanding of task goals (contact block), not just copying actions</p>
+<p><strong>2. Optimality Discovery</strong>:
+- RL explores action space to find more efficient solutions
+- Not constrained by human demonstration biases
+- Similar to AlphaGo discovering unconventional but optimal moves</p>
+<p><strong>3. Task Understanding</strong>:
+- Policy learned the task is "make hammer contact block"
+- Not "copy human lifting motion exactly"
+- Demonstrates goal-directed reasoning vs behavior cloning</p>
+<p><strong>4. Exploration Success</strong>:
+- Higher Rollout Temperature (1.6) enabled diverse strategy exploration
+- Dynamic Sampling focused learning on improvable scenarios
+- PPO with Clip Higher allowed bolder policy updates
+- These three enhancements (paper Section 3.3) enabled discovery</p>
+<h4 id="broader-implications">Broader Implications<a class="headerlink" href="#broader-implications" title="Permanent link">&para;</a></h4>
+<p><strong>For VLA Research</strong>:
+- RL enables creativity beyond supervised learning
+- Outcome-based rewards (success/failure) sufficient for discovery
+- No need to hand-craft dense rewards for every sub-behavior
+- Demonstrates transfer from reasoning models (DeepSeek-R1) to action models (VLA)</p>
+<p><strong>For Robotics</strong>:
+- Policies can discover human-unintuitive but efficient strategies
+- Simulation enables safe exploration of novel behaviors
+- Real-world transfer may discover additional optimizations
+- Suggests RL as path to superhuman manipulation skills</p>
+<hr />
+<h3 id="how-vla-inference-steps-work-with-environment-steps">How VLA Inference Steps Work with Environment Steps<a class="headerlink" href="#how-vla-inference-steps-work-with-environment-steps" title="Permanent link">&para;</a></h3>
+<p><strong>TL;DR</strong>: VLA is <strong>NOT</strong> like ReAct. Instead of generating one action per observation (single-step), VLA uses <strong>action chunking</strong> to generate 25 future actions at once (multi-step planning).</p>
+<h4 id="react-pattern-single-step">ReAct Pattern (Single-Step)<a class="headerlink" href="#react-pattern-single-step" title="Permanent link">&para;</a></h4>
+<p>The ReAct pattern you're thinking of works like this:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Loop until task done:
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>  1. Observe environment state
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>  2. LLM thinks and generates ONE action
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>  3. Execute that ONE action
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>  4. Get new observation
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>  5. Repeat
+</code></pre></div></p>
+<p><strong>Characteristics</strong>:
+- High-frequency LLM calls (one per step)
+- Reactive: responds to immediate observations
+- Myopic: only considers current state
+- Fine-grained control but high computational cost</p>
+<p><strong>Example</strong> (200 environment steps):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Step 0:   obs₀ → LLM → action₀ → execute → obs₁
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>Step 1:   obs₁ → LLM → action₁ → execute → obs₂
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>Step 2:   obs₂ → LLM → action₂ → execute → obs₃
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>...
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>Step 199: obs₁₉₉ → LLM → action₁₉₉ → done
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>Total: 200 LLM calls, 200 environment steps
+</code></pre></div></p>
+<h4 id="vla-pattern-action-chunking">VLA Pattern (Action Chunking)<a class="headerlink" href="#vla-pattern-action-chunking" title="Permanent link">&para;</a></h4>
+<p>VLA uses a fundamentally different approach:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Loop until task done:
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>  1. Observe environment state
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>  2. VLA generates 25 FUTURE actions (action chunk)
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>  3. Execute all 25 actions sequentially
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>  4. Get new observation (after all 25 executed)
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>  5. Repeat
+</code></pre></div></p>
+<p><strong>Characteristics</strong>:
+- Low-frequency VLA calls (one per 25 steps)
+- Predictive: plans ahead for multiple steps
+- Temporal reasoning: considers action sequences
+- Smooth trajectories but delayed reactivity</p>
+<p><strong>Example</strong> (200 environment steps):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>Step 0:   obs₀ → VLA → [action₀, action₁, ..., action₂₄] 
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>          ↓
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>          Execute action₀ in env
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>          Execute action₁ in env
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>          ...
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>          Execute action₂₄ in env
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>          ↓
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>Step 25:  obs₂₅ → VLA → [action₂₅, action₂₆, ..., action₄₉]
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>          ↓
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>          Execute action₂₅ in env
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>          Execute action₂₆ in env
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a>          ...
+<a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a>          Execute action₄₉ in env
+<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a>          ↓
+<a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a>Step 50:  obs₅₀ → VLA → [action₅₀, action₅₁, ..., action₇₄]
+<a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a>...
+<a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a>
+<a id="__codelineno-26-18" name="__codelineno-26-18" href="#__codelineno-26-18"></a>Total: 8 VLA calls, 200 environment steps (25 steps × 8 calls)
+</code></pre></div></p>
+<h4 id="detailed-execution-flow">Detailed Execution Flow<a class="headerlink" href="#detailed-execution-flow" title="Permanent link">&para;</a></h4>
+<p>Let's trace through a concrete example for beat_block_hammer:</p>
+<p><strong>VLA Call 1</strong> (Step 0):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Input:
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>- RGB images: head camera (224×224×3)
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>              left wrist camera (224×224×3)  
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>              right wrist camera (224×224×3)
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>- Proprioception: 14-dim joint positions [θ₁, θ₂, ..., θ₁₄]
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>- Instruction: &quot;Grab the hammer and beat the block&quot;
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>VLA Processing:
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>1. Vision Encoder: Extract visual features from 3 camera views
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>2. Text Encoder: Process instruction into embeddings
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>3. Proprio Encoder: Normalize joint positions
+<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>4. Fusion: Concatenate all modalities
+<a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>5. LLM (Llama-7B): Autoregressively generate 350 tokens
+<a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a>   - 25 action chunks × 14 dimensions = 350 tokens
+<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>6. Action Decoder: Convert tokens to continuous actions
+<a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a>
+<a id="__codelineno-27-17" name="__codelineno-27-17" href="#__codelineno-27-17"></a>Output:
+<a id="__codelineno-27-18" name="__codelineno-27-18" href="#__codelineno-27-18"></a>actions₀₋₂₄ = [
+<a id="__codelineno-27-19" name="__codelineno-27-19" href="#__codelineno-27-19"></a>  [left_arm₀, right_arm₀],    # Step 0
+<a id="__codelineno-27-20" name="__codelineno-27-20" href="#__codelineno-27-20"></a>  [left_arm₁, right_arm₁],    # Step 1
+<a id="__codelineno-27-21" name="__codelineno-27-21" href="#__codelineno-27-21"></a>  ...
+<a id="__codelineno-27-22" name="__codelineno-27-22" href="#__codelineno-27-22"></a>  [left_arm₂₄, right_arm₂₄]  # Step 24
+<a id="__codelineno-27-23" name="__codelineno-27-23" href="#__codelineno-27-23"></a>]
+<a id="__codelineno-27-24" name="__codelineno-27-24" href="#__codelineno-27-24"></a>Shape: (25, 14) = 25 timesteps × 14 dimensions
+<a id="__codelineno-27-25" name="__codelineno-27-25" href="#__codelineno-27-25"></a>
+<a id="__codelineno-27-26" name="__codelineno-27-26" href="#__codelineno-27-26"></a>Time: ~300ms for entire VLA forward pass
+</code></pre></div></p>
+<p><strong>Environment Execution 1</strong> (Steps 0-24):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>for t in range(25):
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>    # Execute one action chunk
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>    env.step(actions₀₋₂₄[t])
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>    # What happens internally:
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>    1. Update robot joint targets with action[t]
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>    2. PD controller computes joint torques
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>    3. Physics simulation advances 1 timestep (~50ms real-time)
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>    4. Update object positions, check collisions
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>    5. Render 3 camera views (RGB images)
+<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>    6. Check success condition
+<a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a>
+<a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a>    # Time per step: ~60ms
+<a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a>
+<a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a># Total execution time: 25 × 60ms = 1500ms
+<a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a># GPU is IDLE during this entire period!
+</code></pre></div></p>
+<p><strong>VLA Call 2</strong> (Step 25):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>Input:
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>- NEW RGB images: Updated after 25 steps of motion
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>- NEW Proprioception: Current joint positions after movement
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>- SAME Instruction: Task hasn&#39;t changed
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>Output:
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>actions₂₅₋₄₉ = [next 25 action chunks]
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>Time: ~300ms
+</code></pre></div></p>
+<p><strong>Environment Execution 2</strong> (Steps 25-49):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>Execute all 25 actions sequentially
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>Time: ~1500ms
+</code></pre></div></p>
+<p>This continues for ~8 VLA calls until either:
+- Success condition met (hammer contacts block)
+- Maximum steps reached (200 steps)
+- Failure detected (robot stuck, collision, timeout)</p>
+<h4 id="visual-timeline">Visual Timeline<a class="headerlink" href="#visual-timeline" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>Time:      0ms         300ms      1800ms     2100ms     3600ms
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>           |            |           |          |           |
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>GPU:       [VLA Call 1] idle        [VLA Call 2] idle      [VLA Call 3]
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>           ↓                                    ↓
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>Actions:   Generate     Execute     Generate   Execute
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>           25 actions   25 actions  25 actions 25 actions
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>Steps:     0            0→24        25         25→49      50
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>Robot:     Stationary   Moving...   Moving...  Moving...  Moving...
+</code></pre></div>
+<h4 id="key-differences-react-vs-vla">Key Differences: ReAct vs VLA<a class="headerlink" href="#key-differences-react-vs-vla" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>ReAct (Single-Step)</th>
+<th>VLA (Action Chunking)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Observation Frequency</strong></td>
+<td>Every step</td>
+<td>Every 25 steps</td>
+</tr>
+<tr>
+<td><strong>Model Calls</strong></td>
+<td>200 (for 200 steps)</td>
+<td>8 (for 200 steps)</td>
+</tr>
+<tr>
+<td><strong>Planning Horizon</strong></td>
+<td>1 step (reactive)</td>
+<td>25 steps (predictive)</td>
+</tr>
+<tr>
+<td><strong>Output per Call</strong></td>
+<td>1 action (14-dim)</td>
+<td>25 actions (25×14 matrix)</td>
+</tr>
+<tr>
+<td><strong>Computational Cost</strong></td>
+<td>200 × 300ms = 60s</td>
+<td>8 × 300ms = 2.4s</td>
+</tr>
+<tr>
+<td><strong>GPU Utilization</strong></td>
+<td>~50% (frequent calls)</td>
+<td>~15% (infrequent calls)</td>
+</tr>
+<tr>
+<td><strong>Adaptability</strong></td>
+<td>High (responds each step)</td>
+<td>Lower (commits to 25 steps)</td>
+</tr>
+<tr>
+<td><strong>Trajectory Smoothness</strong></td>
+<td>Can be jerky</td>
+<td>Naturally smooth</td>
+</tr>
+<tr>
+<td><strong>Real-time Capability</strong></td>
+<td>Challenging (200Hz calls)</td>
+<td>Feasible (8Hz calls)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="why-vla-uses-action-chunking">Why VLA Uses Action Chunking<a class="headerlink" href="#why-vla-uses-action-chunking" title="Permanent link">&para;</a></h4>
+<p><strong>1. Computational Efficiency</strong>:
+- VLA models are huge (7B parameters)
+- 8 forward passes vs 200 = <strong>25× fewer inferences</strong>
+- Critical for real-time robot control
+- Enables deployment on resource-constrained robots</p>
+<p><strong>2. Natural Motion</strong>:
+- Humans plan in chunks (reach → grasp → lift)
+- Robot trajectories should be smooth, not jerky
+- Single-step control often causes oscillations
+- Action chunking produces fluid motion</p>
+<p><strong>3. Training Data Structure</strong>:
+- Human demonstrations naturally contain temporal structure
+- People execute sub-goals (approach, grasp, move) not individual joint movements
+- VLA learns this hierarchical structure
+- Action chunks capture motion primitives</p>
+<p><strong>4. Temporal Consistency</strong>:
+- Generating 25 actions together enforces coherence
+- Actions form smooth trajectory in joint space
+- Prevents contradictory actions (e.g., open then close gripper)
+- LLM's sequential generation creates temporal dependencies</p>
+<p><strong>5. Reduced Accumulation Error</strong>:
+- Frequent re-planning can cause drift
+- Each observation has noise
+- Committing to 25 steps reduces noise amplification
+- Balance between reactivity and stability</p>
+<h4 id="limitations-of-action-chunking">Limitations of Action Chunking<a class="headerlink" href="#limitations-of-action-chunking" title="Permanent link">&para;</a></h4>
+<p><strong>Cannot React Quickly</strong>:
+- Must execute all 25 actions before sensing again
+- 25 × 50ms = 1.25 seconds of "blindness"
+- Cannot respond to unexpected events during chunk execution
+- Example: If object moves during execution, robot won't notice until step 25</p>
+<p><strong>Trade-off Decision</strong>:
+- Shorter chunks (e.g., 10): More reactive but more VLA calls
+- Longer chunks (e.g., 50): Fewer VLA calls but less adaptive
+- Paper uses 25 as optimal balance</p>
+<p><strong>Why 25 Works</strong>:
+- Environment is relatively static (objects don't move spontaneously)
+- Robot motion is fast enough to complete chunks quickly (~1.25s)
+- Success rate shows this horizon is sufficient for tasks
+- GPU idle time (1500ms) &gt;&gt; VLA inference (300ms), so bottleneck is physics anyway</p>
+<h4 id="comparison-to-other-approaches">Comparison to Other Approaches<a class="headerlink" href="#comparison-to-other-approaches" title="Permanent link">&para;</a></h4>
+<p><strong>vs Hierarchical RL</strong>:
+- Hierarchical RL: High-level policy → sub-goal → Low-level policy → actions
+- VLA action chunking: Single model generates action sequence directly
+- VLA is simpler but less flexible</p>
+<p><strong>vs Model Predictive Control (MPC)</strong>:
+- MPC: Optimize trajectory over horizon, execute first action, re-optimize
+- VLA: Generate trajectory once, execute all actions
+- MPC is more adaptive but computationally expensive</p>
+<p><strong>vs Options Framework</strong>:
+- Options: Learn reusable skills (primitives) that execute for variable duration
+- VLA: Fixed-length action sequences, no explicit skill decomposition
+- Options are more structured but harder to learn</p>
+<h4 id="implications-for-your-training">Implications for Your Training<a class="headerlink" href="#implications-for-your-training" title="Permanent link">&para;</a></h4>
+<p><strong>What to Monitor</strong>:
+- Action chunk utilization: Are all 25 steps being used?
+- Early termination rate: How often do episodes end before 25 steps?
+- Trajectory smoothness: Are actions forming coherent sequences?
+- Success timing: At which chunk number does success typically occur?</p>
+<p><strong>Expected Behavior</strong>:
+- Most episodes use 6-8 VLA calls (150-200 steps)
+- Some succeed early (3-4 calls, 75-100 steps)
+- Rarely use all 8 calls unless struggling
+- Action sequences should show smooth progressions in joint space</p>
+<p><strong>Performance Characteristics</strong>:
+- GPU busy: 300ms × 8 = 2.4s per episode
+- GPU idle: 1500ms × 8 = 12s per episode<br />
+- GPU utilization: 2.4s / 14.4s = <strong>16.7%</strong>
+- This is expected and acceptable!</p>
+<hr />
+<h3 id="real-world-deployment-what-happens-during-vla-inference">Real-World Deployment: What Happens During VLA Inference?<a class="headerlink" href="#real-world-deployment-what-happens-during-vla-inference" title="Permanent link">&para;</a></h3>
+<p><strong>Key Question</strong>: When the GPU is computing the next 25 actions (~300ms), what does the physical robot do in real-world deployment?</p>
+<h4 id="answer-the-robot-continues-moving">Answer: The Robot Continues Moving!<a class="headerlink" href="#answer-the-robot-continues-moving" title="Permanent link">&para;</a></h4>
+<p>In real-world deployment, the system uses <strong>buffered execution</strong> to ensure continuous, smooth motion:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>Action Buffer System:
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>Time:     0ms          300ms        1800ms       2100ms
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>          |             |             |            |
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>VLA:      [Inference 1] [Inference 2] [Inference 3]
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>          └─&gt; Chunk 1   └─&gt; Chunk 2   └─&gt; Chunk 3
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>               (25 acts)     (25 acts)     (25 acts)
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>
+<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>Buffer:   [a₀...a₂₄]   [a₂₅...a₄₉]  [a₅₀...a₇₄]
+<a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a>          ↓ executing   ↓ ready       ↓ ready
+<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>
+<a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a>Robot:    [Executing a₀→a₂₄ continuously, no pause!]
+<a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a>                        [Executing a₂₅→a₄₉ continuously]
+</code></pre></div>
+<p><strong>How It Works</strong>:</p>
+<ol>
+<li><strong>Parallel Processing</strong>:</li>
+<li><strong>VLA Thread</strong>: Continuously computes next action chunk</li>
+<li><strong>Robot Control Thread</strong>: Continuously executes actions from buffer</li>
+<li>
+<p>Both run simultaneously on different compute resources</p>
+</li>
+<li>
+<p><strong>Action Buffer (Queue)</strong>:</p>
+</li>
+<li>Initially empty</li>
+<li>VLA generates first 25 actions → buffer fills</li>
+<li>Robot starts executing from buffer at control frequency</li>
+<li>While robot executes actions 0-24, VLA computes actions 25-49</li>
+<li>By the time robot finishes action 24, actions 25-49 are ready</li>
+<li>
+<p>Seamless transition, no pause!</p>
+</li>
+<li>
+<p><strong>Timing Requirements</strong>:</p>
+</li>
+<li>VLA inference time: ~300ms</li>
+<li>Action chunk execution time: ~1250ms (25 actions × 50ms)</li>
+<li><strong>Critical condition</strong>: VLA inference must complete before buffer empties</li>
+<li><strong>Buffer safety margin</strong>: 1250ms - 300ms = 950ms extra time</li>
+<li>This ensures smooth operation with 3× safety margin</li>
+</ol>
+<h4 id="control-frequencies-explained">Control Frequencies Explained<a class="headerlink" href="#control-frequencies-explained" title="Permanent link">&para;</a></h4>
+<p>There are <strong>three different frequencies</strong> in the system:</p>
+<p><strong>1. Simulation Physics Frequency (250 Hz)</strong>
+- <strong>What</strong>: SAPIEN physics engine update rate
+- <strong>Value</strong>: 250 Hz (timestep = 1/250 = 4ms)
+- <strong>Found in</strong>: <code>_base_task.py:223</code> → <code>scene.set_timestep(1/250)</code>
+- <strong>Purpose</strong>: High-fidelity physics simulation
+- <strong>Scope</strong>: Internal to simulator
+- <strong>Note</strong>: This is NOT the robot control frequency!</p>
+<p><strong>2. Robot Control Frequency (Variable, typically 10-50 Hz)</strong>
+- <strong>What</strong>: Rate at which robot receives and executes new action commands
+- <strong>Typical values</strong>:
+  - ALOHA robot: ~50 Hz (20ms per action)
+  - Position control: 10-20 Hz (50-100ms per action)
+  - Torque control: 100-500 Hz (2-10ms per action)
+- <strong>In VLA system</strong>: Each of the 25 action chunks is executed at this rate
+- <strong>Example</strong>: If control freq = 50 Hz:
+  - Each action chunk takes 20ms to execute
+  - 25 chunks × 20ms = 500ms total execution time
+  - But simulation shows ~60ms per chunk → likely using lower control rate (~16 Hz)</p>
+<p><strong>3. VLA Inference Frequency (~8 Hz for 200 steps)</strong>
+- <strong>What</strong>: Rate at which VLA model generates new action chunks
+- <strong>Value</strong>: ~8 Hz (125ms per inference call)
+  - 200 environment steps / 25 chunks = 8 calls
+  - 8 calls / (8 × 1.25s) = ~0.8 Hz actual rate
+  - But ideally: 1 call per 1.25s = 0.8 Hz
+- <strong>Calculation</strong>: 1000ms / 125ms ≈ 8 inferences per second (if continuous)
+- <strong>Purpose</strong>: High-level action planning
+- <strong>Scope</strong>: End-to-end system throughput</p>
+<h4 id="real-world-execution-timeline">Real-World Execution Timeline<a class="headerlink" href="#real-world-execution-timeline" title="Permanent link">&para;</a></h4>
+<p>Let's trace what happens in real-world deployment:</p>
+<p><strong>Initial Phase</strong> (t = 0ms):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>1. VLA thread starts computing first chunk (0-300ms)
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>2. Robot waits at home position (buffer empty)
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>3. At t=300ms: First 25 actions loaded into buffer
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>4. Robot immediately starts executing action₀
+</code></pre></div></p>
+<p><strong>Steady State</strong> (t = 300ms onward):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>Robot Control Loop (50 Hz = 20ms per cycle):
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>  t=300ms:  Execute action₀  | VLA computing chunk 2 in background
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>  t=320ms:  Execute action₁  | VLA still computing...
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>  t=340ms:  Execute action₂  | VLA still computing...
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>  ...
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>  t=780ms:  Execute action₂₄ | VLA finished chunk 2 at t=600ms
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a>  t=800ms:  Execute action₂₅ | Chunk 2 ready, seamless transition!
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>
+<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a>  No pause! Robot maintains continuous motion.
+</code></pre></div></p>
+<p><strong>Key Insight</strong>: 
+- Action execution (500-1250ms) is <strong>slower</strong> than VLA inference (300ms)
+- This creates natural buffering
+- VLA always finishes before buffer empties
+- Robot experiences <strong>continuous, smooth motion</strong></p>
+<h4 id="simulation-vs-real-world-differences">Simulation vs Real-World Differences<a class="headerlink" href="#simulation-vs-real-world-differences" title="Permanent link">&para;</a></h4>
+<p><strong>In Simulation</strong> (SimpleVLA-RL code):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1"># Sequential execution (rob_rollout.py)</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="n">vla_output</span> <span class="o">=</span> <span class="n">_generate_one_step</span><span class="p">(</span><span class="n">vla_input</span><span class="p">)</span>  <span class="c1"># 300ms, GPU busy</span>
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="n">actions</span> <span class="o">=</span> <span class="n">vla_output</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span>  <span class="c1"># (25, 14)</span>
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a>
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="c1"># Then execute all actions</span>
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">25</span><span class="p">):</span>
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a>    <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>  <span class="c1"># 60ms each, GPU idle</span>
+</code></pre></div></p>
+<p><strong>Why sequential in simulation?</strong>
+- Easier to implement and debug
+- No real-time constraints in simulation
+- Can run faster or slower than real-time
+- GPU idle time doesn't matter (no physical robot waiting)</p>
+<p><strong>In Real-World Deployment</strong> (typical VLA systems):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">queue</span>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="n">action_buffer</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>  <span class="c1"># Buffer for 2 chunks</span>
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">vla_inference_thread</span><span class="p">():</span>
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a>        <span class="n">obs</span> <span class="o">=</span> <span class="n">get_latest_observation</span><span class="p">()</span>
+<a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a>        <span class="n">actions</span> <span class="o">=</span> <span class="n">vla_model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>  <span class="c1"># 300ms</span>
+<a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a>        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">:</span>
+<a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a>            <span class="n">action_buffer</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>  <span class="c1"># Add to buffer</span>
+<a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a>
+<a id="__codelineno-36-13" name="__codelineno-36-13" href="#__codelineno-36-13"></a><span class="k">def</span><span class="w"> </span><span class="nf">robot_control_thread</span><span class="p">():</span>
+<a id="__codelineno-36-14" name="__codelineno-36-14" href="#__codelineno-36-14"></a>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<a id="__codelineno-36-15" name="__codelineno-36-15" href="#__codelineno-36-15"></a>        <span class="n">action</span> <span class="o">=</span> <span class="n">action_buffer</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>  <span class="c1"># Blocks if empty</span>
+<a id="__codelineno-36-16" name="__codelineno-36-16" href="#__codelineno-36-16"></a>        <span class="n">robot</span><span class="o">.</span><span class="n">execute_action</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>  <span class="c1"># 20ms at 50 Hz</span>
+<a id="__codelineno-36-17" name="__codelineno-36-17" href="#__codelineno-36-17"></a>        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.02</span><span class="p">)</span>  <span class="c1"># Maintain 50 Hz control rate</span>
+<a id="__codelineno-36-18" name="__codelineno-36-18" href="#__codelineno-36-18"></a>
+<a id="__codelineno-36-19" name="__codelineno-36-19" href="#__codelineno-36-19"></a><span class="c1"># Start both threads</span>
+<a id="__codelineno-36-20" name="__codelineno-36-20" href="#__codelineno-36-20"></a><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">vla_inference_thread</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<a id="__codelineno-36-21" name="__codelineno-36-21" href="#__codelineno-36-21"></a><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">robot_control_thread</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</code></pre></div></p>
+<p><strong>Benefits of Real-World Approach</strong>:
+1. <strong>Continuous Motion</strong>: No pauses, robot never stops
+2. <strong>Smooth Trajectories</strong>: Maintains constant velocity
+3. <strong>Better User Experience</strong>: Looks natural, not jerky
+4. <strong>Optimal Resource Use</strong>: GPU and robot work in parallel
+5. <strong>Robustness</strong>: Buffer handles inference time variations</p>
+<h4 id="control-frequency-trade-offs">Control Frequency Trade-offs<a class="headerlink" href="#control-frequency-trade-offs" title="Permanent link">&para;</a></h4>
+<p><strong>Higher Control Frequency (50-100 Hz)</strong>:
+- ✅ Smoother motion trajectories
+- ✅ Better tracking of complex paths
+- ✅ Faster reaction to disturbances
+- ❌ More computational overhead
+- ❌ Requires faster VLA inference or larger buffer</p>
+<p><strong>Lower Control Frequency (10-20 Hz)</strong>:
+- ✅ Less computational demand
+- ✅ Easier to keep buffer full
+- ✅ More time for VLA inference
+- ❌ Choppier motion
+- ❌ Reduced responsiveness</p>
+<p><strong>Optimal for VLA</strong> (20-50 Hz):
+- Balances smoothness and efficiency
+- Action chunk of 25 at 50 Hz = 500ms execution
+- VLA has 500ms to compute next chunk (vs 300ms needed)
+- 200ms safety margin handles variations</p>
+<h4 id="practical-deployment-example">Practical Deployment Example<a class="headerlink" href="#practical-deployment-example" title="Permanent link">&para;</a></h4>
+<p><strong>ALOHA Robot</strong> (typical VLA deployment platform):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>Hardware Specs:
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>- Control frequency: 50 Hz (20ms per action command)
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>- Servo update rate: 100 Hz (10ms internal)
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>- Camera frame rate: 30 Hz (33ms per frame)
+<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>- Network latency: 5-20ms (WiFi/Ethernet)
+<a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a>
+<a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a>VLA System:
+<a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a>- Inference time: 200-500ms (depends on hardware)
+<a id="__codelineno-37-9" name="__codelineno-37-9" href="#__codelineno-37-9"></a>- Action chunk size: 25 actions
+<a id="__codelineno-37-10" name="__codelineno-37-10" href="#__codelineno-37-10"></a>- Chunk execution time: 25 × 20ms = 500ms
+<a id="__codelineno-37-11" name="__codelineno-37-11" href="#__codelineno-37-11"></a>- VLA frequency: ~2 Hz (500ms per chunk)
+<a id="__codelineno-37-12" name="__codelineno-37-12" href="#__codelineno-37-12"></a>
+<a id="__codelineno-37-13" name="__codelineno-37-13" href="#__codelineno-37-13"></a>Buffer Management:
+<a id="__codelineno-37-14" name="__codelineno-37-14" href="#__codelineno-37-14"></a>- Minimum buffer: 25 actions (500ms)
+<a id="__codelineno-37-15" name="__codelineno-37-15" href="#__codelineno-37-15"></a>- Typical buffer: 50 actions (1000ms = 2 chunks)
+<a id="__codelineno-37-16" name="__codelineno-37-16" href="#__codelineno-37-16"></a>- Buffer refill: When &lt; 15 actions remain
+<a id="__codelineno-37-17" name="__codelineno-37-17" href="#__codelineno-37-17"></a>- This ensures buffer never empties
+</code></pre></div></p>
+<p><strong>Execution Flow</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>t=0ms:     Camera captures frame
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>t=10ms:    Frame sent to VLA computer
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>t=15ms:    VLA starts inference
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a>t=315ms:   VLA outputs 25 actions
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>t=320ms:   Actions sent to robot controller
+<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>t=325ms:   Robot starts executing action₀
+<a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a>
+<a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a>t=325ms:   Robot executes action₀ (servo moves)
+<a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a>t=345ms:   Robot executes action₁
+<a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a>t=365ms:   Robot executes action₂
+<a id="__codelineno-38-11" name="__codelineno-38-11" href="#__codelineno-38-11"></a>...
+<a id="__codelineno-38-12" name="__codelineno-38-12" href="#__codelineno-38-12"></a>t=325ms + 500ms = 825ms: Robot finishes action₂₄
+<a id="__codelineno-38-13" name="__codelineno-38-13" href="#__codelineno-38-13"></a>
+<a id="__codelineno-38-14" name="__codelineno-38-14" href="#__codelineno-38-14"></a>Meanwhile:
+<a id="__codelineno-38-15" name="__codelineno-38-15" href="#__codelineno-38-15"></a>t=350ms:   Camera captures next frame (during execution)
+<a id="__codelineno-38-16" name="__codelineno-38-16" href="#__codelineno-38-16"></a>t=365ms:   VLA starts computing next chunk
+<a id="__codelineno-38-17" name="__codelineno-38-17" href="#__codelineno-38-17"></a>t=665ms:   VLA outputs next 25 actions
+<a id="__codelineno-38-18" name="__codelineno-38-18" href="#__codelineno-38-18"></a>t=670ms:   Actions loaded into buffer (before robot finishes current chunk!)
+<a id="__codelineno-38-19" name="__codelineno-38-19" href="#__codelineno-38-19"></a>
+<a id="__codelineno-38-20" name="__codelineno-38-20" href="#__codelineno-38-20"></a>t=825ms:   Robot seamlessly transitions to action₂₅
+<a id="__codelineno-38-21" name="__codelineno-38-21" href="#__codelineno-38-21"></a>           No pause! Continuous motion!
+</code></pre></div></p>
+<h4 id="what-if-vla-is-too-slow">What if VLA is Too Slow?<a class="headerlink" href="#what-if-vla-is-too-slow" title="Permanent link">&para;</a></h4>
+<p><strong>Problem Scenario</strong>: VLA inference takes 800ms, but chunk execution only 500ms
+- Buffer empties before next chunk ready
+- Robot must pause and wait
+- Results in jerky, unnatural motion</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Increase Chunk Size</strong>:</li>
+<li>Use 50 actions instead of 25</li>
+<li>Execution time: 1000ms</li>
+<li>
+<p>Allows 800ms VLA inference + 200ms margin</p>
+</li>
+<li>
+<p><strong>Faster Hardware</strong>:</p>
+</li>
+<li>Use better GPU (A100 → H100)</li>
+<li>Reduce inference from 800ms → 300ms</li>
+<li>
+<p>Larger safety margin</p>
+</li>
+<li>
+<p><strong>Model Optimization</strong>:</p>
+</li>
+<li>Quantization (bfloat16 → int8)</li>
+<li>Faster inference frameworks (TensorRT)</li>
+<li>
+<p>Smaller models (7B → 3B)</p>
+</li>
+<li>
+<p><strong>Predictive Buffering</strong>:</p>
+</li>
+<li>Start computing chunk N+2 while executing chunk N</li>
+<li>Keep 2-3 chunks in buffer at all times</li>
+<li>Provides larger time cushion</li>
+</ol>
+<h4 id="summary-real-world-behavior">Summary: Real-World Behavior<a class="headerlink" href="#summary-real-world-behavior" title="Permanent link">&para;</a></h4>
+<p><strong>Question</strong>: "Will the robot stop at a static position during VLA inference?"</p>
+<p><strong>Answer</strong>: <strong>No!</strong> In properly designed real-world systems:</p>
+<ol>
+<li>Robot <strong>continues executing</strong> previously generated actions</li>
+<li>VLA computes <strong>in parallel</strong> while robot moves</li>
+<li>Action buffer ensures <strong>seamless transitions</strong></li>
+<li>Robot experiences <strong>continuous, smooth motion</strong></li>
+<li>No pause or static positions during normal operation</li>
+</ol>
+<p><strong>Control Frequency</strong>:
+- <strong>Physics simulation</strong>: 250 Hz (4ms timestep) - only in simulation
+- <strong>Robot control</strong>: 20-50 Hz (20-50ms per action) - real-world execution rate
+- <strong>VLA inference</strong>: ~0.8-2 Hz (500-1250ms per chunk) - planning rate</p>
+<p><strong>Critical Success Factor</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>VLA_inference_time &lt; action_chunk_execution_time
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>300ms &lt; (25 actions × 50ms/action) = 1250ms ✓
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>
+<a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a>This ensures buffer never empties and robot maintains continuous motion.
+</code></pre></div></p>
+<p>The system is designed with a <strong>4× safety margin</strong> (1250ms / 300ms), making it robust to inference time variations, network delays, and other real-world uncertainties!</p>
+<hr />
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>The GPU utilization patterns you're observing are <strong>normal and expected</strong> for this architecture:
+- ✅ <strong>0% GPU</strong>: Environment simulation (CPU-bound)
+- ✅ <strong>100% GPU</strong>: VLA model inference (GPU-bound)<br />
+- ✅ <strong>Unbalanced</strong>: Ray scheduling transitions</p>
+<p>The main bottleneck is <strong>not GPU utilization</strong>, but rather <strong>CPU physics simulation and environment management</strong>.</p>
+<h3 id="key-insight-from-paper">Key Insight from Paper<a class="headerlink" href="#key-insight-from-paper" title="Permanent link">&para;</a></h3>
+<p>The SimpleVLA-RL paper (Section 3.3) introduces <strong>three exploration enhancements</strong> that are already implemented in your config:</p>
+<ol>
+<li><strong>Higher Rollout Temperature (1.6)</strong>: Directly affects the rollout process</li>
+<li>Generates more diverse trajectories during rollout</li>
+<li>Critical for discovering new successful strategies</li>
+<li>Achieves ~15% improvement (Figure 3c)</li>
+<li>
+<p><strong>This is why you see <code>temperature=1.6</code> in the code!</strong></p>
+</li>
+<li>
+<p><strong>Dynamic Sampling</strong>: Filters rollout data during collection</p>
+</li>
+<li>Keeps only groups with mixed success/failure outcomes</li>
+<li>Ensures stable gradients and meaningful learning</li>
+<li>
+<p>Achieves ~15% improvement (Figure 3a)</p>
+</li>
+<li>
+<p><strong>Clip Higher (1.28)</strong>: Affects PPO policy updates (not rollout)</p>
+</li>
+<li>Allows larger policy updates for exploration</li>
+<li>Achieves ~10% improvement (Figure 3b)</li>
+</ol>
+<p><strong>Combined effect</strong>: These three enhancements achieve <strong>~30% improvement</strong> over baseline SFT in just 300 training steps (~4.3 days)!</p>
+<h3 id="terminology-clarification">Terminology Clarification<a class="headerlink" href="#terminology-clarification" title="Permanent link">&para;</a></h3>
+<p>There are <strong>three different types of "steps"</strong> in this system:</p>
+<ol>
+<li><strong>Training Steps (global_steps)</strong>: </li>
+<li><strong>Paper shows: 300 steps</strong> (Figure 3 in <a href="https://arxiv.org/pdf/2509.09674">SimpleVLA-RL paper</a>)</li>
+<li><strong>Config file has: 1500 steps</strong> (<code>trainer.total_epochs=100</code>)</li>
+<li>Main training loop iterations</li>
+<li>One training step = collect rollouts + update policy</li>
+<li>
+<p>Takes ~20 minutes per training step</p>
+</li>
+<li>
+<p><strong>Environment Steps</strong>: Max 200 per rollout</p>
+</li>
+<li>Physical robot control actions in simulation</li>
+<li>
+<p>These are the actual joint movements</p>
+</li>
+<li>
+<p><strong>VLA Inference Steps</strong>: ~8 per rollout</p>
+</li>
+<li>Number of VLA model forward passes</li>
+<li>200 env steps ÷ 25 action_chunks = 8 VLA calls</li>
+</ol>
+<h3 id="actual-performance">Actual Performance<a class="headerlink" href="#actual-performance" title="Permanent link">&para;</a></h3>
+<p>Based on real timing data:
+- <strong>Per Training Step</strong>: ~1220 seconds (~20 minutes)
+  - Rollout: ~1070s (87.8%)
+  - PPO Update: ~145s (11.8%)
+  - Other: ~5s (0.4%)</p>
+<ul>
+<li><strong>Total Training Time</strong>: </li>
+<li>Paper (300 steps): ~4.3 days with 8 GPUs</li>
+<li>Full config (1500 steps): ~21 days with 8 GPUs</li>
+</ul>
+<h3 id="recommendations-priority-order">Recommendations Priority Order<a class="headerlink" href="#recommendations-priority-order" title="Permanent link">&para;</a></h3>
+<p><strong>High Priority</strong> (proven by paper):
+1. <strong>Verify the three key enhancements are working</strong>:
+   - Monitor dynamic sampling retention (~70-80% is healthy)
+   - Check entropy metrics for exploration
+   - Validate temperature=1.6 is being used during rollout</p>
+<ol>
+<li><strong>Monitor learning progress</strong> (paper shows convergence at 300 steps):</li>
+<li>Success rate should improve steadily</li>
+<li>Policy should discover new strategies (like "pushcut" phenomenon)</li>
+<li>Advantages should center around 0 (GRPO working correctly)</li>
+</ol>
+<p><strong>Medium Priority</strong> (system optimization):
+3. Use GPU-accelerated simulators (Isaac Gym) - <strong>10-100× speedup</strong>
+4. Optimize environment initialization
+5. Improve threading/parallelism in rollout</p>
+<p><strong>Low Priority</strong> (experimental):
+6. Reduce action chunk length (25 → 10-15) - may hurt performance
+7. Pipeline CPU/GPU work - complex engineering effort
+8. Separate resource pools - may not help much with current bottleneck</p>
+<p><strong>Key Takeaway</strong>: The paper's three enhancements already address the main algorithmic challenges. The remaining bottleneck is <strong>CPU physics simulation speed</strong>, which is best solved by switching to GPU-accelerated simulators, not by tuning the RL algorithm further.</p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:47 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:47 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../../extras/lang-switcher.js"></script>
+      
+        <script src="../../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

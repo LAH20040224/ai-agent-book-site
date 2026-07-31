@@ -1,0 +1,2432 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/chapter10/staged-system-prompt/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Index - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="Index">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/chapter10/staged-system-prompt/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Index">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#english" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Index
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#english" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        English
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-10-1-staged-system-prompt-based-on-execution-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiment 10-1: Staged System Prompt Based on Execution Phase
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experiment 10-1: Staged System Prompt Based on Execution Phase">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#experiment-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiment Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#canonical-real-provider-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical real-provider result
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to Run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#offline-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Offline Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-demo-illustrates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the Demo Illustrates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expected-output-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Output Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#will-a-stronger-model-make-this-phase-scaffolding-redundant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Will a stronger model make this "phase scaffolding" redundant?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        中文
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-1staged-system-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实验 10-1：根据执行阶段决定系统提示词（Staged System Prompt）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="实验 10-1：根据执行阶段决定系统提示词（Staged System Prompt）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实验目的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        正式真实 API 结果
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        架构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        如何运行
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        离线验证
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        演示说明了什么问题
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        预期输出示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        更强的模型会让这套「阶段脚手架」变得多余吗？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        局限
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/chapter10/staged-system-prompt/README.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/chapter10/staged-system-prompt/README.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h2 id="english">English<a class="headerlink" href="#english" title="Permanent link">&para;</a></h2>
+<h1 id="experiment-10-1-staged-system-prompt-based-on-execution-phase">Experiment 10-1: Staged System Prompt Based on Execution Phase<a class="headerlink" href="#experiment-10-1-staged-system-prompt-based-on-execution-phase" title="Permanent link">&para;</a></h1>
+<p><em>Hands-on code accompanying "Understanding AI Agents"</em></p>
+<h2 id="experiment-objective">Experiment Objective<a class="headerlink" href="#experiment-objective" title="Permanent link">&para;</a></h2>
+<p>The same Coding Agent loads <strong>different system prompts + different tool sets</strong> at different <strong>execution phases</strong> of a task,
+thereby playing different roles and exhibiting different behavior patterns within the same conversation; while ensuring <strong>conversation history and task state are continuously shared across phases</strong>.</p>
+<p>This experiment uses a single "Coding Agent" to chain together three phases:</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Role</th>
+<th>System Prompt Emphasis</th>
+<th>Supporting Tool Set</th>
+<th>Tool Triggering Next Phase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 Requirements Clarification</td>
+<td>Requirements Analyst</td>
+<td>Only ask clarifying questions, <strong>do not write code</strong></td>
+<td><code>ask_clarifying_question</code> / <code>save_requirement</code> / <code>complete_requirements_analysis</code></td>
+<td><code>complete_requirements_analysis</code> → Phase 2</td>
+</tr>
+<tr>
+<td>2 Code Implementation</td>
+<td>Software Engineer</td>
+<td>Write high-quality Python based on confirmed requirements</td>
+<td><code>write_file</code> / <code>read_file</code> / <code>execute_code</code> / <code>submit_for_review</code></td>
+<td><code>submit_for_review</code> → Phase 3</td>
+</tr>
+<tr>
+<td>3 Code Review</td>
+<td>Code Reviewer</td>
+<td>Critically evaluate quality</td>
+<td><code>run_linter</code> / <code>run_tests</code> / <code>analyze_complexity</code> / <code>request_revision</code> / <code>approve_code</code></td>
+<td><code>request_revision</code> → <strong>fallback to Phase 2</strong>; <code>approve_code</code> → Complete</td>
+</tr>
+</tbody>
+</table>
+<h2 id="canonical-real-provider-result">Canonical real-provider result<a class="headerlink" href="#canonical-real-provider-result" title="Permanent link">&para;</a></h2>
+<p>The strict Kimi K3 campaign is complete: <a href="runs/exp10-1-kimi-k3-20260730-v3/manifest.json">the v3 manifest</a>
+records 30 real Moonshot calls, all three roles, the exact transition sequence
+requirements → implementation → review → implementation → review → approval,
+one controlled source-level lint defect, its real rejection and repair, clean final
+linter/smoke/complexity results, 171,001 total tokens, and all 13 acceptance checks
+passing. All seven runtime source hashes, 30 raw provider-receipt hashes, and the
+final workspace-file hash currently recompute with zero mismatches; credentials
+are absent from the retained receipts. The incomplete v1/v2 attempts remain as
+negative provenance and are not acceptance evidence.</p>
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>demo.py                Entry point: run all three phases with one command (task = &quot;write a Python script to organize the Downloads folder&quot;)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>agent.py               StagedAgent: phase state machine + tool call loop + cross-phase shared context + execution log
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>tools.py               Schemas and real implementations for three tool sets (virtual workspace / real code execution / linter / complexity analysis)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>simulated_user.py      Simulated user: automatically answers the Agent&#39;s questions during requirements clarification (predefined answers), enabling unattended operation
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>config.py              Read API Key / base_url / model from environment variables
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>tests/                 Offline regressions for tool argument coercion and stage transitions
+</code></pre></div>
+<p>Key design points:</p>
+<ul>
+<li><strong>Shared Context</strong>: <code>StagedAgent.history</code> is a message list that persists throughout. When switching phases, <strong>only the system prompt is replaced, only the tools passed to the model are swapped</strong>; the history (requirements, code, review comments) is fully retained. Each request is <code>[system(current phase)] + history</code>.</li>
+<li><strong>Phase transitions triggered by tool calls</strong>: The main loop detects when "signal tools" like <code>complete_requirements_analysis</code> / <code>submit_for_review</code> / <code>request_revision</code> / <code>approve_code</code> are called, injects a cross-phase "handover" message, and switches the phase.</li>
+<li><strong>Fallback mechanism</strong>: When issues are found during the review phase, <code>request_revision(issues)</code> is called, sending the issue list back to the implementation phase; a <code>max_revisions</code> safety valve prevents infinite loops from burning tokens.</li>
+<li><strong>Real execution</strong>: <code>execute_code</code> / <code>run_tests</code> write code to a temporary directory and run it in a real subprocess; <code>run_linter</code> / <code>analyze_complexity</code> perform real static analysis based on <code>ast</code>, not fake returns.</li>
+</ul>
+<h2 id="how-to-run">How to Run<a class="headerlink" href="#how-to-run" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From the repository root: use the shared Chapter 10 environment</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.12<span class="w"> </span>--extra<span class="w"> </span>ch10
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Activate it before changing directories:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># macOS/Linux:</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Windows PowerShell: .\.venv\Scripts\Activate.ps1</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Windows cmd: .venv\Scripts\activate.bat</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># pip fallback when uv is not installed:</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># python -m pip install -e &quot;.[ch10]&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nb">cd</span><span class="w"> </span>chapter10/staged-system-prompt
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Single-project compatibility path, still supported during migration:</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># python -m pip install -r requirements.txt</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Configuration (choose one)</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>your-openai-api-key<span class="w">           </span><span class="c1"># Option A: direct export</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>cp<span class="w"> </span>env.example<span class="w"> </span>.env<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>vi<span class="w"> </span>.env<span class="w">         </span><span class="c1"># Option B: write to .env</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>python<span class="w"> </span>demo.py
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># View offline three-phase configuration (roles / system prompts / tool sets / transition signals), no API Key required</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--list-stages
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c1"># View optional parameters (does not affect default behavior)</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--help
+</code></pre></div>
+<p>Optional command-line arguments (default values are identical to running without arguments):</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Default Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--task</code></td>
+<td>Organize Downloads folder task</td>
+<td>Override the user task given to the Agent</td>
+</tr>
+<tr>
+<td><code>--start-stage</code></td>
+<td><code>requirements</code></td>
+<td>Which phase to start from. Choosing <code>implementation</code> will pre-populate confirmed requirements equivalent to the output of the requirements clarification phase, starting directly from the implementation phase. Useful for debugging the latter two phases independently (<code>review</code> depends on code from the implementation phase and cannot be a starting point)</td>
+</tr>
+<tr>
+<td><code>--interactive</code></td>
+<td>Off</td>
+<td>During the requirements clarification phase, a real person answers the Agent's questions from standard input (default uses the simulated user from <code>simulated_user.py</code> for automatic answers, enabling unattended full flow)</td>
+</tr>
+<tr>
+<td><code>--max-revisions</code></td>
+<td><code>3</code></td>
+<td>Maximum number of fallbacks allowed during the review phase; exceeding this forces the demo to end</td>
+</tr>
+<tr>
+<td><code>--model</code></td>
+<td>Environment variable <code>OPENAI_MODEL</code></td>
+<td>Override the model name used</td>
+</tr>
+<tr>
+<td><code>--list-stages</code></td>
+<td>—</td>
+<td>Print the three-phase configuration offline and exit, without calling any API (suitable for understanding the mechanism without a Key)</td>
+</tr>
+</tbody>
+</table>
+<p>Configurable environment variables (see <code>env.example</code>): <code>OPENAI_API_KEY</code>, <code>OPENAI_BASE_URL</code> (default is official),
+<code>OPENAI_MODEL</code> (default <code>gpt-5.6-luna</code>, currently the affordable flagship), <code>OPENAI_TEMPERATURE</code> (default 0.3).
+Can also switch to Kimi / Doubao compatible with the OpenAI protocol.</p>
+<p><strong>Universal fallback</strong>: Prefers using <code>OPENAI_API_KEY</code> to connect directly to OpenAI; if this variable is not set but <code>OPENROUTER_API_KEY</code> is, it automatically switches to OpenRouter and maps the model name to its namespace
+(<code>gpt-5.6-luna</code> → <code>openai/gpt-5.6-luna</code>). Note: The <code>gpt-5.6</code> series requires organization verification for direct OpenAI connection. Simply setting <code>OPENROUTER_API_KEY</code> (without <code>OPENAI_API_KEY</code>) forces the use of OpenRouter, which is more convenient.</p>
+<h2 id="offline-validation">Offline Validation<a class="headerlink" href="#offline-validation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From the repository root; include dev tools for pytest.</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.12<span class="w"> </span>--extra<span class="w"> </span>ch10<span class="w"> </span>--extra<span class="w"> </span>dev
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Windows PowerShell: .\.venv\Scripts\Activate.ps1</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">cd</span><span class="w"> </span>chapter10/staged-system-prompt
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--list-stages
+</code></pre></div>
+<p><code>tests/</code> contains offline regressions for null tool arguments and review-stage transition payloads. They do not require an API key.</p>
+<h2 id="what-the-demo-illustrates">What the Demo Illustrates<a class="headerlink" href="#what-the-demo-illustrates" title="Permanent link">&para;</a></h2>
+<p>A real run (<code>gpt-5.6-luna</code>) will show:</p>
+<ol>
+<li><strong>Requirements Clarification Phase</strong>: The Agent behaves by "continuously asking questions" — proactively inquiring about which file types to process, whether to recurse, whether to keep original names, move or copy, how to determine the target directory, and saves each requirement with <code>save_requirement</code>. It <strong>does not write any code</strong>.</li>
+<li><strong>Code Implementation Phase</strong>: After the prompt switch, the same Agent behaves by "writing code" — producing a Python script with <code>write_file</code>, self-testing with <code>execute_code</code>, and then calling <code>submit_for_review</code>.</li>
+<li><strong>Code Review Phase</strong>: The Agent behaves as a "critical reviewer" — sequentially running <code>run_linter</code> / <code>run_tests</code> / <code>analyze_complexity</code>, discovering real issues (e.g., missing module docstring, smoke test <code>FileNotFoundError</code>), and then calling <code>request_revision</code> to <strong>fall back to the implementation phase</strong>.</li>
+<li>The implementation phase <strong>rewrites and fixes</strong> the code based on the issue list, then submits again; after the review passes, <code>approve_code</code> is called, and the task is complete.</li>
+</ol>
+<p>In other words: <strong>The prompt + tool set change with the phase, and the behavior pattern changes noticeably accordingly</strong>, while the task state (requirements, code, review comments) remains continuously shared across phases. At the end of the run, a "behavior distribution" statistic for each role is printed, visually comparing the behavioral differences across the three phases.</p>
+<h2 id="expected-output-example">Expected Output Example<a class="headerlink" href="#expected-output-example" title="Permanent link">&para;</a></h2>
+<p>The following is an excerpt from a real run (<code>python demo.py</code>, <code>gpt-5.6-luna</code>, routed via OpenRouter), fully demonstrating the behavior switch across three phases
+(In this run, the requirements clarification phase repeatedly asked about case-sensitivity rules, triggered 1 review fallback, and ultimately hit the total step limit
+safety valve to end — a common outcome in real runs, see "Limitations" below):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Model: openai/gpt-5.6-luna  | base_url: https://openrouter.ai/api/v1
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>======================================================================
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Entering phase: requirements  |  Role: Requirements Analyst  |  Available tools: [&#39;ask_clarifying_question&#39;, &#39;save_requirement&#39;, &#39;complete_requirements_analysis&#39;]
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>======================================================================
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>[Requirements Analyst] Question: What file types do you want the script to organize? For example, organize all common files by extension, or only handle specific types like images, documents, videos, etc.?
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>[Requirements Analyst] Simulated user answer: Categorize by file type: Images (jpg/png/gif), Documents (pdf/doc/txt), Audio (mp3/wav), Video (mp4/mov), Archives (zip/rar), and put the rest into Others.
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>[Requirements Analyst] Recorded requirement: file_categories = Categorize by file type: Images jpg/png/gif; Documents pdf/doc/txt; Audio mp3/wav; Video mp4/mov; Archives zip/rar; other extensions go into Others.
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>[Requirements Analyst] Question: Do you need to recursively process subdirectories within the Downloads folder, or only process files in the root of the Downloads folder?
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>[Requirements Analyst] Recorded requirement: recursive = Do not recursively process subdirectories, only organize files at the current level of the Downloads folder, ignoring existing subfolders.
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>[Requirements Analyst] Recorded requirement: operation = Move files (move), do not keep the original location.
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>[Requirements Analyst] Recorded requirement: name_conflicts = Keep original filenames; if a file with the same name exists in the target directory, add _1, _2, etc., before the extension to avoid overwriting.
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>... (The simulated user only gives a fallback answer to &quot;whether extensions are case-sensitive,&quot; so the Agent repeatedly asks about the same point, asking a total of 19 questions)
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>[Requirements Analyst] Completed requirements analysis -&gt; Handing over to implementation: Confirmed: Script categorizes by specified extensions and puts other files into Others; only processes the current level of the download directory; default path is ~/Downloads, can also be specified via command-line argument; moves files instead of copying; extensions are case-insensitive; keeps original filenames, appends _1, _2, etc., to avoid overwriting in case of conflicts.
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>======================================================================
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Entering phase: implementation  |  Role: Software Engineer  |  Available tools: [&#39;write_file&#39;, &#39;read_file&#39;, &#39;execute_code&#39;, &#39;submit_for_review&#39;]
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>======================================================================
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>[Software Engineer] Wrote file: Wrote file organize_downloads.py (4312 characters, 135 lines)
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>[Software Engineer] Executed code for self-test: from pathlib import Path from tempfile import TemporaryDirectory import organize ...
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>[Software Engineer] Submitted for review -&gt; Handing over to review: organize_downloads.py
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>======================================================================
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>Entering phase: review  |  Role: Code Reviewer  |  Available tools: [&#39;run_linter&#39;, &#39;run_tests&#39;, &#39;analyze_complexity&#39;, &#39;request_revision&#39;, &#39;approve_code&#39;]
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>======================================================================
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>[Code Reviewer] run_linter: [linter] Passed: No issues found.
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>[Code Reviewer] run_tests: [tests] Smoke test result: FAIL
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>[Code Reviewer] analyze_complexity: [complexity] Number of functions=6, Branch/loop statements=16, Max nesting depth=3
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>[Code Reviewer] Review not passed -&gt; Falling back to implementation: Fallback #1: [&#39;Smoke test failed: `from __future__ import annotations` not at the beginning of the file triggers SyntaxError. Please remove this future import or use a compatible approach.&#39;]
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>======================================================================
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>Entering phase: implementation  |  Role: Software Engineer  |  Available tools: [&#39;write_file&#39;, &#39;read_file&#39;, &#39;execute_code&#39;, &#39;submit_for_review&#39;]
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>======================================================================
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>[Software Engineer] Wrote file: Wrote file organize_downloads.py (4218 characters, 133 lines)
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>[Software Engineer] Submitted for review -&gt; Handing over to review: organize_downloads.py
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>... (review phase repeats, looping until `approve_code` or reaching step/rollback limit)
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>======================================================================
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>Execution Summary
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>======================================================================
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>[Requirements Analyst] Behavior distribution: questions×19, simulated user responses×19, recorded requirements×7, completed requirements analysis -&gt; handoff to implementation×1
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>[Software Engineer] Behavior distribution: wrote files×2, executed code self-tests×4, read files×1, submitted review -&gt; handoff to review×2
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>[Code Reviewer] Behavior distribution: run_linter×1, run_tests×1, analyze_complexity×1, review failed -&gt; rollback to implementation×1
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>Confirmed requirements count: 7
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>Output files: [&#39;organize_downloads.py&#39;]
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>Review rollback count: 1
+</code></pre></div>
+<p>The three "behavior distribution" sections clearly show the different behavior patterns of the same Agent under three different prompts: the Requirements Analyst only asks and never writes, the Software Engineer only writes and never reviews, and the Code Reviewer only reviews and never writes.</p>
+<h2 id="will-a-stronger-model-make-this-phase-scaffolding-redundant">Will a stronger model make this "phase scaffolding" redundant?<a class="headerlink" href="#will-a-stronger-model-make-this-phase-scaffolding-redundant" title="Permanent link">&para;</a></h2>
+<p>A common intuition is that scaffolding (here, a state machine that switches system prompts and tool sets by phase) is just a crutch for weaker models. With a stronger model, it would naturally self-organize into "clarify first, then implement, then review," making the scaffolding obsolete. Using the same code, the same task, the same simulated user, and running <code>gpt-4o-mini</code> and <code>gpt-5.6-luna</code> locally for a real comparison, the conclusion is negative:</p>
+<table>
+<thead>
+<tr>
+<th>Observation</th>
+<th><code>gpt-4o-mini</code> (weaker)</th>
+<th><code>gpt-5.6-luna</code> (stronger reasoning model)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Number of requirements clarification questions</td>
+<td>5 (one question per point, then moves on)</td>
+<td><strong>21</strong> (repeatedly harping on the edge case of "how to classify uppercase extensions / files without extensions")</td>
+</tr>
+<tr>
+<td>Completed all three phases and obtained <code>approve_code</code></td>
+<td><strong>Yes</strong> (passed review after 1 rollback, task completed)</td>
+<td><strong>No</strong> (hit the 40-step total step safety valve and was forcibly terminated)</td>
+</tr>
+<tr>
+<td>Review rollback count</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>(Run commands: <code>MODEL=gpt-4o-mini python demo.py --model gpt-4o-mini</code>; <code>python demo.py --model gpt-5.6-luna</code>. The latter was routed via OpenRouter as <code>openai/gpt-5.6-luna</code>.)</p>
+<p>Two key points:</p>
+<ol>
+<li><strong>This scaffolding is not a "crutch that can be turned off," but a structural constraint.</strong> Each phase only exposes the tools of that phase to the model (the requirements phase has no <code>write_file</code>, the implementation phase has no <code>approve_code</code>). Role separation is enforced by <strong>tool gating</strong>, applied equally to both strong and weak models—no model can "self-organize" to skip or merge phases. For this very reason, <strong>there is no baseline</strong> in this experiment where scaffolding is turned off and the strong model is allowed to freely improvise, for a strict comparison.</li>
+<li><strong>Switching to a stronger model did not make the scaffolding redundant; instead, it became more dependent on its safety valves.</strong> <code>gpt-5.6-luna</code> is more "persistent," insisting on asking about an edge case that the simulated user cannot answer, and cleverly rephrasing the question each time, thereby bypassing the <code>SimulatedUser</code>'s anti-repetition mechanism of "asking the same question twice prompts it to move to the next phase." As a result, it idled for over twenty steps in the requirements phase, burning through the 40-step budget—ultimately, the <code>max_total_steps</code> scaffolding safety valve had to catch it. The weaker <code>gpt-4o-mini</code>, on the other hand, because it "asked a few broad questions and then stopped," completed the entire process smoothly.</li>
+</ol>
+<p><strong>Honest boundary</strong>: The fact that <code>gpt-5.6-luna</code> did not finish this time is largely due to the <code>SimulatedUser</code> with preset answers (see "Limitations")—it couldn't answer the edge-case questions the strong model pursued, which triggered the idle loop. With a real human answering (<code>--interactive</code>) or a smarter simulated user, the strong model would likely converge much faster. Therefore, this data <strong>cannot</strong> be used to conclude that "a stronger model performs worse on this task." It only supports a narrower, but more useful, conclusion for the reader: <strong>Phase-based prompts + tool gating is a structural scaffolding. The role separation and safety valves it provides work equally for both strong and weak models and will not automatically become ineffective or redundant as models become stronger.</strong></p>
+<h2 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Dependence on the selected model's capabilities</strong>: The default uses the inexpensive flagship <code>gpt-5.6-luna</code> to control demonstration costs. Note that "stronger model = faster convergence" is not always true: more persistent reasoning models are more likely to get stuck in the requirements clarification phase, asking edge-case questions that the preset <code>SimulatedUser</code> cannot answer, leading to idle loops (see the real comparison in the previous section). In such cases, the <code>max_total_steps</code> / <code>max_revisions</code> scaffolding safety valves are more critical for catching failures.</li>
+<li><strong>Single fixed task</strong>: The built-in demo task is "organize the downloads folder." Although a <code>--task</code> parameter has been added to override it, the preset Q&amp;A in <code>simulated_user.py</code> is designed around this specific task scenario. For tasks that are very different, the simulated user may not provide relevant answers.</li>
+<li><strong>Simulated user uses preset answers</strong>: The <code>SimulatedUser</code> matches preset answers based on keywords; it does not truly understand semantics. When the Agent asks questions outside the preset script, it degrades to a fallback response or urges the Agent to move to the next phase.</li>
+<li><strong>Real LLMs have randomness</strong>: Even with <code>temperature=0.3</code>, the order of questions, implementation details, whether the review passes, and the number of rollbacks can vary between runs. It is also possible, as in the example above, to hit the <code>max_revisions</code> safety valve and be forcibly terminated instead of obtaining <code>approve_code</code>.</li>
+</ul>
+<hr />
+<h2 id="_1">中文<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h1 id="10-1staged-system-prompt">实验 10-1：根据执行阶段决定系统提示词（Staged System Prompt）<a class="headerlink" href="#10-1staged-system-prompt" title="Permanent link">&para;</a></h1>
+<p>《深入理解 AI Agent》配套实验代码。</p>
+<h2 id="_2">实验目的<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>同一个 Coding Agent，在任务的不同<strong>执行阶段</strong>加载<strong>不同的系统提示词 + 不同的工具集</strong>，
+从而在同一段对话里扮演不同角色、表现出不同的行为模式；同时让<strong>对话历史与任务状态在阶段间连续共享</strong>。</p>
+<p>本实验用一个「Coding Agent」串起三个阶段：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>角色</th>
+<th>系统提示词强调</th>
+<th>配套工具集</th>
+<th>触发进入下一阶段的工具</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 需求澄清</td>
+<td>需求分析师</td>
+<td>只提问确认、<strong>不写代码</strong></td>
+<td><code>ask_clarifying_question</code> / <code>save_requirement</code> / <code>complete_requirements_analysis</code></td>
+<td><code>complete_requirements_analysis</code> → 阶段2</td>
+</tr>
+<tr>
+<td>2 代码实现</td>
+<td>软件工程师</td>
+<td>按已确认需求写高质量 Python</td>
+<td><code>write_file</code> / <code>read_file</code> / <code>execute_code</code> / <code>submit_for_review</code></td>
+<td><code>submit_for_review</code> → 阶段3</td>
+</tr>
+<tr>
+<td>3 代码审查</td>
+<td>代码审查员</td>
+<td>批判性把关质量</td>
+<td><code>run_linter</code> / <code>run_tests</code> / <code>analyze_complexity</code> / <code>request_revision</code> / <code>approve_code</code></td>
+<td><code>request_revision</code> → <strong>回退阶段2</strong>；<code>approve_code</code> → 完成</td>
+</tr>
+</tbody>
+</table>
+<h2 id="api">正式真实 API 结果<a class="headerlink" href="#api" title="Permanent link">&para;</a></h2>
+<p>严格 Kimi K3 campaign 已完整通过：<a href="runs/exp10-1-kimi-k3-20260730-v3/manifest.json">v3 manifest</a>
+保留 30 次真实 Moonshot 调用、三个角色、完整的“需求 → 实现 → 审查 → 回退实现 →
+再次审查 → 批准”转换链，以及一次受控源码 lint 缺陷的真实拒绝和修复。最终 linter、
+冒烟测试、复杂度检查均通过，共使用 171,001 token，13 项验收门禁全真。当前复算
+7 个运行时源码 hash、30 个原始 provider 回执 hash 和最终工作区文件 hash 均无偏差，
+回执不含凭据。v1/v2 的不完整尝试继续作为负面 provenance 保留，不计入验收。</p>
+<h2 id="_3">架构<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>demo.py                入口：一条命令跑通三阶段（任务 = “写一个整理下载文件夹的 Python 脚本”）
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>agent.py               StagedAgent：阶段状态机 + 工具调用循环 + 跨阶段共享上下文 + 执行日志
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>tools.py               三套工具的 Schema 与真实实现（虚拟工作区 / 真实执行代码 / linter / 复杂度分析）
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>simulated_user.py      模拟用户：需求澄清阶段自动回答 Agent 的提问（预设答案），实现无人值守
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>config.py              从环境变量读取 API Key / base_url / model
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>tests/                 工具参数归一化与阶段转换载荷的离线回归测试
+</code></pre></div>
+<p>关键设计：</p>
+<ul>
+<li><strong>共享上下文</strong>：<code>StagedAgent.history</code> 是一条贯穿始终的消息列表，切换阶段时<strong>只替换 system 提示词、只切换传给模型的 tools</strong>，历史消息（需求、代码、审查意见）全部保留。每次请求都是 <code>[system(当前阶段)] + history</code>。</li>
+<li><strong>阶段转换由工具调用触发</strong>：主循环识别到 <code>complete_requirements_analysis</code> / <code>submit_for_review</code> / <code>request_revision</code> / <code>approve_code</code> 这些「信号工具」被调用时，注入一条跨阶段「交接」消息并切换阶段。</li>
+<li><strong>回退机制</strong>：审查阶段发现问题时调用 <code>request_revision(issues)</code>，把问题清单退回实现阶段；设有 <code>max_revisions</code> 安全阀，避免无限循环烧 token。</li>
+<li><strong>真实执行</strong>：<code>execute_code</code> / <code>run_tests</code> 会把代码写入临时目录并用子进程真实运行；<code>run_linter</code> / <code>analyze_complexity</code> 基于 <code>ast</code> 做真实静态分析，不是假返回。</li>
+</ul>
+<h2 id="_4">如何运行<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 从仓库根目录开始：使用共享的第 10 章环境</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.12<span class="w"> </span>--extra<span class="w"> </span>ch10
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># 切换目录前先激活环境：</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># macOS/Linux:</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Windows PowerShell: .\.venv\Scripts\Activate.ps1</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Windows cmd: .venv\Scripts\activate.bat</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># 未安装 uv 时可用 pip 兜底：</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># python -m pip install -e &quot;.[ch10]&quot;</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="nb">cd</span><span class="w"> </span>chapter10/staged-system-prompt
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># 迁移期间仍支持单项目兼容路径：</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># python -m pip install -r requirements.txt</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># 配置（二选一）</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>your-openai-api-key<span class="w">           </span><span class="c1"># 方式 A：直接 export</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>cp<span class="w"> </span>env.example<span class="w"> </span>.env<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>vi<span class="w"> </span>.env<span class="w">         </span><span class="c1"># 方式 B：写到 .env</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>python<span class="w"> </span>demo.py
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="c1"># 离线查看三阶段配置（角色 / 系统提示词 / 工具集 / 转换信号），无需 API Key</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--list-stages
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="c1"># 查看可选参数（不影响默认行为）</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--help
+</code></pre></div>
+<p>可选命令行参数（默认值与不加参数完全一致）：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--task</code></td>
+<td>整理下载文件夹的任务</td>
+<td>覆盖交给 Agent 的用户任务</td>
+</tr>
+<tr>
+<td><code>--start-stage</code></td>
+<td><code>requirements</code></td>
+<td>从哪个阶段开始。选 <code>implementation</code> 会预置一份等价于需求澄清产物的已确认需求、直接从实现阶段起步，便于单独调试后两个阶段（<code>review</code> 依赖实现阶段的代码，不能作为起点）</td>
+</tr>
+<tr>
+<td><code>--interactive</code></td>
+<td>关</td>
+<td>需求澄清阶段改由真人从标准输入回答 Agent 的提问（默认用 <code>simulated_user.py</code> 的模拟用户自动回答，可无人值守跑通全流程）</td>
+</tr>
+<tr>
+<td><code>--max-revisions</code></td>
+<td><code>3</code></td>
+<td>审查阶段允许的最大回退次数，超过则强制结束演示</td>
+</tr>
+<tr>
+<td><code>--model</code></td>
+<td>环境变量 <code>OPENAI_MODEL</code></td>
+<td>覆盖使用的模型名</td>
+</tr>
+<tr>
+<td><code>--list-stages</code></td>
+<td>—</td>
+<td>离线打印三阶段配置后退出，不调用任何 API（适合无 Key 时先看清机制）</td>
+</tr>
+</tbody>
+</table>
+<p>可配环境变量（见 <code>env.example</code>）：<code>OPENAI_API_KEY</code>、<code>OPENAI_BASE_URL</code>（默认官方）、
+<code>OPENAI_MODEL</code>（默认 <code>gpt-5.6-luna</code>，当前便宜旗舰）、<code>OPENAI_TEMPERATURE</code>（默认 0.3）。
+也可切到兼容 OpenAI 协议的 Kimi / Doubao。</p>
+<p><strong>通用回退</strong>：优先用 <code>OPENAI_API_KEY</code> 直连 OpenAI；若未设置该变量但设了
+<code>OPENROUTER_API_KEY</code>，则自动改走 OpenRouter，并把模型名映射到其命名空间
+（<code>gpt-5.6-luna</code> → <code>openai/gpt-5.6-luna</code>）。提示：<code>gpt-5.6</code> 系列直连 OpenAI 需组织验证，
+只填 <code>OPENROUTER_API_KEY</code>（不填 <code>OPENAI_API_KEY</code>）即可强制走 OpenRouter，更省事。</p>
+<h2 id="_5">离线验证<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 从仓库根目录开始；pytest 需要 dev 依赖。</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.12<span class="w"> </span>--extra<span class="w"> </span>ch10<span class="w"> </span>--extra<span class="w"> </span>dev
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Windows PowerShell: .\.venv\Scripts\Activate.ps1</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">cd</span><span class="w"> </span>chapter10/staged-system-prompt
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--list-stages
+</code></pre></div>
+<p><code>tests/</code> 包含 <code>null</code> 工具参数和审查阶段转换载荷的离线回归测试，无需 API Key。</p>
+<h2 id="_6">演示说明了什么问题<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<p>一次真实运行（<code>gpt-5.6-luna</code>）会看到：</p>
+<ol>
+<li><strong>需求澄清阶段</strong>：Agent 表现为「不断提问」——主动追问处理哪些文件类型、是否递归、是否保留原名、移动还是复制、目标目录怎么定，并逐条 <code>save_requirement</code>。它<strong>完全不写代码</strong>。</li>
+<li><strong>代码实现阶段</strong>：同一个 Agent 换了提示词后表现为「写代码」——<code>write_file</code> 产出 Python 脚本，<code>execute_code</code> 自测，然后 <code>submit_for_review</code>。</li>
+<li><strong>代码审查阶段</strong>：Agent 表现为「批判审查」——依次跑 <code>run_linter</code> / <code>run_tests</code> / <code>analyze_complexity</code>，发现真实问题（如缺少模块 docstring、冒烟测试 <code>FileNotFoundError</code>）后 <code>request_revision</code> <strong>退回实现阶段</strong>。</li>
+<li>实现阶段据问题清单<strong>重写并修复</strong>，再次提交；审查通过后 <code>approve_code</code>，任务完成。</li>
+</ol>
+<p>也就是说：<strong>提示词 + 工具集随阶段切换，行为模式随之明显不同</strong>，而任务状态（需求、代码、审查意见）在阶段间始终连续共享。运行结束时会打印每个角色的「行为分布」统计，直观对比三个阶段的行为差异。</p>
+<h2 id="_7">预期输出示例<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<p>以下是一次真实运行（<code>python demo.py</code>，<code>gpt-5.6-luna</code>，经 OpenRouter 路由）的节选，完整展示三阶段的行为切换
+（本次运行需求澄清阶段反复追问了大小写规则、触发了 1 次审查回退，最终撞到总步数上限
+安全阀结束，也是真实运行中常见的一种结局，详见下方「局限」）：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>模型：openai/gpt-5.6-luna  | base_url：https://openrouter.ai/api/v1
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>======================================================================
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>进入阶段：requirements  |  角色：需求分析师  |  可用工具：[&#39;ask_clarifying_question&#39;, &#39;save_requirement&#39;, &#39;complete_requirements_analysis&#39;]
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>======================================================================
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>[需求分析师] 提问: 你希望脚本整理哪些文件类型？例如按扩展名整理所有常见文件，还是只处理图片、文档、视频等指定类型？
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>[需求分析师] 模拟用户回答: 按文件类型分类：图片(jpg/png/gif)、文档(pdf/doc/txt)、音频(mp3/wav)、视频(mp4/mov)、压缩包(zip/rar)，其余归到 Others。
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>[需求分析师] 记录需求: file_categories = 按文件类型分类：图片 jpg/png/gif；文档 pdf/doc/txt；音频 mp3/wav；视频 mp4/mov；压缩包 zip/rar；其他扩展名归入 Others。
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>[需求分析师] 提问: 整理时是否需要递归处理下载文件夹的子目录，还是只处理下载文件夹根目录中的文件？
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>[需求分析师] 记录需求: recursive = 不递归处理子目录，只整理下载文件夹当前层级的文件，忽略已有子文件夹。
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>[需求分析师] 记录需求: operation = 移动文件（move），不保留原位置的文件。
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>[需求分析师] 记录需求: name_conflicts = 保留原文件名；目标目录存在同名文件时，在扩展名前添加 _1、_2 等序号，避免覆盖。
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>...（模拟用户对「扩展名是否区分大小写」只会给出兜底回答，Agent 因此反复追问同一点，共提问 19 次）
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>[需求分析师] 完成需求分析 -&gt; 转交实现: 已确认：脚本按指定扩展名分类并将其他文件归入 Others；仅处理下载目录当前层级；默认路径为 ~/Downloads、也可通过命令行参数指定；移动文件而非复制；扩展名不区分大小写；保留原文件名，冲突时追加 _1、_2 等避免覆盖。
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>======================================================================
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>进入阶段：implementation  |  角色：软件工程师  |  可用工具：[&#39;write_file&#39;, &#39;read_file&#39;, &#39;execute_code&#39;, &#39;submit_for_review&#39;]
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>======================================================================
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>[软件工程师] 写文件: 已写入文件 organize_downloads.py（4312 字符，135 行）
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>[软件工程师] 执行代码自测: from pathlib import Path from tempfile import TemporaryDirectory import organize ...
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>[软件工程师] 提交审查 -&gt; 转交审查: organize_downloads.py
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>======================================================================
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>进入阶段：review  |  角色：代码审查员  |  可用工具：[&#39;run_linter&#39;, &#39;run_tests&#39;, &#39;analyze_complexity&#39;, &#39;request_revision&#39;, &#39;approve_code&#39;]
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>======================================================================
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>[代码审查员] run_linter: [linter] 通过：未发现问题。
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>[代码审查员] run_tests: [tests] 冒烟测试结果：FAIL
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>[代码审查员] analyze_complexity: [complexity] 函数数量=6，分支/循环语句=16，最大嵌套深度=3
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>[代码审查员] 审查不通过 -&gt; 回退实现: 第1次退回：[&#39;冒烟测试失败：`from __future__ import annotations` 不在文件开头触发 SyntaxError，请移除该 future import 或改用兼容写法。&#39;]
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>======================================================================
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>进入阶段：implementation  |  角色：软件工程师  |  可用工具：[&#39;write_file&#39;, &#39;read_file&#39;, &#39;execute_code&#39;, &#39;submit_for_review&#39;]
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>======================================================================
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>[软件工程师] 写文件: 已写入文件 organize_downloads.py（4218 字符，133 行）
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>[软件工程师] 提交审查 -&gt; 转交审查: organize_downloads.py
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>...（审查阶段再次检查，如此循环，直到 approve_code 或达到步数/回退上限）
+<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>
+<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>======================================================================
+<a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a>执行小结
+<a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a>======================================================================
+<a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a>[需求分析师] 行为分布：提问×19, 模拟用户回答×19, 记录需求×7, 完成需求分析 -&gt; 转交实现×1
+<a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a>[软件工程师] 行为分布：写文件×2, 执行代码自测×4, 读文件×1, 提交审查 -&gt; 转交审查×2
+<a id="__codelineno-7-44" name="__codelineno-7-44" href="#__codelineno-7-44"></a>[代码审查员] 行为分布：run_linter×1, run_tests×1, analyze_complexity×1, 审查不通过 -&gt; 回退实现×1
+<a id="__codelineno-7-45" name="__codelineno-7-45" href="#__codelineno-7-45"></a>
+<a id="__codelineno-7-46" name="__codelineno-7-46" href="#__codelineno-7-46"></a>已确认需求条数：7
+<a id="__codelineno-7-47" name="__codelineno-7-47" href="#__codelineno-7-47"></a>产出文件：[&#39;organize_downloads.py&#39;]
+<a id="__codelineno-7-48" name="__codelineno-7-48" href="#__codelineno-7-48"></a>审查回退次数：1
+</code></pre></div>
+<p>三段「行为分布」清楚对照出同一个 Agent 在三种提示词下的不同行为模式：需求分析师只问不写，
+软件工程师只写不审，代码审查员只查不写。</p>
+<h2 id="_8">更强的模型会让这套「阶段脚手架」变得多余吗？<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+<p>一个常见直觉是：脚手架（这里指「按阶段切换系统提示词 + 工具集」的状态机）只是给弱模型用的拐杖，
+换上更强的模型，它自然会「先澄清、再实现、后审查」地自我组织，脚手架随之失效。
+用同一套代码、同一个任务、同一个模拟用户，本地各<strong>真实</strong>跑一次 <code>gpt-4o-mini</code> 与 <code>gpt-5.6-luna</code> 对照，
+结论是否定的：</p>
+<table>
+<thead>
+<tr>
+<th>观察项</th>
+<th><code>gpt-4o-mini</code>（较弱）</th>
+<th><code>gpt-5.6-luna</code>（较强推理模型）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>需求澄清提问次数</td>
+<td>5（一问一点，问完即走）</td>
+<td><strong>21</strong>（反复纠缠「大写扩展名 / 无扩展名文件如何归类」这一个边角情形）</td>
+</tr>
+<tr>
+<td>是否跑完三阶段拿到 <code>approve_code</code></td>
+<td><strong>是</strong>（1 次回退后审查通过、任务完成）</td>
+<td><strong>否</strong>（撞到 40 步总步数安全阀被强制结束）</td>
+</tr>
+<tr>
+<td>审查回退次数</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>（运行命令：<code>MODEL=gpt-4o-mini python demo.py --model gpt-4o-mini</code>；<code>python demo.py --model gpt-5.6-luna</code>。
+后者经 OpenRouter 路由为 <code>openai/gpt-5.6-luna</code>。）</p>
+<p>要点有两个：</p>
+<ol>
+<li><strong>这套脚手架不是「可以关掉的拐杖」，而是结构性约束。</strong> 每个阶段只把本阶段的工具暴露给模型
+   （需求阶段根本没有 <code>write_file</code>，实现阶段根本没有 <code>approve_code</code>），角色分离是被<strong>工具门控</strong>强制出来的，
+   对强弱模型一视同仁——没有哪个模型能「自我组织」跳过或合并阶段。也正因如此，本实验里<strong>并不存在</strong>
+   一个「关掉脚手架、让强模型自由发挥」的基线可供严格对照。</li>
+<li><strong>换上更强的模型并没有让脚手架变多余，反而更依赖它的安全阀。</strong> <code>gpt-5.6-luna</code> 更「较真」，
+   坚持把一个模拟用户答不上来的边角规则问到底，而且聪明到每次都换一种问法，
+   恰好绕开了 <code>SimulatedUser</code>「同一问题问两次就催它进入下一阶段」的防重复机制，
+   于是在需求阶段空转了二十多步、把 40 步预算烧光——最后是 <code>max_total_steps</code> 这个脚手架安全阀替它兜的底；
+   较弱的 <code>gpt-4o-mini</code> 反而因为「问几个大方向就收手」顺利跑完了全程。</li>
+</ol>
+<p><strong>诚实的边界</strong>：<code>gpt-5.6-luna</code> 这次没跑完，很大程度上是被预设答案的 <code>SimulatedUser</code>（见「局限」）拖累的——
+它答不上强模型追问的边角问题，才诱发了空转；换真人回答（<code>--interactive</code>）或更聪明的模拟用户，
+强模型大概率能更快收敛。所以这组数据<strong>不能</strong>推出「强模型在这个任务上更差」，
+只能支持一个更窄、但对读者更有用的结论：<strong>阶段化提示词 + 工具门控是一种结构性脚手架，
+它带来的角色分离与安全阀对强弱模型同样生效，不会因为模型变强就自动失效或变得多余。</strong></p>
+<h2 id="_9">局限<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>依赖所选模型的能力</strong>：默认用便宜旗舰 <code>gpt-5.6-luna</code> 控制演示成本。注意「更强的模型 = 更快收敛」
+  并不总成立：越较真的推理模型越容易在需求澄清阶段追问预设 <code>SimulatedUser</code> 答不上的边角问题而空转
+  （见上一节的真实对照），此时更依赖 <code>max_total_steps</code> / <code>max_revisions</code> 这两个脚手架安全阀兜底。</li>
+<li><strong>单一固定任务</strong>：内置演示任务是「整理下载文件夹」，虽然新增了 <code>--task</code> 参数可覆盖，
+  但 <code>simulated_user.py</code> 的预设问答是围绕这个任务场景设计的，换成差异很大的任务时模拟用户可能答不上点子上。</li>
+<li><strong>模拟用户是预设答案</strong>：<code>SimulatedUser</code> 按关键词匹配预设回答，不是真正理解语义的用户，
+  遇到 Agent 提出预设脚本之外的问题时会退化为兜底回答或催促进入下一阶段。</li>
+<li><strong>真实 LLM 有随机性</strong>：即使 <code>temperature=0.3</code>，不同次运行的提问顺序、代码实现细节、
+  审查是否通过、回退次数都可能不同；也可能像上面这次示例一样撞到 <code>max_revisions</code> 安全阀
+  强制结束，而不是拿到 <code>approve_code</code>。</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:46 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:46 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

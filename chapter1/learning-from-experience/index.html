@@ -1,0 +1,3263 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/chapter1/learning-from-experience/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Learning from Experience: RL vs LLM In-Context Learning / 从经验中学习：RL 与 LLM 上下文学习对比 - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="Learning from Experience: RL vs LLM In-Context Learning / 从经验中学习：RL 与 LLM 上下文学习对比">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/chapter1/learning-from-experience/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Learning from Experience: RL vs LLM In-Context Learning / 从经验中学习：RL 与 LLM 上下文学习对比">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#learning-from-experience-rl-vs-llm-in-context-learning-rl-llm" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Learning from Experience: RL vs LLM In-Context Learning / 从经验中学习：RL 与 LLM 上下文学习对比
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#english" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        English
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="English">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-insights-being-tested" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Insights Being Tested
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-youll-see" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll See
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Game
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Game">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hidden-mechanics-not-revealed-to-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hidden Mechanics (Not Revealed to Agents)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-kimi-k3-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting up Kimi K3 API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-experiment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the Experiment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Running the Experiment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-demo-see-llm-learning-in-action" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Demo (See LLM Learning in Action)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-interface-experimentpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-Line Interface (experiment.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-learning-only-experiment-7-1-offline-no-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q-Learning Only (Experiment 7-1, offline, no API)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-comparison-rl-vs-llm-experiment-7-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Comparison (RL vs LLM, Experiment 7-2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLM Only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactive-game-play" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive Game Play
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experiment-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiment Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experiment Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#metrics-compared" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metrics Compared
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visualizations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visualizations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expected-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Expected Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-learning-learning-curve-measured-locally-mode-qlearning-rl-episodes-10000-seed-42" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q-Learning learning curve (measured locally, --mode qlearning --rl-episodes 10000 --seed 42)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rl-vs-llm-experiment-7-2-conclusions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RL vs LLM (Experiment 7-2 conclusions)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technical-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Details
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Technical Details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-learning-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q-Learning Agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm-agent-kimi-k3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLM Agent (Kimi K3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extending-the-experiment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extending the Experiment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extending the Experiment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ideas-for-further-research" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ideas for Further Research
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modifying-the-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modifying the Game
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#educational-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Educational Value
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        中文
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="中文">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        概述
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        要验证的关键洞察
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        你会看到什么
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        游戏说明
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="游戏说明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        隐藏机制（不对智能体公开）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        快速开始
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="快速开始">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        安装
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kimi-k3-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        配置 Kimi K3 API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        运行实验
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="运行实验">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        快速演示（观察 LLM 如何学习）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experimentpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        命令行接口（experiment.py）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-learning-7-1-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        仅 Q-Learning（实验 7-1，离线，无需 API）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rl-vs-llm-7-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        完整对比（RL vs LLM，实验 7-2）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        仅 LLM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        交互式试玩
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        验证
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实验结果
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="实验结果">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        对比指标
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        可视化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        预期结果
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="预期结果">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-learning-mode-qlearning-rl-episodes-10000-seed-42" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q-learning 学习曲线（本地实测，--mode qlearning --rl-episodes 10000 --seed 42）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rl-vs-llm-7-2_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RL vs LLM（实验 7-2 的对比结论）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        项目结构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        技术细节
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="技术细节">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-learning-agent_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q-Learning Agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm-agentkimi-k3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLM Agent（Kimi K3）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        扩展实验
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="扩展实验">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        进一步研究思路
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        修改游戏
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        教学价值
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参考文献
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes / 说明
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/chapter1/learning-from-experience/README.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/chapter1/learning-from-experience/README.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="learning-from-experience-rl-vs-llm-in-context-learning-rl-llm">Learning from Experience: RL vs LLM In-Context Learning / 从经验中学习：RL 与 LLM 上下文学习对比<a class="headerlink" href="#learning-from-experience-rl-vs-llm-in-context-learning-rl-llm" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Compares tabular Q-learning with LLM in-context learning on a treasure-hunt game with hidden mechanics (Shunyu Yao, “The Second Half”).<br />
+代码位于第 1 章项目树；对应书中 <strong>实验 7-1 ★（Q-learning 在寻宝游戏中的表现）</strong> 与 <strong>实验 7-2 ★★（传统 RL 与 LLM Agent 的对比研究）</strong>。</p>
+</blockquote>
+<p>← <a href="../">Chapter 1 index / 返回第 1 章目录</a> · 📖 <a href="../../book/chapter7/">Read Chapter 7 / 读第 7 章正文</a>（<a href="../../book-en/chapter7/">EN</a>）</p>
+<hr />
+<h2 id="english">English<a class="headerlink" href="#english" title="Permanent link">&para;</a></h2>
+<h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
+<p>This experiment compares traditional Reinforcement Learning (Q-learning) with LLM-based in-context learning, replicating the key insights from Shunyu Yao's blog post <a href="https://ysymyth.github.io/The-Second-Half/">"The Second Half"</a>.</p>
+<p>It demonstrates how LLMs can generalize through reasoning while traditional RL methods require extensive training to learn game mechanics. We use a text-based treasure hunt game with hidden mechanics that agents must discover through experience.</p>
+<h3 id="key-insights-being-tested">Key Insights Being Tested<a class="headerlink" href="#key-insights-being-tested" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Sample Efficiency</strong>: LLMs can learn from far fewer examples than traditional RL</li>
+<li><strong>Generalization</strong>: LLMs use reasoning to understand patterns, while RL memorizes state-action mappings</li>
+<li><strong>Prior Knowledge</strong>: Language pre-training provides powerful priors for reasoning about new tasks</li>
+<li><strong>Hidden Mechanics Discovery</strong>: LLMs can form hypotheses and test them, while RL requires exhaustive exploration</li>
+</ol>
+<h3 id="what-youll-see">What You'll See<a class="headerlink" href="#what-youll-see" title="Permanent link">&para;</a></h3>
+<p>When running the LLM experiment, you'll see the <strong>complete decision-making process</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>============================================================
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>LLM DECISION PROCESS
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>============================================================
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>📊 Experiences in memory: 15
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>🎮 Current room: hallway
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>🎯 Available actions: 8
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>💡 Recent successful patterns learned:
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>   • take red key → +5.0 reward
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>   • try crafting → +10.0 reward
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>🤔 LLM is thinking...
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>📝 LLM Reasoning:
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>----------------------------------------
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  Based on my past experiences, I&#39;ve learned that:
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  1. The red key opens the locked door to the guard room
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  2. Crafting rusty sword + magic crystal creates a silver sword
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  3. The silver sword can defeat the strong guard
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  Since I have the silver sword and I&#39;m in the hallway...
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>----------------------------------------
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>✅ Chosen action: go north
+</code></pre></div>
+<p>This transparency shows exactly how the LLM learns and reasons, unlike the black-box nature of Q-learning.</p>
+<h3 id="the-game">The Game<a class="headerlink" href="#the-game" title="Permanent link">&para;</a></h3>
+<p>A text-based treasure hunt game where agents must:</p>
+<ul>
+<li>Navigate through multiple rooms</li>
+<li>Collect items and keys</li>
+<li>Defeat guards using appropriate weapons</li>
+<li>Discover hidden mechanics through experience</li>
+</ul>
+<h4 id="hidden-mechanics-not-revealed-to-agents">Hidden Mechanics (Not Revealed to Agents)<a class="headerlink" href="#hidden-mechanics-not-revealed-to-agents" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Color-coded locks</strong>: Specific colored keys open matching doors</li>
+<li><strong>Weapon effectiveness</strong>: Different weapons work against different enemies</li>
+<li><strong>Crafting system</strong>: Certain items combine to create better items</li>
+<li><strong>Potion effects</strong>: Temporary abilities from consuming potions</li>
+</ol>
+<h3 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h3>
+<h4 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Recommended from the repository root: use the shared Chapter 1 environment</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--extra<span class="w"> </span>ch1
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Activate it before changing directories:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># macOS/Linux:</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Windows PowerShell: .venv\Scripts\Activate.ps1</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Windows cmd: .venv\Scripts\activate.bat</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># pip fallback when uv is not installed:</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># python -m pip install -e &quot;.[ch1]&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Enter this experiment directory for the commands below</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nb">cd</span><span class="w"> </span>chapter1/learning-from-experience
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Single-project compatibility path, still supported during migration:</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># python -m pip install -r requirements.txt</span>
+</code></pre></div>
+<ul>
+<li>Q-learning runs fully offline with <strong>no API key</strong>.</li>
+<li>The LLM path needs a Moonshot/Kimi API key (or OpenRouter fallback).</li>
+</ul>
+<h4 id="setting-up-kimi-k3-api">Setting up Kimi K3 API<a class="headerlink" href="#setting-up-kimi-k3-api" title="Permanent link">&para;</a></h4>
+<p>To run the LLM experiments, you need a Kimi (Moonshot) API key:</p>
+<ol>
+<li>Get your API key from <a href="https://platform.moonshot.cn/">Moonshot AI</a></li>
+<li>Set the environment variable:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">MOONSHOT_API_KEY</span><span class="o">=</span><span class="s2">&quot;your-api-key-here&quot;</span>
+</code></pre></div>
+<p>Or create a <code>.env</code> file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;MOONSHOT_API_KEY=your-api-key-here&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.env
+</code></pre></div>
+<p><strong>Universal OpenRouter fallback</strong>: if <code>MOONSHOT_API_KEY</code> is unset but <code>OPENROUTER_API_KEY</code> is set, the LLM path routes through OpenRouter. Because Kimi models are not stably available on OpenRouter, the fallback uses <code>OPENROUTER_MODEL</code> (default <code>openai/gpt-5.6-luna</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENROUTER_API_KEY</span><span class="o">=</span>your-openrouter-api-key
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>python<span class="w"> </span>quick_demo.py<span class="w">   </span><span class="c1"># runs via OpenRouter when MOONSHOT_API_KEY is missing</span>
+</code></pre></div>
+<h3 id="running-the-experiment">Running the Experiment<a class="headerlink" href="#running-the-experiment" title="Permanent link">&para;</a></h3>
+<h4 id="quick-demo-see-llm-learning-in-action">Quick Demo (See LLM Learning in Action)<a class="headerlink" href="#quick-demo-see-llm-learning-in-action" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python<span class="w"> </span>quick_demo.py
+</code></pre></div>
+<p>This shows a detailed view of how the LLM learns through reasoning, displaying:</p>
+<ul>
+<li>Complete thought process for each decision</li>
+<li>How experiences accumulate and influence future decisions</li>
+<li>The dramatic difference in learning speed vs traditional RL</li>
+</ul>
+<h4 id="command-line-interface-experimentpy">Command-Line Interface (<code>experiment.py</code>)<a class="headerlink" href="#command-line-interface-experimentpy" title="Permanent link">&para;</a></h4>
+<p><code>experiment.py</code> provides a full CLI (Chinese help text). List all flags:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>experiment.py<span class="w"> </span>--help
+</code></pre></div>
+<p>Main parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--mode {both,qlearning,rl,llm}</code></td>
+<td>Which agent(s): <code>qlearning</code>/<code>rl</code> = Q-learning only (offline), <code>llm</code> = LLM Agent only, <code>both</code> = comparison</td>
+<td><code>both</code></td>
+</tr>
+<tr>
+<td><code>--rl-episodes</code></td>
+<td>Q-learning training episodes (Experiment 7-1 uses 10000)</td>
+<td><code>10000</code></td>
+</tr>
+<tr>
+<td><code>--llm-episodes</code></td>
+<td>LLM Agent training episodes</td>
+<td><code>20</code></td>
+</tr>
+<tr>
+<td><code>--eval-episodes</code></td>
+<td>Greedy evaluation episodes after Q-learning</td>
+<td><code>100</code></td>
+</tr>
+<tr>
+<td><code>--checkpoint-interval</code></td>
+<td>Learning-curve sample interval (every N episodes)</td>
+<td><code>1000</code></td>
+</tr>
+<tr>
+<td><code>--model</code></td>
+<td>LLM model name (or <code>MOONSHOT_MODEL</code> env)</td>
+<td><code>kimi-k3</code></td>
+</tr>
+<tr>
+<td><code>--output</code></td>
+<td>Results output directory</td>
+<td><code>results</code></td>
+</tr>
+<tr>
+<td><code>--seed</code></td>
+<td>Random seed for reproducible Q-learning curves</td>
+<td>unset</td>
+</tr>
+<tr>
+<td><code>--learning-rate</code> / <code>--discount</code> / <code>--epsilon-decay</code> / <code>--epsilon-min</code></td>
+<td>Q-learning hyperparameters</td>
+<td><code>0.2 / 0.99 / 0.9995 / 0.1</code></td>
+</tr>
+<tr>
+<td><code>--stochastic</code></td>
+<td>Use stochastic environment</td>
+<td>deterministic</td>
+</tr>
+<tr>
+<td><code>--skip-llm</code></td>
+<td>Legacy alias for <code>--mode qlearning</code></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h4 id="q-learning-only-experiment-7-1-offline-no-api">Q-Learning Only (Experiment 7-1, offline, no API)<a class="headerlink" href="#q-learning-only-experiment-7-1-offline-no-api" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python<span class="w"> </span>experiment.py<span class="w"> </span>--mode<span class="w"> </span>qlearning<span class="w"> </span>--rl-episodes<span class="w"> </span><span class="m">10000</span><span class="w"> </span>--seed<span class="w"> </span><span class="m">42</span>
+</code></pre></div>
+<p>Training finishes in under ~3 seconds and prints a <strong>learning curve table</strong> showing how the agent goes from ~0% win rate to mastery over nearly 10k episodes (see Results below).</p>
+<h4 id="full-comparison-rl-vs-llm-experiment-7-2">Full Comparison (RL vs LLM, Experiment 7-2)<a class="headerlink" href="#full-comparison-rl-vs-llm-experiment-7-2" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>python<span class="w"> </span>experiment.py<span class="w"> </span>--mode<span class="w"> </span>both<span class="w"> </span>--model<span class="w"> </span>kimi-k3
+</code></pre></div>
+<p>For the exact book protocol and acceptance-grade evidence, use the canonical
+runner. It executes the 10,000-episode Q-learning arm, 100 greedy evaluation
+episodes, and exactly one first-attempt official Moonshot Kimi K3 trajectory:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>python<span class="w"> </span>run_experiment_7_2.py
+</code></pre></div>
+<p>The canonical runner rejects OpenRouter substitution, API errors, missing raw
+provider response IDs/content, and any parser fallback. It writes
+<code>validation/&lt;timestamp&gt;/evidence.json</code>; if only post-run serialization needs to
+be repaired, <code>finalize_experiment_7_2.py &lt;campaign-dir&gt;</code> finalizes the already
+saved raw campaign without repeating paid model calls.</p>
+<p>This will:</p>
+<ol>
+<li>Train a Q-learning agent for 10000 episodes (~3 seconds) and print its learning curve</li>
+<li>Train an LLM agent for 20 episodes with detailed reasoning display</li>
+<li>Evaluate both agents</li>
+<li>Generate comparison plots</li>
+<li>Save results to the <code>results/</code> directory</li>
+</ol>
+<p><strong>Note</strong>: <code>experiment.py</code> is the exploratory multi-episode runner. The canonical
+book campaign is deliberately one first attempt. The accepted 2026-07-30 Kimi
+K3 attempt took 416.11 seconds for 17 sequential reasoning calls; the earlier
+“1–2 minutes per game” estimate was not reproduced on this route.</p>
+<h4 id="llm-only">LLM Only<a class="headerlink" href="#llm-only" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>python<span class="w"> </span>experiment.py<span class="w"> </span>--mode<span class="w"> </span>llm<span class="w"> </span>--llm-episodes<span class="w"> </span><span class="m">20</span>
+</code></pre></div>
+<h4 id="interactive-game-play">Interactive Game Play<a class="headerlink" href="#interactive-game-play" title="Permanent link">&para;</a></h4>
+<p>Test the game manually:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">game_environment</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreasureHuntGame</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">game</span> <span class="o">=</span> <span class="n">TreasureHuntGame</span><span class="p">()</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">get_state_description</span><span class="p">())</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Available actions:&quot;</span><span class="p">,</span> <span class="n">game</span><span class="o">.</span><span class="n">get_available_actions</span><span class="p">())</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Try an action</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="n">feedback</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span> <span class="o">=</span> <span class="n">game</span><span class="o">.</span><span class="n">execute_action</span><span class="p">(</span><span class="s2">&quot;take rusty sword&quot;</span><span class="p">)</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Feedback: </span><span class="si">{</span><span class="n">feedback</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reward: </span><span class="si">{</span><span class="n">reward</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h3>
+<p>Install the <code>dev</code> extra from the repository root before running pytest in a clean environment:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--extra<span class="w"> </span>ch1<span class="w"> </span>--extra<span class="w"> </span>dev
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Activate it before changing directories:</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># macOS/Linux:</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Windows PowerShell: .venv\Scripts\Activate.ps1</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Windows cmd: .venv\Scripts\activate.bat</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="nb">cd</span><span class="w"> </span>chapter1/learning-from-experience
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests
+</code></pre></div>
+<p>The longer Q-learning learning-curve check is an offline manual smoke script, kept out of default pytest discovery:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>python<span class="w"> </span>tests/manual/rl_learning_check.py<span class="w"> </span>--episodes<span class="w"> </span><span class="m">1000</span>
+</code></pre></div>
+<h3 id="experiment-results">Experiment Results<a class="headerlink" href="#experiment-results" title="Permanent link">&para;</a></h3>
+<h4 id="metrics-compared">Metrics Compared<a class="headerlink" href="#metrics-compared" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Sample Efficiency</strong> — Episodes needed to achieve good performance; learning speed</li>
+<li><strong>Performance</strong> — Victory rate in evaluation; average rewards and episode lengths</li>
+<li><strong>Computational Cost</strong> — Training time; memory (Q-table size vs. experience storage); API calls for LLM</li>
+</ol>
+<h4 id="visualizations">Visualizations<a class="headerlink" href="#visualizations" title="Permanent link">&para;</a></h4>
+<p>The experiment creates comparison plots showing:</p>
+<ul>
+<li>Learning curves over time</li>
+<li>Victory rate progression</li>
+<li>Sample efficiency comparison</li>
+<li>Key insights summary</li>
+</ul>
+<h4 id="expected-results">Expected Results<a class="headerlink" href="#expected-results" title="Permanent link">&para;</a></h4>
+<h5 id="q-learning-learning-curve-measured-locally-mode-qlearning-rl-episodes-10000-seed-42">Q-Learning learning curve (measured locally, <code>--mode qlearning --rl-episodes 10000 --seed 42</code>)<a class="headerlink" href="#q-learning-learning-curve-measured-locally-mode-qlearning-rl-episodes-10000-seed-42" title="Permanent link">&para;</a></h5>
+<p>Measured curve (deterministic env; victory rate as a sliding window over the last 1000 episodes; full training ~3s):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Episodes</th>
+<th style="text-align: right;">Victory rate</th>
+<th style="text-align: right;">Q-table states</th>
+<th style="text-align: right;">epsilon</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1000</td>
+<td style="text-align: right;">0.3%</td>
+<td style="text-align: right;">123</td>
+<td style="text-align: right;">0.606</td>
+</tr>
+<tr>
+<td style="text-align: right;">2000</td>
+<td style="text-align: right;">0.0%</td>
+<td style="text-align: right;">123</td>
+<td style="text-align: right;">0.368</td>
+</tr>
+<tr>
+<td style="text-align: right;">3000</td>
+<td style="text-align: right;">0.1%</td>
+<td style="text-align: right;">126</td>
+<td style="text-align: right;">0.223</td>
+</tr>
+<tr>
+<td style="text-align: right;">5000</td>
+<td style="text-align: right;">0.1%</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">0.100</td>
+</tr>
+<tr>
+<td style="text-align: right;">7000</td>
+<td style="text-align: right;">97.0%</td>
+<td style="text-align: right;">138</td>
+<td style="text-align: right;">0.100</td>
+</tr>
+<tr>
+<td style="text-align: right;">8000</td>
+<td style="text-align: right;">99.6%</td>
+<td style="text-align: right;">138</td>
+<td style="text-align: right;">0.100</td>
+</tr>
+<tr>
+<td style="text-align: right;">9000</td>
+<td style="text-align: right;">99.8%</td>
+<td style="text-align: right;">139</td>
+<td style="text-align: right;">0.100</td>
+</tr>
+<tr>
+<td style="text-align: right;">10000</td>
+<td style="text-align: right;"><strong>98.1%</strong></td>
+<td style="text-align: right;">142</td>
+<td style="text-align: right;">0.100</td>
+</tr>
+</tbody>
+</table>
+<p>After training, the canonical greedy evaluation reaches <strong>100%</strong> win rate,
+averaging 12 steps. The accepted Kimi K3 arm won on its first attempt in 17
+steps with 17/17 real responses, zero API errors, zero fallbacks, and 28,242
+tokens. This reproduces the first-attempt conclusion but not the manuscript's
+historical point estimates of exactly 18 Kimi steps and an 11-step Q-learning
+solution. See the <a href="validation/20260730_011704/evidence.json">canonical evidence</a>.</p>
+<h5 id="rl-vs-llm-experiment-7-2-conclusions">RL vs LLM (Experiment 7-2 conclusions)<a class="headerlink" href="#rl-vs-llm-experiment-7-2-conclusions" title="Permanent link">&para;</a></h5>
+<ul>
+<li><strong>Q-Learning</strong>: Needs ~10000 episodes for stable clears; treats “door / key / sword” as meaningless symbols and only explores statistically.</li>
+<li><strong>LLM In-Context</strong>: Carries pretrained priors; often clears in the first episode within tens of steps by reasoning about game concepts.</li>
+<li><strong>Sample Efficiency</strong>: LLM is 2–3 orders of magnitude more sample-efficient; but per-episode inference is slow (~1–2 min API), while Q-learning finishes 10000 episodes in ~3s—trade-off depends on interaction cost (see book Experiment 7-2).</li>
+</ul>
+<h3 id="project-structure">Project Structure<a class="headerlink" href="#project-structure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>learning-from-experience/
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>├── game_environment.py    # Text-based game with hidden mechanics
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>├── rl_agent.py            # Q-learning implementation
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>├── llm_agent.py           # LLM with in-context learning
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>├── experiment.py          # Main experiment runner
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>├── demo.py                # Interactive local game demo
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>├── quick_demo.py          # Short LLM learning demo
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>├── run_experiment_7_2.py  # Exact real campaign + acceptance gates
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>├── finalize_experiment_7_2.py # Evidence-only recovery; no API rerun
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>├── env.example            # Optional API-key template
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>├── tests/
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>│   ├── test_basic.py
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>│   ├── test_zero_episodes.py
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>│   ├── test_rl_progress_small_episodes.py
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>│   └── manual/
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>│       └── rl_learning_check.py
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>├── requirements.txt       # Python dependencies
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>├── README.md              # This file
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>└── results/               # Experiment outputs (created on run)
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>    └── [timestamp]/
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>        ├── rl_agent.pkl           # Trained Q-learning agent
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>        ├── llm_experiences.json   # LLM&#39;s collected experiences
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>        ├── experiment_results.json # Numerical results
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>        └── comparison_plots.png   # Visualization
+</code></pre></div>
+<h3 id="technical-details">Technical Details<a class="headerlink" href="#technical-details" title="Permanent link">&para;</a></h3>
+<h4 id="q-learning-agent">Q-Learning Agent<a class="headerlink" href="#q-learning-agent" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Algorithm</strong>: Tabular Q-learning with ε-greedy exploration</li>
+<li><strong>State Representation</strong>: Hashed combination of room, inventory, and game state</li>
+<li><strong>Learning Rate</strong>: 0.2 (configurable via <code>--learning-rate</code>)</li>
+<li><strong>Discount Factor</strong>: 0.99 (configurable via <code>--discount</code>)</li>
+<li><strong>Exploration</strong>: ε starts at 1.0, decays by <code>--epsilon-decay</code> (0.9995) to <code>--epsilon-min</code> (0.1)</li>
+</ul>
+<h4 id="llm-agent-kimi-k3">LLM Agent (Kimi K3)<a class="headerlink" href="#llm-agent-kimi-k3" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Model</strong>: <code>kimi-k3</code> (override with <code>--model</code> or <code>MOONSHOT_MODEL</code>)</li>
+<li><strong>Reasoning model</strong>: Kimi K3 emits a chain-of-thought (<code>message.reasoning_content</code>) before its final answer (<code>message.content</code>), so the code uses a generous <code>max_tokens=2048</code> to make sure the <code>ACTION:</code> line is not truncated by the reasoning budget.</li>
+<li><strong>Learning Method</strong>: In-context learning with experience memory (up to 50 experiences)</li>
+<li><strong>Context Management</strong>: Stores successful and failed experiences</li>
+<li><strong>Reasoning</strong>: Prompts LLM to reason about past experiences before acting</li>
+<li><strong>Temperature</strong>: requested 0.7, but reasoning models (Kimi K3, GPT-5) only accept <code>temperature=1</code>, so the code auto-forces <code>1</code> for those (see <code>_reasoning_safe_temperature</code>)</li>
+</ul>
+<h3 id="extending-the-experiment">Extending the Experiment<a class="headerlink" href="#extending-the-experiment" title="Permanent link">&para;</a></h3>
+<h4 id="ideas-for-further-research">Ideas for Further Research<a class="headerlink" href="#ideas-for-further-research" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Different Games</strong>: Try other hidden-mechanic games</li>
+<li><strong>Hybrid Approaches</strong>: Combine RL with LLM guidance</li>
+<li><strong>Transfer Learning</strong>: Test how well agents transfer to similar games</li>
+<li><strong>Ablation Studies</strong>: Remove reasoning prompts to isolate their impact</li>
+<li><strong>Other LLMs</strong>: Compare different language models</li>
+</ol>
+<h4 id="modifying-the-game">Modifying the Game<a class="headerlink" href="#modifying-the-game" title="Permanent link">&para;</a></h4>
+<p>Edit <code>game_environment.py</code> to:</p>
+<ul>
+<li>Add new rooms and items</li>
+<li>Create more complex hidden mechanics</li>
+<li>Adjust difficulty and rewards</li>
+<li>Add new types of puzzles</li>
+</ul>
+<h3 id="educational-value">Educational Value<a class="headerlink" href="#educational-value" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>The Power of Priors</strong>: How language pre-training provides useful knowledge</li>
+<li><strong>Reasoning vs. Memorization</strong>: Different approaches to learning</li>
+<li><strong>Sample Efficiency</strong>: Why it matters for real-world applications</li>
+<li><strong>The Second Half Thesis</strong>: Moving from “can we solve it?” to “how efficiently?”</li>
+</ol>
+<h3 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://ysymyth.github.io/The-Second-Half/">The Second Half</a> by Shunyu Yao</li>
+<li><a href="https://arxiv.org/abs/2210.03629">ReAct: Synergizing Reasoning and Acting in Language Models</a></li>
+<li>Original Q-learning paper: Watkins &amp; Dayan (1992)</li>
+</ul>
+<hr />
+<h2 id="_1">中文<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h3 id="_2">概述<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>本实验对比传统强化学习（Q-learning）与基于 LLM 的上下文学习（in-context learning），复现 Shunyu Yao 博客 <a href="https://ysymyth.github.io/The-Second-Half/">“The Second Half”</a> 中的核心洞见。</p>
+<p>目标：展示 LLM 如何通过<strong>推理</strong>泛化，而传统 RL 往往需要大量试错才能学到游戏机制。我们使用带有<strong>隐藏机制</strong>的文本寻宝游戏，智能体只能通过经验去发现规则。</p>
+<p>代码在 <code>chapter1/learning-from-experience/</code>，对应书中<strong>实验 7-1</strong> 与 <strong>实验 7-2</strong>（正文见第 7 章）。</p>
+<h3 id="_3">要验证的关键洞察<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>样本效率</strong>：LLM 用远少于传统 RL 的样例即可学习  </li>
+<li><strong>泛化</strong>：LLM 用推理理解模式；RL 记忆状态-动作映射  </li>
+<li><strong>先验知识</strong>：语言预训练为新任务推理提供强大先验  </li>
+<li><strong>隐藏机制发现</strong>：LLM 可形成假设并检验；RL 往往需要穷尽式探索  </li>
+</ol>
+<h3 id="_4">你会看到什么<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>运行 LLM 实验时，会看到<strong>完整决策过程</strong>：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>============================================================
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>LLM DECISION PROCESS
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>============================================================
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>📊 Experiences in memory: 15
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>🎮 Current room: hallway
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>🎯 Available actions: 8
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>💡 Recent successful patterns learned:
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>   • take red key → +5.0 reward
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>   • try crafting → +10.0 reward
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>🤔 LLM is thinking...
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>📝 LLM Reasoning:
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>----------------------------------------
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>  Based on my past experiences, I&#39;ve learned that:
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>  1. The red key opens the locked door to the guard room
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>  2. Crafting rusty sword + magic crystal creates a silver sword
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>  3. The silver sword can defeat the strong guard
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>  Since I have the silver sword and I&#39;m in the hallway...
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>----------------------------------------
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>✅ Chosen action: go north
+</code></pre></div>
+<p>这种透明度展示了 LLM 如何学习与推理，有别于 Q-learning 的黑盒性质。</p>
+<h3 id="_5">游戏说明<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>文本寻宝游戏，智能体需要：</p>
+<ul>
+<li>在多个房间间导航  </li>
+<li>收集物品与钥匙  </li>
+<li>使用合适武器击败守卫  </li>
+<li>通过经验发现隐藏机制  </li>
+</ul>
+<h4 id="_6">隐藏机制（不对智能体公开）<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>颜色锁</strong>：特定颜色钥匙开对应门  </li>
+<li><strong>武器有效性</strong>：不同武器对不同敌人有效  </li>
+<li><strong>合成系统</strong>：特定物品可合成更强物品  </li>
+<li><strong>药水效果</strong>：消耗药水获得临时能力  </li>
+</ol>
+<h3 id="_7">快速开始<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h4 id="_8">安装<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># 推荐在仓库根目录使用统一的第 1 章环境</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--extra<span class="w"> </span>ch1
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># 切换目录前先激活环境：</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># macOS/Linux：</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Windows PowerShell：.venv\Scripts\Activate.ps1</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c1"># Windows cmd：.venv\Scripts\activate.bat</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># 未安装 uv 时可用 pip 兜底：</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="c1"># python -m pip install -e &quot;.[ch1]&quot;</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1"># 进入本实验目录，后续命令都在这里运行</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="nb">cd</span><span class="w"> </span>chapter1/learning-from-experience
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="c1"># 迁移期间仍支持单项目兼容路径：</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="c1"># python -m pip install -r requirements.txt</span>
+</code></pre></div>
+<ul>
+<li>Q-learning 完全离线，<strong>无需任何 API Key</strong>。  </li>
+<li>LLM 部分需要 Moonshot/Kimi API Key（或 OpenRouter 兜底）。  </li>
+</ul>
+<h4 id="kimi-k3-api">配置 Kimi K3 API<a class="headerlink" href="#kimi-k3-api" title="Permanent link">&para;</a></h4>
+<p>运行 LLM 实验需要 Kimi（Moonshot）API Key：</p>
+<ol>
+<li>从 <a href="https://platform.moonshot.cn/">Moonshot AI</a> 获取 Key  </li>
+<li>设置环境变量：</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">MOONSHOT_API_KEY</span><span class="o">=</span><span class="s2">&quot;your-api-key-here&quot;</span>
+</code></pre></div>
+<p>或创建 <code>.env</code>：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;MOONSHOT_API_KEY=your-api-key-here&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.env
+</code></pre></div>
+<p><strong>通用兜底（OpenRouter）</strong>：若未设置 <code>MOONSHOT_API_KEY</code> 但设置了 <code>OPENROUTER_API_KEY</code>，LLM 部分会自动改走 OpenRouter。由于 Kimi 模型在 OpenRouter 上不稳定可用，兜底时会使用 <code>OPENROUTER_MODEL</code>（默认 <code>openai/gpt-5.6-luna</code>）：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENROUTER_API_KEY</span><span class="o">=</span>your-openrouter-api-key
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>python<span class="w"> </span>quick_demo.py<span class="w">   </span><span class="c1"># MOONSHOT_API_KEY 缺失时自动经 OpenRouter 运行</span>
+</code></pre></div>
+<h3 id="_9">运行实验<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h4 id="llm">快速演示（观察 LLM 如何学习）<a class="headerlink" href="#llm" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>python<span class="w"> </span>quick_demo.py
+</code></pre></div>
+<p>会展示：</p>
+<ul>
+<li>每一步的完整思考过程  </li>
+<li>经验如何累积并影响后续决策  </li>
+<li>与传统 RL 在学习速度上的巨大差异  </li>
+</ul>
+<h4 id="experimentpy">命令行接口（<code>experiment.py</code>）<a class="headerlink" href="#experimentpy" title="Permanent link">&para;</a></h4>
+<p><code>experiment.py</code> 提供带中文帮助的完整 CLI：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>python<span class="w"> </span>experiment.py<span class="w"> </span>--help
+</code></pre></div>
+<p>主要参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--mode {both,qlearning,rl,llm}</code></td>
+<td>运行哪种智能体：<code>qlearning</code>/<code>rl</code> 只跑 Q-learning（离线）、<code>llm</code> 只跑 LLM Agent、<code>both</code> 两者对比</td>
+<td><code>both</code></td>
+</tr>
+<tr>
+<td><code>--rl-episodes</code></td>
+<td>Q-learning 训练局数（实验 7-1 用 10000）</td>
+<td><code>10000</code></td>
+</tr>
+<tr>
+<td><code>--llm-episodes</code></td>
+<td>LLM Agent 训练局数</td>
+<td><code>20</code></td>
+</tr>
+<tr>
+<td><code>--eval-episodes</code></td>
+<td>Q-learning 训练后贪婪评估局数</td>
+<td><code>100</code></td>
+</tr>
+<tr>
+<td><code>--checkpoint-interval</code></td>
+<td>学习曲线采样间隔（每 N 局记录一次胜率/Q 表规模）</td>
+<td><code>1000</code></td>
+</tr>
+<tr>
+<td><code>--model</code></td>
+<td>LLM 模型名（也可用 <code>MOONSHOT_MODEL</code> 环境变量）</td>
+<td><code>kimi-k3</code></td>
+</tr>
+<tr>
+<td><code>--output</code></td>
+<td>结果输出目录</td>
+<td><code>results</code></td>
+</tr>
+<tr>
+<td><code>--seed</code></td>
+<td>随机种子，用于复现 Q-learning 学习曲线</td>
+<td>不固定</td>
+</tr>
+<tr>
+<td><code>--learning-rate</code> / <code>--discount</code> / <code>--epsilon-decay</code> / <code>--epsilon-min</code></td>
+<td>Q-learning 超参数</td>
+<td><code>0.2 / 0.99 / 0.9995 / 0.1</code></td>
+</tr>
+<tr>
+<td><code>--stochastic</code></td>
+<td>使用随机环境</td>
+<td>确定性</td>
+</tr>
+<tr>
+<td><code>--skip-llm</code></td>
+<td>兼容旧用法，等价于 <code>--mode qlearning</code></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h4 id="q-learning-7-1-api">仅 Q-Learning（实验 7-1，离线，无需 API）<a class="headerlink" href="#q-learning-7-1-api" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>python<span class="w"> </span>experiment.py<span class="w"> </span>--mode<span class="w"> </span>qlearning<span class="w"> </span>--rl-episodes<span class="w"> </span><span class="m">10000</span><span class="w"> </span>--seed<span class="w"> </span><span class="m">42</span>
+</code></pre></div>
+<p>训练不到 3 秒即可完成，并打印<strong>学习曲线表格</strong>，直观展现智能体如何在近万局试错中从 0% 胜率逐步学会通关（见下文“实验结果”）。</p>
+<h4 id="rl-vs-llm-7-2">完整对比（RL vs LLM，实验 7-2）<a class="headerlink" href="#rl-vs-llm-7-2" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>python<span class="w"> </span>experiment.py<span class="w"> </span>--mode<span class="w"> </span>both<span class="w"> </span>--model<span class="w"> </span>kimi-k3
+</code></pre></div>
+<p>严格复现正文协议并生成可验收证据，请运行：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>python<span class="w"> </span>run_experiment_7_2.py
+</code></pre></div>
+<p>该入口固定运行 10,000 局 Q-learning、100 局贪婪评估和且仅一局官方
+Moonshot <code>kimi-k3</code> 首次尝试；OpenRouter 替代、API 错误、缺失原始响应
+ID/正文或任何 parser fallback 都会使验收失败。若模型调用已经完成、仅证据
+序列化失败，可运行 <code>python finalize_experiment_7_2.py &lt;campaign-dir&gt;</code>，直接从
+已保留的原始结果完成证据，不重复付费调用。</p>
+<p>流程：</p>
+<ol>
+<li>训练 Q-learning 10000 局（约 3 秒）并打印学习曲线  </li>
+<li>训练 LLM Agent 20 局，并展示详细推理  </li>
+<li>评估双方  </li>
+<li>生成对比图  </li>
+<li>结果写入 <code>results/</code>  </li>
+</ol>
+<p><strong>说明</strong>：<code>experiment.py</code> 是多局探索入口；正文规范入口只测第一局。2026-07-30
+验收运行包含 17 次串行推理调用，共耗时 416.11 秒，因此没有复现旧版
+“每局 1–2 分钟”的估计。</p>
+<h4 id="llm_1">仅 LLM<a class="headerlink" href="#llm_1" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>python<span class="w"> </span>experiment.py<span class="w"> </span>--mode<span class="w"> </span>llm<span class="w"> </span>--llm-episodes<span class="w"> </span><span class="m">20</span>
+</code></pre></div>
+<h4 id="_10">交互式试玩<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">game_environment</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreasureHuntGame</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="n">game</span> <span class="o">=</span> <span class="n">TreasureHuntGame</span><span class="p">()</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">get_state_description</span><span class="p">())</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Available actions:&quot;</span><span class="p">,</span> <span class="n">game</span><span class="o">.</span><span class="n">get_available_actions</span><span class="p">())</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># Try an action</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="n">feedback</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span> <span class="o">=</span> <span class="n">game</span><span class="o">.</span><span class="n">execute_action</span><span class="p">(</span><span class="s2">&quot;take rusty sword&quot;</span><span class="p">)</span>
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Feedback: </span><span class="si">{</span><span class="n">feedback</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reward: </span><span class="si">{</span><span class="n">reward</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="_11">验证<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>在干净环境中运行 pytest 前，先在仓库根目录安装 <code>dev</code> extra：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--extra<span class="w"> </span>ch1<span class="w"> </span>--extra<span class="w"> </span>dev
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="c1"># 切换目录前先激活环境：</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="c1"># macOS/Linux：</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="c1"># Windows PowerShell：.venv\Scripts\Activate.ps1</span>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="c1"># Windows cmd：.venv\Scripts\activate.bat</span>
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a><span class="nb">cd</span><span class="w"> </span>chapter1/learning-from-experience
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests
+</code></pre></div>
+<p>较长的 Q-learning 学习曲线检查是离线手动 smoke 脚本，不会被默认 pytest 收集：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>python<span class="w"> </span>tests/manual/rl_learning_check.py<span class="w"> </span>--episodes<span class="w"> </span><span class="m">1000</span>
+</code></pre></div>
+<h3 id="_12">实验结果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h4 id="_13">对比指标<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>样本效率</strong> — 达到良好表现所需局数、学习速度  </li>
+<li><strong>性能</strong> — 评估胜率、平均回报与回合长度  </li>
+<li><strong>计算成本</strong> — 训练时间；内存（Q 表规模 vs. 经验存储）；LLM 的 API 调用  </li>
+</ol>
+<h4 id="_14">可视化<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h4>
+<p>实验会生成对比图，包括：</p>
+<ul>
+<li>随时间的学习曲线  </li>
+<li>胜率演进  </li>
+<li>样本效率对比  </li>
+<li>关键洞察摘要  </li>
+</ul>
+<h4 id="_15">预期结果<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h4>
+<h5 id="q-learning-mode-qlearning-rl-episodes-10000-seed-42">Q-learning 学习曲线（本地实测，<code>--mode qlearning --rl-episodes 10000 --seed 42</code>）<a class="headerlink" href="#q-learning-mode-qlearning-rl-episodes-10000-seed-42" title="Permanent link">&para;</a></h5>
+<p>实测学习曲线（确定性环境，胜率按最近 1000 局滑动窗口统计，整段训练约 3 秒）：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Episodes</th>
+<th style="text-align: right;">Victory rate</th>
+<th style="text-align: right;">Q-table states</th>
+<th style="text-align: right;">epsilon</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1000</td>
+<td style="text-align: right;">0.3%</td>
+<td style="text-align: right;">123</td>
+<td style="text-align: right;">0.606</td>
+</tr>
+<tr>
+<td style="text-align: right;">2000</td>
+<td style="text-align: right;">0.0%</td>
+<td style="text-align: right;">123</td>
+<td style="text-align: right;">0.368</td>
+</tr>
+<tr>
+<td style="text-align: right;">3000</td>
+<td style="text-align: right;">0.1%</td>
+<td style="text-align: right;">126</td>
+<td style="text-align: right;">0.223</td>
+</tr>
+<tr>
+<td style="text-align: right;">5000</td>
+<td style="text-align: right;">0.1%</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">0.100</td>
+</tr>
+<tr>
+<td style="text-align: right;">7000</td>
+<td style="text-align: right;">97.0%</td>
+<td style="text-align: right;">138</td>
+<td style="text-align: right;">0.100</td>
+</tr>
+<tr>
+<td style="text-align: right;">8000</td>
+<td style="text-align: right;">99.6%</td>
+<td style="text-align: right;">138</td>
+<td style="text-align: right;">0.100</td>
+</tr>
+<tr>
+<td style="text-align: right;">9000</td>
+<td style="text-align: right;">99.8%</td>
+<td style="text-align: right;">139</td>
+<td style="text-align: right;">0.100</td>
+</tr>
+<tr>
+<td style="text-align: right;">10000</td>
+<td style="text-align: right;"><strong>98.1%</strong></td>
+<td style="text-align: right;">142</td>
+<td style="text-align: right;">0.100</td>
+</tr>
+</tbody>
+</table>
+<p>规范运行训练后 100 局贪婪评估胜率为 <strong>100%</strong>，平均 12 步通关；Kimi K3
+第一局 17 步通关，保留 17/17 条官方响应，零 API 错误、零 fallback，共
+28,242 tokens。它复现了“第一局成功”的实质结论，但没有复现历史记录中的
+Kimi 恰好 18 步和 Q-learning 恰好 11 步。详见<a href="validation/20260730_011704/evidence.json">规范证据</a>。</p>
+<h5 id="rl-vs-llm-7-2_1">RL vs LLM（实验 7-2 的对比结论）<a class="headerlink" href="#rl-vs-llm-7-2_1" title="Permanent link">&para;</a></h5>
+<ul>
+<li><strong>Q-Learning</strong>：需要近 10000 局才达到稳定通关；把“门/钥匙/剑”当作无意义符号，只能靠统计式暴力探索。  </li>
+<li><strong>LLM In-Context</strong>：携带预训练先验，往往第一局就能在十几步内通关；靠推理理解游戏概念结构。  </li>
+<li><strong>样本效率</strong>：LLM 高出 2–3 个数量级；但单局推理慢（API 调用 ~1–2 分钟），Q-learning 跑 10000 局只需约 3 秒——权衡取决于交互成本，详见书中实验 7-2。  </li>
+</ul>
+<h3 id="_16">项目结构<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>learning-from-experience/
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>├── game_environment.py    # Text-based game with hidden mechanics
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>├── rl_agent.py            # Q-learning implementation
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>├── llm_agent.py           # LLM with in-context learning
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>├── experiment.py          # Main experiment runner
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>├── demo.py                # Interactive local game demo
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>├── quick_demo.py          # Short LLM learning demo
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>├── run_experiment_7_2.py  # 正文规范实测与验收门
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>├── finalize_experiment_7_2.py # 仅补写证据，不重复 API 调用
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>├── env.example            # Optional API-key template
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>├── tests/
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>│   ├── test_basic.py
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a>│   ├── test_zero_episodes.py
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a>│   ├── test_rl_progress_small_episodes.py
+<a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a>│   └── manual/
+<a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a>│       └── rl_learning_check.py
+<a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a>├── requirements.txt       # Python dependencies
+<a id="__codelineno-29-18" name="__codelineno-29-18" href="#__codelineno-29-18"></a>├── README.md              # This file
+<a id="__codelineno-29-19" name="__codelineno-29-19" href="#__codelineno-29-19"></a>└── results/               # Experiment outputs (created on run)
+<a id="__codelineno-29-20" name="__codelineno-29-20" href="#__codelineno-29-20"></a>    └── [timestamp]/
+<a id="__codelineno-29-21" name="__codelineno-29-21" href="#__codelineno-29-21"></a>        ├── rl_agent.pkl           # Trained Q-learning agent
+<a id="__codelineno-29-22" name="__codelineno-29-22" href="#__codelineno-29-22"></a>        ├── llm_experiences.json   # LLM&#39;s collected experiences
+<a id="__codelineno-29-23" name="__codelineno-29-23" href="#__codelineno-29-23"></a>        ├── experiment_results.json # Numerical results
+<a id="__codelineno-29-24" name="__codelineno-29-24" href="#__codelineno-29-24"></a>        └── comparison_plots.png   # Visualization
+</code></pre></div>
+<h3 id="_17">技术细节<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<h4 id="q-learning-agent_1">Q-Learning Agent<a class="headerlink" href="#q-learning-agent_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>算法</strong>：表格 Q-learning + ε-贪婪探索  </li>
+<li><strong>状态表示</strong>：房间、背包与游戏状态的哈希组合  </li>
+<li><strong>学习率</strong>：0.2（<code>--learning-rate</code>）  </li>
+<li><strong>折扣因子</strong>：0.99（<code>--discount</code>）  </li>
+<li><strong>探索</strong>：ε 从 1.0 起，按 <code>--epsilon-decay</code>（0.9995）衰减到 <code>--epsilon-min</code>（0.1）  </li>
+</ul>
+<h4 id="llm-agentkimi-k3">LLM Agent（Kimi K3）<a class="headerlink" href="#llm-agentkimi-k3" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>模型</strong>：<code>kimi-k3</code>（可用 <code>--model</code> 或 <code>MOONSHOT_MODEL</code> 覆盖）  </li>
+<li><strong>推理模型</strong>：Kimi K3 会在最终答案（<code>message.content</code>）前输出思维链（<code>message.reasoning_content</code>），因此代码使用较大的 <code>max_tokens=2048</code>，避免 <code>ACTION:</code> 行被思考预算截断。  </li>
+<li><strong>学习方式</strong>：上下文学习 + 经验记忆（最多 50 条）  </li>
+<li><strong>上下文管理</strong>：存储成功与失败经验  </li>
+<li><strong>推理</strong>：行动前提示模型基于过往经验推理  </li>
+<li><strong>Temperature</strong>：请求 0.7，但推理模型（Kimi K3、GPT-5）只接受 <code>temperature=1</code>，代码会自动强制为 <code>1</code>（见 <code>_reasoning_safe_temperature</code>）  </li>
+</ul>
+<h3 id="_18">扩展实验<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
+<h4 id="_19">进一步研究思路<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>不同游戏</strong>：尝试其他隐藏机制游戏  </li>
+<li><strong>混合方法</strong>：RL 与 LLM 引导结合  </li>
+<li><strong>迁移学习</strong>：测试向相似游戏的迁移  </li>
+<li><strong>消融研究</strong>：去掉推理提示以隔离其影响  </li>
+<li><strong>其他 LLM</strong>：对比不同语言模型  </li>
+</ol>
+<h4 id="_20">修改游戏<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h4>
+<p>编辑 <code>game_environment.py</code> 可：</p>
+<ul>
+<li>增加房间与物品  </li>
+<li>设计更复杂的隐藏机制  </li>
+<li>调整难度与奖励  </li>
+<li>加入新类型谜题  </li>
+</ul>
+<h3 id="_21">教学价值<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>先验的力量</strong>：语言预训练如何提供有用知识  </li>
+<li><strong>推理 vs. 记忆</strong>：不同学习路径  </li>
+<li><strong>样本效率</strong>：为何对现实任务重要  </li>
+<li><strong>“The Second Half” 论点</strong>：从“能否解决”转向“多高效”  </li>
+</ol>
+<h3 id="_22">参考文献<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://ysymyth.github.io/The-Second-Half/">The Second Half</a> — Shunyu Yao  </li>
+<li><a href="https://arxiv.org/abs/2210.03629">ReAct: Synergizing Reasoning and Acting in Language Models</a>  </li>
+<li>Q-learning 原文：Watkins &amp; Dayan (1992)  </li>
+</ul>
+<hr />
+<h2 id="notes">Notes / 说明<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Project type: <strong>✅ standalone runnable</strong> (Q-learning offline; LLM needs API key).<br />
+  项目类型：<strong>✅ 可独立运行</strong>（Q-learning 离线；LLM 需 API Key）。  </li>
+<li>For educational purposes; inspired by academic work on AI and RL.<br />
+  教学用途，灵感来自 AI 与强化学习相关研究。  </li>
+<li>Feel free to add mechanics, other RL algorithms (DQN, PPO, …), providers, or richer metrics.<br />
+  欢迎增加隐藏机制、其他 RL 算法、提供商或更完善的评估指标。  </li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:46 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:46 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2703 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/chapter4/active-tool-discovery/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Active Tool Discovery / 主动工具发现 - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="Active Tool Discovery / 主动工具发现">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/chapter4/active-tool-discovery/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Active Tool Discovery / 主动工具发现">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#active-tool-discovery" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Active Tool Discovery / 主动工具发现
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#canonical-manuscript-campaign" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical manuscript campaign / 正式实验活动
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#english" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        English
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="English">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mechanisms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adaptation-extension" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adaptation / extension
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#offline-mechanism-self-check-python-demopy-offline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Offline mechanism self-check (python demo.py --offline)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conclusions-one-real-run-gpt-56-luna-2026-07" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusions (one real run, gpt-5.6-luna, 2026-07)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-scaffolding-trade-off-weak-gpt-4o-mini-vs-strong-gpt-56-luna" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model ↔ scaffolding trade-off (weak gpt-4o-mini vs strong gpt-5.6-luna)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model ↔ scaffolding trade-off (weak gpt-4o-mini vs strong gpt-5.6-luna)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#value-1-avoid-misusing-generic-tools-fades-with-stronger-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Value 1: avoid misusing generic tools — fades with stronger models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#value-2-inject-token-savings-persists-regardless-of-model-strength" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Value 2: inject-token savings — persists regardless of model strength
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-line-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One-line summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        中文
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="中文">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        目的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        机制
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        运行
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        如何适配 / 扩展
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mock-python-demopy-offline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        离线机制自检（本地嵌入 + mock 模型，python demo.py --offline）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpt-56-luna2026-07" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        结论（基于一次真实运行，gpt-5.6-luna，2026-07）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpt-4o-mini-vs-gpt-56-luna" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模型 ↔ 脚手架此消彼长（弱模型 gpt-4o-mini vs 强模型 gpt-5.6-luna，均为真实运行）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="模型 ↔ 脚手架此消彼长（弱模型 gpt-4o-mini vs 强模型 gpt-5.6-luna，均为真实运行）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        价值一：避免"错选通用工具"—— 随模型变强而淡出（fading）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-persisting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        价值二：节省注入 token —— 与模型强弱无关、始终存在（persisting）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一句话小结
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        文件
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes / 说明
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/chapter4/active-tool-discovery/README.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/chapter4/active-tool-discovery/README.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="active-tool-discovery">Active Tool Discovery / 主动工具发现<a class="headerlink" href="#active-tool-discovery" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Companion code for <em>AI Agents in Depth</em>, Chapter 4 — <strong>Experiment 4-6 ★★★: Proactive Tool Discovery</strong>. Compares full injection, retrieval prefilter, and active discovery on a 126-tool library.<br />
+配套《深入理解 AI Agent》第 4 章 <strong>实验 4-6 ★★★：主动工具发现</strong>。在 126 个跨领域工具上对比全量注入、检索预筛选与主动发现。</p>
+</blockquote>
+<p>← <a href="../">Chapter 4 index / 返回第 4 章目录</a></p>
+<h2 id="canonical-manuscript-campaign">Canonical manuscript campaign / 正式实验活动<a class="headerlink" href="#canonical-manuscript-campaign" title="Permanent link">&para;</a></h2>
+<p><code>run_exact_experiment.py</code> replaces the mechanism-only demo for formal
+Experiment 4-6 acceptance. It obtains all 126 complete schemas from the real
+perception MCP server, proves the full-catalog control exceeds 50K measured
+tokens, uses local Ollama <code>qwen3:4b</code> for both arms, retrieves five candidates
+with <code>all-MiniLM-L6-v2</code>, and executes every selected tool through MCP against
+real public APIs/local processes. No mock tool result can satisfy a formal
+gate. Runs are resumable and store the gzipped catalog, model receipts, MCP
+receipts, artifacts, hashes, paired metrics, and an honest hypothesis result.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>run_exact_experiment.py<span class="w"> </span>--campaign-id<span class="w"> </span>my-qwen3-4b-run
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># after an interruption:</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>python<span class="w"> </span>run_exact_experiment.py<span class="w"> </span>--campaign-id<span class="w"> </span>my-qwen3-4b-run<span class="w"> </span>--resume
+</code></pre></div>
+<p><code>demo.py</code> and <code>offline_backend.py</code> remain useful teaching/CI paths, but their
+lightweight tool outputs and scripted model do not count as formal evidence.</p>
+<p>The completed canonical evidence is
+<a href="validation/experiment_4_6/qwen3_4b_exact_v2_20260730T130600Z/summary.json"><code>validation/experiment_4_6/qwen3_4b_exact_v2_20260730T130600Z/summary.json</code></a>,
+with manifest SHA-256
+<code>88d622db4981207a9980c30abea4eb8dc2621161ded80be0cb2bb8582833153c</code>.
+All twelve gates passed. Control and treatment both selected every required
+capability and completed all three tasks (100% versus 100%), so the predicted
+accuracy/completion improvement was not observed. Treatment elapsed time was
+808.926 seconds versus 2,590.820 seconds for control (3.20× faster). Its
+initial system prompt was 1,251 tokens per task and it dynamically injected
+12,838 schema tokens across all tasks; control used 50,352 system-prompt tokens
+per task.</p>
+<p>The pass does not hide weak-model detours. In the treatment Apple trajectory,
+Qwen made an irrelevant search and code call (leaving a 215-byte empty SVG)
+and attempted to finish twice before the completion gate forced discovery of
+the stock and news specialists. The arXiv trajectory also retained malformed
+actions and a redundant discovery. The first v2 terminal attempt additionally
+retains real 429/503/disconnect receipts under <code>failed_attempts/</code>; a single
+bounded resume archived it and retried only that incomplete task. Completed
+receipts are never replayed, and a third real attempt is refused.</p>
+<p><code>run_exact_experiment.py</code> 是实验 4-6 的正式运行器：从真实感知 MCP 读取 126 个完整
+schema，验证控制组超过 50K token，两组都使用本地 Ollama <code>qwen3:4b</code>，实验组用
+<code>all-MiniLM-L6-v2</code> 每次检索五个候选，并通过 MCP 调用真实公共 API 或本地进程执行所选
+工具。mock 结果不能通过正式门禁；中断后可用 <code>--resume</code> 续跑。<code>demo.py</code> 与离线后端仅作
+教学/CI 机制自检，不是正式验收证据。</p>
+<p>正式证据为
+<a href="validation/experiment_4_6/qwen3_4b_exact_v2_20260730T130600Z/summary.json"><code>validation/experiment_4_6/qwen3_4b_exact_v2_20260730T130600Z/summary.json</code></a>，
+manifest SHA-256 为
+<code>88d622db4981207a9980c30abea4eb8dc2621161ded80be0cb2bb8582833153c</code>。
+12 项门禁全部通过；对照组与实验组均完成 3/3 任务，准确率均为 100%，因此正文
+预期的准确率/完成率提升并未出现。实验组用时 808.926 秒，对照组为
+2,590.820 秒（快 3.20×）；实验组每任务初始 system prompt 为 1,251 token，
+三任务合计动态注入 12,838 token，对照组每任务则为 50,352 token。
+成功轨迹仍保留了 Apple 任务的无关搜索/代码调用、215 字节空 SVG、两次过早结束，
+以及 arXiv 任务的格式错误和冗余发现；不把通过解读为“工具选择过程干净”。</p>
+<hr />
+<h2 id="english">English<a class="headerlink" href="#english" title="Permanent link">&para;</a></h2>
+<h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h3>
+<p>When an Agent has hundreds of tools, a common approach is to inject every tool JSON schema into the system prompt. That creates two problems:</p>
+<ol>
+<li><strong>Token waste</strong>: Full schemas for 126 tools are about <strong>11.6k tokens</strong>, re-billed on every reasoning step.</li>
+<li><strong>Instruction-following degradation</strong>: On slightly vague tasks, the model “casts a wide net” and calls generic fallbacks (<code>web_search</code> / <code>google_search</code> / <code>universal_search</code>) together with specialized tools—or even replaces specialized tools with generic search (e.g. looking up a stock price via generic <code>web_search</code>).</li>
+</ol>
+<p><strong>Active discovery</strong> keeps only a few base tools plus a <code>discover_tools(need)</code> meta-tool in the system prompt. When the model hits a capability gap, it describes the need in natural language; the system retrieves the 3–5 most relevant specialized tools via embedding similarity, appends their schemas as a <strong>user message</strong> (protecting the system-prefix KV cache), and updates the status bar of available tools.</p>
+<h3 id="mechanisms">Mechanisms<a class="headerlink" href="#mechanisms" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>tools_library.py   126 cross-domain teaching tools (finance/web/arxiv/github/geo/weather/media/...; 17 domains)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>                   demo.py uses lightweight outputs; the formal runner instead uses perception MCP schemas/execution
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>                   Intentionally mixes 8 generic/near-synonym tools (web_search, etc.) with inflated descriptions
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>                   select_tools(size): subset by --tool-set-size to show full injection cost growing with catalog size
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>discovery.py       Pluggable embedding backend + tool vector index; OpenAIEmbedder uses text-embedding-3-small
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>                   and caches to .cache/; search(need) = embed need, cosine similarity vs tool vectors, return top-k
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>agent.py           Three ReAct strategies (text protocol: model outputs one JSON tool call per step)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>                   - run_full_injection: all 126 schemas in system prompt
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>                   - run_retrieval_prefilter: one-shot top-n retrieve by initial query (book’s “retrieval prefilter”)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>                   - run_active_discovery: base tools + discover_tools; retrieve-on-demand during execution
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>offline_backend.py Offline backend: LocalEmbedder (local bag-of-words hash) + MockChatClient (scripted mock)
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>                   so --offline runs end-to-end without any API key (token/latency real; accuracy = heuristic routing)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>demo.py            Same tasks under selected strategies; prints token / latency / call traces / exact match; summary table
+</code></pre></div>
+<p><strong>Why “text inject + text parse” instead of native OpenAI function calling?</strong><br />
+Native function-calling is heavily optimized for tool choice and rarely errs even with hundreds of tools, so it cannot demonstrate long-context instruction-following degradation. Putting schemas in the prompt as plain text and letting the model emit JSON tool calls is the control condition—and matches the book’s “inject schemas into the system prompt (tens of thousands of tokens)” setup.</p>
+<p><strong>Why does embedding retrieval reduce wrong picks?</strong> Generic tools like <code>web_search</code> claim to “do everything,” so their semantics are diluted; specialized tools (e.g. <code>search_news</code>) have focused descriptions. For a focused <code>need</code> (“recent Tesla news”), specialized tools score higher and rank first; generics often never enter top-k and are never loaded—retrieval acts as a precision filter.</p>
+<p><strong>Why isn’t retrieval prefilter enough?</strong> Prefilter (<code>run_retrieval_prefilter</code>) matches only the <strong>initial query</strong> once and injects top-n tools. On multi-step cross-domain tasks (e.g. stock price + news), the initial vector often favors the first domain; the second sub-task’s specialized tool may miss top-n. Active discovery defers discovery until each real <code>need</code> appears and retrieves separately (offline self-check shows prefilter missing the second tool on half of multi-step tasks—see table below).</p>
+<h3 id="how-to-run">How to run<a class="headerlink" href="#how-to-run" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From the repository root: use the shared Chapter 4 environment</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.12<span class="w"> </span>--extra<span class="w"> </span>ch4
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Activate it before changing directories:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># macOS/Linux:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Windows PowerShell: .venv\Scripts\Activate.ps1</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Windows cmd: .venv\Scripts\activate.bat</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># pip fallback when uv is not installed:</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># python -m pip install -e &quot;.[ch4]&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nb">cd</span><span class="w"> </span>chapter4/active-tool-discovery
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Single-project compatibility path, still supported during migration:</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># python -m pip install -r requirements.txt</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Path A: offline mechanism self-check (no keys; token/latency real; accuracy = heuristic routing only)</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--offline
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># Path B: real model (needed for small-model instruction-following degradation)</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>cp<span class="w"> </span>env.example<span class="w"> </span>.env<span class="w">    </span><span class="c1"># set OPENAI_API_KEY (chat + embeddings both use OpenAI)</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># Fallback: if OPENAI_API_KEY is unset but OPENROUTER_API_KEY is set, chat routes via OpenRouter</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># (model mapped to openai/gpt-5.6-luna, etc.); tool retrieval falls back to local hash embeddings</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># (OpenRouter has no embeddings API).</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>python<span class="w"> </span>demo.py<span class="w">                                   </span><span class="c1"># all 8 tasks × three strategies</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--strategies<span class="w"> </span>full,discovery<span class="w">       </span><span class="c1"># compare only two strategies</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--tasks<span class="w"> </span>finance+news,crypto+news<span class="w">  </span><span class="c1"># selected tasks (comma-separated)</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--tasks<span class="w"> </span><span class="s1">&#39;opinion(诱导)&#39;</span><span class="w">            </span><span class="c1"># quote task ids that contain parentheses</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--tool-set-size<span class="w"> </span><span class="m">20</span><span class="w">                </span><span class="c1"># smaller catalog: full-injection disadvantage shrinks</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;查英伟达股价再搜点相关新闻&#39;</span><span class="w"> </span>--offline<span class="w">   </span><span class="c1"># one-off natural-language task</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--offline<span class="w"> </span>--output<span class="w"> </span>results/offline.json<span class="w">         </span><span class="c1"># export structured results</span>
+</code></pre></div>
+<p>Default model <code>gpt-5.6-luna</code>; override with <code>--model</code> or env: <code>python demo.py --model gpt-5.6-luna</code>.<br />
+First run builds tool embeddings and caches under <code>.cache/</code>. Full flags: <code>python demo.py --help</code><br />
+(<code>--query / --tasks / --strategies / --tool-set-size / --top-k / --prefilter-n / --model / --embed-model / --max-steps / --offline / --output</code>).</p>
+<h3 id="adaptation-extension">Adaptation / extension<a class="headerlink" href="#adaptation-extension" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Swap chat model</strong>: <code>MODEL=gpt-4.1-mini python demo.py</code>; swap embeddings with <code>EMBED_MODEL=text-embedding-3-large</code> (cache rebuilds automatically when the embed signature changes).</li>
+<li><strong>Swap provider / gateway</strong>: chat and embeddings both use the OpenAI SDK; <code>OpenAI()</code> reads <code>OPENAI_BASE_URL</code>, so any <strong>OpenAI-compatible</strong> gateway works via <code>OPENAI_BASE_URL=https://your-gateway/v1</code> (endpoint must offer both chat and embeddings).</li>
+<li><strong>Swap tasks / inputs</strong>: edit <code>TASKS</code> in <code>tools_library.py</code> (each has <code>prompt</code> and scoring capability slots), or use <code>--tasks</code> / <code>--query</code>; grow/shrink the catalog in <code>ALL_TOOLS</code> in the same file.</li>
+<li><strong>Offline self-check</strong>: <code>--offline</code> uses <code>offline_backend.py</code> (local hash embeddings + scripted mock). Good for CI / offline / pipeline smoke tests. It reproduces token/latency structure and “prefilter misses second tool,” not real-model long-context choice behavior (see real gpt-5.6-luna results below).</li>
+</ul>
+<h3 id="offline-mechanism-self-check-python-demopy-offline">Offline mechanism self-check (<code>python demo.py --offline</code>)<a class="headerlink" href="#offline-mechanism-self-check-python-demopy-offline" title="Permanent link">&para;</a></h3>
+<p>One real <code>--offline</code> run (8 tasks × three strategies). <strong>Token/latency are real tiktoken/wall-clock</strong>; <strong>accuracy only reflects scripted heuristic routing</strong>, not a real model—the mock is a “strong router” and never degrades, so full injection also scores perfectly.</p>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Exact match</th>
+<th>Task complete</th>
+<th>Avg inject tokens</th>
+<th>Total inject tokens</th>
+<th>Avg latency (s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Full injection</td>
+<td>8/8</td>
+<td>8/8</td>
+<td>11630</td>
+<td>93040</td>
+<td>0.008</td>
+</tr>
+<tr>
+<td>Retrieval prefilter</td>
+<td>4/8</td>
+<td>4/8</td>
+<td>1030</td>
+<td>8236</td>
+<td>0.006</td>
+</tr>
+<tr>
+<td>Active discovery</td>
+<td>8/8</td>
+<td>8/8</td>
+<td>974</td>
+<td>7796</td>
+<td>0.010</td>
+</tr>
+</tbody>
+</table>
+<p>Two <strong>real, reproducible structural</strong> takeaways:</p>
+<ol>
+<li><strong>Tokens diverge as catalog size grows</strong>: full injection is fixed at 11,630 tokens/task; prefilter and discovery inject ~1,000 (<strong>~11.9×</strong> smaller). With <code>--tool-set-size 20</code> the gap shrinks to ~1.8×—confirming “more tools → full injection hurts more.”</li>
+<li><strong>Prefilter structurally misses tools on multi-step cross-domain tasks</strong>: one-shot top-10 misses the second specialized tool on 4/8 tasks (e.g. <code>academic(诱导)</code> top-10 has no <code>arxiv_search</code>); active discovery retrieves per emerging <code>need</code> and hits 8/8.</li>
+</ol>
+<h3 id="conclusions-one-real-run-gpt-56-luna-2026-07">Conclusions (one real run, gpt-5.6-luna, 2026-07)<a class="headerlink" href="#conclusions-one-real-run-gpt-56-luna-2026-07" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>One real LLM run (<code>python demo.py --model gpt-5.6-luna</code>, 8 tasks × three strategies, OpenAI chat + <code>text-embedding-3-small</code>). gpt-5.6-luna is a reasoning model that only supports default <code>temperature=1</code> (no <code>temperature=0</code>; code falls back on that error), so this is a <strong>single non-deterministic</strong> run. Scoring: ✅ exact match (all capability slots, no generic fallback misuse); ⚠️ completed but also picked a generic tool; ❌ failed (missed specialized tool, abandoned, or 0 tool calls).</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Full</th>
+<th>Prefilter</th>
+<th>Discovery</th>
+<th>Full tokens</th>
+<th>Discovery tokens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>finance+news</td>
+<td>✅</td>
+<td>❌</td>
+<td>✅</td>
+<td>11630</td>
+<td>883</td>
+</tr>
+<tr>
+<td>arxiv+download</td>
+<td>✅</td>
+<td>❌</td>
+<td>✅</td>
+<td>11630</td>
+<td>927</td>
+</tr>
+<tr>
+<td>github+viz</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>11630</td>
+<td>295</td>
+</tr>
+<tr>
+<td>weather+calendar</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>11630</td>
+<td>1055</td>
+</tr>
+<tr>
+<td>forex+weather</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+<td>11630</td>
+<td>295</td>
+</tr>
+<tr>
+<td>crypto+news</td>
+<td>❌</td>
+<td>⚠️</td>
+<td>❌</td>
+<td>11630</td>
+<td>295</td>
+</tr>
+<tr>
+<td>opinion(诱导)</td>
+<td>⚠️</td>
+<td>❌</td>
+<td>✅</td>
+<td>11630</td>
+<td>688</td>
+</tr>
+<tr>
+<td>academic(诱导)</td>
+<td>⚠️</td>
+<td>⚠️</td>
+<td>❌</td>
+<td>11630</td>
+<td>295</td>
+</tr>
+<tr>
+<td><strong>Exact match</strong></td>
+<td><strong>3/8</strong></td>
+<td><strong>2/8</strong></td>
+<td><strong>4/8</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Task complete</strong></td>
+<td><strong>5/8</strong></td>
+<td><strong>4/8</strong></td>
+<td><strong>4/8</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Total inject tokens</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td><strong>93040</strong></td>
+<td><strong>4733</strong></td>
+</tr>
+</tbody>
+</table>
+<p>(Prefilter avg 971 tokens/task, total 7768; mean latency ~11.5 / 9.6 / 10.7 s for the three strategies—measured this run.)</p>
+<ol>
+<li>
+<p><strong>Token savings remain robust</strong>: full injection fixed at <strong>11,630 tokens/task</strong>; discovery <strong>295–1,055</strong>, total 93,040 → 4,733 (<strong>~19.7×</strong>). Part of the larger ratio is gpt-5.6-luna abandoning some tasks without <code>discover_tools</code> (only 3 base tools = 295 tokens). The structural gain still holds: full injection re-bills tens of thousands; on-demand injects thousands or fewer.</p>
+</li>
+<li>
+<p><strong>Book core phenomenon on two “inducement” tasks</strong>: with vague wording, full injection grabs generic fallbacks—</p>
+</li>
+<li><code>opinion(诱导)</code>: full called <code>search_news, search_news, web_search, search_tweets</code> (⚠️ included generic <strong><code>web_search</code></strong>); discovery retrieved <code>search_news / get_news_by_source / ...</code> (<strong>no</strong> <code>web_search</code>) and only used specialized news tools (✅).</li>
+<li>
+<p><code>academic(诱导)</code>: full called 8 tools including <strong><code>google_search / universal_search / ask_knowledge_base</code></strong> (⚠️); prefilter also misused <code>google_search / universal_search</code>.</p>
+</li>
+<li>
+<p><strong>Another real behavior this run</strong>: conservative reasoning models sometimes <strong><code>finish</code> with 0 tool calls</strong> (“cannot access real-time data”), lowering absolute accuracy for all strategies. Main failure mode was abandon/skip steps—not only wrong tool choice—and it appears under both full injection and discovery.</p>
+</li>
+<li>
+<p><strong>Boundaries</strong>:</p>
+</li>
+<li>Control setup is “schemas as plain text + model emits JSON tool calls”; mock tools return placeholders, so conservative models may refuse—major source of low accuracy here.</li>
+<li>With <code>temperature=1</code> only, per-task outcomes vary across runs; structural conclusions (token savings; full injection misusing generics on inducement tasks) stay directionally stable.</li>
+<li>For cleaner, reproducible mechanism checks (token/latency + prefilter missing second tool), use the <code>--offline</code> table above.</li>
+</ol>
+<blockquote>
+<p><strong>One line:</strong> On gpt-5.6-luna, active discovery’s steadiest win is still tokens (~19.7× this run); on vague inducement tasks, embedding retrieval keeps inflated generics (<code>web_search</code> / <code>google_search</code> / <code>universal_search</code>) out of the candidate set. Strong reasoners’ conservative “give up” behavior also lowers absolute accuracy for every strategy—read the table above as-is.</p>
+</blockquote>
+<h3 id="model-scaffolding-trade-off-weak-gpt-4o-mini-vs-strong-gpt-56-luna">Model ↔ scaffolding trade-off (weak gpt-4o-mini vs strong gpt-5.6-luna)<a class="headerlink" href="#model-scaffolding-trade-off-weak-gpt-4o-mini-vs-strong-gpt-56-luna" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>Does stronger models make this scaffolding useless? Comparing the gpt-5.6-luna (strong) run with a gpt-4o-mini (weak) run on the same 8 tasks × three strategies (<code>python demo.py --model gpt-4o-mini</code>, 2026-07, same scoring). Scaffolding has two values: one <strong>fades</strong> as models strengthen; one is <strong>model-independent</strong>.</p>
+</blockquote>
+<p><strong>Weak model gpt-4o-mini real summary:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Exact match</th>
+<th>Task complete</th>
+<th>Total inject tokens</th>
+<th>Avg latency (s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Full injection</td>
+<td>5/8</td>
+<td><strong>8/8</strong></td>
+<td>93040</td>
+<td>8.38</td>
+</tr>
+<tr>
+<td>Retrieval prefilter</td>
+<td>7/8</td>
+<td>7/8</td>
+<td>7768</td>
+<td>4.90</td>
+</tr>
+<tr>
+<td>Active discovery</td>
+<td><strong>8/8</strong></td>
+<td><strong>8/8</strong></td>
+<td>7266</td>
+<td>7.65</td>
+</tr>
+</tbody>
+</table>
+<p>(token 93040 → 7266, <strong>~12.8×</strong>.)</p>
+<h4 id="value-1-avoid-misusing-generic-tools-fades-with-stronger-models">Value 1: avoid misusing generic tools — <strong>fades</strong> with stronger models<a class="headerlink" href="#value-1-avoid-misusing-generic-tools-fades-with-stronger-models" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Weak gpt-4o-mini:</strong> under full injection never abandons (8/8 complete) but wide-nets generics on 3 tasks → <strong>5/8 exact</strong>. Discovery blocks inflated generics: <strong>8/8 exact, 0 generic misuse, still 8/8 complete</strong> (+3 exact tasks, zero completion loss).</li>
+<li><strong>Strong gpt-5.6-luna:</strong> generic misuse only on 2 inducement tasks; discovery cleans those but exact only <strong>3/8 → 4/8 (+1)</strong> and completion <strong>falls 5/8 → 4/8</strong>. Main failure is abandon, not wrong pick—retrieval cannot fix “no tool call at all.” The weakness scaffolding targets is thin on strong models, so that value fades.</li>
+</ul>
+<h4 id="value-2-inject-token-savings-persists-regardless-of-model-strength">Value 2: inject-token savings — <strong>persists</strong> regardless of model strength<a class="headerlink" href="#value-2-inject-token-savings-persists-regardless-of-model-strength" title="Permanent link">&para;</a></h4>
+<p>Full injection is always <strong>11,630 tokens/task</strong> (all 126 schemas in system). On-demand injects a few hundred to ~1k:</p>
+<ul>
+<li>Weak gpt-4o-mini: 93,040 → 7,266, <strong>~12.8×</strong></li>
+<li>Strong gpt-5.6-luna: 93,040 → 4,733, <strong>~19.7×</strong> (larger partly because abandon skips <code>discover_tools</code>)</li>
+</ul>
+<p>Token savings hold on both models and grow with catalog size—the hard reason to keep scaffolding in the strong-model era.</p>
+<h4 id="one-line-summary">One-line summary<a class="headerlink" href="#one-line-summary" title="Permanent link">&para;</a></h4>
+<blockquote>
+<p><strong>Stronger models weaken “help it not pick the wrong tool”</strong> (gpt-4o-mini full 5/8→discovery 8/8 exact, zero completion loss; gpt-5.6-luna only 3/8→4/8 and completion drops, because losses are “abandon” not “wrong pick”). <strong>Token savings stay</strong> (~12.8× / ~19.7×). On strong models, the main case for active discovery shifts from “fix instruction-following degradation” to “control context cost.”</p>
+</blockquote>
+<h3 id="files">Files<a class="headerlink" href="#files" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>tools_library.py</code> — 126 tool defs + <code>select_tools</code> + mock execution + 8 eval tasks / scoring</li>
+<li><code>discovery.py</code> — pluggable embedders (<code>OpenAIEmbedder</code>) + vector index / similarity search</li>
+<li><code>agent.py</code> — three strategies (full / prefilter / discovery) ReAct loops + token stats</li>
+<li><code>offline_backend.py</code> — <code>LocalEmbedder</code> + <code>MockChatClient</code> for <code>--offline</code></li>
+<li><code>demo.py</code> — multi-strategy CLI demo</li>
+<li><code>requirements.txt</code> / <code>env.example</code></li>
+</ul>
+<hr />
+<h2 id="_1">中文<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h3 id="_2">目的<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>当一个 Agent 拥有上百个工具时，常见做法是把全部工具的 JSON schema 一次性塞进 system prompt。
+这会带来两个问题：</p>
+<ol>
+<li><strong>token 浪费</strong>：126 个工具的完整 schema 约 <strong>1.16 万 token</strong>，每一步推理都要重复计费。</li>
+<li><strong>指令遵循退化</strong>：措辞稍泛的任务下，模型会"广撒网"地把通用兜底工具（<code>web_search</code> /
+   <code>google_search</code> / <code>universal_search</code>）和专用工具一起调用，甚至用通用搜索替代专用工具
+   —— 即书中所说的"查股价却选了通用 web_search"。</li>
+</ol>
+<p><strong>主动发现</strong>只在 system 里保留少量基础工具 + 一个 <code>discover_tools(need)</code> 元工具。模型遇到能力缺口时，
+用自然语言描述需求，系统用嵌入相似度从工具库检索 3-5 个最相关的专用工具，把它们的 schema 作为
+<strong>user message</strong> 追加进对话（保护 system 前缀的 KV Cache），并更新状态栏可用工具列表。</p>
+<h3 id="_3">机制<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>tools_library.py   126 个跨领域工具（finance/web/arxiv/github/geo/weather/media/... 共 17 个领域）
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>                   每个工具有真实 name/description/parameters；执行为轻量 mock（重点是&quot;选对工具&quot;）
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>                   其中故意混入 8 个&quot;通用/近义&quot;工具（web_search 等），它们的描述夸大自己无所不能
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>                   select_tools(size)：按 --tool-set-size 截取子集，演示&quot;工具集越大全量注入越吃亏&quot;
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>discovery.py       可插拔嵌入后端 + 工具向量索引；OpenAIEmbedder 用 text-embedding-3-small 生成向量
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>                   并缓存到 .cache/；search(need) = 把 need 向量化后与工具向量做余弦相似度返回 top-k
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>agent.py           三种策略的 ReAct 循环（文本协议：模型每步输出一个 JSON 工具调用）
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>                   - run_full_injection：126 个工具 schema 全部写进 system prompt
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>                   - run_retrieval_prefilter：按初始查询一次性检索 top-n 工具注入（书中&quot;检索式预筛选&quot;）
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>                   - run_active_discovery：基础工具 + discover_tools，执行中按需检索加载
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>offline_backend.py 离线后端：LocalEmbedder（本地哈希词袋嵌入）+ MockChatClient（脚本化 mock 模型），
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>                   让 --offline 无需任何 API key 即可跑通全流程（token/延迟真实，准确率仅反映启发式路由）
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>demo.py            对同一组任务分别跑所选策略，打印 token / 延迟 / 调用轨迹 / 是否精确选对，并汇总对比表
+</code></pre></div>
+<p><strong>为什么用"文本注入 + 文本解析"而不是 OpenAI 原生 function calling？</strong>
+原生 function-calling 接口对工具选择做了很强的约束优化，即使上百个工具也极少选错，无法体现书中
+所述的"超长上下文指令遵循退化"。把 schema 当作纯文本塞进 prompt、让模型自己以 JSON 输出工具调用，
+才是控制组的真实机制，也才能观察到退化。这也正是书中"把 schema 注入 system prompt（几万 token）"的写法。</p>
+<p><strong>为什么嵌入检索能避免错选？</strong> 通用工具 <code>web_search</code> 的描述"什么都能做"，语义被稀释；而专用工具
+（如 <code>search_news</code>）描述聚焦。对一个聚焦的 <code>need</code>（"获取特斯拉最近的新闻"），聚焦的专用工具余弦相似度
+更高、排在前面，通用工具往往进不了 top-k，于是根本不会被加载 —— 检索层天然起到了"精度过滤"作用。</p>
+<p><strong>检索预筛选为什么不够？</strong> 检索预筛选（<code>run_retrieval_prefilter</code>）只按<strong>初始查询</strong>做一次语义匹配、
+一次性注入 top-n 工具。对"查股价 + 搜新闻"这类多步跨领域任务，初始查询的向量往往偏向第一个领域，
+第二个子任务需要的专用工具可能挤不进 top-n，模型执行到一半才发现"想调用的工具根本没在清单里"——
+这正是书中指出的一次性匹配的内在局限。主动发现把"发现"延后到执行中、按每个真实浮现的 <code>need</code> 分别检索，
+从而补齐这一缺口（离线自检里可直接观察到：检索预筛选在半数多步任务上漏掉了第二个工具，见下表）。</p>
+<h3 id="_4">运行<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 在仓库根目录使用统一的第 4 章环境</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.12<span class="w"> </span>--extra<span class="w"> </span>ch4
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># 切换目录前先激活环境：</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># macOS/Linux：</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Windows PowerShell：.venv\Scripts\Activate.ps1</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Windows cmd：.venv\Scripts\activate.bat</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># 未安装 uv 时可用 pip 兜底：</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># python -m pip install -e &quot;.[ch4]&quot;</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">cd</span><span class="w"> </span>chapter4/active-tool-discovery
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># 迁移期间仍支持单项目兼容路径：</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># python -m pip install -r requirements.txt</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># 方式 A：离线机制自检（无需任何 key；token/延迟真实，准确率仅反映启发式路由）</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--offline
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># 方式 B：真实模型（体现小模型&quot;指令遵循退化&quot;需要真实 LLM）</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>cp<span class="w"> </span>env.example<span class="w"> </span>.env<span class="w">    </span><span class="c1"># 填入 OPENAI_API_KEY（chat 与 embeddings 都用 OpenAI）</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c1"># 兜底：若无 OPENAI_API_KEY 但设置了 OPENROUTER_API_KEY，chat 会自动改走 OpenRouter</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="c1">#（模型映射到 openai/gpt-5.6-luna 等），工具检索退用本地哈希嵌入（OpenRouter 无 embeddings 接口）。</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>python<span class="w"> </span>demo.py<span class="w">                                   </span><span class="c1"># 全部 8 任务 × 三种策略</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--strategies<span class="w"> </span>full,discovery<span class="w">       </span><span class="c1"># 只跑其中两种策略对比</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--tasks<span class="w"> </span>finance+news,crypto+news<span class="w">  </span><span class="c1"># 只跑指定任务（逗号分隔）</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--tasks<span class="w"> </span><span class="s1">&#39;opinion(诱导)&#39;</span><span class="w">            </span><span class="c1"># 含括号的任务 id 记得加引号</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--tool-set-size<span class="w"> </span><span class="m">20</span><span class="w">                </span><span class="c1"># 缩小工具集，看全量注入的劣势如何随规模放大</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;查英伟达股价再搜点相关新闻&#39;</span><span class="w"> </span>--offline<span class="w">   </span><span class="c1"># 临时单条自然语言任务</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>python<span class="w"> </span>demo.py<span class="w"> </span>--offline<span class="w"> </span>--output<span class="w"> </span>results/offline.json<span class="w">         </span><span class="c1"># 导出结构化结果</span>
+</code></pre></div>
+<p>默认模型 <code>gpt-5.6-luna</code>，可用 <code>--model</code> 或 env 覆盖：<code>python demo.py --model gpt-5.6-luna</code>。
+首次运行会为工具生成嵌入向量并缓存到 <code>.cache/</code>，之后复用。<code>python demo.py --help</code> 查看全部参数
+（<code>--query / --tasks / --strategies / --tool-set-size / --top-k / --prefilter-n / --model / --embed-model / --max-steps / --offline / --output</code>）。</p>
+<h3 id="_5">如何适配 / 扩展<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>换模型</strong>：<code>MODEL=gpt-4.1-mini python demo.py</code>（chat 模型）；<code>EMBED_MODEL=text-embedding-3-large</code> 换嵌入模型
+  （换嵌入模型会因签名变化自动重建 <code>.cache/</code> 索引）。</li>
+<li><strong>换供应商 / 网关</strong>：chat 与 embeddings 都走 OpenAI SDK，<code>OpenAI()</code> 会自动读取环境变量 <code>OPENAI_BASE_URL</code>，
+  因此指向任意 <strong>OpenAI 兼容</strong>的网关/代理只需 <code>OPENAI_BASE_URL=https://your-gateway/v1</code>（该端点需同时提供 chat 与 embeddings）。</li>
+<li><strong>换任务 / 输入</strong>：编辑 <code>tools_library.py</code> 里的 <code>TASKS</code>（每条含 <code>prompt</code> 与判分用的能力槽位），或用
+  <code>--tasks</code> 只跑其中几条，或用 <code>--query</code> 传一句临时需求；想扩充工具库同样在 <code>tools_library.py</code> 的 <code>ALL_TOOLS</code> 中增删。</li>
+<li><strong>离线自检</strong>：<code>--offline</code> 用 <code>offline_backend.py</code> 的本地哈希嵌入 + 脚本化 mock 模型，无需任何 key，
+  适合 CI、无网环境或快速验证流水线；它复现的是 token/延迟结构与"检索预筛选一次性漏工具"的机制，
+  不复现真实模型在长上下文工具墙下的选择行为（后者见下方 gpt-5.6-luna 真实结果）。</li>
+</ul>
+<h3 id="mock-python-demopy-offline">离线机制自检（本地嵌入 + mock 模型，<code>python demo.py --offline</code>）<a class="headerlink" href="#mock-python-demopy-offline" title="Permanent link">&para;</a></h3>
+<p>下表为一次真实的 <code>--offline</code> 运行（8 任务 × 三策略）。<strong>token/延迟是 tiktoken/wall-clock 真实测量</strong>；
+<strong>准确率仅反映脚本化启发式路由，不代表真实模型能力</strong>——mock 模型是"强路由器"，不会退化，所以全量注入也拿满分。</p>
+<table>
+<thead>
+<tr>
+<th>策略</th>
+<th>精确选对</th>
+<th>任务完成</th>
+<th>平均注入 token</th>
+<th>总注入 token</th>
+<th>平均延迟(s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全量注入</td>
+<td>8/8</td>
+<td>8/8</td>
+<td>11630</td>
+<td>93040</td>
+<td>0.008</td>
+</tr>
+<tr>
+<td>检索预筛选</td>
+<td>4/8</td>
+<td>4/8</td>
+<td>1030</td>
+<td>8236</td>
+<td>0.006</td>
+</tr>
+<tr>
+<td>主动发现</td>
+<td>8/8</td>
+<td>8/8</td>
+<td>974</td>
+<td>7796</td>
+<td>0.010</td>
+</tr>
+</tbody>
+</table>
+<p>离线自检要传达的<strong>两个真实、可复现的结构性结论</strong>：</p>
+<ol>
+<li><strong>token 随工具集规模放大而分化</strong>：全量注入固定 11,630 token/任务；检索预筛选与主动发现按需只注入
+   约 1,000 token（<strong>~11.9× 精简</strong>）。用 <code>--tool-set-size 20</code> 缩小工具集，差距收敛到 ~1.8×——印证"工具越多、
+   全量注入越吃亏"。</li>
+<li><strong>检索预筛选在多步跨领域任务上结构性漏工具</strong>：一次性 top-10 检索在 8 个任务里有 4 个漏掉了第二个子任务
+   所需的专用工具（如 <code>academic(诱导)</code> 的 top-10 里根本没有 <code>arxiv_search</code>），模型执行到一半调不到工具 →
+   子任务失败；主动发现按每个真实浮现的 <code>need</code> 分别检索，8/8 补齐。</li>
+</ol>
+<h3 id="gpt-56-luna2026-07">结论（基于一次真实运行，gpt-5.6-luna，2026-07）<a class="headerlink" href="#gpt-56-luna2026-07" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>说明：下表是一次真实 LLM 运行（<code>python demo.py --model gpt-5.6-luna</code>，8 任务 × 三策略，OpenAI 直连
+chat + <code>text-embedding-3-small</code> 检索）。gpt-5.6-luna 是推理型模型，仅支持默认 <code>temperature=1</code>
+（不支持 <code>temperature=0</code>，代码遇到该报错会自动回退到默认温度），故本次为<strong>单次、非确定性</strong>运行；
+token/延迟为真实测量，逐任务的选择结果可能随采样波动。判定：✅=精确选对（覆盖全部能力槽位且未错选
+通用兜底工具）；⚠️=完成但顺手错选了通用工具；❌=出错（漏用专用工具或中途放弃、0 次工具调用）。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>任务</th>
+<th>全量注入</th>
+<th>检索预筛选</th>
+<th>主动发现</th>
+<th>全量 token</th>
+<th>发现 token</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>finance+news</td>
+<td>✅</td>
+<td>❌</td>
+<td>✅</td>
+<td>11630</td>
+<td>883</td>
+</tr>
+<tr>
+<td>arxiv+download</td>
+<td>✅</td>
+<td>❌</td>
+<td>✅</td>
+<td>11630</td>
+<td>927</td>
+</tr>
+<tr>
+<td>github+viz</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>11630</td>
+<td>295</td>
+</tr>
+<tr>
+<td>weather+calendar</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>11630</td>
+<td>1055</td>
+</tr>
+<tr>
+<td>forex+weather</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+<td>11630</td>
+<td>295</td>
+</tr>
+<tr>
+<td>crypto+news</td>
+<td>❌</td>
+<td>⚠️</td>
+<td>❌</td>
+<td>11630</td>
+<td>295</td>
+</tr>
+<tr>
+<td>opinion(诱导)</td>
+<td>⚠️</td>
+<td>❌</td>
+<td>✅</td>
+<td>11630</td>
+<td>688</td>
+</tr>
+<tr>
+<td>academic(诱导)</td>
+<td>⚠️</td>
+<td>⚠️</td>
+<td>❌</td>
+<td>11630</td>
+<td>295</td>
+</tr>
+<tr>
+<td><strong>精确选对</strong></td>
+<td><strong>3/8</strong></td>
+<td><strong>2/8</strong></td>
+<td><strong>4/8</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>任务完成</strong></td>
+<td><strong>5/8</strong></td>
+<td><strong>4/8</strong></td>
+<td><strong>4/8</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>总注入 token</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td><strong>93040</strong></td>
+<td><strong>4733</strong></td>
+</tr>
+</tbody>
+</table>
+<p>（检索预筛选平均 971 token/任务、总 7768；三策略平均延迟约 11.5 / 9.6 / 10.7 s，均为本次真实测量。）</p>
+<ol>
+<li>
+<p><strong>token 节省依旧稳健（且更悬殊）</strong>：全量注入每任务固定注入 <strong>11,630 token</strong>；主动发现按需加载后仅
+   <strong>295~1,055 token</strong>，合计 93,040 → 4,733（<strong>~19.7×</strong>）。需诚实说明：本次比值偏大，部分是因为
+   gpt-5.6-luna 在若干任务上直接放弃、根本没触发 <code>discover_tools</code>（此时只注入 3 个基础工具 = 295 token）。
+   即便如此，"全量注入固定重复计费上万 token、按需发现只注入千级 token"这一结构性收益不受影响。</p>
+</li>
+<li>
+<p><strong>书中核心现象在两个"诱导任务"上如实复现</strong>：措辞偏泛时，全量注入会顺手抓通用兜底工具——</p>
+</li>
+<li><code>opinion(诱导)</code>（"特斯拉最近的新闻舆论风向"）：全量注入调用了 <code>search_news, search_news,
+     web_search, search_tweets</code>，把通用的 <strong><code>web_search</code></strong> 也用上（⚠️ 错选）；主动发现检索到
+     <code>search_news / get_news_by_source / ...</code>（<strong>没有</strong> <code>web_search</code>），只调用专用新闻工具，<strong>干净选对（✅）</strong>。</li>
+<li>
+<p><code>academic(诱导)</code>（"量子计算最新科研进展"）：全量注入一口气调用了 8 个工具，其中
+     <strong><code>google_search / universal_search / ask_knowledge_base</code></strong> 三个都是通用兜底（⚠️）；检索预筛选也错选了
+     <code>google_search / universal_search</code>。这正是书中"上百工具的工具墙 + 措辞含糊 → 广撒网抓通用工具"的写照。</p>
+</li>
+<li>
+<p><strong>本次运行暴露的另一类真实行为（与早期 gpt-4o-mini 运行不同，须如实记录）</strong>：gpt-5.6-luna 是偏保守的
+   推理型模型，在多个任务上<strong>没有调用（mock）工具就提前 <code>finish</code></strong>，理由多为"无法访问实时数据/工具"
+   （如 <code>github+viz</code>、<code>weather+calendar</code> 的全量注入，以及 <code>forex+weather</code>、<code>crypto+news</code>、<code>academic</code> 的
+   主动发现，均出现 0 次工具调用）。这压低了三种策略的绝对准确率，也意味着本次<strong>得不出</strong>"清晰任务下模型
+   面对工具墙一律选对"的结论——恰恰相反，放弃/漏步成了主要失分点，且这类失分在全量注入与主动发现上都存在。</p>
+</li>
+<li>
+<p><strong>如实说明的边界</strong>：</p>
+</li>
+<li>本实验用"schema 当纯文本注入 + 模型自行输出 JSON 工具调用"的控制组机制来观察长上下文选择行为；
+     mock 工具返回的是占位数据，保守的推理模型有时会识破并拒绝作答，这是本次准确率偏低的一大来源。</li>
+<li>因 gpt-5.6-luna 仅支持默认 <code>temperature=1</code>，逐任务结果具随机性；重复运行时哪些任务"放弃"、哪些
+     "错选通用工具"会有波动，但两条结构性结论（token 节省、诱导任务下全量注入误用通用工具）方向稳定。</li>
+<li>想要更干净、可复现的机制自检（token/延迟结构 + 检索预筛选一次性漏工具），见上方 <code>--offline</code> 表。</li>
+</ol>
+<blockquote>
+<p>一句话：<strong>在 gpt-5.6-luna 上，主动工具发现最稳的收益仍是 token（本次 ~19.7×）；在措辞含糊、通用工具
+易被误用的"诱导任务"上，嵌入检索确实把 <code>web_search / google_search / universal_search</code> 等夸大其词的
+通用工具挡在候选之外。但这一版真实运行也提醒：强推理模型保守的"放弃"行为会同时拉低各策略的绝对准确率，
+单次结果需按上表如实解读。</strong></p>
+</blockquote>
+<h3 id="gpt-4o-mini-vs-gpt-56-luna">模型 ↔ 脚手架此消彼长（弱模型 gpt-4o-mini vs 强模型 gpt-5.6-luna，均为真实运行）<a class="headerlink" href="#gpt-4o-mini-vs-gpt-56-luna" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>这一节回答一个直接的问题：<strong>模型变强，这套"主动工具发现"脚手架是不是就没用了？</strong>
+我们把上面的 gpt-5.6-luna（强）结果，与同样 8 任务 × 三策略、OpenAI 直连 chat +
+<code>text-embedding-3-small</code> 检索的 <strong>gpt-4o-mini（弱）</strong> 真实运行放在一起对照
+（<code>python demo.py --model gpt-4o-mini</code>，2026-07，判定口径同上）。结论是：脚手架有两种价值，
+一种随模型变强而<strong>淡出</strong>，另一种与模型强弱<strong>无关、始终存在</strong>。</p>
+</blockquote>
+<p><strong>弱模型 gpt-4o-mini 真实汇总：</strong></p>
+<table>
+<thead>
+<tr>
+<th>策略</th>
+<th>精确选对</th>
+<th>任务完成</th>
+<th>总注入 token</th>
+<th>平均延迟(s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全量注入</td>
+<td>5/8</td>
+<td><strong>8/8</strong></td>
+<td>93040</td>
+<td>8.38</td>
+</tr>
+<tr>
+<td>检索预筛选</td>
+<td>7/8</td>
+<td>7/8</td>
+<td>7768</td>
+<td>4.90</td>
+</tr>
+<tr>
+<td>主动发现</td>
+<td><strong>8/8</strong></td>
+<td><strong>8/8</strong></td>
+<td>7266</td>
+<td>7.65</td>
+</tr>
+</tbody>
+</table>
+<p>（token 93040 → 7266，<strong>~12.8×</strong> 精简。）</p>
+<h4 id="fading">价值一：避免"错选通用工具"—— 随模型变强而<strong>淡出</strong>（fading）<a class="headerlink" href="#fading" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>弱模型 gpt-4o-mini：脚手架价值巨大且干净。</strong> 全量注入下，gpt-4o-mini 从不放弃（任务完成 8/8），
+  但在 3 个任务上"广撒网"抓了通用兜底工具——<code>crypto+news</code> 用了 <code>web_search</code>，两个诱导任务
+  <code>opinion</code> / <code>academic</code> 各自把 <code>web_search / google_search / universal_search</code> 一并调用——
+  于是全量注入只有 <strong>5/8 精确</strong>。主动发现让嵌入检索把这些夸大其词的通用工具<strong>挡在候选之外</strong>，
+  gpt-4o-mini 根本无从误用：<strong>8/8 精确、0 次通用工具误用、且任务完成不降（仍 8/8）</strong>。
+  即"全量 5/8 → 发现 8/8 精确，+3 个任务，零完成损失"——这正是书中"上百工具的工具墙 +
+  措辞含糊 → 广撒网抓通用工具"的弱模型病症，脚手架把它一次性治好。</li>
+<li><strong>强模型 gpt-5.6-luna：同一价值明显缩水。</strong> 它在全量注入下的"通用工具误用"只剩 2 个任务
+  （<code>opinion</code> / <code>academic</code>），比 gpt-4o-mini 的 3 个更少；主动发现把这两处也擦干净，但精确率只从
+  <strong>3/8 提到 4/8（+1）</strong>，而且<strong>任务完成反而从 5/8 降到 4/8</strong>。原因在于强推理模型的主要失分点
+  <strong>不是"选错工具"，而是"直接放弃"</strong>：多个任务它 0 次工具调用就 <code>finish</code>（理由多为"无法访问实时数据"），
+  这类失分检索层无法修复，工具可见得更少时甚至略微加剧。<strong>换言之，脚手架专治的"错选通用工具"这一弱点，
+  在强模型上本就稀薄，收益随之淡出。</strong></li>
+</ul>
+<h4 id="token-persisting">价值二：节省注入 token —— 与模型强弱<strong>无关、始终存在</strong>（persisting）<a class="headerlink" href="#token-persisting" title="Permanent link">&para;</a></h4>
+<p>全量注入无论模型强弱都固定为 <strong>11,630 token/任务</strong>（把 126 个工具 schema 全塞进 system），
+这是纯结构性开销。按需发现只注入几百到一千余 token：</p>
+<ul>
+<li>弱模型 gpt-4o-mini：93,040 → 7,266，<strong>~12.8×</strong>；</li>
+<li>强模型 gpt-5.6-luna：93,040 → 4,733，<strong>~19.7×</strong>（比值更大，部分是因为它常放弃、根本没触发 <code>discover_tools</code>，
+  只注入 3 个基础工具）。</li>
+</ul>
+<p>两个模型上 token 节省都稳稳成立，且随工具集变大而放大——<strong>这份收益不因模型变强而消失</strong>，
+是脚手架在"强模型时代"仍然值得保留的硬理由。</p>
+<h4 id="_6">一句话小结<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h4>
+<blockquote>
+<p><strong>模型越强，脚手架"帮它别选错工具"的价值越淡（gpt-4o-mini 全量 5/8→发现 8/8 精确、零完成损失；
+gpt-5.6-luna 仅 3/8→4/8 且完成还降了，因为它的失分是"放弃"而非"错选"）；但"省 token"的价值
+与模型强弱无关、始终存在（弱模型 ~12.8×、强模型 ~19.7×，全量注入恒为 11,630 token/任务）。
+所以在强模型上，主动工具发现的主要理由从"纠正指令遵循退化"转向"控制上下文成本"。</strong></p>
+</blockquote>
+<h3 id="_7">文件<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>tools_library.py</code> — 126 个工具定义 + <code>select_tools</code> 子集截取 + mock 执行 + 8 个评测任务与判分标准</li>
+<li><code>discovery.py</code> — 可插拔嵌入后端（<code>OpenAIEmbedder</code>）+ 工具向量索引与相似度检索（<code>discover_tools</code>/预筛选的后端）</li>
+<li><code>agent.py</code> — 三种策略（全量注入 / 检索预筛选 / 主动发现）的 ReAct 循环与 token 统计</li>
+<li><code>offline_backend.py</code> — 离线后端：<code>LocalEmbedder</code> + <code>MockChatClient</code>，支撑 <code>--offline</code> 无 key 自检</li>
+<li><code>demo.py</code> — 一键多策略对比演示（含 CLI：<code>--query/--tasks/--strategies/--tool-set-size/--offline/--output</code> 等）</li>
+<li><code>requirements.txt</code> / <code>env.example</code></li>
+</ul>
+<hr />
+<h2 id="notes">Notes / 说明<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Commands, paths, env vars, and measured tables are identical on both language sides.  </li>
+<li>两侧命令、路径、环境变量与实测表格保持一致。  </li>
+<li>Offline path needs no API key; real-model tables are single-run, non-deterministic (temperature=1).  </li>
+<li>离线路径无需 API Key；真实模型表为单次非确定性运行（temperature=1）。</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:47 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:47 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
