@@ -1,0 +1,1762 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+      
+      
+      
+        <link rel="canonical" href="https://bojieli.github.io/ai-agent-book/book-zhtw/introduction.zhtw/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>引言 - AI Agents in Depth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC,+-apple-system,+BlinkMacSystemFont,+Helvetica,+Arial,+sans-serif:300,300i,400,400i,700,700i%7CJetBrains+Mono,+SFMono-Regular,+Consolas,+monospace:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";--md-code-font:"JetBrains Mono, SFMono-Regular, Consolas, monospace"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extras/lang-switcher.css">
+    
+      <link rel="stylesheet" href="../../extras/book-theme.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Agents in Depth">
+<meta property="og:title" content="引言">
+<meta property="og:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta property="og:url" content="https://bojieli.github.io/ai-agent-book/book-zhtw/introduction.zhtw/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="引言">
+<meta name="twitter:description" content="AI Agents in Depth — Design Principles and Engineering Practice. An open-source book covering AI Agents from theory to production, with 10 chapters and 94 companion experiments.">
+<meta name="twitter:image" content="https://bojieli.github.io/ai-agent-book/assets/og-card.png">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="AI Agents in Depth" class="md-header__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    
+    <script>
+      try {
+        if (window.localStorage.getItem("ai-agent-book.primary-sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-nav-collapsed");
+        }
+      } catch (_) {}
+    </script>
+    
+    <button type="button"
+            class="md-header__button md-icon sidebar-toggle"
+            data-sidebar-toggle
+            aria-controls="primary-navigation"
+            aria-expanded="true"
+            aria-label="隐藏侧边栏"
+            title="隐藏侧边栏"
+            hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15.61 19.59 17l-5.01-5 5.01-5L21 8.39 17.44 12zM3 6h13v2H3zm0 7v-2h10v2zm0 5v-2h13v2z"/></svg>
+    </button>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agents in Depth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              引言
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    
+    <div class="lang-switcher">
+      <button id="lang-selector"
+              class="lang-select"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-menu"
+              aria-label="Switch language">
+        <span class="lang-select__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+        </span>
+        <span class="lang-select__label" data-lang-label>Language</span>
+        <span class="lang-select__chevron" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"/></svg>
+        </span>
+      </button>
+      <div id="lang-menu"
+           class="lang-menu"
+           role="menu"
+           aria-labelledby="lang-selector"
+           hidden></div>
+    </div>
+
+    
+    <script>window.LANG_CONFIG = {"ar": {"label": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", "prefix": "book-ar/", "readmeSuffix": "ar", "suffix": ".ar"}, "en": {"label": "English", "prefix": "book-en/", "readmeSuffix": "en"}, "es": {"label": "Espa\u00f1ol", "prefix": "book-es/", "readmeSuffix": "es", "suffix": ".es"}, "hu": {"label": "Magyar", "prefix": "book-hu/", "readmeSuffix": "hu"}, "id": {"label": "Bahasa Indonesia", "prefix": "book-id/", "readmeSuffix": "id"}, "ja": {"label": "\u65e5\u672c\u8a9e", "prefix": "book-ja/", "readmeSuffix": "ja", "suffix": ".ja"}, "ko": {"label": "\ud55c\uad6d\uc5b4", "prefix": "book-ko/", "readmeSuffix": "ko", "suffix": ".ko"}, "ru": {"label": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", "prefix": "book-ru/", "readmeSuffix": "ru"}, "ta": {"label": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", "prefix": "book-ta/", "readmeSuffix": "ta", "suffix": ".ta"}, "tr": {"label": "T\u00fcrk\u00e7e", "prefix": "book-tr/", "readmeSuffix": "tr", "suffix": ".tr"}, "vi": {"label": "Ti\u1ebfng Vi\u1ec7t", "prefix": "book-vi/", "readmeSuffix": "vi", "suffix": ".vi"}, "zh": {"default": true, "label": "\u4e2d\u6587", "prefix": "book/"}, "zhtw": {"label": "\u7e41\u9ad4\u4e2d\u6587\uff08\u53f0\u7063\uff09", "prefix": "book-zhtw/", "readmeSuffix": "zh-TW", "suffix": ".zhtw"}};</script>
+    <script>window.SITE_ROOT = "https://bojieli.github.io/ai-agent-book/";</script>
+
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Agents in Depth" class="md-nav__button md-logo" aria-label="AI Agents in Depth" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    AI Agents in Depth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bojieli/ai-agent-book" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bojieli/ai-agent-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第1章 Agent基础知识
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第1章 Agent基础知识
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第2章 上下文工程
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第2章 上下文工程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第3章 用户记忆和知识库
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第3章 用户记忆和知识库
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第4章 工具
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第4章 工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter5/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第5章 CodingAgent与代码生成
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第5章 CodingAgent与代码生成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter6/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第6章 Agent的评估
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第6章 Agent的评估
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter7/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第7章 模型后训练
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第7章 模型后训练
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter8/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第8章 Agent的持续进化
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第8章 Agent的持续进化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter9/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第9章 多模态与实时交互
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第9章 多模态与实时交互
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../book/chapter10/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第10章 多Agent协作
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    第10章 多Agent协作
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配套实验
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/afterword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book/reference-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    思考题参考答案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        全書結構
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        如何閱讀本書
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        前置知識
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        致謝
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/bojieli/ai-agent-book/edit/main/book-zhtw/introduction.zhtw.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/bojieli/ai-agent-book/raw/main/book-zhtw/introduction.zhtw.md" title="查看本页的源代码" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="_1">引言<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>2025 年 8 月至 10 月，我在圖靈《AI Agent 實戰營》上進行了一系列技術講座。講座的初衷很簡單：把 AI Agent 的設計從 「感覺驅動」 變成 「原則驅動」：不只是教大家跑通一個 Demo，而是深入理解 Agent 為什麼要這樣設計，每一個架構決策背後的取捨是什麼。這本書正是從那些講座的講稿和實驗中整理、擴充套件而來的。</p>
+<p>這本書從最初的想法到最終成書，本身就是用一種可以稱為 <strong>whisper coding</strong>（口述式協作）的方式做出來的——而我用來口述的，正是我們 Pine 自己的語音 Agent。每次準備講稿，我都會先向它口述一個大致的提綱，讓它去做調研（survey），再由它整理出一份初稿；講完課後，我再結合 AI Agent 實戰營裡同學們的回饋，與它反覆討論、打磨，如此迭代，最終把這些講稿擴寫、編排成了今天這本書。整個過程裡，我多數時候並不打字，而是把想法口述給它——語音的頻寬遠高於打字（正常說話的速度約為打字的四倍），「口述—調研—討論—修改」的迴圈因此轉得很快。某種意義上，這本書既是在講 Agent，也是一件由 Agent 參與做成的作品。</p>
+<p>從 2025 年初 DeepSeek R1 釋出至今，AI 領域已經從單純的基座模型（即通用的大語言模型底座）演進，進入了工程落地的深水區。模型層的進展可以從兩個方向看到：一方面，模型透過在智慧體環境中的強化學習（Agentic Reinforcement Learning）把工具呼叫能力訓進了模型引數，使模型掌握了在程式設計（coding）、數學、圖形介面操作（computer use）等領域的通用能力。模型的迭代速度也越來越快，GPT-5.2 到 GPT-5.5、Claude Opus 4.5 到 4.8，都僅僅經過了半年。產品層則有 Manus、Claude Code、OpenClaw 等通用 Agent 重新定義了人機互動方式，把 「程式碼生成 + 檔案系統」 這一架構正規化推到了主流視野。</p>
+<p>當我回頭審視近一年前在課程中總結的那些 Agent 架構設計原則時，有一個發現讓我既欣慰又驚訝：<strong>這些原則非但沒有過時，反而變得越來越經典了。</strong> 雖然 Agent 業界後來陸續出現了 Skill、harness、loop engineering 等新名詞，但真實的順序恰恰是反的：並不是 Anthropic 這些公司先發明瞭這些概念、眾多 Agent 才跟著用起來；相反，是大量 Agent 早就在這麼做了，Anthropic 才把它們提煉、總結成了架構設計原則。實踐在前，命名在後。</p>
+<p>這些原則的底氣，來自把 Agent 真正推進長流程、高風險場景的實戰。作為 Pine AI 的首席科學家，我和團隊打造了 Pine。據我所知，它是第一個能夠自主與真人互動、並可靠地獨立處理涉及金錢的敏感、複雜、長程任務的通用 Agent：它替使用者打電話與營運商協商帳單、與商家交涉退款和投訴、取消訂閱，全程無需人工接管。這類任務動輒幾十輪交涉，任何一步出錯都會造成真金白銀的損失。正是這種對可靠性近乎苛刻的要求，把本書反覆強調的架構原則一條條倒逼了出來。下面幾個例子，就來自這段實踐。</p>
+<ul>
+<li>早在 Skill 概念流行之前，我們就已經採用動態載入提示詞的方法解決提示詞無限膨脹的問題，採用命令列執行工具的方式解決工具列表無限膨脹的問題，採用系統狀態列技術解決 Agent 不感知執行環境和使用者時間、工作狀態等問題。</li>
+<li>早在 harness 概念流行之前，我們就在採用類似 Claude Code 的方法解決模型工具呼叫的不穩定、幻覺、危險操作、越權操作、指令不遵循等問題。</li>
+<li>早在 loop engineering 概念流行之前，我們就在使用本書稱為提議者～稽核者（proposer-reviewer）的方法解決模型過早認為任務完成的問題。</li>
+</ul>
+<p>而且這並不是我們的獨家發明，據我所知，大多數頭部模型和 Agent 公司都自己摸索出了類似的方法。這是我在 2025 年 8 月在圖靈開設《AI Agent 實戰營》課程和 2024-2026 年持續在國科大開設 AI Agent 實踐課程的原因。我選擇把這本書開源釋出，而不是封閉起來收版稅，也是希望這些知識能傳播給更多從業者。</p>
+<p><strong>實踐在前，命名在後</strong>，這個順序對企業級 Agent 開發有一個很實際的含義：<strong>如果你每次都要等到業界開始流行某個 Agent 名詞才去實踐，就已經慢了一步。</strong> 名詞流行的時候，頭部公司往往早已把對應的問題趟過一遍了。那麼，怎樣才能趕在名詞流行之前就知道該怎麼做？我認為最關鍵的有兩點。</p>
+<p><strong>第一，擁有一個對 Agent 能力上限有極高要求的真實業務，並能持續獲得真實的業務回饋。</strong> 以 Pine 為例，處理一件事往往耗時數小時甚至數週，過程中可能要跟多個利益相關方反覆溝通：其間可能要打好幾個小時的電話，在電腦上操作並填寫好幾頁複雜的表單，還要來回傳送數封郵件；全程既不能在任何數字上出錯，又要在溝通中時刻保持謹慎，維護使用者的利益。只有置身於這樣足夠複雜的場景，實踐才會自然地把你倒逼著去建構 harness，去解決那些模型本身當下還做不到、業務上卻必須完成的事。反過來，如果業務對能力上限的要求不高、模型稍一升級就夠用，你也就沒有動力去打磨這些架構原則。</p>
+<p><strong>第二，必須建立評估（Evaluation）機制。</strong> 這也是本書反覆強調的一點：沒有評估，就沒有進步。評估讓你能分辨一次改動究竟是真的變好了，還是隻是運氣，從而讓 Agent 的迭代方向不再依賴直覺。說到底，我們主張的是用科學的方法去做工程、去做 Agent，而評估正是這套方法的地基。第六章會專門展開這套方法。</p>
+<p>不管底層模型如何升級，不管產品形態如何創新，幾乎所有成功的 Agent 系統都遵循著相同的架構模式。這並非巧合：<strong>好的設計原則本就應該穿越模型的迭代週期</strong>，因為它們描述的不是某個模型的用法，而是智慧系統與世界互動的基本模式。</p>
+<p>圖靈獎得主、強化學習之父 Richard Sutton 曾說，宇宙演化經歷了從塵埃到恆星、從恆星到生命、從生命到智慧體（原文為設計實體，designed entities）的 4 個階段。生物進化是盲目的：隨機變異，自然選擇。大多數生物並不理解自己的工作原理，也無法自主設計和改造生物。而智慧體（Agent）是宇宙演化史上一種全新的存在：它能透過生成程式碼實現自舉（bootstrap）和自我進化，就像一個程式設計師編寫了另一個程式設計師，然後新的程式設計師又能繼續編寫下一個。也就是說，Agent 能夠理解自身的運作機制，並根據目標創造全新的智慧體，甚至改進自己。本書的使命，就是幫助你理解和掌握這種創造的原則。</p>
+<p>本書的核心公式只有一句話：<strong>Agent = LLM + 上下文 + 工具</strong>。三者缺一不可。</p>
+<p><img alt="圖 0-1 Agent = LLM + 上下文 + 工具" src="../images/fig0-1.svg" /></p>
+<p>更直觀地說，就是<strong>大腦 + 眼睛 + 手腳</strong>。大腦（LLM）負責思考和決策，眼睛（上下文）決定 Agent 能看到什麼資訊，手腳（工具）決定 Agent 能做什麼事情。（嚴格來說，「眼睛」只是粗略的類比：上下文不僅包含環境資訊和對話歷史，還包含工具定義等內容，也就是說 Agent 「看到」的資訊中也包括了「有哪些手腳可用」。這個隱喻旨在傳達核心直覺：上下文是模型能感知到的一切資訊。）</p>
+<p>對熟悉強化學習的讀者，這三者也可以對映到 RL 的形式化語言。具體來說，LLM 對應 Policy（策略），上下文對應 Observation Space（觀察空間），工具對應 Action Space（動作空間）。三種說法對應同一個物件，只是表達層次不同。</p>
+<h2 id="_2">全書結構<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>本書共十章，沿四個層次展開（圖 0-2）。第一章建立 Agent 的基礎框架；第二至五章討論如何建構 Agent，依次展開上下文、知識、工具與程式碼生成；第六至八章討論如何評估並持續改進 Agent，從度量系統、模型後訓練一直推進到由執行經驗驅動的持續進化；第九至十章則把視野擴充套件到多模態互動與多 Agent 協作。</p>
+<p><img alt="圖 0-2 全書結構：建構、評估與進化、互動與協作" src="../images/fig0-2.svg" /></p>
+<ul>
+<li><strong>第一章（Agent 基礎知識）</strong>從多個真實 Agent 產品出發，建立對 Agent 的直觀理解。深入解析 Agent 的核心公式：從實現層的 LLM + 上下文 + 工具，到直覺層的大腦 + 眼睛 + 手腳，再到學術層的策略（Policy）、觀察空間（Observation Space）與動作空間（Action Space）。同時透過實驗剖析 ReAct 迴圈的運作機制，也就是「思考→行動→觀察」的迭代過程，並區分任務內的上下文適應、跨任務的外部產物（artifact）更新和訓練週期中的參數更新。最後討論從工作流到自主 Agent 的編排設計模式，為後續章節建立統一的概念框架。</li>
+<li><strong>第二章（上下文工程）</strong>是全書最關鍵的一章，系統講解上下文，也就是 Agent 的「眼睛」。本章先從 API 訊息結構與 Agent 核心迴圈講起，建立「上下文就是訊息列表」的地基，再深入 KV Cache（大模型推理過程中複用歷史計算結果的機制）的底層原理，然後依次展開：提示工程（Prompt Engineering，包括流程化設計、工具描述、業務規則細化）與提示注入（Prompt Injection）攻防、Agent Skills 的按需載入機制、Agent 狀態列技術，以及上下文壓縮（Context Compression）策略。各術語的完整定義在正文首次出現處給出。</li>
+<li><strong>第三章（使用者記憶和知識庫）</strong>將上下文管理延伸到跨會話的持久化知識體系，讓 Agent 不僅能記住當前對話的內容，還能在多次對話間積累和呼叫知識。涵蓋使用者記憶的四種漸進式策略、RAG（檢索增強生成，即先檢索相關文件再讓模型生成回答）的完整技術棧（包括不同的文字搜尋方法和搜尋結果排序最佳化）、多模態資訊提取、更高階的知識組織方法，以及智慧體化 RAG（Agentic RAG，即讓 Agent 自主決定何時檢索、檢索什麼）。</li>
+<li><strong>第四章（工具）</strong>探討 Agent 與外部世界互動的橋樑：工具就像是 Agent 的「手腳」，讓它能夠搜尋網頁、呼叫 API、操作資料庫等。介紹 MCP 工具互操作標準和五類工具的設計原則（感知、執行、協作、事件觸發、使用者溝通），重點闡述執行工具的安全機制以及事件驅動的非同步 Agent 架構。</li>
+<li><strong>第五章（Coding Agent 與程式碼生成）</strong>論證了 Coding Agent 加上檔案系統，是所有通用 Agent 最核心的技術基礎。以 OpenClaw 架構為主線，剖析 Coding Agent 的工作流程和實現技巧，並展示程式碼生成在程式設計之外的廣泛價值：從輔助思考、建構知識庫，到動態創造新工具和 Agent 自舉。</li>
+<li><strong>第六章（Agent 的評估）</strong>建構一套科學的評估方法論。涵蓋評估環境（工具呼叫型和人機互動型兩種核心正規化，以及章末單獨討論的模擬環境）、資料集的設計原則、LLM-as-a-Judge 自動化評判方法、評估驅動的模型選型，以及將評估結果轉化為系統改進的完整閉環。</li>
+<li><strong>第七章（模型後訓練）</strong>深入 SFT（監督微調，即用標註資料教模型「照樣學樣」）與 RL（強化學習，即讓模型透過試錯和獎勵回饋自主提升）這兩種後訓練技術。以「SFT 記憶、RL 泛化」和「資料與環境比演算法更重要」為核心論點，涵蓋預訓練/SFT/RL 三階段全景、經典 RL 理論、獎勵訊號設計（從二元獎勵到過程獎勵、再到「獎勵結果、約束過程」的驗證路徑懲罰）、單輪與多輪強化學習演算法，以及樣本效率最佳化等前沿探索。</li>
+<li><strong>第八章（Agent 的持續進化）</strong>研究如何把 Agent 的執行經驗轉化為下一版本的能力。全章先建立由環境結果、過程規則和 LLM Rubric 組成的學習訊號，再比較知識文件、Prompt 與 Skills、程式與 Harness、模型參數四種更新載體，最後討論候選版本的驗證、灰度發布、回滾與長期整理。</li>
+<li><strong>第九章（多模態與即時互動）</strong>展望 Agent 從文字世界走向物理世界。涵蓋語音 Agent（從序列流水線到端到端模型）、Computer Use（讓 Agent 像人一樣操作圖形介面）和機器人操作（VLA（視覺～語言～動作模型）控制與 Sim2Real 遷移），揭示多模態和即時性帶來的共同架構挑戰。</li>
+<li><strong>第十章（多 Agent 協作）</strong>討論 AI Agent 系統的終極形態：多個 Agent 如何分工合作。系統闡述多 Agent 協作的分類框架（上下文共享/獨立 × 對等/管理者/去中心化），透過翻譯 Agent、電話+電腦 Agent 等案例展示協作架構的設計方法，並展望 Agent 社會和 Agent 經濟的前沿方向。</li>
+</ul>
+<h2 id="_3">如何閱讀本書<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>本書的各章節相對獨立，你可以根據自己的需求選擇不同的閱讀路徑：</p>
+<ul>
+<li><strong>如果你是 Agent 開發者</strong>，建議按順序閱讀第一至八章：前五章給出建構方法，第六章建立評估基礎，第七章解釋如何訓練模型，第八章再把參數與其他更新載體納入完整的持續進化閉環。第九、十章可根據多模態互動和多 Agent 協作的需要選讀。</li>
+<li><strong>如果你時間有限</strong>，優先閱讀第一章（建立全域性認知）和第二章（掌握最關鍵的上下文工程）。第二章中 KV Cache 的底層原理較為技術化，初次閱讀可先跳過原理部分、只記住開頭給出的三條核心結論，不影響後續理解。</li>
+<li><strong>如果你關注模型訓練</strong>，可以直接閱讀第七章（模型後訓練）；其中評估方法（第六章）是訓練的前提，建議一併閱讀，並先讀第一至二章以建立整體認知。</li>
+</ul>
+<p>每章都包含大量的<strong>實驗</strong>和<strong>思考題</strong>，編號格式為「實驗 X-Y」（X 為章節號，Y 為章節內序號）。實驗和思考題的標題中用星級標註難度：★ 表示入門級，適合所有讀者；★★ 表示中等難度，需要一定的工程實踐基礎；★★★ 表示進階挑戰，通常涉及開放性問題或複雜的系統設計。大部分實驗配有完整的可執行程式碼，組織在配套的開源倉庫中：</p>
+<blockquote>
+<p><strong>配套程式碼倉庫</strong>：<a href="https://github.com/bojieli/ai-agent-book">https://github.com/bojieli/ai-agent-book</a></p>
+</blockquote>
+<p>可以使用 Git 取得全部配套程式碼：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/bojieli/ai-agent-book.git
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>ai-agent-book
+</code></pre></div>
+<p>不熟悉 Git 的讀者也可以在倉庫頁面點選 <strong>Code → Download ZIP</strong> 下載。實驗程式碼按章節組織在 <code>chapter1/</code> 至 <code>chapter10/</code> 中；要查找「實驗 X-Y」，請先開啟對應的 <code>chapterX/README.zh-TW.md</code>，根據實驗編號找到專案目錄，再按照專案自身的 README 安裝依賴並執行。部分標為「重現指南」的實驗依賴外部倉庫，具體取得方式也會在相應的 README 中說明。</p>
+<p>我強烈建議你動手跑一遍這些實驗。AI Agent 是實踐性極強的領域，很多設計上的直覺需要在動手除錯的過程中才能真正建立起來。</p>
+<p><strong>一個術語約定</strong>：有些英文技術詞直譯成中文會產生歧義，本書對兩個高頻詞做了特別區分：把 reasoning（模型展開中間推導、「想」的過程）統一譯為「思考」，把 inference（模型的前向計算與部署執行）統一譯為「推理」。用兩個不同的中文詞，是為了避免「推理」一詞同時承載兩個概念、讓讀者無法區分。因此，凡是指模型思維鏈（Chain-of-Thought）、思考型模型（如 OpenAI o 系列、DeepSeek-R1，本書稱「思考模型」「思考者」）、思考 token、思考過程的地方，本書一律用「思考」；凡是指模型執行部署（推理時、推理成本、推理棧、推理時擴充套件等）的地方，用「推理」。一個例外是幾個已在中文裡固化的複合詞：<strong>邏輯推理、多跳推理、空間推理、時序推理</strong>，以及「推理遊戲」這類日常用法，本書沿用習慣譯法保留「推理」二字，請讀者根據語境理解，它們指的是演繹推斷的一般含義，而非上述 inference 的技術義。其他關鍵術語，正文會在首次出現處給出中英文對照。</p>
+<h2 id="_4">前置知識<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>本書面向有一定技術背景的讀者，但不要求你是某個特定領域的專家。以下按「必需」和「推薦」兩個層次列出前置知識，幫助你評估自己的準備程度。</p>
+<p><strong>必需：閱讀全書的基礎</strong></p>
+<ul>
+<li><strong>Python 程式設計</strong>：書中幾乎所有實驗都基於 Python。你需要熟悉 Python 的基本語法、常用的資料結構、包管理（pip）等基本概念。不要求精通，但應能讀懂和修改中等複雜度的 Python 程式碼。</li>
+<li><strong>LLM 的基本使用經驗</strong>：你應該用過 ChatGPT、Claude 或類似的產品，理解「提示詞（Prompt）→ 模型回覆」的基本互動模式。</li>
+<li><strong>一款 AI 輔助程式設計工具</strong>：強烈建議安裝並熟悉至少一款 AI 輔助程式設計工具，如 Claude Code、Codex、Cursor、TRAE 等。一方面，這些工具能顯著提升實驗的開發效率，書中的實驗涉及大量的程式碼編寫和除錯。另一方面，這些程式設計工具本身就是成熟的 Coding Agent，你在使用它們的過程中，會直觀地體驗到 ReAct 迴圈、工具呼叫、上下文管理等書中反覆討論的核心機制，這種第一手的體驗對理解 Agent 的設計原則極有價值。</li>
+<li><strong>軟體工程常識</strong>：熟悉命令列操作、Git 版本控制、JSON 資料格式、REST API 等基本概念。這些是執行實驗和理解 Agent 工具呼叫機制的基礎。</li>
+</ul>
+<p><strong>推薦：提升特定章節的閱讀體驗</strong></p>
+<ul>
+<li><strong>機器學習基礎</strong>（第七章）：瞭解訓練與推理、損失函式、梯度下降、過擬合等基本概念，有助於理解模型後訓練。</li>
+<li><strong>基礎數學</strong>（第 2-3、7 章）：對線性代數有直覺性的理解（比如知道向量可以表示方向和大小、矩陣可以做批次運算）有助於理解嵌入和注意力機制；基本的機率統計知識有助於理解評估指標和強化學習中的期望獎勵。書中的數學不涉及複雜的推導，側重直覺性的解釋。</li>
+<li><strong>Web 開發基礎</strong>（第 4、9 章）：瞭解 HTTP、WebSocket、前後端分離架構等概念，有助於理解事件驅動的非同步 Agent 架構和語音 Agent 的即時通訊實驗。</li>
+<li><strong>對 Transformer 架構的基本瞭解</strong>（第 2、7 章）：Transformer 是當前幾乎所有大語言模型的底層架構。對於希望系統地補充大模型基礎知識的讀者，推薦閱讀《圖解大模型》（圖靈出版）。該書以直觀的圖解方式講解了 Transformer 架構、預訓練與微調等核心概念，與本書的 Agent 工程視角形成良好的互補。</li>
+</ul>
+<p>如果你在某些前置知識上有所欠缺，不必因此卻步。本書的核心價值在於<strong>架構設計原則和工程實踐的方法</strong>，而非某個具體的演算法或技巧。除第七章後訓練以外，全書對數學和機器學習的要求很低，完全可以作為起點。</p>
+<p>Agent 技術仍在快速演進，但<strong>好的架構設計原則具有穿越時間的力量</strong>。掌握了「為什麼要這樣設計」，你就能在技術浪潮的變化中保持清醒的判斷力。希望這本書能成為你建構 AI Agent 的可靠指南。</p>
+<h2 id="_5">致謝<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>感謝圖靈的夢鴿老師和劉美英老師的辛勤編輯，以及為組織圖靈《AI Agent 實戰營》課程付出的努力；感謝劉俊明老師在國科大開設 AI Agent 實戰課程。也要特別感謝圖靈《AI Agent 實戰營》的所有學員，以及國科大 AI Agent 實戰課程的所有同學——在我講授這些課程的過程中，大家給了我許多有價值的回饋與建議，也讓我對這些概念本身有了更清晰的理解。</p>
+<p>感謝 Pine AI 的所有同事。如果沒有 Pine AI 這樣優秀的產品，以及它所帶來的種種挑戰，我不可能在 Agent 領域獲得如此深入的理解與實踐；在一次次思想碰撞中，同事們也貢獻了大量思想輸入。</p>
+<p>也要感謝 AI 業界的許多朋友（在此不一一具名）。在各種產業討論中，大家對我的觀點給予了坦誠的回饋，糾正了我不少錯誤的判斷，提升了我對模型與 Agent 的認知。</p>
+<p>最要感謝的，是我的家人，特別是我的太太孟佳穎。她始終支援我完成本書的寫作，還為本書提出了許多意見。</p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:46 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年7月31日 09:16:46 UTC">2026年7月31日</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "content.tabs.link", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../extras/site-i18n.generated.js"></script>
+      
+        <script src="../../extras/lang-switcher.js"></script>
+      
+        <script src="../../extras/nav-collapse.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../extras/mermaid-init.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
