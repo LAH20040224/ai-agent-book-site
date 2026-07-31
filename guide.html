@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>零基础也能学透 AI Agent · 全书名词通关指南</title>
+<style>
+  :root {
+    --ink: #2b2b33; --soft: #6b6b76; --line: #e8e6e1;
+    --brand: #4f46e5; --brand-soft: #eef2ff; --paper: #fbfaf7;
+    --accent: #0e7490;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif;
+    line-height: 1.85; font-size: 16.5px;
+  }
+  .hero {
+    background: linear-gradient(135deg, #312e81 0%, #4f46e5 55%, #7c6cf0 100%);
+    color: #fff; padding: 56px 24px 44px; text-align: center;
+  }
+  .hero h1 { margin: 0 0 12px; font-size: 30px; letter-spacing: .5px; border: none; color: #fff; }
+  .hero p { margin: 0 auto; max-width: 720px; color: #e3e1ff; font-size: 15.5px; }
+  .hero .badge {
+    display: inline-block; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.25);
+    border-radius: 999px; padding: 3px 14px; font-size: 13px; margin-bottom: 18px; color: #e3e1ff;
+  }
+  .layout { display: flex; max-width: 1180px; margin: 0 auto; gap: 36px; padding: 36px 24px 80px; }
+  nav#toc {
+    position: sticky; top: 24px; align-self: flex-start; flex: 0 0 240px;
+    max-height: calc(100vh - 48px); overflow-y: auto;
+    background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 18px 16px;
+    font-size: 13.5px; line-height: 1.7;
+  }
+  nav#toc .toc-title { font-weight: 700; color: var(--brand); margin-bottom: 8px; font-size: 14px; }
+  nav#toc a { display: block; color: var(--soft); text-decoration: none; padding: 3px 8px; border-radius: 7px; }
+  nav#toc a:hover { background: var(--brand-soft); color: var(--brand); }
+  nav#toc a.l2 { padding-left: 20px; }
+  main {
+    flex: 1; min-width: 0; background: #fff; border: 1px solid var(--line);
+    border-radius: 16px; padding: 44px 52px;
+    box-shadow: 0 1px 3px rgba(30,27,75,.05);
+  }
+  h1 { font-size: 26px; line-height: 1.4; }
+  h2 {
+    font-size: 21px; margin-top: 56px; padding: 10px 0 10px 14px;
+    border-left: 5px solid var(--brand); background: var(--brand-soft);
+    border-radius: 0 10px 10px 0;
+  }
+  h3 { font-size: 17.5px; margin-top: 36px; color: #3730a3; }
+  h2:first-of-type { margin-top: 24px; }
+  p { margin: 14px 0; }
+  strong { color: #1e1b4b; }
+  a { color: var(--brand); }
+  blockquote {
+    margin: 20px 0; padding: 14px 20px; background: #f0fdfa;
+    border-left: 4px solid var(--accent); border-radius: 0 10px 10px 0; color: #134e4a;
+  }
+  table {
+    border-collapse: collapse; width: 100%; margin: 20px 0; font-size: 14.5px;
+    display: block; overflow-x: auto;
+  }
+  th, td { border: 1px solid var(--line); padding: 10px 14px; text-align: left; vertical-align: top; }
+  th { background: var(--brand-soft); color: #3730a3; white-space: nowrap; }
+  tr:nth-child(even) td { background: #fafaf9; }
+  code {
+    background: #f3f4f6; border-radius: 5px; padding: 2px 7px;
+    font-family: "JetBrains Mono", Consolas, monospace; font-size: 13.5px; color: #9f1239;
+  }
+  pre {
+    background: #1e1b4b; color: #e3e1ff; padding: 20px 24px; border-radius: 12px;
+    overflow-x: auto; line-height: 1.7; font-size: 13.5px;
+  }
+  pre code { background: none; color: inherit; padding: 0; }
+  hr { border: none; border-top: 1px dashed var(--line); margin: 40px 0; }
+  ul, ol { padding-left: 24px; }
+  li { margin: 5px 0; }
+  .footer { text-align: center; color: var(--soft); font-size: 13px; padding: 0 24px 48px; }
+  @media (max-width: 900px) {
+    nav#toc { display: none; }
+    main { padding: 28px 22px; }
+  }
+  @media print {
+    nav#toc, .hero .badge { display: none; }
+    .hero { background: none; color: #000; padding: 20px 0; }
+    .hero h1 { color: #000; } .hero p { color: #333; }
+    main { border: none; box-shadow: none; padding: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="badge">📖 配套《深入理解 AI Agent：设计原理与工程实践》· 零基础阅读伴侣</div>
+  <h1>零基础也能学透 AI Agent<br>全书名词通关指南</h1>
+  <p>不会编程也能读懂的 Agent 教科书导读 · 全部术语的大白话翻译 · 8 周自学路线</p>
+</div>
+<div class="layout">
+  <nav id="toc"><div class="toc-title">📑 本页目录</div><a class="l2" href="#sec-0">第一部分：不会编程，到底怎么学这本书？</a><a class="l3" href="#sec-1">这本书在讲什么（一句话）</a><a class="l3" href="#sec-2">不会编程，能学到什么？</a><a class="l3" href="#sec-3">学习的三把钥匙</a><a class="l3" href="#sec-4">全书最重要的一个&quot;术语约定&quot;（先看这个，不然会混乱）</a><a class="l2" href="#sec-5">第二部分：打地基——8 个绕不开的基础名词</a><a class="l3" href="#sec-6">1. AI Agent（智能体）</a><a class="l3" href="#sec-7">2. LLM（Large Language Model，大语言模型）</a><a class="l3" href="#sec-8">3. Token（词元）</a><a class="l3" href="#sec-9">4. Prompt（提示词）与 System Prompt（系统提示词）</a><a class="l3" href="#sec-10">5. 上下文（Context）</a><a class="l3" href="#sec-11">6. 工具（Tools）</a><a class="l3" href="#sec-12">7. API（应用程序接口）</a><a class="l3" href="#sec-13">8. 参数（Parameters / Weights，权重）</a><a class="l2" href="#sec-14">第三部分：十章名词地图</a><a class="l3" href="#sec-15">第 1 章 · Agent 基础知识：一个 Agent 是怎么运转的</a><a class="l3" href="#sec-16">第 2 章 · 上下文工程：给大脑看什么，是门大学问</a><a class="l3" href="#sec-17">第 3 章 · 用户记忆和知识库：让 Agent 跨对话记住你</a><a class="l3" href="#sec-18">第 4 章 · 工具：Agent 的手脚怎么造</a><a class="l3" href="#sec-19">第 5 章 · Coding Agent 与代码生成：代码是 Agent 的&quot;元能力&quot;</a><a class="l3" href="#sec-20">第 6 章 · Agent 的评估：怎么证明它真的变好了</a><a class="l3" href="#sec-21">第 7 章 · 模型后训练：给大脑本身做升级</a><a class="l3" href="#sec-22">第 8 章 · Agent 的持续进化：让它越干越聪明</a><a class="l3" href="#sec-23">第 9 章 · 多模态与实时交互：给 Agent 装上嘴、眼和手</a><a class="l3" href="#sec-24">第 10 章 · 多 Agent 协作：从单打独斗到 Agent 社会</a><a class="l2" href="#sec-25">第四部分：最容易搞混的 10 组名词对照</a><a class="l2" href="#sec-26">第五部分：不会编程的 8 周学习路线</a><a class="l3" href="#sec-27">关于 94 个配套实验（不会编程怎么办）</a><a class="l2" href="#sec-28">第六部分：一页纸速查（贴在桌前）</a></nav>
+  <main><h1>零基础也能学透 AI Agent：全书名词通关指南</h1>
+<blockquote>
+<p>写给<strong>不会编程</strong>的你：这份指南把《深入理解 AI Agent：设计原理与工程实践》（李博杰，开源书）里出现的名词，全部翻译成大白话。先读这份指南建立地图，再读原书正文，遇到任何生词回来查。</p>
+<p>原书在线阅读：学习网站（见配套部署说明）或 <a href="https://bojieli.github.io/ai-agent-book/">https://bojieli.github.io/ai-agent-book/</a></p>
+</blockquote>
+<hr />
+<h2 id="sec-0">第一部分：不会编程，到底怎么学这本书？</h2>
+<h3 id="sec-1">这本书在讲什么（一句话）</h3>
+<p>教你<strong>设计一个&quot;会自己干活的 AI&quot;</strong>：不是你问一句它答一句的聊天机器人，而是你交代一个任务（比如&quot;帮我把这个月的销售数据整理成报表并发给老板&quot;），它能自己拆解步骤、查资料、操作软件、发现错误并改正，直到把活干完。</p>
+<h3 id="sec-2">不会编程，能学到什么？</h3>
+<p>这本书的内容分三层：</p>
+<table>
+<thead>
+<tr>
+<th>层次</th>
+<th>内容</th>
+<th>不会编程能学吗</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>思想层</strong></td>
+<td>为什么这么设计？每个决策背后的取舍</td>
+<td>✅ 完全能学，这是全书最值钱的部分</td>
+</tr>
+<tr>
+<td><strong>架构层</strong></td>
+<td>各个部件怎么配合、信息怎么流动</td>
+<td>✅ 能学，靠类比就能理解</td>
+</tr>
+<tr>
+<td><strong>代码层</strong></td>
+<td>94 个配套实验，要动手跑 Python</td>
+<td>⚠️ 可以跳过，或借助 AI 编程工具代劳</td>
+</tr>
+</tbody>
+</table>
+<p><strong>核心结论：跳过所有代码块，你依然能学透这本书的 80%——而且是作者最看重的 80%</strong>（作者原话：本书的核心价值在于&quot;架构设计原则和工程实践的方法论&quot;，而非具体算法）。</p>
+<h3 id="sec-3">学习的三把钥匙</h3>
+<p><strong>钥匙一：记住一个总公式</strong></p>
+<blockquote>
+<p><strong>Agent = LLM + 上下文 + 工具</strong></p>
+</blockquote>
+<p>全书十章都是这个公式的展开。任何一个新名词，先问一句：&quot;它属于大脑、眼睛，还是手脚？还是让这三者配合得更好的东西？&quot;——能回答这个问题，这个名词你就懂了一半。</p>
+<p><strong>钥匙二：用类比代替定义</strong></p>
+<p>书里的每个技术名词，本质都在描述一个你熟悉的人类世界的东西：公司岗位、笔记本、工具箱、考试、带徒弟……本指南的全部工作就是给你这些类比。</p>
+<p><strong>钥匙三：顺着&quot;一个 Agent 的一生&quot;这条主线读</strong></p>
+<ul>
+<li>第 1 章：Agent 是什么（出生证明）</li>
+<li>第 2~5 章：怎么<strong>造</strong>一个 Agent（成长）</li>
+<li>第 6 章：怎么<strong>考</strong>一个 Agent（考试）</li>
+<li>第 7~8 章：Agent 怎么<strong>变强</strong>（进修）</li>
+<li>第 9~10 章：Agent 怎么用五官、怎么<strong>组团</strong>（社会化）</li>
+</ul>
+<h3 id="sec-4">全书最重要的一个&quot;术语约定&quot;（先看这个，不然会混乱）</h3>
+<p>中文里&quot;推理&quot;一词被太多人混用，作者特意做了区分，<strong>读书时必须记住</strong>：</p>
+<ul>
+<li><strong>思考</strong>（reasoning）= 模型&quot;想&quot;的过程。就像学生考试时在草稿纸上写演算步骤。</li>
+<li><strong>推理</strong>（inference）= 模型&quot;运行&quot;这件事本身。就像&quot;这台机器开机运转了&quot;。</li>
+</ul>
+<p>所以书里说&quot;思考模型&quot;指的是会先打草稿再回答的模型（如 DeepSeek-R1、OpenAI o 系列）；说&quot;推理成本&quot;指的是&quot;让模型跑起来要花多少钱&quot;。</p>
+<hr />
+<h2 id="sec-5">第二部分：打地基——8 个绕不开的基础名词</h2>
+<p>在进章节之前，先扫清这些贯穿全书的基础词。</p>
+<h3 id="sec-6">1. AI Agent（智能体）</h3>
+<p><strong>大白话</strong>：能自己感知情况、自己做决定、自己动手完成任务的 AI 系统。
+<strong>类比</strong>：普通聊天 AI 像&quot;电话咨询顾问&quot;——只动嘴；Agent 像&quot;全能行政助理&quot;——听完任务会去查邮件、填表格、打电话，把事办完。
+<strong>注意</strong>：判断一个系统是不是 Agent，就看它有没有&quot;眼睛&quot;（能看信息）和&quot;手脚&quot;（能做事情），而不只是会聊天。</p>
+<h3 id="sec-7">2. LLM（Large Language Model，大语言模型）</h3>
+<p><strong>大白话</strong>：用海量文字训练出来的超大 AI 模型，是 Agent 的&quot;大脑&quot;。ChatGPT、Claude、DeepSeek、Kimi 背后都是它。
+<strong>类比</strong>：一个读完了整个图书馆、记性极好、文笔极佳，但<strong>没有眼睛耳朵、没有手脚、对今天发生的事一无所知</strong>的天才。它的特长是&quot;根据上文猜下文&quot;。
+<strong>书中定位</strong>：公式里的第一项，Agent 的决策核心。</p>
+<h3 id="sec-8">3. Token（词元）</h3>
+<p><strong>大白话</strong>：模型读写文字的最小单位。一个汉字、半个英文单词、一个标点都可能是一个 Token。
+<strong>类比</strong>：模型的&quot;粮食&quot;和&quot;字数计费单位&quot;。模型的记忆容量（上下文长度）和 API 收费都按 Token 算。
+<strong>为什么重要</strong>：书里说的&quot;上下文窗口 100 万 Token&quot;≈ 大脑一次能摊开在桌面上的资料总量；&quot;思考 Token&quot;≈ 草稿纸的长度。</p>
+<h3 id="sec-9">4. Prompt（提示词）与 System Prompt（系统提示词）</h3>
+<p><strong>大白话</strong>：Prompt 就是你发给模型的话。System Prompt 是开发者预先写好、全程不变的&quot;隐形指令&quot;，用户看不到。
+<strong>类比</strong>：System Prompt 是员工的<strong>岗位说明书</strong>——&quot;你是客服，语气要礼貌，绝不承诺退款超过 500 元&quot;。Prompt 是用户当下说的具体事。
+<strong>书中定位</strong>：写好系统提示词的学问叫&quot;提示工程&quot;（第 2 章）。</p>
+<h3 id="sec-10">5. 上下文（Context）</h3>
+<p><strong>大白话</strong>：模型在做出每一个决定前，<strong>能看到的全部信息</strong>。
+<strong>类比</strong>：开会时摊在桌上的所有资料——任务说明（系统提示词）、可用工具清单（工具定义）、之前的会议纪要（对话历史）、刚收到的传真（工具执行结果）。<strong>桌上没有的，模型一律不知道。</strong>
+<strong>书中金句</strong>：上下文决定 Agent 能力上限——&quot;给模型看什么、怎么组织，比模型本身有多聪明更影响结果&quot;。
+<strong>记住一个数字 5</strong>：书里把上下文拆成 5 个组成部分——①系统提示词 ②工具定义（这两样是固定的&quot;静态前缀&quot;）③用户消息 ④模型回复 ⑤工具执行结果（这三样是不断变长的&quot;动态轨迹&quot;）。</p>
+<h3 id="sec-11">6. 工具（Tools）</h3>
+<p><strong>大白话</strong>：模型可以调用的外部能力——搜索网页、查数据库、发邮件、操作软件、执行代码。
+<strong>类比</strong>：Agent 的&quot;手脚&quot;。没有工具的模型只会说，有了工具才会做。
+<strong>书中定位</strong>：公式第三项。第 4 章专门讲怎么设计工具，第 5 章讲&quot;代码&quot;这件最强的工具。</p>
+<h3 id="sec-12">7. API（应用程序接口）</h3>
+<p><strong>大白话</strong>：程序之间互相说话的&quot;标准插座&quot;。你的程序通过 API 调用大模型，大模型通过 API 使用工具。
+<strong>类比</strong>：餐厅的点餐窗口——你不需要进厨房，按格式递单子（请求），厨房按格式出菜（响应）。
+<strong>零基础知识量</strong>：知道&quot;调用 API&quot;=&quot;按标准格式发请求拿结果&quot;就够了，第 2 章的代码示例可以直接跳过。</p>
+<h3 id="sec-13">8. 参数（Parameters / Weights，权重）</h3>
+<p><strong>大白话</strong>：模型&quot;大脑&quot;内部的神经元连接强度，训练时学到的一切知识都刻在里面。一个模型有几百亿个参数。
+<strong>类比</strong>：大脑的神经回路。改参数 = 给大脑做&quot;物理改造&quot;；不改参数只靠提示词 = 给大脑&quot;下口头指示&quot;。
+<strong>为什么重要</strong>：第 7 章&quot;模型后训练&quot;讲的就是怎么改参数；第 8 章会告诉你&quot;改参数&quot;只是让 Agent 变强的四种方式之一。</p>
+<hr />
+<h2 id="sec-14">第三部分：十章名词地图</h2>
+<blockquote>
+<p>每一章的结构：<strong>本章讲什么 → 核心名词逐个翻译 → 一句话记住本章</strong>。</p>
+</blockquote>
+<h3 id="sec-15">第 1 章 · Agent 基础知识：一个 Agent 是怎么运转的</h3>
+<p><strong>本章讲什么</strong>：建立全书框架——核心公式，以及 Agent 干活的循环方式。</p>
+<table>
+<thead>
+<tr>
+<th>名词</th>
+<th>大白话解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>观察空间 / 动作空间</strong>（Observation / Action Space）</td>
+<td>学术版说法。&quot;观察空间&quot;= Agent 能看到什么的范围（眼睛可视范围）；&quot;动作空间&quot;= Agent 能做什么动作的范围（手脚可动范围）。扩大这两个空间，就能让原本做不了的任务变得能做。</td>
+</tr>
+<tr>
+<td><strong>ReAct 循环</strong></td>
+<td>Agent 干活的基本节奏：<strong>思考 → 行动 → 观察 → 再思考 → ……</strong> 像修车师傅：想想哪坏了（思考）→ 拧一下螺丝（行动）→ 看看还漏不漏油（观察）→ 再想下一步。</td>
+</tr>
+<tr>
+<td><strong>轨迹</strong>（Trajectory）</td>
+<td>Agent 一轮轮&quot;思考、行动、观察&quot;留下的完整记录。像飞机的黑匣子，出事后回放轨迹就能知道哪一步错了。</td>
+</tr>
+<tr>
+<td><strong>Harness（工程）</strong></td>
+<td>本书的核心概念之一。直译是&quot;马具/挽具&quot;——<strong>套在模型外面、让它可靠干活的一整套工程装置</strong>。大脑再聪明也会犯错，Harness 负责约束它、验证它、纠正它。作者观点：模型能力大家都能买到，Harness 才是真正的竞争力。</td>
+</tr>
+<tr>
+<td><strong>Harness 的五个功能</strong></td>
+<td>上下文（给够信息）、工具（接口清晰）、<strong>约束</strong>（不该做的默认禁止，像手机 App 权限）、<strong>验证</strong>（检查结果对不对）、<strong>纠正</strong>（错了能恢复）。五环构成可靠性闭环。</td>
+</tr>
+<tr>
+<td><strong>ACI</strong>（Agent-Computer Interface）</td>
+<td>&quot;给 Agent 用的操作界面&quot;设计学。原则：从 Agent 视角而不是程序员视角设计工具接口，像 SIM 卡缺角一样&quot;防呆&quot;——让错误从设计上就不可能发生。</td>
+</tr>
+<tr>
+<td><strong>编排模式</strong>（Orchestration）</td>
+<td>多个 AI 步骤怎么串联的组织方式。书里讲五种：<strong>链式</strong>（流水线，一道接一道）、<strong>路由</strong>（分诊台，看情况转给不同专科）、<strong>并行</strong>（多人同时做再汇总）、<strong>编排者-工人</strong>（项目经理派活）、<strong>评估者-优化者</strong>（写手 + 编辑来回改稿）。</td>
+</tr>
+<tr>
+<td><strong>工作流 vs 自主 Agent</strong></td>
+<td>工作流 = 固定流水线，每一步人事先排好，稳但不灵活；自主 Agent = 只给目标，路线让它自己定，灵活但难控制。作者建议：<strong>先优化提示词 → 再上工作流 → 最后才考虑自主 Agent</strong>。</td>
+</tr>
+<tr>
+<td><strong>护栏</strong>（Guardrails）</td>
+<td>防止 Agent 闯祸的安全栏杆：金额上限、敏感操作要人批准、危险指令直接拦截。</td>
+</tr>
+<tr>
+<td><strong>对齐</strong>（Alignment）</td>
+<td>让 AI 的行为和人类的真实意图保持一致——不只照字面办事，还要办&quot;你真正想要的事&quot;。</td>
+</tr>
+<tr>
+<td><strong>消融实验</strong>（Ablation Study）</td>
+<td>&quot;逐个拆零件看影响&quot;的实验法：把系统提示词删掉看会怎样，把历史记录删掉看会怎样……以此证明每个部件都不可或缺。第 6 章的评估方法论就靠它。</td>
+</tr>
+<tr>
+<td><strong>Artifact（产物）</strong></td>
+<td>Agent 干活时产出的文件：写好的文档、生成的表格、画好的图。区别于&quot;聊天里说的话&quot;，产物是留下来能用的东西。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>一句话记住第 1 章</strong>：Agent = 大脑 + 眼睛 + 手脚，靠&quot;思考→行动→观察&quot;循环干活，靠 Harness 保证可靠。</p>
+</blockquote>
+<h3 id="sec-16">第 2 章 · 上下文工程：给大脑看什么，是门大学问</h3>
+<p><strong>本章讲什么</strong>：全书最关键一章。模型的&quot;桌面&quot;就那么大，放什么、怎么摆、摆不下怎么办。</p>
+<table>
+<thead>
+<tr>
+<th>名词</th>
+<th>大白话解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>上下文工程</strong>（Context Engineering）</td>
+<td>精心设计&quot;模型每次做决定时能看到什么&quot;的工程学问。类比：给决策者准备简报的艺术——信息不全他判断失误，塞太多他抓不住重点。</td>
+</tr>
+<tr>
+<td><strong>消息四种角色</strong>（system / user / assistant / tool）</td>
+<td>API 里的四种&quot;发言人&quot;：system=岗位说明书（开发者的规矩）、user=用户说的话、assistant=模型的回复、tool=工具交回来的结果。四者加工具定义，正好对应第一章的上下文五部分。</td>
+</tr>
+<tr>
+<td><strong>Chat Template（聊天模板）</strong></td>
+<td>把&quot;谁说了什么&quot;翻译成模型能读懂的内部格式。类比：会议记录的统一模板——【主持人】【发言人】【决议】各归各位，模型才分得清哪句是谁说的。</td>
+</tr>
+<tr>
+<td><strong>KV Cache</strong></td>
+<td>模型的&quot;草稿复用&quot;技术：算过的内容存起来，下次接着写不用从头重算。<strong>代价</strong>：一旦改动了前面的内容，后面存的所有草稿全部作废。所以它约束你：上下文要&quot;只往后加，别改前面&quot;。</td>
+</tr>
+<tr>
+<td><strong>Prompt Cache（提示缓存）</strong></td>
+<td>KV Cache 的&quot;持久版&quot;：把常用前缀（比如很长的岗位说明书）的运算结果存在服务商那里，下次直接复用，又快又便宜。</td>
+</tr>
+<tr>
+<td><strong>提示工程</strong>（Prompt Engineering）</td>
+<td>打磨系统提示词的学问：语气人格、结构格式、流程设计、业务规则细化。类比：给新员工写岗位手册——写得越具体、越有流程，他干活越稳。</td>
+</tr>
+<tr>
+<td><strong>Few-shot 示例</strong></td>
+<td>在提示词里给模型看几个&quot;标准答案样例&quot;，让它照着做。给 3 个例子 = 3-shot；一个不给 = Zero-shot。类比：培训时先给看三份优秀报告模板。</td>
+</tr>
+<tr>
+<td><strong>提示注入</strong>（Prompt Injection）</td>
+<td>Agent 时代的&quot;网络诈骗&quot;：坏人把恶意指令藏在网页/邮件里，Agent 读到后可能被&quot;洗脑&quot;，做出越权操作（比如把数据发给别人）。第 2 章讲攻击原理，第 4 章讲防御。</td>
+</tr>
+<tr>
+<td><strong>Agent Skills（技能）</strong></td>
+<td>把&quot;某类任务的专业知识&quot;打包成可插拔的技能包，<strong>用到时才加载</strong>，不常驻大脑。类比：员工的&quot;业务手册书架&quot;——平时不在桌上，遇到对应业务才取下来翻。解决的是&quot;提示词无限膨胀&quot;问题。</td>
+</tr>
+<tr>
+<td><strong>Agent 状态栏</strong></td>
+<td>在上下文里给模型放一块&quot;仪表盘&quot;：现在几点、任务进行到哪步、用户什么状态。类比：汽车仪表盘——不看仪表盘开车，会错过油量和时速。</td>
+</tr>
+<tr>
+<td><strong>上下文压缩</strong>（Context Compression）</td>
+<td>对话太长装不下时，把前面的内容提炼成摘要，用摘要替换原文。类比：会议纪要——3 小时的会，新人看 2 页纪要就能接上。</td>
+</tr>
+<tr>
+<td><strong>上下文腐化</strong>（Context Rot / Degradation）</td>
+<td>上下文越堆越长，里面过时、矛盾、无关的信息越来越多，模型表现反而下降。类比：办公桌上文件堆成山，重要的那张反而找不到了。</td>
+</tr>
+<tr>
+<td><strong>子 Agent 上下文隔离</strong></td>
+<td>大任务拆给&quot;子 Agent&quot;单独干，它有自己的独立桌面，干完只把结论交回来。类比：老板不需要看外包团队的所有过程文件，只看最终交付——主桌面保持干净。<strong>隔离优于压缩</strong>是书里的重要原则。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>一句话记住第 2 章</strong>：上下文是 Agent 的眼睛；桌面管理（放什么、复用什么、何时清理）决定它能看多远、看多清。</p>
+</blockquote>
+<h3 id="sec-17">第 3 章 · 用户记忆和知识库：让 Agent 跨对话记住你</h3>
+<p><strong>本章讲什么</strong>：第 2 章管&quot;一次对话内&quot;的信息，本章管&quot;跨对话&quot;的持久记忆和外部知识。</p>
+<table>
+<thead>
+<tr>
+<th>名词</th>
+<th>大白话解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>用户记忆</strong>（User Memory）</td>
+<td>Agent 跨多次对话记住的关于你的信息：你的偏好、习惯、历史。类比：老管家记得&quot;先生喝咖啡不加糖&quot;。</td>
+</tr>
+<tr>
+<td><strong>记忆的四种存储格式</strong></td>
+<td>书中四种由简到繁的记法：<strong>Simple Notes</strong>（便利贴，一条一条事实）、<strong>JSON Cards</strong>（档案卡片，分门别类带结构）等。越简单越好维护，越复杂表达力越强——取舍是本章主题。</td>
+</tr>
+<tr>
+<td><strong>记忆压缩与整理</strong></td>
+<td>定期把零碎记忆归纳合并，去掉重复和过时的。类比：年底整理档案柜。</td>
+</tr>
+<tr>
+<td><strong>日志脱敏</strong></td>
+<td>记录日志时自动抹掉密码、身份证号等敏感信息。类比：病历公开前把病人姓名涂黑。</td>
+</tr>
+<tr>
+<td><strong>RAG</strong>（Retrieval-Augmented Generation，检索增强生成）</td>
+<td>全书最高频术语之一。模型回答前，<strong>先从资料库里检索相关内容，摆在桌上，再回答</strong>。类比：开卷考试——不用把整本书背下来，会查就行。解决两大问题：模型不知道你的私有资料；模型知识有截止日期。</td>
+</tr>
+<tr>
+<td><strong>分块</strong>（Chunking）</td>
+<td>把长文档切成小段作为检索单位。切太大找不准，切太小没上下文——像把书撕成合适的卡片。</td>
+</tr>
+<tr>
+<td><strong>嵌入</strong>（Embedding）</td>
+<td>把文字变成一串数字（向量），让&quot;意思相近&quot;的文字在数字空间里也离得近。类比：给每段文字一个&quot;语义 GPS 坐标&quot;，搜&quot;开心&quot;也能找到&quot;喜悦&quot;。</td>
+</tr>
+<tr>
+<td><strong>稠密嵌入 / 稀疏嵌入</strong></td>
+<td>两种找资料的方式：稠密=按<strong>意思</strong>找（搜&quot;肚子疼&quot;能找到&quot;胃胀气&quot;）；稀疏=按<strong>关键词</strong>找（搜&quot;BM25&quot;只找含这三个字母的）。</td>
+</tr>
+<tr>
+<td><strong>混合检索</strong></td>
+<td>意思找 + 关键词找，两路结果合并。像导航既看&quot;语义目的地&quot;又看&quot;精确门牌号&quot;。</td>
+</tr>
+<tr>
+<td><strong>重排序</strong>（Rerank）</td>
+<td>粗选出 100 条候选后，再用更精细的模型排出最相关的前几条。类比：海选之后还有复赛评委打分。</td>
+</tr>
+<tr>
+<td><strong>recall@k</strong></td>
+<td>检索质量的度量：正确答案出现在前 k 条结果里的比例。考试&quot;前 5 名里有你孩子&quot;的概率。</td>
+</tr>
+<tr>
+<td><strong>RAPTOR</strong></td>
+<td>给文档建&quot;目录树&quot;的检索法：小块→摘要→摘要的摘要，一层层组织。类比：公司的组织架构——员工→部门→事业部，问宏观问题找高层节点，问细节找叶子。</td>
+</tr>
+<tr>
+<td><strong>GraphRAG / 知识图谱</strong>（Knowledge Graph）</td>
+<td>把知识整理成&quot;实体 + 关系&quot;的网：张三—任职于—某公司—位于—某城市。类比：人物关系图谱，查&quot;某人的老板的邻居&quot;这种多跳问题特别强。</td>
+</tr>
+<tr>
+<td><strong>上下文感知检索</strong>（Contextual Retrieval）</td>
+<td>给每个文档小块补上&quot;它属于哪、在讲什么&quot;的背景说明再检索，避免断章取义。类比：档案卡片上注明&quot;出自第 3 章第 2 节&quot;。</td>
+</tr>
+<tr>
+<td><strong>Agentic RAG（智能体化 RAG）</strong></td>
+<td>让 Agent <strong>自己决定</strong>要不要查、查什么、查得够不够，不够再换个查法。从&quot;固定开卷考试&quot;升级为&quot;研究员式的主动调研&quot;。</td>
+</tr>
+<tr>
+<td><strong>双层记忆架构</strong></td>
+<td>本章压轴设计：档案卡片常驻桌面当&quot;概览&quot;，细节按需检索。类比：大脑记索引，细节查图书馆。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>一句话记住第 3 章</strong>：记忆让 Agent 认识你，RAG 让 Agent 认识世界；检索质量决定回答质量。</p>
+</blockquote>
+<h3 id="sec-18">第 4 章 · 工具：Agent 的手脚怎么造</h3>
+<p><strong>本章讲什么</strong>：工具怎么设计、怎么标准化、怎么保证安全，以及 Agent 怎么从&quot;随叫随到&quot;变成&quot;主动干活&quot;。</p>
+<table>
+<thead>
+<tr>
+<th>名词</th>
+<th>大白话解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MCP</strong>（Model Context Protocol）</td>
+<td>工具界的&quot;USB-C 标准&quot;：不管什么工具，按统一接口做，任何 Agent 都能即插即用。由 Anthropic 提出，已成行业事实标准。</td>
+</tr>
+<tr>
+<td><strong>感知工具</strong></td>
+<td>让 Agent 获取信息的工具：搜索、读文件、看网页——五官的延伸。只读不改，所以天然安全、可缓存。</td>
+</tr>
+<tr>
+<td><strong>执行工具</strong></td>
+<td>让 Agent 改变世界的工具：发邮件、下单、删文件——真正的&quot;手&quot;。<strong>最危险</strong>，需要层层防护。</td>
+</tr>
+<tr>
+<td><strong>协作工具</strong></td>
+<td>让 Agent 能创建&quot;子 Agent&quot;、给别的 Agent 派活和通信的工具。</td>
+</tr>
+<tr>
+<td><strong>提议者-审核者</strong>（Proposer-Reviewer）</td>
+<td>重要操作双人复核：一个模块提议&quot;我要删这个文件&quot;，另一个独立模块审核&quot;理由成立吗&quot;，通过才执行。类比：大额转账要主管复核。</td>
+</tr>
+<tr>
+<td><strong>Sidecar（边车）机制</strong></td>
+<td>挂在 Agent 旁边的独立小助手，走单独通道查询/验证信息，不污染主上下文。类比：飞行员旁边的副驾驶，独立核对仪表。</td>
+</tr>
+<tr>
+<td><strong>事件驱动 / 异步 Agent</strong></td>
+<td>传统 Agent 像电话客服——你不打过去它永远等着；异步 Agent 像值班医生—— BP 机一响（事件来了：新邮件、定时点、股价异动）就主动开工。</td>
+</tr>
+<tr>
+<td><strong>Webhook</strong></td>
+<td>&quot;有事请呼这个地址&quot;的通知机制：外部系统出事后，自动给指定网址发消息。类比：快递柜的取件短信。</td>
+</tr>
+<tr>
+<td><strong>Hooks / Cron / Heartbeat</strong></td>
+<td>让 Agent 自动行动的三种内置机制：Hooks=某个动作完成时顺带触发；Cron=定时闹钟（每天早上 8 点巡检）；Heartbeat=定期心跳自检（每隔一阵看看自己有没有待办）。</td>
+</tr>
+<tr>
+<td><strong>Channel（通道）</strong></td>
+<td>书里 PineClaw 的设计：给外部事件源（邮件、API 回调）开的专用入口，让第三方事件能即时唤醒 Agent。</td>
+</tr>
+<tr>
+<td><strong>虚拟身份与隔离执行环境</strong></td>
+<td>给 Agent 独立的账号、邮箱和&quot;单间办公室&quot;干活，既能以&quot;它&quot;的名义对外沟通，又把风险关在单间里。</td>
+</tr>
+<tr>
+<td><strong>主动工具发现</strong></td>
+<td>工具成百上千时，不把所有工具说明都堆在桌面（占地方还干扰判断），而是让 Agent 按需&quot;查工具目录&quot;找到该用哪个。类比：员工不需要背下全公司通讯录，会用 OA 查就行。</td>
+</tr>
+<tr>
+<td><strong>工具描述投毒 / 工具遮蔽</strong></td>
+<td>接入第三方工具的新风险：坏人在工具说明书里夹带私货（投毒），或恶意工具抢注相似名字冒充正规工具（遮蔽）。接入前要审查。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>一句话记住第 4 章</strong>：工具设计决定能力上限，安全机制决定能不能上线，事件驱动让 Agent 从&quot;应答机&quot;变成&quot;值班员&quot;。</p>
+</blockquote>
+<h3 id="sec-19">第 5 章 · Coding Agent 与代码生成：代码是 Agent 的&quot;元能力&quot;</h3>
+<p><strong>本章讲什么</strong>：为什么&quot;会写代码的 Agent + 一个文件系统&quot;几乎是所有通用 Agent 的内核。（本章代码最多，不会编程就读论证和结论。）</p>
+<table>
+<thead>
+<tr>
+<th>名词</th>
+<th>大白话解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Coding Agent</strong></td>
+<td>会写代码、调 bug、跑测试的 Agent，如 Claude Code、Cursor。书里的关键洞察：它成熟不是因为代码模型特别强，而是因为软件行业几十年攒下了测试、版本管理等&quot;现成验收体系&quot;——天然就是最好的 Harness。</td>
+</tr>
+<tr>
+<td><strong>Sessionless（无会话）设计</strong></td>
+<td>不依赖&quot;一直聊着的会话&quot;，每个任务都能从保存的轨迹重新加载继续。类比：流水线工人换班——交接记录写清楚，谁来都能接着干。</td>
+</tr>
+<tr>
+<td><strong>代码是&quot;元能力&quot;</strong></td>
+<td>元能力 = 能创造其他能力的能力。代码是&quot;能创造新工具的工具&quot;：没有现成工具？Agent 现场写一个。</td>
+</tr>
+<tr>
+<td><strong>代码作为思考工具</strong></td>
+<td>心算不如笔算：模型概率性的&quot;想&quot;容易错，写成代码执行就是精确的。类比：口算三位数乘法容易错，列竖式就稳了。</td>
+</tr>
+<tr>
+<td><strong>代码作为业务规则的约束</strong></td>
+<td>把&quot;退款不得超过 500 元&quot;写成代码关卡，比写在提示词里可靠一万倍——提示词模型可能&quot;忘&quot;，代码不会通融。不可逆操作前的确定性防线。</td>
+</tr>
+<tr>
+<td><strong>生成式 UI</strong>（Generative UI）</td>
+<td>Agent 现场给你画界面：需要填表就生成表单，需要看趋势就生成图表。突破纯文字聊天的限制。</td>
+</tr>
+<tr>
+<td><strong>Agent 自举</strong>（Bootstrap）</td>
+<td>终极形态：Agent 用代码修复和创造新的 Agent——&quot;程序员写出了另一个程序员&quot;。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>一句话记住第 5 章</strong>：代码既是干活的手段，也是思考的工具、安全的闸门、创造新 Agent 的种子。</p>
+</blockquote>
+<h3 id="sec-20">第 6 章 · Agent 的评估：怎么证明它真的变好了</h3>
+<p><strong>本章讲什么</strong>：作者反复强调&quot;没有评估，就没有进步&quot;。本章讲怎么科学地给 Agent 考试。</p>
+<table>
+<thead>
+<tr>
+<th>名词</th>
+<th>大白话解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>评估</strong>（Evaluation / Eval）</td>
+<td>给 Agent 出的标准化考试：固定题目、固定评分、可重复。靠&quot;感觉好像变好了&quot;做改进是炼金术，靠评估才是科学。</td>
+</tr>
+<tr>
+<td><strong>Benchmark（基准测试）</strong></td>
+<td>公开的&quot;统考卷子&quot;，不同 Agent/模型做同一套题比谁分高。如测编程的 SWE-bench、测操作电脑的 OSWorld。</td>
+</tr>
+<tr>
+<td><strong>评估环境</strong></td>
+<td>考试的&quot;考场&quot;：让 Agent 在受控环境里真刀真枪操作，并自动记录对错。分两种：<strong>工具调用型</strong>（给它 API 让它完成任务）和<strong>人机交互型</strong>（模拟真人跟它对话周旋）。</td>
+</tr>
+<tr>
+<td><strong>任务数据集</strong></td>
+<td>考题库。设计讲究：描述要精确、难度要分层、对错要能客观验证、还要防&quot;泄题&quot;（题目混进训练数据）。</td>
+</tr>
+<tr>
+<td><strong>LLM-as-a-Judge</strong></td>
+<td>让另一个大模型当阅卷老师。因为 Agent 的很多产出（一段话、一通电话）没有标准答案，只能让&quot;AI 老师&quot;按评分标准判。</td>
+</tr>
+<tr>
+<td><strong>Rubric（评分细则）</strong></td>
+<td>给 AI 阅卷老师的打分标准：&quot;语气礼貌 20 分、信息完整 40 分、解决问题 40 分&quot;。细则越细，判分越稳。</td>
+</tr>
+<tr>
+<td><strong>配对比较</strong>（Pairwise Comparison）</td>
+<td>不看绝对分，让两份答卷摆一起比&quot;哪份更好&quot;，再汇总成排名。类比：选秀节目两两 PK。</td>
+</tr>
+<tr>
+<td><strong>统计显著性</strong></td>
+<td>防止&quot;瞎猫碰上死耗子&quot;：A 比 B 高 2 分，是真强还是运气好？题目量够不够、分差稳不稳，要用统计方法验证。</td>
+</tr>
+<tr>
+<td><strong>可观测性</strong>（Observability）</td>
+<td>给运行中的 Agent 装&quot;监控摄像头&quot;：每一步调用、耗时、花费都有迹可查，出问题能回放定位。</td>
+</tr>
+<tr>
+<td><strong>A/B 测试</strong></td>
+<td>两组用户，一组用旧版一组用新版，看哪组指标好。互联网产品经典方法，Agent 迭代同样适用。</td>
+</tr>
+<tr>
+<td><strong>特性开关</strong>（Feature Flag）</td>
+<td>新功能做成可远程开关的电闸：上线出问题不用改代码，直接把闸拉了。</td>
+</tr>
+<tr>
+<td><strong>仿真环境</strong></td>
+<td>给 Agent 造的&quot;模拟训练场&quot;（仿真的电商网站、仿真的电话对端），既能当考场，也能当第 7 章强化学习的练习场。<strong>领域随机化</strong>= 刻意把训练场条件做得五花八门，逼它学会应对真实世界的多样性。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>一句话记住第 6 章</strong>：观察 → 假设 → 实验 → 验证，评估闭环让 Agent 工程从玄学变科学。</p>
+</blockquote>
+<h3 id="sec-21">第 7 章 · 模型后训练：给大脑本身做升级</h3>
+<p><strong>本章讲什么</strong>：全书技术含量最高的一章，讲怎么把能力&quot;刻进&quot;模型参数。（不会编程：掌握三阶段和 SFT/RL 的取舍即可，公式全可跳过。）</p>
+<table>
+<thead>
+<tr>
+<th>名词</th>
+<th>大白话解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>预训练</strong>（Pre-training）</td>
+<td>造大脑的&quot;九年义务教育&quot;：喂海量文本练&quot;预测下一个词&quot;，学会语言和常识。成本巨大，只有大厂做。</td>
+</tr>
+<tr>
+<td><strong>后训练</strong>（Post-training）</td>
+<td>义务教育之后的&quot;岗前培训&quot;：让通用大脑学会听指令、用工具、按规矩办事。本章主角。</td>
+</tr>
+<tr>
+<td><strong>SFT</strong>（Supervised Fine-Tuning，监督微调）</td>
+<td>&quot;照着范例学&quot;：给模型看成千上万条&quot;标准问 + 标准答&quot;，教它照样学样。类比：新人培训期抄老师傅的话术。特点：<strong>长于记忆，先把输出格式稳定下来</strong>。</td>
+</tr>
+<tr>
+<td><strong>RL</strong>（Reinforcement Learning，强化学习）</td>
+<td>&quot;在试错中学&quot;：模型自己做事，做对了给奖励、做错了没奖励，慢慢摸索出好策略。类比：销售在实战中成长——成了有提成，败了总结教训。特点：<strong>长于泛化，能应对没见过的情况</strong>。</td>
+</tr>
+<tr>
+<td><strong>先 SFT 后 RL</strong></td>
+<td>铁律：先用 SFT 把格式和规范教会（不然奖励都算不出来），再用 RL 练应变。书里&quot;SFT 记忆、RL 泛化&quot;是全章最重要的一句话。</td>
+</tr>
+<tr>
+<td><strong>奖励模型 / RLHF</strong></td>
+<td>RLHF = 基于人类反馈的强化学习：人标注&quot;哪个回答更好&quot;，训出一个<strong>奖励模型</strong>（AI 裁判），再用它给模型的表现自动打分发奖励。</td>
+</tr>
+<tr>
+<td><strong>RLVR</strong></td>
+<td>用&quot;可验证的结果&quot;发奖励：代码跑通了、数学算对了——对错有客观标准，不需要 AI 裁判。Coding、数学领域因此突飞猛进。</td>
+</tr>
+<tr>
+<td><strong>信用分配</strong>（Credit Assignment）</td>
+<td>多轮任务的经典难题：谈了一个月终于签单，功劳算给哪一步？类比：球队赢了球，功劳怎么分给每个球员每次触球。</td>
+</tr>
+<tr>
+<td><strong>过程奖励 vs 结果奖励</strong></td>
+<td>只看结局（结果奖励）信号太稀疏，但逐步骤打分（过程奖励）又容易误判；书里的答案：<strong>奖励结果，约束过程</strong>。</td>
+</tr>
+<tr>
+<td><strong>RLVP</strong>（验证路径惩罚）</td>
+<td>作者团队的方法：结局好给奖励，但过程中走了违规弯路要扣分——防止&quot;结果对了就纵容手段&quot;。</td>
+</tr>
+<tr>
+<td><strong>Reward Hacking（奖励黑客）</strong></td>
+<td>模型钻奖励规则的空子：让它&quot;测通代码&quot;，它把难测的用例删了。类比：按论文数发奖金，有人就拆香肠式灌水。设计奖励时必须防。</td>
+</tr>
+<tr>
+<td><strong>PPO / GRPO / DPO</strong></td>
+<td>主流强化学习算法的名字。零基础只需知道：它们是&quot;发奖励学经验&quot;的不同具体算法，书里强调<strong>数据和环境比选哪个算法更重要</strong>。</td>
+</tr>
+<tr>
+<td><strong>样本效率</strong></td>
+<td>学一次能长多少本事。样本效率低 = 要摔一万次才学会；当前 RL 的最大瓶颈。</td>
+</tr>
+<tr>
+<td><strong>On-Policy Distillation（在线策略蒸馏）</strong></td>
+<td>让&quot;老师模型&quot;对自己正在做的题逐字逐句指导，把稠密信号带进学习。类比：师傅站在旁边看你实操，每个动作都点评，而不是只看月底业绩。</td>
+</tr>
+<tr>
+<td><strong>LoRA</strong></td>
+<td>低成本微调技术：不动整个大脑，只训练一小块&quot;外挂插件&quot;。类比：不动地基，只改软装。</td>
+</tr>
+<tr>
+<td><strong>泛化 vs 记忆</strong></td>
+<td>记忆 = 背下见过的题；泛化 = 没见过的题也会做。SFT 偏前者，RL 偏后者——这是选技术路线的根本依据。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>一句话记住第 7 章</strong>：SFT 教规矩、RL 练应变；环境和数据的质量，比算法的选择更能决定成败。</p>
+</blockquote>
+<h3 id="sec-22">第 8 章 · Agent 的持续进化：让它越干越聪明</h3>
+<p><strong>本章讲什么</strong>：模型公司不帮你升级大脑时，怎么让运行中的 Agent 自己积累经验、持续变强。</p>
+<table>
+<thead>
+<tr>
+<th>名词</th>
+<th>大白话解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>持续进化 / 持续学习</strong></td>
+<td>Agent 从每天干活的成败中提取经验，变成自己的能力，像员工&quot;在复盘中成长&quot;。</td>
+</tr>
+<tr>
+<td><strong>学习信号</strong></td>
+<td>从一次任务里提炼出的&quot;哪好哪不好&quot;的依据：环境给的结果、过程是否违规、AI 评委的打分。</td>
+</tr>
+<tr>
+<td><strong>四种更新载体</strong></td>
+<td>学到的经验写去哪里？①<strong>知识</strong>（更新知识库——记在笔记本上）②<strong>指令</strong>（更新提示词/Skills——改进岗位手册）③<strong>程序</strong>（更新工具和 Harness——升级装备）④<strong>参数</strong>（更新模型本身——改造大脑）。越往后越根本，也越危险。</td>
+</tr>
+<tr>
+<td><strong>上下文适应</strong></td>
+<td>只在当前对话里&quot;临时变聪明&quot;——对话一关就忘。所以靠它不能实现真正的持续学习。</td>
+</tr>
+<tr>
+<td><strong>灰度发布</strong></td>
+<td>新版本先给一小撮场景用，没问题再全量。类比：新药先小范围临床试验。</td>
+</tr>
+<tr>
+<td><strong>回滚</strong></td>
+<td>新版出问题，一键退回旧版。进化的每一步都要留退路。</td>
+</tr>
+<tr>
+<td><strong>睡眠学习</strong></td>
+<td>像人睡觉时大脑整理白天记忆：Agent 在空闲时段批量整理经验、合并知识、淘汰过时内容。</td>
+</tr>
+<tr>
+<td><strong>可验证闭环</strong></td>
+<td>&quot;发现问题 → 生成候选改进 → 验证 → 发布 → 继续观察&quot;的完整回路。闭环里最要紧的是&quot;验证&quot;——没验证过的改动不许上线。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>一句话记住第 8 章</strong>：在线干活攒证据，离线学习做改进，验证发布有退路——进化是个治理问题，不只是技术问题。</p>
+</blockquote>
+<h3 id="sec-23">第 9 章 · 多模态与实时交互：给 Agent 装上嘴、眼和手</h3>
+<p><strong>本章讲什么</strong>：Agent 走出文字世界——能打电话（语音）、能操作电脑（GUI）、能控制机器人（物理世界）。</p>
+<table>
+<thead>
+<tr>
+<th>名词</th>
+<th>大白话解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>多模态</strong>（Multimodal）</td>
+<td>能处理文字之外的信息：语音、图片、视频、动作。&quot;模态&quot;= 信息的形态。</td>
+</tr>
+<tr>
+<td><strong>级联流水线</strong>（Cascading）</td>
+<td>语音方案一：耳朵（语音识别 ASR）→ 大脑（LLM）→ 嘴（语音合成 TTS）三段串联。像同传箱子里的接力。结构简单，但慢、且语气等副语言信息会丢失。</td>
+</tr>
+<tr>
+<td><strong>端到端 Omni 模型</strong></td>
+<td>语音方案二：一个模型直接&quot;听声音进、出声音&quot;。像真人口译，反应快、懂语气，但更难训练和控制。</td>
+</tr>
+<tr>
+<td><strong>全双工</strong>（Full-Duplex）</td>
+<td>电话术语：双方可以同时说话、互相打断。半双工像对讲机（&quot;over&quot;才能换人说），全双工才是真对话。</td>
+</tr>
+<tr>
+<td><strong>VAD / ASR / TTS</strong></td>
+<td>语音三件套：VAD=检测&quot;人开始/停止说话&quot;；ASR=语音转文字（耳朵）；TTS=文字转语音（嘴）。</td>
+</tr>
+<tr>
+<td><strong>TTFT</strong>（首 Token 延迟）</td>
+<td>你问完到它&quot;开口第一个字&quot;的等待时间。语音 Agent 体验的生命线——等 5 秒才接话，没人受得了。</td>
+</tr>
+<tr>
+<td><strong>快思考 / 慢思考</strong></td>
+<td>实时交互的两难：接话要快（快思考，凭直觉），答难题要深想（慢思考，打草稿）。书里讲三种架构：先应付再补答、先交互再提醒、边想边说统一模型。</td>
+</tr>
+<tr>
+<td><strong>Computer Use</strong></td>
+<td>让 Agent 像人一样操作图形界面：看屏幕截图 → 动鼠标键盘。好处是不挑软件（没有 API 的老软件也能用），坏处是慢且容易点错。</td>
+</tr>
+<tr>
+<td><strong>Grounding（视觉定位）</strong></td>
+<td>&quot;把'登录按钮'这个词对应到屏幕上的具体像素坐标&quot;。Computer Use 的核心技术——看不懂按钮在哪，一切免谈。</td>
+</tr>
+<tr>
+<td><strong>VLM</strong>（视觉-语言模型）</td>
+<td>能看图的 LLM，是 Computer Use 和机器人的眼睛。</td>
+</tr>
+<tr>
+<td><strong>OSWorld</strong></td>
+<td>测&quot;操作电脑能力&quot;的基准考试。书里数据：准确率已接近人类，但步骤数远超人类——会做，但笨。</td>
+</tr>
+<tr>
+<td><strong>VLA</strong>（Vision-Language-Action，视觉-语言-动作模型）</td>
+<td>机器人的小脑：看着摄像头画面，听懂指令，直接输出关节动作。让机械臂&quot;看到苹果 → 伸手抓住&quot;。</td>
+</tr>
+<tr>
+<td><strong>Sim2Real</strong></td>
+<td>在仿真器里练好机器人，再迁移到真实世界。难点：仿真和真实总有差距（摩擦、光照、材质），这个差距叫&quot;现实鸿沟&quot;。</td>
+</tr>
+<tr>
+<td><strong>具身智能</strong>（Embodied AI）</td>
+<td>有身体（机器人）的 AI，能在物理世界感知和行动。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>一句话记住第 9 章</strong>：从文字到语音到 GUI 到机器人，共同的两大坎是&quot;实时性&quot;和&quot;多模态&quot;。</p>
+</blockquote>
+<h3 id="sec-24">第 10 章 · 多 Agent 协作：从单打独斗到 Agent 社会</h3>
+<p><strong>本章讲什么</strong>：多个 Agent 怎么分工、怎么通信、什么时候协作真的比单干强，以及海量 Agent 聚集后涌现的&quot;社会&quot;。</p>
+<table>
+<thead>
+<tr>
+<th>名词</th>
+<th>大白话解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>上下文共享 vs 隔离</strong></td>
+<td>多 Agent 的第一设计维度：共享=大家看同一块桌面，信息零损耗但桌面挤爆；隔离=各有各的桌面，靠&quot;移交包&quot;传结论。类比：全组共享一个文档 vs 各写各的周报。</td>
+</tr>
+<tr>
+<td><strong>协作拓扑</strong></td>
+<td>第二设计维度，三种结构：<strong>对等模式</strong>（几个 Agent 平等互评，像写作小组互改稿）、<strong>管理者模式</strong>（一个项目经理派活，它的能力就是全队的瓶颈——要用最强模型）、<strong>去中心化模式</strong>（任务在 Agent 间流转，像工单系统）。</td>
+</tr>
+<tr>
+<td><strong>移交</strong>（Handoff）</td>
+<td>一个 Agent 把任务连同情报转交给另一个。移交时信息怎么打包（全量移交 vs 提炼摘要）是大学问。</td>
+</tr>
+<tr>
+<td><strong>共享文件系统</strong></td>
+<td>多 Agent 的&quot;公司网盘&quot;：产物写成文件互传路径。书里把它叫&quot;数据平面&quot;。</td>
+</tr>
+<tr>
+<td><strong>消息总线</strong></td>
+<td>Agent 间的&quot;内部对讲系统&quot;：谁都能发消息、订阅消息。书里叫&quot;控制平面&quot;。</td>
+</tr>
+<tr>
+<td><strong>A2A 协议</strong>（Agent2Agent）</td>
+<td>跨公司 Agent 协作的&quot;外交礼仪&quot;标准：你的 Agent 和我的 Agent 属于不同组织，靠 A2A 协议互相发任务、验身份。</td>
+</tr>
+<tr>
+<td><strong>涌现</strong>（Emergence）</td>
+<td>个体简单、群体复杂：单个 Agent 只会回消息，25 个 Agent 放进斯坦福 AI 小镇，会自发传八卦、组织派对——没人编程教过这些。</td>
+</tr>
+<tr>
+<td><strong>Agent 社会 / Agent 经济</strong></td>
+<td>前沿实验：斯坦福 AI 小镇（社会模拟）、Moltbook（Agent 自己的社交网络）、Pinchwork（Agent 互相雇佣）、RentAHuman（Agent 出钱雇真人干体力活）。书中用它们讨论&quot;Agent 社会&quot;的秩序与经济。</td>
+</tr>
+<tr>
+<td><strong>多 Agent 何时优于单 Agent</strong></td>
+<td>书里最重要的判断标准：<strong>协作是否带来了生成时不存在的新信息</strong>。如果只是几个 Agent 反复看同一段文字（空转辩论），不如一个 Agent；如果审核者拿到了执行结果、渲染截图等&quot;新证据&quot;，协作才是真优势。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>一句话记住第 10 章</strong>：协作的价值来自新信息，不来自人头数；基础设施学操作系统——文件系统管数据，消息总线管控制。</p>
+</blockquote>
+<hr />
+<h2 id="sec-25">第四部分：最容易搞混的 10 组名词对照</h2>
+<table>
+<thead>
+<tr>
+<th>易混组合</th>
+<th>一句话分清</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>思考 vs 推理</strong></td>
+<td>思考=打草稿（reasoning，想的过程）；推理=开机运行（inference，部署执行）。全书最重要的一对约定。</td>
+</tr>
+<tr>
+<td><strong>上下文 vs 记忆 vs 知识库</strong></td>
+<td>上下文=此刻桌面上摊着的资料（第 2 章）；用户记忆=关于&quot;你&quot;的档案，跨对话保留（第 3 章）；知识库=关于&quot;世界&quot;的资料馆，大家共享（第 3 章）。后两者都要用时才被摆上桌面。</td>
+</tr>
+<tr>
+<td><strong>工具 vs Skill vs MCP</strong></td>
+<td>工具=具体的&quot;一件装备&quot;（搜索、发邮件）；Skill=&quot;某类活的业务手册&quot;，用到才翻开，教 Agent 怎么组合使用装备；MCP=装备接口的统一标准（USB-C）。</td>
+</tr>
+<tr>
+<td><strong>提示词 vs 系统提示词</strong></td>
+<td>提示词=用户这次说的话；系统提示词=开发者预设的全程不变的岗位说明书。</td>
+</tr>
+<tr>
+<td><strong>工作流 vs Agent</strong></td>
+<td>工作流=固定流水线，人事先排好每步；Agent=给目标自己找路。先流水线，不够再自主。</td>
+</tr>
+<tr>
+<td><strong>RAG vs 微调（Fine-tuning）</strong></td>
+<td>RAG=开卷考试，资料现查（适合常变的知识、私有文档）；微调=考前背书，知识进脑子（适合稳定的技能、格式和风格）。</td>
+</tr>
+<tr>
+<td><strong>SFT vs RL</strong></td>
+<td>SFT=照范例抄，学规矩、强记忆；RL=实战试错，练应变、强泛化。先 SFT 后 RL。</td>
+</tr>
+<tr>
+<td><strong>评估 vs 测试 vs Benchmark</strong></td>
+<td>测试=检查某个功能对不对（一次性的）；评估=系统的考试体系（持续进行的）；Benchmark=全行业用的公开考卷。</td>
+</tr>
+<tr>
+<td><strong>预训练 vs 后训练</strong></td>
+<td>预训练=义务教育造大脑（大厂专属）；后训练=岗前培训教规矩（SFT+RL，普通人能做）。</td>
+</tr>
+<tr>
+<td><strong>子 Agent vs 多 Agent 系统</strong></td>
+<td>子 Agent=主 Agent 临时雇佣的&quot;外包&quot;，为隔离上下文而生（第 2、4 章）；多 Agent 系统=多个对等/分层的 Agent 长期协作（第 10 章）。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="sec-26">第五部分：不会编程的 8 周学习路线</h2>
+<blockquote>
+<p>目标：<strong>学透思想，能向人讲清每个名词，能看懂行业新闻和产品设计</strong>。</p>
+</blockquote>
+<p><strong>第 1 周：建立骨架</strong>（每天约 40 分钟）</p>
+<ul>
+<li>读：本指南第一、二部分 + 原书引言 + 第 1 章（跳过代码块和&quot;实验&quot;小节的具体操作）</li>
+<li>任务：合上书，能画出&quot;大脑+眼睛+手脚&quot;公式图，能用修车师傅例子讲清 ReAct 循环</li>
+<li>自测：跟朋友解释&quot;为什么聊天机器人不是 Agent&quot;</li>
+</ul>
+<p><strong>第 2 周：攻克全书最关键的上下文工程</strong></p>
+<ul>
+<li>读：原书第 2 章。KV Cache 原理小节可只读开头的三条结论（作者允许的）</li>
+<li>任务：用&quot;办公桌管理&quot;类比讲清：上下文五部分、静态前缀、压缩、Skills、状态栏</li>
+<li>自测：解释&quot;为什么对话越长 AI 越笨&quot;（上下文腐化）</li>
+</ul>
+<p><strong>第 3 周：记忆与知识</strong></p>
+<ul>
+<li>读：原书第 3 章（稠密/稀疏嵌入的数学细节可跳过）</li>
+<li>任务：能用&quot;开卷考试&quot;讲清 RAG 全流程：分块→嵌入→检索→重排→生成</li>
+<li>自测：区分&quot;用户记忆&quot;和&quot;知识库&quot;，解释为什么客服 AI 需要 RAG</li>
+</ul>
+<p><strong>第 4 周：工具与异步</strong></p>
+<ul>
+<li>读：原书第 4 章（代码全跳）</li>
+<li>任务：记住三类工具（感知/执行/协作）、MCP 是 USB-C、提议者-审核者是双人复核</li>
+<li>自测：解释&quot;提示注入&quot;为什么可怕，以及&quot;事件驱动&quot;让 Agent 从应答机变值班员</li>
+</ul>
+<p><strong>第 5 周：代码元能力 + 评估</strong></p>
+<ul>
+<li>读：原书第 5 章只看&quot;代码的六个维度&quot;论证部分；第 6 章全读（这章几乎无代码，最适合非程序员）</li>
+<li>任务：理解&quot;代码是规则的最强表达&quot;；掌握评估闭环：环境→数据集→AI 评委→分析→改进</li>
+<li>自测：解释&quot;没有评估就没有进步&quot;，LLM-as-a-Judge 是什么</li>
+</ul>
+<p><strong>第 6 周：后训练（最难一周，放慢）</strong></p>
+<ul>
+<li>读：原书第 7 章，只看每节开头和结尾的结论段；重点读&quot;预训练/SFT/RL 三阶段全景&quot;和&quot;何时选 SFT 何时选 RL&quot;</li>
+<li>任务：能用&quot;义务教育→岗前培训→实战成长&quot;讲清三阶段；记住&quot;SFT 记忆、RL 泛化&quot;&quot;数据和环境比算法重要&quot;</li>
+<li>自测：向人解释 RLHF 和 Reward Hacking（奖励黑客）</li>
+</ul>
+<p><strong>第 7 周：进化与多模态</strong></p>
+<ul>
+<li>读：原书第 8 章 + 第 9 章（机器人部分可泛读）</li>
+<li>任务：记住四种更新载体（知识/指令/程序/参数）和风险递增；语音三范式（流水线/端到端/全双工）</li>
+<li>自测：解释为什么&quot;改提示词&quot;比&quot;改参数&quot;安全</li>
+</ul>
+<p><strong>第 8 周：协作 + 总复习</strong></p>
+<ul>
+<li>读：原书第 10 章 + 后记</li>
+<li>任务：画一张全书地图：十章各自解决了&quot;Agent 一生&quot;中的什么问题</li>
+<li><strong>毕业自测（费曼学习法）</strong>：找一位完全不懂 AI 的朋友，在 30 分钟内给他讲明白：Agent 是什么、它怎么看世界、怎么干活、怎么考试、怎么变强、怎么组团。讲不清的地方，就是你要重读的地方。</li>
+</ul>
+<h3 id="sec-27">关于 94 个配套实验（不会编程怎么办）</h3>
+<ul>
+<li><strong>完全跳过也不影响理解思想</strong>——每章的&quot;本章小结&quot;都会总结实验结论</li>
+<li>想体验：装一个 AI 编程工具（Claude Code、Cursor 等），把实验目录和 README 交给它：&quot;帮我跑通这个实验&quot;，让它代劳——顺便说一句，<strong>这个帮你跑实验的工具本身就是一个 Coding Agent</strong>，你在用本书第 5 章的知识消费它</li>
+<li>思考题：每章末尾的思考题没有代码，推荐认真做，参考答案在书的最后一篇</li>
+</ul>
+<hr />
+<h2 id="sec-28">第六部分：一页纸速查（贴在桌前）</h2>
+<pre><code>总公式：Agent = LLM(大脑) + 上下文(眼睛) + 工具(手脚)
+工作方式：ReAct 循环 = 思考 → 行动 → 观察 → 再思考
+可靠性：Harness 五环 = 上下文 · 工具 · 约束 · 验证 · 纠正
+上下文五部分：系统提示词 + 工具定义 + 用户消息 + 模型回复 + 工具结果
+记忆与知识：用户记忆(关于你) + RAG 知识库(关于世界) = 开卷考试
+工具标准：MCP = USB-C；三类工具 = 感知 · 执行 · 协作
+最强工具：代码 = 元能力（能造工具的工具）
+进步方法：评估闭环 = 考场 + 考题 + AI 评委 + 分析改进
+大脑升级：预训练(义务教育) → SFT(学规矩) → RL(练应变)
+持续变强：四种载体 = 知识 · 指令 · 程序 · 参数（风险递增）
+走向现实：语音三范式、Computer Use、VLA 机器人
+群体智慧：协作的价值 = 新信息，不是人头数
+</code></pre>
+<hr />
+<p><em>本指南由 Kimi 基于《深入理解 AI Agent：设计原理与工程实践》（Apache-2.0 开源，作者李博杰）整理改写，供零基础读者配合原书使用。原书版权归原作者所有。</em></p>
+</main>
+</div>
+<div class="footer">由 Kimi 基于开源书籍整理改写 · 原书：github.com/bojieli/ai-agent-book（Apache-2.0）</div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "ai-agent-book-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "《深入理解 AI Agent》在线学习网站 —— 静态站点本地预览",
+  "scripts": {
+    "dev": "node server.js"
+  }
+}
